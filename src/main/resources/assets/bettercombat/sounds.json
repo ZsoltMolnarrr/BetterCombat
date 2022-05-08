@@ -1,0 +1,12 @@
+{
+  "claymore-impact": {
+    "sounds": [
+      "bettercombat:claymore-impact-01"
+    ]
+  },
+  "claymore-swing": {
+    "sounds": [
+      "bettercombat:claymore-swing-01"
+    ]
+  }
+}
