@@ -1,4 +1,4 @@
-package bettercombat.bettercombat;
+package net.bettercombat;
 
 import net.fabricmc.api.ModInitializer;
 

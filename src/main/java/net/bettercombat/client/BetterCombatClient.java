@@ -1,4 +1,4 @@
-package bettercombat.bettercombat.client;
+package net.bettercombat.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;

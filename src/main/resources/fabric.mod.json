@@ -1,27 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "better-combat",
+  "id": "bettercombat",
   "version": "${version}",
   "name": "Better Combat",
   "description": "",
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/better-combat/icon.png",
+  "icon": "assets/bettercombat/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "bettercombat.bettercombat.client.BetterCombatClient"
+      "net.bettercombat.client.BetterCombatClient"
     ],
     "main": [
-      "bettercombat.bettercombat.BetterCombat"
+      "net.bettercombat.BetterCombat"
     ]
   },
   "mixins": [
-    "better-combat.mixins.json"
+    "bettercombat.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.4",
+    "fabricloader": ">=0.14.5",
     "fabric": "*",
     "minecraft": "1.18.2"
   }

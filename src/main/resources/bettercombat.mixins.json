@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "bettercombat.bettercombat.mixin",
+  "package": "net.bettercombat.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
