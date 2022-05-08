@@ -1,4 +1,4 @@
-package bettercombat.bettercombat.api;
+package net.bettercombat.api;
 
 public interface MeleeWeapon {
 
