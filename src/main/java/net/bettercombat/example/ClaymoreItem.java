@@ -1,6 +1,6 @@
 package net.bettercombat.example;
 
-import bettercombat.bettercombat.api.MeleeWeapon;
+import net.bettercombat.api.MeleeWeapon;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

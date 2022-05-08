@@ -12,6 +12,8 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
+
+    maven {url 'https://maven.kosmx.dev/'}
 }
 
 dependencies {
@@ -22,6 +24,11 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    modImplementation "io.github.kosmx:bendy-lib:2.0.4"
+    modImplementation(files("emotecraft-for-MC1.18.2-2.1.3-SNAPSHOT-build.22-fabric.jar"))
+    // modRuntimeOnly(files("emotecraft-for-MC1.18.2-2.1.3-SNAPSHOT-build.22-fabric.jar"))
+    // compileOnly("io.github.kosmx.emotes:emotesAPI:2.1.3-SNAPSHOT-build.22")
 }
 
 processResources {

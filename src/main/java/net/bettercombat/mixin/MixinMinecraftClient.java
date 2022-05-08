@@ -1,14 +1,12 @@
 package net.bettercombat.mixin;
 
 import net.bettercombat.api.MeleeWeapon;
+import net.bettercombat.client.PlayerExtension;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Random;
 
 @Mixin(MinecraftClient.class)
 public class MixinMinecraftClient {
@@ -21,6 +19,9 @@ public class MixinMinecraftClient {
                 && client.player.getMainHandStack().getItem() instanceof MeleeWeapon) {
             // MeleeWeapon weapon = (MeleeWeapon) client.player.getMainHandStack().getItem();
             // client.getNetworkHandler().sendPacket();
+
+            ((PlayerExtension) client.player).animatePlayer("slash");
+
             info.cancel();
         }
     }
