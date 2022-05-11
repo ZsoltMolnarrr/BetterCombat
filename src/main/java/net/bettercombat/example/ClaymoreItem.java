@@ -1,16 +1,11 @@
 package net.bettercombat.example;
 
-import net.bettercombat.api.MeleeWeapon;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
 
-public class ClaymoreItem extends SwordItem implements MeleeWeapon {
+public class ClaymoreItem extends SwordItem {
+
     public ClaymoreItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Item.Settings settings) {
         super(toolMaterial, attackDamage, attackSpeed, settings);
     }

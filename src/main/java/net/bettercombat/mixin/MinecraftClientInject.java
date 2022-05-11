@@ -2,18 +2,24 @@ package net.bettercombat.mixin;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.WeaponRegistry;
+import net.bettercombat.api.AttackStyle;
 import net.bettercombat.api.MeleeWeaponAttributes;
+import net.bettercombat.client.AttackTargetFinder;
+import net.bettercombat.client.AxisAlignedTargetFinder;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerExtension;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,12 +27,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
+import static net.bettercombat.api.AttackStyle.SLASH_HORIZONTAL_RIGHT_TO_LEFT;
 import static net.minecraft.util.hit.HitResult.Type.BLOCK;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientInject {
 
+    private AttackTargetFinder targetFinder = new AxisAlignedTargetFinder();
     @Shadow public ClientWorld world;
+
+    @Shadow @Nullable public ClientPlayerEntity player;
 
     private MinecraftClient thisClient() {
         return (MinecraftClient)((Object)this);
@@ -116,6 +128,12 @@ public class MinecraftClientInject {
                 }
                 ((PlayerExtension) client.player).animate("slash");
                 client.player.resetLastAttackedTicks();
+                float attackRange = 4;
+                AttackStyle attackStyle = SLASH_HORIZONTAL_RIGHT_TO_LEFT;
+                List<Entity> targets = targetFinder.findAttackTargets(player, attackRange, attackStyle);
+                for (Entity target : targets) {
+                    client.interactionManager.attackEntity(player, target);
+                }
                 ((MinecraftClientAccessor) client).setAttackCooldown(10);
                 return true;
             }

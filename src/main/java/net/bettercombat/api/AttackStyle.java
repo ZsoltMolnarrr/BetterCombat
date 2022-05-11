@@ -1,6 +1,6 @@
 package net.bettercombat.api;
 
-public enum SwingType {
+public enum AttackStyle {
     STAB,
     SLASH_TOP_TO_BOTTOM,
     SLASH_HORIZONTAL_RIGHT_TO_LEFT,
