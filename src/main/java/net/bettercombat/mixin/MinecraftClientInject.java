@@ -1,7 +1,9 @@
 package net.bettercombat.mixin;
 
+import net.bettercombat.BetterCombat;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.MeleeWeaponAttributes;
+import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerExtension;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -35,22 +37,19 @@ public class MinecraftClientInject {
     @Inject(method = "doAttack",at = @At("HEAD"), cancellable = true)
     private void pre_doAttack(CallbackInfoReturnable<Boolean> info) {
         MinecraftClient client = thisClient();
-        HitResult crosshairTarget = client.crosshairTarget;
-
-        // Checking for mineable block, if not already swinging
-        if (crosshairTarget != null && crosshairTarget.getType() == BLOCK) {
-            BlockHitResult blockHitResult = (BlockHitResult)crosshairTarget;
-            BlockPos pos = blockHitResult.getBlockPos();
-            BlockState clicked = world.getBlockState(pos);
-            if (!clicked.getCollisionShape(world, pos).isEmpty() || clicked.getHardness(world, pos) != 0.0F) {
-                // Mineable block found
-                return;
+        if (client.player.getMainHandStack() != null) {
+            Item item = client.player.getMainHandStack().getItem();
+            Identifier id = Registry.ITEM.getId(item);
+            MeleeWeaponAttributes attributes = WeaponRegistry.getAttributes(id);
+            if (attributes != null) {
+                if (isTargetingMineableBlock()) {
+                    return;
+                }
+                if (performAttack()) {
+                    info.setReturnValue(false);
+                    info.cancel();
+                }
             }
-        }
-
-        if (performAttack()) {
-            info.setReturnValue(false);
-            info.cancel();
         }
     }
 
@@ -65,20 +64,15 @@ public class MinecraftClientInject {
 
             if (attributes != null) {
                 boolean isPressed = client.options.attackKey.isPressed();
-
-                HitResult crosshairTarget = client.crosshairTarget;
-                // Checking for mineable block, if not already swinging
-                if (isPressed && !isHoldingAttack && crosshairTarget != null && crosshairTarget.getType() == BLOCK) {
-                    BlockHitResult blockHitResult = (BlockHitResult)crosshairTarget;
-                    BlockPos pos = blockHitResult.getBlockPos();
-                    BlockState clicked = world.getBlockState(pos);
-                    if (!clicked.getCollisionShape(world, pos).isEmpty() || clicked.getHardness(world, pos) != 0.0F) {
-                        // Mineable block found
+                if(isPressed && !isHoldingAttack) {
+                    if (isTargetingMineableBlock()) {
                         return;
+                    } else {
+                        ci.cancel();
                     }
                 }
 
-                if (isPressed) {
+                if (BetterCombatClient.config.isHoldToAttackEnabled && isPressed) {
                     isHoldingAttack = true;
                     performAttack();
                     ci.cancel();
@@ -89,13 +83,33 @@ public class MinecraftClientInject {
         }
     }
 
+    private boolean isTargetingMineableBlock() {
+        if (!BetterCombatClient.config.isMiningWithWeaponsEnabled) {
+            return false;
+        }
+        MinecraftClient client = thisClient();
+        HitResult crosshairTarget = client.crosshairTarget;
+        if (crosshairTarget != null && crosshairTarget.getType() == BLOCK) {
+            BlockHitResult blockHitResult = (BlockHitResult) crosshairTarget;
+            BlockPos pos = blockHitResult.getBlockPos();
+            BlockState clicked = world.getBlockState(pos);
+            if (BetterCombatClient.config.isSwingThruGrassEnabled) {
+                if (!clicked.getCollisionShape(world, pos).isEmpty() || clicked.getHardness(world, pos) != 0.0F) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean performAttack() {
         MinecraftClient client = thisClient();
         if (client.player.getMainHandStack() != null) {
             Item item = client.player.getMainHandStack().getItem();
             Identifier id = Registry.ITEM.getId(item);
             MeleeWeaponAttributes attributes = WeaponRegistry.getAttributes(id);
-
             if (attributes != null) {
                 if (client.player.getAttackCooldownProgress(0) < 1) {
                     return true;

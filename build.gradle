@@ -13,7 +13,20 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
 
-    maven {url 'https://maven.kosmx.dev/'}
+    maven {
+        url 'https://maven.kosmx.dev/'
+    }
+
+    // CompleteConfig https://gitlab.com/Lortseam/completeconfig
+    maven {
+        url 'https://jitpack.io'
+    }
+    maven {
+        url "https://maven.terraformersmc.com/"
+    }
+    maven {
+        url "https://maven.shedaniel.me/"
+    }
 }
 
 dependencies {
@@ -27,8 +40,10 @@ dependencies {
 
     modImplementation "io.github.kosmx:bendy-lib:2.0.4"
     modImplementation(files("emotecraft-for-MC1.18.2-2.1.3-SNAPSHOT-build.22-fabric.jar"))
-    // modRuntimeOnly(files("emotecraft-for-MC1.18.2-2.1.3-SNAPSHOT-build.22-fabric.jar"))
-    // compileOnly("io.github.kosmx.emotes:emotesAPI:2.1.3-SNAPSHOT-build.22")
+
+    // Config
+    modImplementation("com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}")
+    modImplementation("com.terraformersmc:modmenu:3.2.1")
 }
 
 processResources {
