@@ -33,9 +33,10 @@ public class ColliderDebugRenderer {
         Vec3d cameraPosition = camera.getPos().negate();
         Vec3d center = player.getEyePos().add(cameraPosition);
 
-        OrientedBoundingBox obb = new OrientedBoundingBox(center, 2, 1, 3,
-                player.getPitch(), player.getYaw());
-
+        Vec3d size = new Vec3d(2, 1, 3);
+        OrientedBoundingBox obb = new OrientedBoundingBox(center, size, player.getPitch(), player.getYaw())
+                .offsetU(size.z / 2F)
+                .updateVertex();
 
         drawLines(obb);
 
@@ -101,12 +102,15 @@ public class ColliderDebugRenderer {
         look(obb, bufferBuilder, 1, 1, 1, 0.1F);
 
         tessellator.draw();
+
         RenderSystem.lineWidth(1.0f);
         RenderSystem.enableBlend();
         RenderSystem.enableTexture();
     }
 
     private void outlineOBB(OrientedBoundingBox box, BufferBuilder buffer, float red, float green, float blue, float alpha) {
+        buffer.vertex(box.vertex1.x, box.vertex1.y, box.vertex1.z).color(0, 0, 0, 0).next();
+
         buffer.vertex(box.vertex1.x, box.vertex1.y, box.vertex1.z).color(red, green, blue, alpha).next();
         buffer.vertex(box.vertex2.x, box.vertex2.y, box.vertex2.z).color(red, green, blue, alpha).next();
         buffer.vertex(box.vertex3.x, box.vertex3.y, box.vertex3.z).color(red, green, blue, alpha).next();
@@ -114,13 +118,21 @@ public class ColliderDebugRenderer {
         buffer.vertex(box.vertex1.x, box.vertex1.y, box.vertex1.z).color(red, green, blue, alpha).next();
         buffer.vertex(box.vertex5.x, box.vertex5.y, box.vertex5.z).color(red, 0, 0, alpha).next();
         buffer.vertex(box.vertex6.x, box.vertex6.y, box.vertex6.z).color(red, 0, 0, alpha).next();
+        buffer.vertex(box.vertex2.x, box.vertex2.y, box.vertex2.z).color(red, green, blue, alpha).next();
+        buffer.vertex(box.vertex6.x, box.vertex6.y, box.vertex6.z).color(red, 0, 0, alpha).next();
+        buffer.vertex(box.vertex7.x, box.vertex7.y, box.vertex7.z).color(red, 0, 0, alpha).next();
+        buffer.vertex(box.vertex3.x, box.vertex3.y, box.vertex3.z).color(red, green, blue, alpha).next();
         buffer.vertex(box.vertex7.x, box.vertex7.y, box.vertex7.z).color(red, 0, 0, alpha).next();
         buffer.vertex(box.vertex8.x, box.vertex8.y, box.vertex8.z).color(red, 0, 0, alpha).next();
+        buffer.vertex(box.vertex4.x, box.vertex4.y, box.vertex4.z).color(red, green, blue, alpha).next();
+        buffer.vertex(box.vertex8.x, box.vertex8.y, box.vertex8.z).color(red, 0, 0, alpha).next();
         buffer.vertex(box.vertex5.x, box.vertex5.y, box.vertex5.z).color(red, 0, 0, alpha).next();
+
+        buffer.vertex(box.vertex5.x, box.vertex5.y, box.vertex5.z).color(0, 0, 0, 0).next();
+        buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 0, 0, 0).next();
     }
 
     private void look(OrientedBoundingBox box, BufferBuilder buffer, float red, float green, float blue, float alpha) {
-
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(1, 0, blue, 0).next();
         buffer.vertex(box.orientation_u.x, box.orientation_u.y, box.orientation_u.z).color(1, 0, blue, 0).next();
 

@@ -40,7 +40,30 @@ public class OrientedBoundingBox {
     public Vec3d vertex7;
     public Vec3d vertex8;
 
-    private void updateVertex() {
+    // 1. CONSTRUCT
+
+    public OrientedBoundingBox(Vec3d center, double width, double height, double depth, float yaw, float pitch) {
+        this.center = center;
+        this.extent = new Vec3d(width/2.0, height/2.0, depth/2.0);
+        this.orientation_u = Vec3d.fromPolar(yaw, pitch).normalize();
+        this.orientation_v = Vec3d.fromPolar(yaw + 90, pitch).negate().normalize();
+        this.orientation_w = orientation_u.crossProduct(orientation_v);
+    }
+
+    public OrientedBoundingBox(Vec3d center, Vec3d size, float yaw, float pitch) {
+        this(center,size.x, size.y, size.z, yaw, pitch);
+    }
+
+    // 2. CONFIGURE
+
+    public OrientedBoundingBox offsetU(double offset) {
+        this.center = this.center.add(orientation_u.multiply(offset));
+        return this;
+    }
+
+    // 3. UPDATE
+
+    public OrientedBoundingBox updateVertex() {
         Vec3d extent_x = orientation_w.multiply(extent.x);
         Vec3d extent_y = orientation_v.multiply(extent.y);
         Vec3d extent_z = orientation_u.multiply(extent.z);
@@ -52,23 +75,18 @@ public class OrientedBoundingBox {
         vertex6 = center.add(extent_z).add(extent_x).subtract(extent_y);
         vertex7 = center.add(extent_z).add(extent_x).add(extent_y);
         vertex8 = center.add(extent_z).subtract(extent_x).add(extent_y);
+        return this;
     }
 
-    // Convenience constructor
-    public OrientedBoundingBox(Vec3d center, double width, double height, double depth, float yaw, float pitch) {
-        this.center = center;
-        this.extent = new Vec3d(width/2.0, height/2.0, depth/2.0);
-        this.orientation_u = Vec3d.fromPolar(yaw, pitch).normalize();
-        this.orientation_v = Vec3d.fromPolar(yaw + 90, pitch).negate().normalize();
-        this.orientation_w = orientation_u.crossProduct(orientation_v);
-        this.updateVertex();
-    }
+    // 4. CHECK INTERSECTIONS
 
     // Calculates intersection with
     public boolean intersectsBoundingBox(Box boundingBox) {
         // TODO
         return false;
     }
+
+    // HELPERS
 
     public void printDebug() {
         Vec3d extent_x = orientation_w.multiply(extent.x);
