@@ -35,7 +35,7 @@ public class ColliderDebugRenderer {
             return;
         }
 
-        Vec3d size = new Vec3d(3, 1, 2);
+        Vec3d size = new Vec3d(4, 0.5, 4);
         Box searchArea = player.getBoundingBox().expand(3F);
         List<Entity> entities = player.world.getOtherEntities(player, searchArea);
 
@@ -45,10 +45,13 @@ public class ColliderDebugRenderer {
         Vec3d cameraPosition = camera.getPos().negate();
         boolean collides = false;
 
+        long start = System.nanoTime();
+
+
 //        for (Entity entity: entities) {
 //            int i = 0;
 //            for(Vec3d vertex: this.getVertices(entity.getBoundingBox())) {
-//                if (obb.contains(vertex)) {
+//                if (entity instanceof LivingEntity && obb.contains(vertex)) {
 //                    collides = true;
 //                    break;
 //                } else {
@@ -65,8 +68,14 @@ public class ColliderDebugRenderer {
             if (entity instanceof LivingEntity && obb.intersects(entity.getBoundingBox())) {
                 collides = true;
 //                drawOutline(new OrientedBoundingBox(entity.getBoundingBox()).offset(cameraPosition).updateVertex(), collides);
-                break;
+                // break;
             }
+        }
+
+        long time = System.nanoTime() - start;
+
+        if (client.options.attackKey.isPressed()) {
+            System.out.println("Collision check under " + time + " nano s");
         }
 
         obb.offset(cameraPosition).updateVertex();

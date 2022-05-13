@@ -182,9 +182,9 @@ public class OrientedBoundingBox {
             return false;
 
         var aMin = Double.MAX_VALUE;
-        var aMax = Double.MAX_VALUE;
+        var aMax = Double.MIN_VALUE;
         var bMin = Double.MAX_VALUE;
-        var bMax = Double.MAX_VALUE;
+        var bMax = Double.MIN_VALUE;
 
         // Define two intervals, a and b. Calculate their min and max values
         for (var i = 0; i < 8; i++)
