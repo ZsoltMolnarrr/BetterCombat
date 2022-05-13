@@ -8,7 +8,7 @@ import net.minecraft.util.math.Vec3f;
 public class OrientedBoundingBox {
 
     // TOPOLOGY
-    //
+
     // Y ^       8   +-------+   7     axisY   axisZ
     //   |          /|      /|             | /
     //   |     4   +-------+ | 3           |/
@@ -45,6 +45,7 @@ public class OrientedBoundingBox {
     public Vec3d vertex6;
     public Vec3d vertex7;
     public Vec3d vertex8;
+    public Vec3d[] vertices;
 
     // 1. CONSTRUCT
 
@@ -58,6 +59,14 @@ public class OrientedBoundingBox {
 
     public OrientedBoundingBox(Vec3d center, Vec3d size, float yaw, float pitch) {
         this(center,size.x, size.y, size.z, yaw, pitch);
+    }
+
+    public OrientedBoundingBox(Box box) {
+        this.center = new Vec3d((box.maxX + box.minX) / 2.0, (box.maxY + box.minY) / 2.0, (box.maxZ + box.minZ) / 2.0);
+        this.extent = new Vec3d(Math.abs(box.maxX - box.minX) / 2.0, Math.abs(box.maxY - box.minY) / 2.0, Math.abs(box.maxZ - box.minZ) / 2.0);
+        this.axisX = new Vec3d(1, 0, 0);
+        this.axisY = new Vec3d(0, 1, 0);
+        this.axisZ = new Vec3d(0, 0, 1);
     }
 
     // 2. CONFIGURE
@@ -98,6 +107,17 @@ public class OrientedBoundingBox {
         vertex7 = center.add(orientationZ).add(orientationX).add(orientationY);
         vertex8 = center.add(orientationZ).subtract(orientationX).add(orientationY);
 
+        vertices = new Vec3d[]{
+            vertex1,
+            vertex2,
+            vertex3,
+            vertex4,
+            vertex5,
+            vertex6,
+            vertex7,
+            vertex8
+        };
+
         return this;
     }
 
@@ -112,9 +132,75 @@ public class OrientedBoundingBox {
     }
 
     // Calculates intersection with
-    public boolean intersectsBoundingBox(Box boundingBox) {
-        // TODO
-        return false;
+    public boolean intersects(Box boundingBox) {
+        var otherOBB = new OrientedBoundingBox(boundingBox).updateVertex();
+        return Intersects(this, otherOBB);
+    }
+
+    static boolean Intersects(OrientedBoundingBox a, OrientedBoundingBox b)  {
+        if (Separated(a.vertices, b.vertices, a.axisX))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.axisY))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.axisZ))
+            return false;
+
+        if (Separated(a.vertices, b.vertices, b.axisX))
+            return false;
+        if (Separated(a.vertices, b.vertices, b.axisY))
+            return false;
+        if (Separated(a.vertices, b.vertices, b.axisZ))
+            return false;
+
+        if (Separated(a.vertices, b.vertices, a.axisX.crossProduct(b.axisX)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.axisX.crossProduct(b.axisY)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.axisX.crossProduct(b.axisZ)))
+            return false;
+
+        if (Separated(a.vertices, b.vertices, a.axisY.crossProduct(b.axisX)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.axisY.crossProduct(b.axisY)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.axisY.crossProduct(b.axisZ)))
+            return false;
+
+        if (Separated(a.vertices, b.vertices, a.axisZ.crossProduct(b.axisX)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.axisZ.crossProduct(b.axisY)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.axisZ.crossProduct(b.axisZ)))
+            return false;
+
+        return true;
+    }
+
+    private static boolean Separated(Vec3d[] vertsA, Vec3d[] vertsB, Vec3d axis)  {
+        // Handles the crossProduct product = {0,0,0} case
+        if (axis.equals(Vec3d.ZERO))
+            return false;
+
+        var aMin = Double.MAX_VALUE;
+        var aMax = Double.MAX_VALUE;
+        var bMin = Double.MAX_VALUE;
+        var bMax = Double.MAX_VALUE;
+
+        // Define two intervals, a and b. Calculate their min and max values
+        for (var i = 0; i < 8; i++)
+        {
+            var aDist = vertsA[i].dotProduct(axis);
+            aMin = aDist < aMin ? aDist : aMin;
+            aMax = aDist > aMax ? aDist : aMax;
+            var bDist = vertsB[i].dotProduct(axis);
+            bMin = bDist < bMin ? bDist : bMin;
+            bMax = bDist > bMax ? bDist : bMax;
+        }
+
+        // One-dimensional intersection test between a and b
+        var longSpan = Math.max(aMax, bMax) - Math.min(aMin, bMin);
+        var sumSpan = aMax - aMin + bMax - bMin;
+        return longSpan >= sumSpan; // > to treat touching as intersection
     }
 
     // MISC / HELPERS
