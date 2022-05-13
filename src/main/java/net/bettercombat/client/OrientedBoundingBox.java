@@ -85,28 +85,4 @@ public class OrientedBoundingBox {
         // TODO
         return false;
     }
-
-    // HELPERS
-
-    public void printDebug() {
-        Vec3d extent_x = orientation_w.multiply(extent.x);
-        Vec3d extent_y = orientation_v.multiply(extent.y);
-        Vec3d extent_z = orientation_u.multiply(extent.z);
-        System.out.println("Center: " + vec3Short(center) + "orientation: " + vec3Short(orientation_u) + " Extent: " + vec3Short(extent) );
-        System.out.println("orientation_u: " + vec3Short(orientation_u)
-                + "orientation_v: " + vec3Short(orientation_v)
-                + "orientation_w: " + vec3Short(orientation_w));
-        System.out.println("1:" + vec3Short(vertex1)
-                + " 2:" + vec3Short(vertex2)
-                + " 3:" + vec3Short(vertex3)
-                + " 4:" + vec3Short(vertex4));
-        System.out.println("5:" + vec3Short(vertex5)
-                + " 6:" + vec3Short(vertex6)
-                + " 7:" + vec3Short(vertex7)
-                + " 8:" + vec3Short(vertex8));
-    }
-
-    private String vec3Short(Vec3d vec) {
-        return "{" + String.format("%.2f", vec.x) + ", "  + String.format("%.2f", vec.y) + ", "  + String.format("%.2f", vec.z) + "}";
-    }
 }

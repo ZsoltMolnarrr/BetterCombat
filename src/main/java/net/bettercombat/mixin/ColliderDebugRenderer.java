@@ -6,8 +6,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import net.minecraft.client.render.debug.DebugRenderer;
@@ -17,22 +15,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(DebugRenderer.class)
 public class ColliderDebugRenderer {
-
     @Inject(method = "render",at = @At("TAIL"))
     public void renderColliderDebug(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
         MinecraftClient client = MinecraftClient.getInstance();
+        if(!((MinecraftClientAccessor)client).getEntityRenderDispatcher().shouldRenderHitboxes()) {
+            return;
+        }
         ClientPlayerEntity player = client.player;
         if (player == null) {
             return;
         }
-        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+        Camera camera = client.gameRenderer.getCamera();
         if (!camera.isReady()) {
             return;
         }
 
         Vec3d cameraPosition = camera.getPos().negate();
         Vec3d center = player.getEyePos().add(cameraPosition);
-
         Vec3d size = new Vec3d(2, 1, 3);
         OrientedBoundingBox obb = new OrientedBoundingBox(center, size, player.getPitch(), player.getYaw())
                 .offsetU(size.z / 2F)
@@ -42,7 +41,7 @@ public class ColliderDebugRenderer {
 
         if (client.options.attackKey.isPressed()) {
             System.out.println("yaw: " + player.getHeadYaw() + " pitch: " + player.getPitch());
-             obb.printDebug();
+            printDebug(obb);
         }
     }
 
@@ -102,5 +101,27 @@ public class ColliderDebugRenderer {
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 0, 1, alpha).next();
         buffer.vertex(box.orientation_w.x, box.orientation_w.y, box.orientation_w.z).color(0, 0, 1, alpha).next();
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 0, 1, alpha).next();
+    }
+
+    public void printDebug(OrientedBoundingBox obb) {
+        Vec3d extent_x = obb.orientation_w.multiply(obb.extent.x);
+        Vec3d extent_y = obb.orientation_v.multiply(obb.extent.y);
+        Vec3d extent_z = obb.orientation_u.multiply(obb.extent.z);
+        System.out.println("Center: " + vec3Short(obb.center) + "orientation: " + vec3Short(obb.orientation_u) + " Extent: " + vec3Short(obb.extent) );
+        System.out.println("orientation_u: " + vec3Short(obb.orientation_u)
+                + "orientation_v: " + vec3Short(obb.orientation_v)
+                + "orientation_w: " + vec3Short(obb.orientation_w));
+        System.out.println("1:" + vec3Short(obb.vertex1)
+                + " 2:" + vec3Short(obb.vertex2)
+                + " 3:" + vec3Short(obb.vertex3)
+                + " 4:" + vec3Short(obb.vertex4));
+        System.out.println("5:" + vec3Short(obb.vertex5)
+                + " 6:" + vec3Short(obb.vertex6)
+                + " 7:" + vec3Short(obb.vertex7)
+                + " 8:" + vec3Short(obb.vertex8));
+    }
+
+    private String vec3Short(Vec3d vec) {
+        return "{" + String.format("%.2f", vec.x) + ", "  + String.format("%.2f", vec.y) + ", "  + String.format("%.2f", vec.z) + "}";
     }
 }
