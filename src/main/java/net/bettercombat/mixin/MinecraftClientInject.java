@@ -1,11 +1,10 @@
 package net.bettercombat.mixin;
 
-import net.bettercombat.BetterCombat;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.AttackStyle;
 import net.bettercombat.api.MeleeWeaponAttributes;
-import net.bettercombat.client.AttackTargetFinder;
-import net.bettercombat.client.AxisAlignedTargetFinder;
+import net.bettercombat.client.collision.AttackTargetFinder;
+import net.bettercombat.client.collision.AxisAlignedTargetFinder;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerExtension;
 import net.minecraft.block.BlockState;

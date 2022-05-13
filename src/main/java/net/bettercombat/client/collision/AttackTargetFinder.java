@@ -1,4 +1,4 @@
-package net.bettercombat.client;
+package net.bettercombat.client.collision;
 
 import net.bettercombat.api.AttackStyle;
 import net.minecraft.entity.Entity;

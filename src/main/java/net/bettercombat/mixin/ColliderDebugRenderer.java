@@ -1,17 +1,21 @@
 package net.bettercombat.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.bettercombat.client.OrientedBoundingBox;
+import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import net.minecraft.client.render.debug.DebugRenderer;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(DebugRenderer.class)
 public class ColliderDebugRenderer {
@@ -30,22 +34,44 @@ public class ColliderDebugRenderer {
             return;
         }
 
-        Vec3d cameraPosition = camera.getPos().negate();
-        Vec3d center = player.getEyePos().add(cameraPosition);
         Vec3d size = new Vec3d(2, 1, 3);
-        OrientedBoundingBox obb = new OrientedBoundingBox(center, size, player.getPitch(), player.getYaw())
+        Box searchArea = player.getBoundingBox().expand(3F);
+        List<Entity> entities = player.world.getOtherEntities(player, searchArea);
+
+        OrientedBoundingBox obb = new OrientedBoundingBox(player.getEyePos(), size, player.getPitch(), player.getYaw())
                 .offsetU(size.z / 2F)
                 .updateVertex();
 
-        drawOutline(obb);
+        boolean collides = false;
+        for (Entity entity: entities) {
+            int i = 0;
+            for(Vec3d vertex: this.getVertices(entity.getBoundingBox())) {
+                if (obb.contains(vertex)) {
+                    collides = true;
+                    break;
+                } else {
+                    if (client.options.attackKey.isPressed()) {
+                        System.out.println("Vertex did not collide at index " + i);
+                        System.out.println(vec3Short(vertex));
+                    }
+                    ++i;
+                }
+            }
+        }
+
+        Vec3d cameraPosition = camera.getPos().negate();
+        obb.offset(cameraPosition).updateVertex();
+        drawOutline(obb, collides);
+
 
         if (client.options.attackKey.isPressed()) {
             System.out.println("yaw: " + player.getHeadYaw() + " pitch: " + player.getPitch());
+            System.out.println("collides: " + collides);
             printDebug(obb);
         }
     }
 
-    private void drawOutline(OrientedBoundingBox obb) {
+    private void drawOutline(OrientedBoundingBox obb, boolean collides) {
         RenderSystem.enableDepthTest();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Tessellator tessellator = Tessellator.getInstance();
@@ -55,7 +81,11 @@ public class ColliderDebugRenderer {
         RenderSystem.lineWidth(1.0f);
         bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-        outlineOBB(obb, bufferBuilder, 0, 1, 0, 0.1F);
+        if (collides) {
+            outlineOBB(obb, bufferBuilder, 1, 0, 0, 0.5F);
+        } else {
+            outlineOBB(obb, bufferBuilder, 0, 1, 0, 0.5F);
+        }
         look(obb, bufferBuilder, 0.5F);
 
         tessellator.draw();
@@ -91,26 +121,26 @@ public class ColliderDebugRenderer {
 
     private void look(OrientedBoundingBox box, BufferBuilder buffer, float alpha) {
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(1, 0, 0, alpha).next();
-        buffer.vertex(box.orientation_u.x, box.orientation_u.y, box.orientation_u.z).color(1, 0, 0, alpha).next();
+        buffer.vertex(box.axisZ.x, box.axisZ.y, box.axisZ.z).color(1, 0, 0, alpha).next();
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(1, 0, 0, alpha).next();
 
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 1, 0, alpha).next();
-        buffer.vertex(box.orientation_v.x, box.orientation_v.y, box.orientation_v.z).color(0, 1, 0, alpha).next();
+        buffer.vertex(box.axisY.x, box.axisY.y, box.axisY.z).color(0, 1, 0, alpha).next();
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 1, 0, alpha).next();
 
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 0, 1, alpha).next();
-        buffer.vertex(box.orientation_w.x, box.orientation_w.y, box.orientation_w.z).color(0, 0, 1, alpha).next();
+        buffer.vertex(box.axisX.x, box.axisX.y, box.axisX.z).color(0, 0, 1, alpha).next();
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 0, 1, alpha).next();
     }
 
     public void printDebug(OrientedBoundingBox obb) {
-        Vec3d extent_x = obb.orientation_w.multiply(obb.extent.x);
-        Vec3d extent_y = obb.orientation_v.multiply(obb.extent.y);
-        Vec3d extent_z = obb.orientation_u.multiply(obb.extent.z);
-        System.out.println("Center: " + vec3Short(obb.center) + "orientation: " + vec3Short(obb.orientation_u) + " Extent: " + vec3Short(obb.extent) );
-        System.out.println("orientation_u: " + vec3Short(obb.orientation_u)
-                + "orientation_v: " + vec3Short(obb.orientation_v)
-                + "orientation_w: " + vec3Short(obb.orientation_w));
+        Vec3d extent_x = obb.axisX.multiply(obb.extent.x);
+        Vec3d extent_y = obb.axisY.multiply(obb.extent.y);
+        Vec3d extent_z = obb.axisZ.multiply(obb.extent.z);
+        System.out.println("Center: " + vec3Short(obb.center) + "orientation: " + vec3Short(obb.axisZ) + " Extent: " + vec3Short(obb.extent) );
+        System.out.println("orientation_u: " + vec3Short(obb.axisZ)
+                + "orientation_v: " + vec3Short(obb.axisY)
+                + "orientation_w: " + vec3Short(obb.axisX));
         System.out.println("1:" + vec3Short(obb.vertex1)
                 + " 2:" + vec3Short(obb.vertex2)
                 + " 3:" + vec3Short(obb.vertex3)
@@ -123,5 +153,18 @@ public class ColliderDebugRenderer {
 
     private String vec3Short(Vec3d vec) {
         return "{" + String.format("%.2f", vec.x) + ", "  + String.format("%.2f", vec.y) + ", "  + String.format("%.2f", vec.z) + "}";
+    }
+
+    private Vec3d[] getVertices(Box box) {
+        return new Vec3d[]{
+            new Vec3d(box.minX, box.minY, box.minZ),
+            new Vec3d(box.maxX, box.minY, box.minZ),
+            new Vec3d(box.minX, box.maxY, box.minZ),
+            new Vec3d(box.minX, box.minY, box.maxZ),
+            new Vec3d(box.maxX, box.maxY, box.minZ),
+            new Vec3d(box.minX, box.maxY, box.maxZ),
+            new Vec3d(box.maxX, box.minY, box.maxZ),
+            new Vec3d(box.maxX, box.maxY, box.maxZ)
+        };
     }
 }

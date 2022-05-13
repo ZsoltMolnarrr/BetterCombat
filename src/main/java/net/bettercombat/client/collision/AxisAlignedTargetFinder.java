@@ -1,4 +1,4 @@
-package net.bettercombat.client;
+package net.bettercombat.client.collision;
 
 import net.bettercombat.api.AttackStyle;
 import net.minecraft.entity.Entity;
@@ -18,7 +18,6 @@ public class AxisAlignedTargetFinder implements AttackTargetFinder {
                 .filter(entity ->
                     entity.distanceTo(player) <= attackRange
                         && entity != player
-                    // TODO: Add direcitn check
                 )
                 .collect(Collectors.toList());
         return targets;
