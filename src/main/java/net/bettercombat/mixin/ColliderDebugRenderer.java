@@ -64,7 +64,9 @@ public class ColliderDebugRenderer {
 //            }
 //        }
 
+        var count = 0;
         for (Entity entity: entities) {
+            ++count;
             if (entity instanceof LivingEntity && obb.intersects(entity.getBoundingBox())) {
                 collides = true;
 //                drawOutline(new OrientedBoundingBox(entity.getBoundingBox()).offset(cameraPosition).updateVertex(), collides);
@@ -75,7 +77,7 @@ public class ColliderDebugRenderer {
         long time = System.nanoTime() - start;
 
         if (client.options.attackKey.isPressed()) {
-            System.out.println("Collision check under " + time + " nano s");
+            System.out.println("Collisions (" + count +") checked under " + time + " nano s");
         }
 
         obb.offset(cameraPosition).updateVertex();

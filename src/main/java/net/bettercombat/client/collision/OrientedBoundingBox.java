@@ -28,9 +28,9 @@ public class OrientedBoundingBox {
     public Vec3d extent;
 
     // Orthogonal basis vectors define orientation
-    public Vec3d axisZ;
-    public Vec3d axisY;
     public Vec3d axisX;
+    public Vec3d axisY;
+    public Vec3d axisZ;
 
     // DERIVED PROPERTIES
     public Vec3d orientationX;
@@ -131,13 +131,20 @@ public class OrientedBoundingBox {
                 Math.abs(distance.getZ()) < extent.z;
     }
 
-    // Calculates intersection with
     public boolean intersects(Box boundingBox) {
         var otherOBB = new OrientedBoundingBox(boundingBox).updateVertex();
         return Intersects(this, otherOBB);
     }
 
-    static boolean Intersects(OrientedBoundingBox a, OrientedBoundingBox b)  {
+    public boolean intersects(OrientedBoundingBox otherOBB) {
+        return Intersects(this, otherOBB);
+    }
+
+    /*
+    * Calculates if there is intersection between given OBBs.
+    * Separating Axes Theorem implementation.
+    */
+    public static boolean Intersects(OrientedBoundingBox a, OrientedBoundingBox b)  {
         if (Separated(a.vertices, b.vertices, a.axisX))
             return false;
         if (Separated(a.vertices, b.vertices, a.axisY))
@@ -202,6 +209,4 @@ public class OrientedBoundingBox {
         var sumSpan = aMax - aMin + bMax - bMin;
         return longSpan >= sumSpan; // > to treat touching as intersection
     }
-
-    // MISC / HELPERS
 }
