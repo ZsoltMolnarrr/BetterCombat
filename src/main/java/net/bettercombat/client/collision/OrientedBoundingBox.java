@@ -71,7 +71,17 @@ public class OrientedBoundingBox {
 
     // 2. CONFIGURE
 
-    public OrientedBoundingBox offsetU(double offset) {
+    public OrientedBoundingBox offsetAlongAxisX(double offset) {
+        this.center = this.center.add(axisX.multiply(offset));
+        return this;
+    }
+
+    public OrientedBoundingBox offsetAlongAxisY(double offset) {
+        this.center = this.center.add(axisY.multiply(offset));
+        return this;
+    }
+
+    public OrientedBoundingBox offsetAlongAxisZ(double offset) {
         this.center = this.center.add(axisZ.multiply(offset));
         return this;
     }

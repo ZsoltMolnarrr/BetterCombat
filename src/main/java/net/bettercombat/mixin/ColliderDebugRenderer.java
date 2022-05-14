@@ -35,12 +35,12 @@ public class ColliderDebugRenderer {
             return;
         }
 
-        Vec3d size = new Vec3d(4, 0.5, 4);
-        Box searchArea = player.getBoundingBox().expand(3F);
+        Vec3d size = new Vec3d(1, 1, 2);
+        Box searchArea = player.getBoundingBox().expand(5F);
         List<Entity> entities = player.world.getOtherEntities(player, searchArea);
 
         OrientedBoundingBox obb = new OrientedBoundingBox(player.getEyePos(), size, player.getPitch(), player.getYaw())
-                .offsetU(size.z / 2F)
+                .offsetAlongAxisZ(size.z / 2F)
                 .updateVertex();
         Vec3d cameraPosition = camera.getPos().negate();
         boolean collides = false;
