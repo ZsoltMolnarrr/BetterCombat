@@ -150,7 +150,7 @@ public class OrientedBoundingBox {
         return Intersects(this, otherOBB);
     }
 
-    /*
+    /**
     * Calculates if there is intersection between given OBBs.
     * Separating Axes Theorem implementation.
     */
@@ -218,5 +218,11 @@ public class OrientedBoundingBox {
         var longSpan = Math.max(aMax, bMax) - Math.min(aMin, bMin);
         var sumSpan = aMax - aMin + bMax - bMin;
         return longSpan >= sumSpan; // > to treat touching as intersection
+    }
+
+    // HELPERS
+
+    public double getMaxExtent() {
+        return Math.max(Math.max(extent.x, extent.y), extent.z);
     }
 }

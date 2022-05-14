@@ -1,6 +1,7 @@
 package net.bettercombat.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.bettercombat.client.collision.BoxHelper;
 import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -35,7 +36,7 @@ public class ColliderDebugRenderer {
             return;
         }
 
-        Vec3d size = new Vec3d(1, 1, 2);
+        Vec3d size = new Vec3d(3, 0.5, 1.5F);
         Box searchArea = player.getBoundingBox().expand(5F);
         List<Entity> entities = player.world.getOtherEntities(player, searchArea);
 
@@ -47,30 +48,17 @@ public class ColliderDebugRenderer {
 
         long start = System.nanoTime();
 
-
-//        for (Entity entity: entities) {
-//            int i = 0;
-//            for(Vec3d vertex: this.getVertices(entity.getBoundingBox())) {
-//                if (entity instanceof LivingEntity && obb.contains(vertex)) {
-//                    collides = true;
-//                    break;
-//                } else {
-//                    if (client.options.attackKey.isPressed()) {
-//                        System.out.println("Vertex did not collide at index " + i);
-//                        System.out.println(vec3Short(vertex));
-//                    }
-//                    ++i;
-//                }
-//            }
-//        }
-
+        var searchRadius = obb.extent.z * 2; //obb.getMaxExtent();
         var count = 0;
         for (Entity entity: entities) {
             ++count;
-            if (entity instanceof LivingEntity && obb.intersects(entity.getBoundingBox())) {
+            if ( (entity instanceof LivingEntity)
+                    && obb.intersects(entity.getBoundingBox())
+                     && BoxHelper.distance(entity.getBoundingBox(), player.getEyePos()) <= searchRadius ) {
                 collides = true;
-//                drawOutline(new OrientedBoundingBox(entity.getBoundingBox()).offset(cameraPosition).updateVertex(), collides);
-                // break;
+            }
+            if (client.options.attackKey.isPressed()) {
+                System.out.println("Distance: " + BoxHelper.distance(entity.getBoundingBox(), player.getEyePos()) + " radius: " + searchRadius );
             }
         }
 
