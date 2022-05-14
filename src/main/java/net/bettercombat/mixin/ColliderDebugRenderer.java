@@ -27,7 +27,7 @@ public class ColliderDebugRenderer {
     @Inject(method = "render",at = @At("TAIL"))
     public void renderColliderDebug(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if(!((MinecraftClientAccessor)client).getEntityRenderDispatcher().shouldRenderHitboxes()) {
+        if (!((MinecraftClientAccessor) client).getEntityRenderDispatcher().shouldRenderHitboxes()) {
             return;
         }
         ClientPlayerEntity player = client.player;
@@ -47,7 +47,6 @@ public class ColliderDebugRenderer {
         if (attributes == null) {
             return;
         }
-
         var target = TargetFinder.findAttackTargetResult(player, attributes);
         boolean collides = target.entities.size() > 0;
         Vec3d cameraOffset = camera.getPos().negate();

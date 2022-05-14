@@ -42,17 +42,13 @@ public class TargetFinder {
     }
 
     public static List<Entity> getInitialTargets(PlayerEntity player, double attackRange) {
-        Box box = player.getBoundingBox().expand(attackRange, 0, attackRange);
+        Box box = player.getBoundingBox().expand(5F); // TODO: Proper expansion
         return player
                 .world
                 .getNonSpectatingEntities(LivingEntity.class, box)
                 .stream()
-                .filter(entity ->
-                        entity.distanceTo(player) <= attackRange
-                                && entity != player
-                )
+                .filter(entity -> entity != player)
                 .collect(Collectors.toList());
-
     }
 
     public interface Filter {
