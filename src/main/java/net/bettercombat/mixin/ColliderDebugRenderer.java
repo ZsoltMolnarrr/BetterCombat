@@ -1,16 +1,19 @@
 package net.bettercombat.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.bettercombat.client.collision.MathHelper;
+import net.bettercombat.WeaponRegistry;
+import net.bettercombat.api.MeleeWeaponAttributes;
 import net.bettercombat.client.collision.OrientedBoundingBox;
+import net.bettercombat.client.collision.TargetFinder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import net.minecraft.client.render.debug.DebugRenderer;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,47 +38,24 @@ public class ColliderDebugRenderer {
         if (!camera.isReady()) {
             return;
         }
+        if (client.player.getMainHandStack() == null) {
+            return;
+        }
+        Item item = client.player.getMainHandStack().getItem();
+        Identifier id = Registry.ITEM.getId(item);
+        MeleeWeaponAttributes attributes = WeaponRegistry.getAttributes(id);
+        if (attributes == null) {
+            return;
+        }
 
-        Vec3d size = new Vec3d(3, 0.5, 1.5F);
-        Box searchArea = player.getBoundingBox().expand(5F);
-        List<Entity> entities = player.world.getOtherEntities(player, searchArea);
-
-        OrientedBoundingBox obb = new OrientedBoundingBox(player.getEyePos(), size, player.getPitch(), player.getYaw())
-                .offsetAlongAxisZ(size.z / 2F)
+        var target = TargetFinder.findAttackTargetResult(player, attributes);
+        boolean collides = target.entities.size() > 0;
+        Vec3d cameraOffset = camera.getPos().negate();
+        var obb = target.obb.
+                copy()
+                .offset(cameraOffset)
                 .updateVertex();
-        Vec3d cameraPosition = camera.getPos().negate();
-        boolean collides = false;
-
-        long start = System.nanoTime();
-
-        var searchRadius = obb.extent.z * 2; //obb.getMaxExtent();
-        var count = 0;
-        for (Entity entity: entities) {
-            ++count;
-            if ( (entity instanceof LivingEntity)
-                    && obb.intersects(entity.getBoundingBox())
-                     && MathHelper.distance(entity.getBoundingBox(), player.getEyePos()) <= searchRadius ) {
-                collides = true;
-            }
-            if (client.options.attackKey.isPressed()) {
-                System.out.println("Distance: " + MathHelper.distance(entity.getBoundingBox(), player.getEyePos()) + " radius: " + searchRadius );
-            }
-        }
-
-        long time = System.nanoTime() - start;
-
-        if (client.options.attackKey.isPressed()) {
-            System.out.println("Collisions (" + count +") checked under " + time + " nano s");
-        }
-
-        obb.offset(cameraPosition).updateVertex();
         drawOutline(obb, collides);
-
-        if (client.options.attackKey.isPressed()) {
-            System.out.println("yaw: " + player.getHeadYaw() + " pitch: " + player.getPitch());
-            System.out.println("collides: " + collides);
-            printDebug(obb);
-        }
     }
 
     private void drawOutline(OrientedBoundingBox obb, boolean collides) {

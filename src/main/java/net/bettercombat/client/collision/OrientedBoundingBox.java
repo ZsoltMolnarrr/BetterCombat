@@ -69,6 +69,18 @@ public class OrientedBoundingBox {
         this.axisZ = new Vec3d(0, 0, 1);
     }
 
+    public OrientedBoundingBox(OrientedBoundingBox obb) {
+        this.center = obb.center;
+        this.extent = obb.extent;
+        this.axisX = obb.axisX;
+        this.axisY = obb.axisY;
+        this.axisZ = obb.axisZ;
+    }
+
+    public OrientedBoundingBox copy() {
+        return new OrientedBoundingBox(this);
+    }
+
     // 2. CONFIGURE
 
     public OrientedBoundingBox offsetAlongAxisX(double offset) {

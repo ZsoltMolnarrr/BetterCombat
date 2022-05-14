@@ -1,12 +1,10 @@
 package net.bettercombat.mixin;
 
 import net.bettercombat.WeaponRegistry;
-import net.bettercombat.api.AttackStyle;
 import net.bettercombat.api.MeleeWeaponAttributes;
-import net.bettercombat.client.collision.AttackTargetFinder;
-import net.bettercombat.client.collision.AxisAlignedTargetFinder;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerExtension;
+import net.bettercombat.client.collision.TargetFinder;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -28,13 +26,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-import static net.bettercombat.api.AttackStyle.SLASH_HORIZONTAL_RIGHT_TO_LEFT;
 import static net.minecraft.util.hit.HitResult.Type.BLOCK;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientInject {
-
-    private AttackTargetFinder targetFinder = new AxisAlignedTargetFinder();
     @Shadow public ClientWorld world;
 
     @Shadow @Nullable public ClientPlayerEntity player;
@@ -127,9 +122,8 @@ public class MinecraftClientInject {
                 }
                 ((PlayerExtension) client.player).animate("slash");
                 client.player.resetLastAttackedTicks();
-                float attackRange = 4;
-                AttackStyle attackStyle = SLASH_HORIZONTAL_RIGHT_TO_LEFT;
-                List<Entity> targets = targetFinder.findAttackTargets(player, attackRange, attackStyle);
+
+                List<Entity> targets = TargetFinder.findAttackTargets(player, attributes);
                 for (Entity target : targets) {
                     client.interactionManager.attackEntity(player, target);
                 }

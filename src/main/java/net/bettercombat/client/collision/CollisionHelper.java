@@ -3,10 +3,10 @@ package net.bettercombat.client.collision;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
-public class MathHelper {
+public class CollisionHelper {
     public static double angleBetween(Vec3d a, Vec3d b) {
         var cosineTheta = a.dotProduct(b) / (a.length() * b.length());
-        return Math.acos(cosineTheta);
+        return Math.acos(cosineTheta) * (180.0 / Math.PI);
     }
 
     public static Vec3d distanceVector(Box box, Vec3d point) {

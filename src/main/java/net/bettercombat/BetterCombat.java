@@ -19,6 +19,6 @@ public class BetterCombat implements ModInitializer {
     @Override
     public void onInitialize() {
         Registry.register(Registry.ITEM, new Identifier("bettercombat", "claymore"), CLAYMORE);
-        WeaponRegistry.register(new Identifier("bettercombat", "claymore"), new MeleeWeaponAttributes());
+        WeaponRegistry.register(new Identifier("bettercombat", "claymore"), ClaymoreItem.attributes);
     }
 }
