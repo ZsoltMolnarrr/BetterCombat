@@ -1,7 +1,7 @@
 package net.bettercombat.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.bettercombat.client.collision.BoxHelper;
+import net.bettercombat.client.collision.MathHelper;
 import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -54,11 +54,11 @@ public class ColliderDebugRenderer {
             ++count;
             if ( (entity instanceof LivingEntity)
                     && obb.intersects(entity.getBoundingBox())
-                     && BoxHelper.distance(entity.getBoundingBox(), player.getEyePos()) <= searchRadius ) {
+                     && MathHelper.distance(entity.getBoundingBox(), player.getEyePos()) <= searchRadius ) {
                 collides = true;
             }
             if (client.options.attackKey.isPressed()) {
-                System.out.println("Distance: " + BoxHelper.distance(entity.getBoundingBox(), player.getEyePos()) + " radius: " + searchRadius );
+                System.out.println("Distance: " + MathHelper.distance(entity.getBoundingBox(), player.getEyePos()) + " radius: " + searchRadius );
             }
         }
 
