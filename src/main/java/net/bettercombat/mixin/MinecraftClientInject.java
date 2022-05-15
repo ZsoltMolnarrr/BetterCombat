@@ -3,6 +3,7 @@ package net.bettercombat.mixin;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.MeleeWeaponAttributes;
 import net.bettercombat.client.BetterCombatClient;
+import net.bettercombat.client.MinecraftClientHelper;
 import net.bettercombat.client.PlayerExtension;
 import net.bettercombat.client.collision.TargetFinder;
 import net.minecraft.block.BlockState;
@@ -13,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
@@ -27,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 import static net.minecraft.util.hit.HitResult.Type.BLOCK;
+import static net.minecraft.util.hit.HitResult.Type.ENTITY;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientInject {
@@ -123,7 +126,7 @@ public class MinecraftClientInject {
                 ((PlayerExtension) client.player).animate("slash");
                 client.player.resetLastAttackedTicks();
 
-                List<Entity> targets = TargetFinder.findAttackTargets(player, attributes);
+                List<Entity> targets = TargetFinder.findAttackTargets(player, MinecraftClientHelper.getCursorTarget(client), attributes);
                 for (Entity target : targets) {
                     client.interactionManager.attackEntity(player, target);
                 }

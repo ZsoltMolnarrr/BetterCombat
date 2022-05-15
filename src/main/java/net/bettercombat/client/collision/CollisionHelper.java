@@ -13,9 +13,6 @@ public class CollisionHelper {
      * Calculates distance vector FROM the given point TO the given box.
      */
     public static Vec3d distanceVector(Vec3d point, Box box) {
-//        var dx = Math.max(Math.max(box.minX - point.x, box.maxX - point.x), 0);
-//        var dy = Math.max(Math.max(box.minY - point.y, box.maxY - point.y), 0);
-//        var dz = Math.max(Math.max(box.minZ - point.z, box.maxZ - point.z), 0);
         double dx = 0;
         if (box.minX > point.x) {
             dx = box.minX - point.x;

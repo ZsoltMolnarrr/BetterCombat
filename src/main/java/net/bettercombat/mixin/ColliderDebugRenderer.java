@@ -3,6 +3,7 @@ package net.bettercombat.mixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.MeleeWeaponAttributes;
+import net.bettercombat.client.MinecraftClientHelper;
 import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.bettercombat.client.collision.TargetFinder;
 import net.minecraft.client.MinecraftClient;
@@ -19,8 +20,6 @@ import net.minecraft.client.render.debug.DebugRenderer;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.List;
 
 @Mixin(DebugRenderer.class)
 public class ColliderDebugRenderer {
@@ -47,7 +46,8 @@ public class ColliderDebugRenderer {
         if (attributes == null) {
             return;
         }
-        var target = TargetFinder.findAttackTargetResult(player, attributes);
+        var cursorTarget = MinecraftClientHelper.getCursorTarget(client);
+        var target = TargetFinder.findAttackTargetResult(player, cursorTarget, attributes);
         boolean collides = target.entities.size() > 0;
         Vec3d cameraOffset = camera.getPos().negate();
         var obb = target.obb.

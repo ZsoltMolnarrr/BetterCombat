@@ -20,7 +20,6 @@ import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class BetterCombatClient implements ClientModInitializer {
-
     public static Map<String, EmoteData> emotes = new HashMap<>();
     private static String[] configCategory = {"client"};
     public static ClientConfig config = new ClientConfig();
