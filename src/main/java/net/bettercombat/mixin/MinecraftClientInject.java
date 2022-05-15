@@ -11,6 +11,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -34,9 +36,7 @@ import static net.minecraft.util.hit.HitResult.Type.ENTITY;
 @Mixin(MinecraftClient.class)
 public class MinecraftClientInject {
     @Shadow public ClientWorld world;
-
     @Shadow @Nullable public ClientPlayerEntity player;
-
     private MinecraftClient thisClient() {
         return (MinecraftClient)((Object)this);
     }
@@ -54,10 +54,9 @@ public class MinecraftClientInject {
                 if (isTargetingMineableBlock()) {
                     return;
                 }
-                if (performAttack()) {
-                    info.setReturnValue(false);
-                    info.cancel();
-                }
+                startUpswing();
+                info.setReturnValue(false);
+                info.cancel();
             }
         }
     }
@@ -83,7 +82,7 @@ public class MinecraftClientInject {
 
                 if (BetterCombatClient.config.isHoldToAttackEnabled && isPressed) {
                     isHoldingAttack = true;
-                    performAttack();
+                    startUpswing();
                     ci.cancel();
                 } else {
                     isHoldingAttack = false;
@@ -113,6 +112,35 @@ public class MinecraftClientInject {
         return false;
     }
 
+    private static float UpswingRate = 0.25F; // TODO: Move this constant to config or attributes?
+
+    private int upswingTicks = 0;
+
+    private int getUpswingLength(PlayerEntity player) {
+        Item item = player.getMainHandStack().getItem();
+        Identifier id = Registry.ITEM.getId(item);
+        double attackCooldownTicks = 20.0 / player.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED);
+        return (int)(Math.round(attackCooldownTicks * UpswingRate));
+    }
+
+    private void startUpswing() {
+        if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - UpswingRate)) {
+            return;
+        }
+        this.upswingTicks = getUpswingLength(player);
+        ((PlayerExtension) player).animate("slash");
+    }
+
+    @Inject(method = "tick",at = @At("HEAD"))
+    private void post_Tick(CallbackInfo ci) {
+        if (upswingTicks > 0) {
+            --upswingTicks;
+            if (upswingTicks == 0) {
+                performAttack();
+            }
+        }
+    }
+
     private boolean performAttack() {
         MinecraftClient client = thisClient();
         if (client.player.getMainHandStack() != null) {
@@ -120,10 +148,10 @@ public class MinecraftClientInject {
             Identifier id = Registry.ITEM.getId(item);
             MeleeWeaponAttributes attributes = WeaponRegistry.getAttributes(id);
             if (attributes != null) {
-                if (client.player.getAttackCooldownProgress(0) < 1) {
+                if (client.player.getAttackCooldownProgress(0) < (1.0 - UpswingRate)) {
                     return true;
                 }
-                ((PlayerExtension) client.player).animate("slash");
+
                 client.player.resetLastAttackedTicks();
 
                 List<Entity> targets = TargetFinder.findAttackTargets(player, MinecraftClientHelper.getCursorTarget(client), attributes);

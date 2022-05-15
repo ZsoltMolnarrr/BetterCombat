@@ -2,7 +2,6 @@ package net.bettercombat.client.collision;
 
 import net.bettercombat.api.AttackStyle;
 import net.bettercombat.api.MeleeWeaponAttributes;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

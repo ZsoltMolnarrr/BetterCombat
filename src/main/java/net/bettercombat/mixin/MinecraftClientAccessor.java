@@ -9,10 +9,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface MinecraftClientAccessor {
     @Accessor
     int getAttackCooldown();
-
     @Accessor("attackCooldown")
     void setAttackCooldown(int attackCooldown);
-
     @Accessor
     EntityRenderDispatcher getEntityRenderDispatcher();
 }

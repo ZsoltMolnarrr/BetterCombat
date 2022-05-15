@@ -13,7 +13,7 @@ public class BetterCombat implements ModInitializer {
 
     public static final String MODID = "bettercombat";
 
-    public static final ClaymoreItem CLAYMORE = new ClaymoreItem(ToolMaterials.IRON, 6, -3.2F, new FabricItemSettings()
+    public static final ClaymoreItem CLAYMORE = new ClaymoreItem(ToolMaterials.IRON, 6, -3.333f, new FabricItemSettings()
             .group(ItemGroup.COMBAT));
 
     @Override
