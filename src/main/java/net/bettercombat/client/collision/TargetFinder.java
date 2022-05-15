@@ -1,6 +1,7 @@
 package net.bettercombat.client.collision;
 
 import net.bettercombat.api.MeleeWeaponAttributes;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,7 +28,7 @@ public class TargetFinder {
         List<Entity> entities = getInitialTargets(player, attributes.attackRange);
         var obb = new OrientedBoundingBoxFilter(player, origin, attributes.attackRange);
         entities = obb.filter(entities);
-        var radial = new RadialFilter(origin, obb.obb.orientationZ, attributes.attackRange, attributes.attackAngle);
+        var radial = new RadialFilter(origin, obb.obb.axisZ, attributes.attackRange, attributes.attackAngle);
         entities = radial.filter(entities);
         return new TargetResult(entities, obb.obb);
     }
@@ -94,9 +95,14 @@ public class TargetFinder {
         public List<Entity> filter(List<Entity> entities) {
             return entities.stream()
                     .filter(entity -> {
-                        Vec3d distanceVector = CollisionHelper.distanceVector(entity.getBoundingBox(), origin);
+                        Vec3d distanceVector = CollisionHelper.distanceVector(origin, entity.getBoundingBox());
+                        if (MinecraftClient.getInstance().options.attackKey.isPressed()) {
+                            System.out.println("Orientation: " + orientation);
+                            System.out.println("Distance vector: " + distanceVector);
+                            System.out.println("Diff: " + CollisionHelper.angleBetween(distanceVector, orientation) + " required: " + (attackAngle / 2.0));
+                        }
                         return distanceVector.length() <= attackRange
-                                && CollisionHelper.angleBetween(distanceVector, orientation) <= attackAngle;
+                                && CollisionHelper.angleBetween(distanceVector, orientation) <= (attackAngle / 2.0);
                         // TODO: Handle attack angle 0
                     })
                     .collect(Collectors.toList());
