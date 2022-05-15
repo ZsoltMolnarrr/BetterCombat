@@ -16,7 +16,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
@@ -31,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 import static net.minecraft.util.hit.HitResult.Type.BLOCK;
-import static net.minecraft.util.hit.HitResult.Type.ENTITY;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientInject {
@@ -131,8 +129,19 @@ public class MinecraftClientInject {
         ((PlayerExtension) player).animate("slash");
     }
 
+    private void feintIfNeeded() {
+        if (BetterCombatClient.config.feintKey != null
+                && BetterCombatClient.feintKeyBinding.isPressed()
+                && upswingTicks > 0) {
+            System.out.println("FEINT!!");
+            ((PlayerExtension) player).stopAnimation();
+            upswingTicks = 0;
+        }
+    }
+
     @Inject(method = "tick",at = @At("HEAD"))
     private void post_Tick(CallbackInfo ci) {
+        feintIfNeeded();
         if (upswingTicks > 0) {
             --upswingTicks;
             if (upswingTicks == 0) {

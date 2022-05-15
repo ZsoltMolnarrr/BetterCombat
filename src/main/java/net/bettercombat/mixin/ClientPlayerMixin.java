@@ -5,6 +5,7 @@ import io.github.kosmx.emotes.common.emote.EmoteData;
 import io.github.kosmx.playerAnim.IAnimatedPlayer;
 import io.github.kosmx.playerAnim.layered.AnimationContainer;
 import io.github.kosmx.playerAnim.layered.EmoteDataPlayer;
+import io.github.kosmx.playerAnim.layered.IAnimation;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerExtension;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -38,5 +39,14 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerEx
         EmoteData data = BetterCombatClient.emotes.get(name);
         container.setAnim(new EmoteDataPlayer(data, 0));
         this.bodyYaw = this.headYaw;
+    }
+
+    @Override
+    public void stopAnimation() {
+        IAnimation currentAnimation = container.getAnim();
+        if (currentAnimation != null && currentAnimation instanceof EmoteDataPlayer) {
+            ((EmoteDataPlayer)currentAnimation).stop();
+        }
+        // container.setAnim(null);
     }
 }
