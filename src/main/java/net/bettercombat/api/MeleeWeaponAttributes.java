@@ -10,4 +10,22 @@ public class MeleeWeaponAttributes {
         this.attackRange = attackRange;
         this.attackStyle = attackStyle;
     }
+
+//    public enum Held {
+//        2H_SWORD, 1H_SWORD;
+//    }
+
+    public enum SwingDirection {
+        FORWARD,
+        VERTICAL_TOP_TO_BOTTOM,
+        HORIZONTAL_RIGHT_TO_LEFT,
+        HORIZONTAL_LEFT_TO_RIGHT,
+    }
+    public record Attack(
+        SwingDirection direction,
+        double damageMultiplier,
+        double angle,
+        String swingSoundId,
+        String impactSoundId
+    ) { }
 }
