@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -38,17 +39,13 @@ public class BetterCombatClient implements ClientModInitializer {
         if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
             ConfigScreenBuilder.setMain(BetterCombat.MODID, new ClothConfigScreenBuilder());
         }
-        feintKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                config.feintKey.getTranslationKey(),
-                config.feintKey.getCategory(),
-                config.feintKey.getCode(),
-                BetterCombat.MODID));
-        config.listener = new ClientConfig.Listener() {
-            @Override
-            public void feintKeyUpdated() {
-                feintKeyBinding.setBoundKey(config.feintKey);
-            }
-        };
+
+        feintKeyBinding = new KeyBinding(
+                "config.bettercombat.clientConfig.feintKey",
+                InputUtil.Type.KEYSYM,
+                InputUtil.GLFW_KEY_R,
+                "Better Combat");
+        KeyBindingHelper.registerKeyBinding(feintKeyBinding);
     }
 
     private void loadAnimations(String name) {

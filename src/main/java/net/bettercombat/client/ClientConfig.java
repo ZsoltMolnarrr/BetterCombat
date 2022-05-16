@@ -14,18 +14,16 @@ public class ClientConfig implements ConfigGroup {
     public boolean isMiningWithWeaponsEnabled = true;
     @ConfigEntry
     public boolean isSwingThruGrassEnabled = true;
-    @ConfigEntry
-    public Key feintKey = InputUtil.fromKeyCode(InputUtil.GLFW_KEY_R, 0);
 
-    public Listener listener;
-    public interface Listener {
-        void feintKeyUpdated();
-    }
-
-    public void setFeintKey(Key feintKey) {
-        this.feintKey = feintKey;
-        if (listener != null) {
-            listener.feintKeyUpdated();
-        }
-    }
+//    public Listener listener;
+//    public interface Listener {
+//        void feintKeyUpdated();
+//    }
+//
+//    public void setFeintKey(Key feintKey) {
+//        this.feintKey = feintKey;
+//        if (listener != null) {
+//            listener.feintKeyUpdated();
+//        }
+//    }
 }

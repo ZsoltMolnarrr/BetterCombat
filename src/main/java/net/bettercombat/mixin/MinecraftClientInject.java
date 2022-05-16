@@ -130,10 +130,8 @@ public class MinecraftClientInject {
     }
 
     private void feintIfNeeded() {
-        if (BetterCombatClient.config.feintKey != null
-                && BetterCombatClient.feintKeyBinding.isPressed()
+        if (BetterCombatClient.feintKeyBinding.isPressed()
                 && upswingTicks > 0) {
-            System.out.println("FEINT!!");
             ((PlayerExtension) player).stopAnimation();
             upswingTicks = 0;
         }
