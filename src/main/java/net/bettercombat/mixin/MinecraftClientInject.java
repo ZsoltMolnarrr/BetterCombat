@@ -110,9 +110,12 @@ public class MinecraftClientInject {
         return false;
     }
 
-    private static float UpswingRate = 0.25F; // TODO: Move this constant to config or attributes?
+    private static float UpswingRate = 0.25F; // TODO: Move this constant to config
+    private static float ComboResetRate = 2F; // TODO: Move this constant to config
 
     private int upswingTicks = 0;
+    private int comboCount = 0;
+    private int lastAttacked = 1000;
 
     private int getUpswingLength(PlayerEntity player) {
         Item item = player.getMainHandStack().getItem();
@@ -125,6 +128,7 @@ public class MinecraftClientInject {
         if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - UpswingRate)) {
             return;
         }
+        lastAttacked = 0;
         this.upswingTicks = getUpswingLength(player);
         ((PlayerExtension) player).animate("slash");
     }
@@ -137,15 +141,32 @@ public class MinecraftClientInject {
         }
     }
 
-    @Inject(method = "tick",at = @At("HEAD"))
-    private void post_Tick(CallbackInfo ci) {
-        feintIfNeeded();
+    private void attackFromUpswingIfNeeded() {
         if (upswingTicks > 0) {
             --upswingTicks;
             if (upswingTicks == 0) {
                 performAttack();
             }
         }
+    }
+
+    private void resetComboIfNeeded() {
+        double attackCooldownTicks = 20.0 / player.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED);
+        int comboReset = (int)Math.round(attackCooldownTicks * ComboResetRate);
+        if(lastAttacked > comboReset && comboCount > 0) {
+            comboCount = 0;
+        }
+    }
+
+    @Inject(method = "tick",at = @At("HEAD"))
+    private void post_Tick(CallbackInfo ci) {
+        if (player == null) {
+            return;
+        }
+        lastAttacked += 1;
+        feintIfNeeded();
+        attackFromUpswingIfNeeded();
+        resetComboIfNeeded();
     }
 
     private boolean performAttack() {
@@ -159,13 +180,13 @@ public class MinecraftClientInject {
                     return true;
                 }
 
-                client.player.resetLastAttackedTicks();
-
                 List<Entity> targets = TargetFinder.findAttackTargets(player, MinecraftClientHelper.getCursorTarget(client), attributes);
                 for (Entity target : targets) {
                     client.interactionManager.attackEntity(player, target);
                 }
+                client.player.resetLastAttackedTicks();
                 ((MinecraftClientAccessor) client).setAttackCooldown(10);
+                comboCount += 1;
                 return true;
             }
         }

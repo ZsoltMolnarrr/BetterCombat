@@ -2,8 +2,8 @@ package net.bettercombat.api;
 
 public record WeaponAttributes(
         double attackRange,
-        net.bettercombat.api.WeaponAttributes.Attack[] attacks,
-        net.bettercombat.api.WeaponAttributes.Held held) {
+        net.bettercombat.api.WeaponAttributes.Held held,
+        net.bettercombat.api.WeaponAttributes.Attack[] attacks) {
 
     public enum Held {
         SWORD_ONE_HANDED,
