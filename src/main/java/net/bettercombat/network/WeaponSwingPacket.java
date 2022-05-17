@@ -68,6 +68,7 @@ public class WeaponSwingPacket {
             // Set damage multiplier
             // Save lastAttacked
             // Iterate targets
+            //   Check things: this.isTeammate
             //   Restore lastAttacked
             //   map to interaction packet
             //   attack using packet

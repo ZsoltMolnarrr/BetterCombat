@@ -4,6 +4,7 @@
   "package": "net.bettercombat.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "PlayerEntityInject"
   ],
   "client": [
     "ColliderDebugRenderer",
