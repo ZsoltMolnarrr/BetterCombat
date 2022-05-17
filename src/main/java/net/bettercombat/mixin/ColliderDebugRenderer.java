@@ -2,7 +2,8 @@ package net.bettercombat.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.bettercombat.WeaponRegistry;
-import net.bettercombat.api.MeleeWeaponAttributes;
+import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.MinecraftClientHelper;
 import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.bettercombat.client.collision.TargetFinder;
@@ -10,11 +11,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import net.minecraft.client.render.debug.DebugRenderer;
 import org.spongepowered.asm.mixin.injection.At;
@@ -40,14 +38,17 @@ public class ColliderDebugRenderer {
         if (client.player.getMainHandStack() == null) {
             return;
         }
-        Item item = client.player.getMainHandStack().getItem();
-        Identifier id = Registry.ITEM.getId(item);
-        MeleeWeaponAttributes attributes = WeaponRegistry.getAttributes(id);
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes == null) {
             return;
         }
+        var comboCount = ((MinecraftClientExtension)client).getComboCount();
         var cursorTarget = MinecraftClientHelper.getCursorTarget(client);
-        var target = TargetFinder.findAttackTargetResult(player, cursorTarget, attributes);
+        var target = TargetFinder.findAttackTargetResult(
+                player,
+                cursorTarget,
+                attributes.currentAttack(comboCount),
+                attributes.attackRange());
         boolean collides = target.entities.size() > 0;
         Vec3d cameraOffset = camera.getPos().negate();
         var obb = target.obb.
@@ -130,10 +131,10 @@ public class ColliderDebugRenderer {
         Vec3d extent_x = obb.axisX.multiply(obb.extent.x);
         Vec3d extent_y = obb.axisY.multiply(obb.extent.y);
         Vec3d extent_z = obb.axisZ.multiply(obb.extent.z);
-        System.out.println("Center: " + vec3Short(obb.center) + "orientation: " + vec3Short(obb.axisZ) + " Extent: " + vec3Short(obb.extent) );
-        System.out.println("orientation_u: " + vec3Short(obb.axisZ)
-                + "orientation_v: " + vec3Short(obb.axisY)
-                + "orientation_w: " + vec3Short(obb.axisX));
+        System.out.println("Center: " + vec3Short(obb.center) + " Extent: " + vec3Short(obb.extent) );
+        System.out.println("scaledAxisX: " + vec3Short(obb.scaledAxisX)
+                + "scaledAxisY: " + vec3Short(obb.scaledAxisY)
+                + "scaledAxisZ: " + vec3Short(obb.scaledAxisZ));
         System.out.println("1:" + vec3Short(obb.vertex1)
                 + " 2:" + vec3Short(obb.vertex2)
                 + " 3:" + vec3Short(obb.vertex3)
@@ -145,7 +146,7 @@ public class ColliderDebugRenderer {
     }
 
     private String vec3Short(Vec3d vec) {
-        return "{" + String.format("%.2f", vec.x) + ", "  + String.format("%.2f", vec.y) + ", "  + String.format("%.2f", vec.z) + "}";
+        return "{" + String.format("%.3f", vec.x) + ", "  + String.format("%.3f", vec.y) + ", "  + String.format("%.3f", vec.z) + "}";
     }
 
     private Vec3d[] getVertices(Box box) {

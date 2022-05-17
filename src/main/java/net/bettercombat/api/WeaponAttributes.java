@@ -53,4 +53,11 @@ public record WeaponAttributes(
             float pitchRandomness
     ) {
     }
+
+    // Helpers
+
+    public WeaponAttributes.Attack currentAttack(int comboCount) {
+        int index = comboCount % this.attacks().length;
+        return this.attacks()[index];
+    }
 }

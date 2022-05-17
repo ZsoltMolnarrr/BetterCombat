@@ -33,9 +33,9 @@ public class OrientedBoundingBox {
     public Vec3d axisZ;
 
     // DERIVED PROPERTIES
-    public Vec3d orientationX;
-    public Vec3d orientationY;
-    public Vec3d orientationZ;
+    public Vec3d scaledAxisX;
+    public Vec3d scaledAxisY;
+    public Vec3d scaledAxisZ;
     public Matrix3f rotation = new Matrix3f();
     public Vec3d vertex1;
     public Vec3d vertex2;
@@ -116,28 +116,28 @@ public class OrientedBoundingBox {
         rotation.set(2,1, (float) axisZ.y);
         rotation.set(2,2, (float) axisZ.z);
 
-        orientationX = axisX.multiply(extent.x);
-        orientationY = axisY.multiply(extent.y);
-        orientationZ = axisZ.multiply(extent.z);
+        scaledAxisX = axisX.multiply(extent.x);
+        scaledAxisY = axisY.multiply(extent.y);
+        scaledAxisZ = axisZ.multiply(extent.z);
 
-        vertex1 = center.subtract(orientationZ).subtract(orientationX).subtract(orientationY);
-        vertex2 = center.subtract(orientationZ).add(orientationX).subtract(orientationY);
-        vertex3 = center.subtract(orientationZ).add(orientationX).add(orientationY);
-        vertex4 = center.subtract(orientationZ).subtract(orientationX).add(orientationY);
-        vertex5 = center.add(orientationZ).subtract(orientationX).subtract(orientationY);
-        vertex6 = center.add(orientationZ).add(orientationX).subtract(orientationY);
-        vertex7 = center.add(orientationZ).add(orientationX).add(orientationY);
-        vertex8 = center.add(orientationZ).subtract(orientationX).add(orientationY);
+        vertex1 = center.subtract(scaledAxisZ).subtract(scaledAxisX).subtract(scaledAxisY);
+        vertex2 = center.subtract(scaledAxisZ).add(scaledAxisX).subtract(scaledAxisY);
+        vertex3 = center.subtract(scaledAxisZ).add(scaledAxisX).add(scaledAxisY);
+        vertex4 = center.subtract(scaledAxisZ).subtract(scaledAxisX).add(scaledAxisY);
+        vertex5 = center.add(scaledAxisZ).subtract(scaledAxisX).subtract(scaledAxisY);
+        vertex6 = center.add(scaledAxisZ).add(scaledAxisX).subtract(scaledAxisY);
+        vertex7 = center.add(scaledAxisZ).add(scaledAxisX).add(scaledAxisY);
+        vertex8 = center.add(scaledAxisZ).subtract(scaledAxisX).add(scaledAxisY);
 
         vertices = new Vec3d[]{
-            vertex1,
-            vertex2,
-            vertex3,
-            vertex4,
-            vertex5,
-            vertex6,
-            vertex7,
-            vertex8
+                vertex1,
+                vertex2,
+                vertex3,
+                vertex4,
+                vertex5,
+                vertex6,
+                vertex7,
+                vertex8
         };
 
         return this;
@@ -163,43 +163,43 @@ public class OrientedBoundingBox {
     }
 
     /**
-    * Calculates if there is intersection between given OBBs.
-    * Separating Axes Theorem implementation.
-    */
+     * Calculates if there is intersection between given OBBs.
+     * Separating Axes Theorem implementation.
+     */
     public static boolean Intersects(OrientedBoundingBox a, OrientedBoundingBox b)  {
-        if (Separated(a.vertices, b.vertices, a.axisX))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisX))
             return false;
-        if (Separated(a.vertices, b.vertices, a.axisY))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisY))
             return false;
-        if (Separated(a.vertices, b.vertices, a.axisZ))
-            return false;
-
-        if (Separated(a.vertices, b.vertices, b.axisX))
-            return false;
-        if (Separated(a.vertices, b.vertices, b.axisY))
-            return false;
-        if (Separated(a.vertices, b.vertices, b.axisZ))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisZ))
             return false;
 
-        if (Separated(a.vertices, b.vertices, a.axisX.crossProduct(b.axisX)))
+        if (Separated(a.vertices, b.vertices, b.scaledAxisX))
             return false;
-        if (Separated(a.vertices, b.vertices, a.axisX.crossProduct(b.axisY)))
+        if (Separated(a.vertices, b.vertices, b.scaledAxisY))
             return false;
-        if (Separated(a.vertices, b.vertices, a.axisX.crossProduct(b.axisZ)))
-            return false;
-
-        if (Separated(a.vertices, b.vertices, a.axisY.crossProduct(b.axisX)))
-            return false;
-        if (Separated(a.vertices, b.vertices, a.axisY.crossProduct(b.axisY)))
-            return false;
-        if (Separated(a.vertices, b.vertices, a.axisY.crossProduct(b.axisZ)))
+        if (Separated(a.vertices, b.vertices, b.scaledAxisZ))
             return false;
 
-        if (Separated(a.vertices, b.vertices, a.axisZ.crossProduct(b.axisX)))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisX.crossProduct(b.scaledAxisX)))
             return false;
-        if (Separated(a.vertices, b.vertices, a.axisZ.crossProduct(b.axisY)))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisX.crossProduct(b.scaledAxisY)))
             return false;
-        if (Separated(a.vertices, b.vertices, a.axisZ.crossProduct(b.axisZ)))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisX.crossProduct(b.scaledAxisZ)))
+            return false;
+
+        if (Separated(a.vertices, b.vertices, a.scaledAxisY.crossProduct(b.scaledAxisX)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.scaledAxisY.crossProduct(b.scaledAxisY)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.scaledAxisY.crossProduct(b.scaledAxisZ)))
+            return false;
+
+        if (Separated(a.vertices, b.vertices, a.scaledAxisZ.crossProduct(b.scaledAxisX)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.scaledAxisZ.crossProduct(b.scaledAxisY)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.scaledAxisZ.crossProduct(b.scaledAxisZ)))
             return false;
 
         return true;
@@ -219,22 +219,16 @@ public class OrientedBoundingBox {
         for (var i = 0; i < 8; i++)
         {
             var aDist = vertsA[i].dotProduct(axis);
-            aMin = aDist < aMin ? aDist : aMin;
-            aMax = aDist > aMax ? aDist : aMax;
+            aMin = (aDist < aMin) ? aDist : aMin;
+            aMax = (aDist > aMax) ? aDist : aMax;
             var bDist = vertsB[i].dotProduct(axis);
-            bMin = bDist < bMin ? bDist : bMin;
-            bMax = bDist > bMax ? bDist : bMax;
+            bMin = (bDist < bMin) ? bDist : bMin;
+            bMax = (bDist > bMax) ? bDist : bMax;
         }
 
         // One-dimensional intersection test between a and b
         var longSpan = Math.max(aMax, bMax) - Math.min(aMin, bMin);
         var sumSpan = aMax - aMin + bMax - bMin;
         return longSpan >= sumSpan; // > to treat touching as intersection
-    }
-
-    // HELPERS
-
-    public double getMaxExtent() {
-        return Math.max(Math.max(extent.x, extent.y), extent.z);
     }
 }

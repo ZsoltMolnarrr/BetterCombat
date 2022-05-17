@@ -2,18 +2,14 @@ package net.bettercombat.network;
 
 import com.google.common.collect.Iterables;
 import net.bettercombat.WeaponRegistry;
-import net.bettercombat.api.MeleeWeaponAttributes;
+import net.bettercombat.api.WeaponAttributes;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class WeaponSwingPacket {
 
@@ -62,7 +58,7 @@ public class WeaponSwingPacket {
             }
 
             C2S_AttackRequest request = C2S_AttackRequest.read(buf);
-            MeleeWeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+            WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
             if (attributes != null) {
                 // player.getAttributes().addTemporaryModifiers();
             }

@@ -1,7 +1,7 @@
 package net.bettercombat.client.collision;
 
-import net.bettercombat.api.AttackStyle;
-import net.bettercombat.api.MeleeWeaponAttributes;
+import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.api.WeaponAttributes.Attack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,18 +21,18 @@ public class TargetFinder {
         }
     }
 
-    public static TargetResult findAttackTargetResult(PlayerEntity player, Entity cursorTarget, MeleeWeaponAttributes attributes) {
+    public static TargetResult findAttackTargetResult(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
         Vec3d origin = getInitialTracingPoint(player);
-        List<Entity> entities = getInitialTargets(player, cursorTarget, attributes.attackRange);
-        var obb = new OrientedBoundingBoxFilter(player, origin, attributes.attackStyle, attributes.attackRange);
+        List<Entity> entities = getInitialTargets(player, cursorTarget, attackRange);
+        var obb = new OrientedBoundingBoxFilter(player, origin, attack.direction(), attackRange);
         entities = obb.filter(entities);
-        var radial = new RadialFilter(origin, obb.obb.axisZ, attributes.attackRange, attributes.attackAngle);
+        var radial = new RadialFilter(origin, obb.obb.axisZ, attackRange, attack.angle());
         entities = radial.filter(entities);
         return new TargetResult(entities, obb.obb);
     }
 
-    public static List<Entity> findAttackTargets(PlayerEntity player, Entity cursorTarget, MeleeWeaponAttributes attributes) {
-        return findAttackTargetResult(player, cursorTarget, attributes).entities;
+    public static List<Entity> findAttackTargets(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
+        return findAttackTargetResult(player, cursorTarget, attack, attackRange).entities;
     }
 
     public static Vec3d getInitialTracingPoint(PlayerEntity player) {
@@ -63,10 +63,10 @@ public class TargetFinder {
         final private double attackRange;
         public OrientedBoundingBox obb;
 
-        public OrientedBoundingBoxFilter(PlayerEntity player, Vec3d origin, AttackStyle attackStyle, double attackRange) {
+        public OrientedBoundingBoxFilter(PlayerEntity player, Vec3d origin, WeaponAttributes.SwingDirection direction, double attackRange) {
             this.player = player;
             this.attackRange = attackRange;
-            Vec3d size = WeaponHitBoxes.createHitbox(attackStyle, attackRange);
+            Vec3d size = WeaponHitBoxes.createHitbox(direction, attackRange);
             obb = new OrientedBoundingBox(origin, size, player.getPitch(), player.getYaw())
                     .offsetAlongAxisZ(size.z / 2F)
                     .updateVertex();

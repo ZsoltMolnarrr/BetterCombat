@@ -1,8 +1,9 @@
 package net.bettercombat.mixin;
 
 import net.bettercombat.WeaponRegistry;
-import net.bettercombat.api.MeleeWeaponAttributes;
+import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.BetterCombatClient;
+import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.MinecraftClientHelper;
 import net.bettercombat.client.PlayerExtension;
 import net.bettercombat.client.collision.TargetFinder;
@@ -32,7 +33,7 @@ import java.util.List;
 import static net.minecraft.util.hit.HitResult.Type.BLOCK;
 
 @Mixin(MinecraftClient.class)
-public class MinecraftClientInject {
+public class MinecraftClientInject implements MinecraftClientExtension {
     @Shadow public ClientWorld world;
     @Shadow @Nullable public ClientPlayerEntity player;
     private MinecraftClient thisClient() {
@@ -44,18 +45,14 @@ public class MinecraftClientInject {
     @Inject(method = "doAttack",at = @At("HEAD"), cancellable = true)
     private void pre_doAttack(CallbackInfoReturnable<Boolean> info) {
         MinecraftClient client = thisClient();
-        if (client.player.getMainHandStack() != null) {
-            Item item = client.player.getMainHandStack().getItem();
-            Identifier id = Registry.ITEM.getId(item);
-            MeleeWeaponAttributes attributes = WeaponRegistry.getAttributes(id);
-            if (attributes != null) {
-                if (isTargetingMineableBlock()) {
-                    return;
-                }
-                startUpswing();
-                info.setReturnValue(false);
-                info.cancel();
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
+        if (attributes != null) {
+            if (isTargetingMineableBlock()) {
+                return;
             }
+            startUpswing();
+            info.setReturnValue(false);
+            info.cancel();
         }
     }
 
@@ -63,28 +60,23 @@ public class MinecraftClientInject {
     @Inject(method = "handleBlockBreaking",at = @At("HEAD"), cancellable = true)
     private void pre_handleBlockBreaking(boolean bl, CallbackInfo ci) {
         MinecraftClient client = thisClient();
-        if (client.player.getMainHandStack() != null) {
-            Item item = client.player.getMainHandStack().getItem();
-            Identifier id = Registry.ITEM.getId(item);
-            MeleeWeaponAttributes attributes = WeaponRegistry.getAttributes(id);
-
-            if (attributes != null) {
-                boolean isPressed = client.options.attackKey.isPressed();
-                if(isPressed && !isHoldingAttack) {
-                    if (isTargetingMineableBlock()) {
-                        return;
-                    } else {
-                        ci.cancel();
-                    }
-                }
-
-                if (BetterCombatClient.config.isHoldToAttackEnabled && isPressed) {
-                    isHoldingAttack = true;
-                    startUpswing();
-                    ci.cancel();
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
+        if (attributes != null) {
+            boolean isPressed = client.options.attackKey.isPressed();
+            if(isPressed && !isHoldingAttack) {
+                if (isTargetingMineableBlock()) {
+                    return;
                 } else {
-                    isHoldingAttack = false;
+                    ci.cancel();
                 }
+            }
+
+            if (BetterCombatClient.config.isHoldToAttackEnabled && isPressed) {
+                isHoldingAttack = true;
+                startUpswing();
+                ci.cancel();
+            } else {
+                isHoldingAttack = false;
             }
         }
     }
@@ -171,25 +163,32 @@ public class MinecraftClientInject {
 
     private boolean performAttack() {
         MinecraftClient client = thisClient();
-        if (client.player.getMainHandStack() != null) {
-            Item item = client.player.getMainHandStack().getItem();
-            Identifier id = Registry.ITEM.getId(item);
-            MeleeWeaponAttributes attributes = WeaponRegistry.getAttributes(id);
-            if (attributes != null) {
-                if (client.player.getAttackCooldownProgress(0) < (1.0 - UpswingRate)) {
-                    return true;
-                }
-
-                List<Entity> targets = TargetFinder.findAttackTargets(player, MinecraftClientHelper.getCursorTarget(client), attributes);
-                for (Entity target : targets) {
-                    client.interactionManager.attackEntity(player, target);
-                }
-                client.player.resetLastAttackedTicks();
-                ((MinecraftClientAccessor) client).setAttackCooldown(10);
-                comboCount += 1;
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
+        if (attributes != null) {
+            if (client.player.getAttackCooldownProgress(0) < (1.0 - UpswingRate)) {
                 return true;
             }
+
+            List<Entity> targets = TargetFinder.findAttackTargets(
+                    player,
+                    MinecraftClientHelper.getCursorTarget(client),
+                    attributes.currentAttack(comboCount),
+                    attributes.attackRange());
+            for (Entity target : targets) {
+                client.interactionManager.attackEntity(player, target);
+            }
+            client.player.resetLastAttackedTicks();
+            ((MinecraftClientAccessor) client).setAttackCooldown(10);
+            comboCount += 1;
+            return true;
         }
         return false;
+    }
+
+    // MinecraftClientExtension
+
+    @Override
+    public int getComboCount() {
+        return comboCount;
     }
 }

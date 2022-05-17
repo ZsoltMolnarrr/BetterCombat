@@ -1,19 +1,12 @@
 package net.bettercombat.example;
 
-import net.bettercombat.api.AttackStyle;
-import net.bettercombat.api.MeleeWeaponAttributes;
 import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 
 public class ClaymoreItem extends SwordItem {
-    public static MeleeWeaponAttributes attributes = new MeleeWeaponAttributes(
-            150,
-            2,
-            AttackStyle.SLASH_HORIZONTAL_RIGHT_TO_LEFT);
-
-    public static WeaponAttributes attributesV2 = new WeaponAttributes(
+    public static WeaponAttributes attributes = new WeaponAttributes(
             2.5,
             WeaponAttributes.Held.SWORD_TWO_HANDED,
             new WeaponAttributes.Attack[]{
