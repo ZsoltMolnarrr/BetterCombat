@@ -103,6 +103,11 @@ public class OrientedBoundingBox {
         return this;
     }
 
+    public OrientedBoundingBox scale(double scale) {
+        this.extent = this.extent.multiply(scale);
+        return this;
+    }
+
     // 3. UPDATE
 
     public OrientedBoundingBox updateVertex() {
@@ -210,10 +215,10 @@ public class OrientedBoundingBox {
         if (axis.equals(Vec3d.ZERO))
             return false;
 
-        var aMin = Double.MAX_VALUE;
-        var aMax = Double.MIN_VALUE;
-        var bMin = Double.MAX_VALUE;
-        var bMax = Double.MIN_VALUE;
+        var aMin = Double.POSITIVE_INFINITY;
+        var aMax = Double.NEGATIVE_INFINITY;
+        var bMin = Double.POSITIVE_INFINITY;
+        var bMax = Double.NEGATIVE_INFINITY;
 
         // Define two intervals, a and b. Calculate their min and max values
         for (var i = 0; i < 8; i++)

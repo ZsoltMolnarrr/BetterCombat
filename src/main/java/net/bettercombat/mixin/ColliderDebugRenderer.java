@@ -19,6 +19,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mixin(DebugRenderer.class)
 public class ColliderDebugRenderer {
     @Inject(method = "render",at = @At("TAIL"))
@@ -55,10 +58,16 @@ public class ColliderDebugRenderer {
                 copy()
                 .offset(cameraOffset)
                 .updateVertex();
-        drawOutline(obb, collides);
+        List<OrientedBoundingBox> collidingObbs = target.entities.stream()
+                .map(entity -> new OrientedBoundingBox(entity.getBoundingBox())
+                        .offset(cameraOffset)
+                        .scale(0.95)
+                        .updateVertex())
+                .collect(Collectors.toList());
+        drawOutline(obb, collidingObbs, collides);
     }
 
-    private void drawOutline(OrientedBoundingBox obb, boolean collides) {
+    private void drawOutline(OrientedBoundingBox obb, List<OrientedBoundingBox> otherObbs, boolean collides) {
         RenderSystem.enableDepthTest();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Tessellator tessellator = Tessellator.getInstance();
@@ -78,6 +87,12 @@ public class ColliderDebugRenderer {
                     1, 1, 0,0.5F);
         }
         look(obb, bufferBuilder, 0.5F);
+
+        for(OrientedBoundingBox otherObb: otherObbs){
+            outlineOBB(otherObb, bufferBuilder,
+                    1, 0, 0,
+                    1, 0, 0,0.5F);
+        }
 
         tessellator.draw();
 
@@ -114,6 +129,8 @@ public class ColliderDebugRenderer {
     }
 
     private void look(OrientedBoundingBox box, BufferBuilder buffer, float alpha) {
+        buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 0, 0, alpha).next();
+
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(1, 0, 0, alpha).next();
         buffer.vertex(box.axisZ.x, box.axisZ.y, box.axisZ.z).color(1, 0, 0, alpha).next();
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(1, 0, 0, alpha).next();
@@ -125,6 +142,8 @@ public class ColliderDebugRenderer {
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 0, 1, alpha).next();
         buffer.vertex(box.axisX.x, box.axisX.y, box.axisX.z).color(0, 0, 1, alpha).next();
         buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 0, 1, alpha).next();
+
+        buffer.vertex(box.center.x, box.center.y, box.center.z).color(0, 0, 0, alpha).next();
     }
 
     public void printDebug(OrientedBoundingBox obb) {
