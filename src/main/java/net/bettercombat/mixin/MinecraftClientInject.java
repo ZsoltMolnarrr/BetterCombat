@@ -183,9 +183,6 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             ClientPlayNetworking.send(
                     WeaponSwingPacket.C2S_AttackRequest.ID,
                     WeaponSwingPacket.C2S_AttackRequest.write(buffer, comboCount, true, player.isSneaking(), targets));
-//            for (Entity target : targets) {
-//                client.interactionManager.attackEntity(player, target);
-//            }
             client.player.resetLastAttackedTicks();
             ((MinecraftClientAccessor) client).setAttackCooldown(10);
             comboCount += 1;

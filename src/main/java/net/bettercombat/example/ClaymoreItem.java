@@ -12,19 +12,19 @@ public class ClaymoreItem extends SwordItem {
             new WeaponAttributes.Attack[]{
                     new WeaponAttributes.Attack(
                             WeaponAttributes.SwingDirection.HORIZONTAL_RIGHT_TO_LEFT,
-                            0.5,
+                            -0.5,
                             150,
                             null,
                             null),
                     new WeaponAttributes.Attack(
                             WeaponAttributes.SwingDirection.FORWARD,
-                            1.0,
+                            0,
                             0,
                             null,
                             null),
                     new WeaponAttributes.Attack(
                             WeaponAttributes.SwingDirection.VERTICAL_TOP_TO_BOTTOM,
-                            1.5,
+                            0.5,
                             150,
                             null,
                             null)

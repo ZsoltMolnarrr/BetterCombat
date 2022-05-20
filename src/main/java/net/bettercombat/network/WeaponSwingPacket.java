@@ -3,28 +3,38 @@ package net.bettercombat.network;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.mojang.logging.LogUtils;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.UUID;
 
 public class WeaponSwingPacket {
 
+    static final Logger LOGGER = LogUtils.getLogger();
+
     public record C2S_AttackRequest(int comboCount, int stack, boolean isSneaking, int[] entityIds) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "c2s_request_attack");
+        public static double RangeTolerance = 2.0;
+        public static boolean UseVanillaPacket = false;
         public static PacketByteBuf write(PacketByteBuf buffer, int comboCount, boolean useMainHand, boolean isSneaking, List<Entity> entities) {
             int[] ids = new int[entities.size()];
             for(int i = 0; i < entities.size(); i++) {
@@ -66,49 +76,63 @@ public class WeaponSwingPacket {
         ServerPlayNetworking.registerGlobalReceiver(C2S_AttackRequest.ID, (server, player, handler, buf, responseSender) -> {
             ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
                     .orNull();
-            if (world == null) {
+            if (world == null || world.isClient) {
                 return;
             }
 
+            boolean useVanillaPacket = C2S_AttackRequest.UseVanillaPacket;
             C2S_AttackRequest request = C2S_AttackRequest.read(buf);
             WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
             Multimap<EntityAttribute, EntityAttributeModifier> temporaryAttributes = null;
+            double range = 18.0;
             if (attributes != null) {
+                range = attributes.attackRange();
                 WeaponAttributes.Attack attack = attributes.currentAttack(request.comboCount);
-                var multiplier = attack.damageMultiplier() - 1.0;
+                var multiplier = attack.damageMultiplier();
                 var key = EntityAttributes.GENERIC_ATTACK_DAMAGE;
                 var value = new EntityAttributeModifier(UUID.randomUUID(), "COMBO_DAMAGE_MULTIPLIER", multiplier, EntityAttributeModifier.Operation.MULTIPLY_BASE);
                 temporaryAttributes = HashMultimap.create();
                 temporaryAttributes.put(key, value);
                 player.getAttributes().addTemporaryModifiers(temporaryAttributes);
-                System.out.println("Apply multiplier " + multiplier);
             }
 
             var lastAttackedTicks = ((LivingEntityAccessor)player).getLastAttackedTicks();
+            if (!useVanillaPacket) {
+                player.setSneaking(request.isSneaking);
+            }
 
             for (int entityId: request.entityIds) {
                 Entity entity = world.getEntityById(entityId);
-                System.out.println("Receive attack request " + 4 + entity);
                 if (entity == null
                         || entity.isTeammate(player)
                         || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
                     continue;
                 }
-                System.out.println("Receive attack request " + 4 + " a");
-                ((LivingEntityAccessor)player).setLastAttackedTicks(lastAttackedTicks);
-                System.out.println("Receive attack request " + 4 + " b");
-                PlayerInteractEntityC2SPacket mappedAttackPacket = PlayerInteractEntityC2SPacket.attack(entity, request.isSneaking);
-                System.out.println("Receive attack request " + 4 + " c");
-                try { // FIXME
-                    handler.onPlayerInteractEntity(mappedAttackPacket);
-                } catch (Throwable ex) {
-                    ex.printStackTrace();
+                ((LivingEntityAccessor) player).setLastAttackedTicks(lastAttackedTicks);
+                if (useVanillaPacket) {
+                    PlayerInteractEntityC2SPacket vanillaAttackPacket = PlayerInteractEntityC2SPacket.attack(entity, request.isSneaking);
+                    try { // FIXME
+                        handler.onPlayerInteractEntity(vanillaAttackPacket);
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    if (player.squaredDistanceTo(entity) < range * C2S_AttackRequest.RangeTolerance) {
+                        if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity || entity instanceof PersistentProjectileEntity || entity == player) {
+                            handler.disconnect(new TranslatableText("multiplayer.disconnect.invalid_entity_attacked"));
+                            LOGGER.warn("Player {} tried to attack an invalid entity", (Object)player.getName().getString());
+                            return;
+                        }
+                        player.attack(entity);
+                    }
                 }
-                System.out.println("Receive attack request " + 4 + " d");
+            }
+
+            if (!useVanillaPacket) {
+                player.updateLastActionTime();
             }
 
             if (temporaryAttributes != null) {
-                System.out.println("Receive attack request " + 5);
                 player.getAttributes().removeModifiers(temporaryAttributes);
             }
         });
