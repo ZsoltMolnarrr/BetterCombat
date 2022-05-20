@@ -34,7 +34,7 @@ public class WeaponSwingPacket {
     public record C2S_AttackRequest(int comboCount, int stack, boolean isSneaking, int[] entityIds) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "c2s_request_attack");
         public static double RangeTolerance = 2.0;
-        public static boolean UseVanillaPacket = false;
+        public static boolean UseVanillaPacket = true;
         public static PacketByteBuf write(PacketByteBuf buffer, int comboCount, boolean useMainHand, boolean isSneaking, List<Entity> entities) {
             int[] ids = new int[entities.size()];
             for(int i = 0; i < entities.size(); i++) {
@@ -80,61 +80,60 @@ public class WeaponSwingPacket {
                 return;
             }
 
-            boolean useVanillaPacket = C2S_AttackRequest.UseVanillaPacket;
-            C2S_AttackRequest request = C2S_AttackRequest.read(buf);
-            WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
-            Multimap<EntityAttribute, EntityAttributeModifier> temporaryAttributes = null;
-            double range = 18.0;
-            if (attributes != null) {
-                range = attributes.attackRange();
-                WeaponAttributes.Attack attack = attributes.currentAttack(request.comboCount);
-                var multiplier = attack.damageMultiplier();
-                var key = EntityAttributes.GENERIC_ATTACK_DAMAGE;
-                var value = new EntityAttributeModifier(UUID.randomUUID(), "COMBO_DAMAGE_MULTIPLIER", multiplier, EntityAttributeModifier.Operation.MULTIPLY_BASE);
-                temporaryAttributes = HashMultimap.create();
-                temporaryAttributes.put(key, value);
-                player.getAttributes().addTemporaryModifiers(temporaryAttributes);
-            }
+            final C2S_AttackRequest request = C2S_AttackRequest.read(buf);
+            final WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+            final boolean useVanillaPacket = C2S_AttackRequest.UseVanillaPacket;
 
-            var lastAttackedTicks = ((LivingEntityAccessor)player).getLastAttackedTicks();
-            if (!useVanillaPacket) {
-                player.setSneaking(request.isSneaking);
-            }
-
-            for (int entityId: request.entityIds) {
-                Entity entity = world.getEntityById(entityId);
-                if (entity == null
-                        || entity.isTeammate(player)
-                        || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
-                    continue;
+            world.getServer().executeSync(() -> {
+                Multimap<EntityAttribute, EntityAttributeModifier> temporaryAttributes = null;
+                double range = 18.0;
+                if (attributes != null) {
+                    range = attributes.attackRange();
+                    WeaponAttributes.Attack attack = attributes.currentAttack(request.comboCount);
+                    var multiplier = attack.damageMultiplier();
+                    var key = EntityAttributes.GENERIC_ATTACK_DAMAGE;
+                    var value = new EntityAttributeModifier(UUID.randomUUID(), "COMBO_DAMAGE_MULTIPLIER", multiplier, EntityAttributeModifier.Operation.MULTIPLY_BASE);
+                    temporaryAttributes = HashMultimap.create();
+                    temporaryAttributes.put(key, value);
+                    player.getAttributes().addTemporaryModifiers(temporaryAttributes);
                 }
-                ((LivingEntityAccessor) player).setLastAttackedTicks(lastAttackedTicks);
-                if (useVanillaPacket) {
-                    PlayerInteractEntityC2SPacket vanillaAttackPacket = PlayerInteractEntityC2SPacket.attack(entity, request.isSneaking);
-                    try { // FIXME
+
+                var lastAttackedTicks = ((LivingEntityAccessor)player).getLastAttackedTicks();
+                if (!useVanillaPacket) {
+                    player.setSneaking(request.isSneaking);
+                }
+
+                for (int entityId: request.entityIds) {
+                    Entity entity = world.getEntityById(entityId);
+                    if (entity == null
+                            || entity.isTeammate(player)
+                            || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
+                        continue;
+                    }
+                    ((LivingEntityAccessor) player).setLastAttackedTicks(lastAttackedTicks);
+                    if (useVanillaPacket) {
+                        PlayerInteractEntityC2SPacket vanillaAttackPacket = PlayerInteractEntityC2SPacket.attack(entity, request.isSneaking);
                         handler.onPlayerInteractEntity(vanillaAttackPacket);
-                    } catch (Throwable ex) {
-                        ex.printStackTrace();
-                    }
-                } else {
-                    if (player.squaredDistanceTo(entity) < range * C2S_AttackRequest.RangeTolerance) {
-                        if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity || entity instanceof PersistentProjectileEntity || entity == player) {
-                            handler.disconnect(new TranslatableText("multiplayer.disconnect.invalid_entity_attacked"));
-                            LOGGER.warn("Player {} tried to attack an invalid entity", (Object)player.getName().getString());
-                            return;
+                    } else {
+                        if (player.squaredDistanceTo(entity) < range * C2S_AttackRequest.RangeTolerance) {
+                            if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity || entity instanceof PersistentProjectileEntity || entity == player) {
+                                handler.disconnect(new TranslatableText("multiplayer.disconnect.invalid_entity_attacked"));
+                                LOGGER.warn("Player {} tried to attack an invalid entity", (Object)player.getName().getString());
+                                return;
+                            }
+                            player.attack(entity);
                         }
-                        player.attack(entity);
                     }
                 }
-            }
 
-            if (!useVanillaPacket) {
-                player.updateLastActionTime();
-            }
+                if (!useVanillaPacket) {
+                    player.updateLastActionTime();
+                }
 
-            if (temporaryAttributes != null) {
-                player.getAttributes().removeModifiers(temporaryAttributes);
-            }
+                if (temporaryAttributes != null) {
+                    player.getAttributes().removeModifiers(temporaryAttributes);
+                }
+            });
         });
     }
 }
