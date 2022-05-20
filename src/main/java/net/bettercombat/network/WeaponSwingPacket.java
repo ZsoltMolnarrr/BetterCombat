@@ -1,54 +1,67 @@
 package net.bettercombat.network;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.mixin.LivingEntityAccessor;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
+import java.util.UUID;
 
 public class WeaponSwingPacket {
 
-    public record C2S_AttackRequest(int comboCount, int stack, int[] entityIds) {
-        public static Identifier ID = new Identifier("C2S_REQUEST_ATTACK");
-        public static void write(PacketByteBuf buffer, int comboCount, boolean useMainHand, List<Entity> entities) {
+    public record C2S_AttackRequest(int comboCount, int stack, boolean isSneaking, int[] entityIds) {
+        public static Identifier ID = new Identifier(BetterCombat.MODID, "c2s_request_attack");
+        public static PacketByteBuf write(PacketByteBuf buffer, int comboCount, boolean useMainHand, boolean isSneaking, List<Entity> entities) {
             int[] ids = new int[entities.size()];
             for(int i = 0; i < entities.size(); i++) {
                 ids[i] = entities.get(i).getId();
             }
             buffer.writeInt(comboCount);
             buffer.writeInt(useMainHand ? 0 : 1);
+            buffer.writeBoolean(isSneaking);
             buffer.writeIntArray(ids);
+            return buffer;
         }
 
         public static C2S_AttackRequest read(PacketByteBuf buffer) {
             int comboCount = buffer.readInt();
             int stack = buffer.readInt();
+            boolean isSneaking = buffer.readBoolean();
             int[] ids = buffer.readIntArray();
-            return new C2S_AttackRequest(comboCount, stack, ids);
+            return new C2S_AttackRequest(comboCount, stack, isSneaking, ids);
         }
     }
 
-    public static Identifier C2S_REQUEST_SWING = new Identifier("C2S_REQUEST_SWING");
-    public static Identifier S2C_PERFORM_SWING = new Identifier("C2S_REQUEST_SWING");
+//    public static Identifier C2S_REQUEST_SWING = new Identifier("C2S_REQUEST_SWING");
+//    public static Identifier S2C_PERFORM_SWING = new Identifier("C2S_REQUEST_SWING");
 
     public static void initializeHandlers() {
-        ServerPlayNetworking.registerGlobalReceiver(WeaponSwingPacket.C2S_REQUEST_SWING, (server, player, handler, buf, responseSender) -> {
-            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
-                    .orNull();
-            if (world == null) {
-                return;
-            }
-
-            // world.isPlayerInRange()
-            // ServerPlayNetworking.send((ServerPlayerEntity) user, TutorialNetworkingConstants.HIGHLIGHT_PACKET_ID, PacketByteBufs.empty());
-            // world.getChunkManager().sendToOtherNearbyPlayers(player, asd);
-            // ServerChunkManager serverChunkManager = server.chunk
-        });
+//        ServerPlayNetworking.registerGlobalReceiver(WeaponSwingPacket.C2S_REQUEST_SWING, (server, player, handler, buf, responseSender) -> {
+//            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
+//                    .orNull();
+//            if (world == null) {
+//                return;
+//            }
+//
+//            // world.isPlayerInRange()
+//            // ServerPlayNetworking.send((ServerPlayerEntity) user, TutorialNetworkingConstants.HIGHLIGHT_PACKET_ID, PacketByteBufs.empty());
+//            // world.getChunkManager().sendToOtherNearbyPlayers(player, asd);
+//            // ServerChunkManager serverChunkManager = server.chunk
+//        });
 
         ServerPlayNetworking.registerGlobalReceiver(C2S_AttackRequest.ID, (server, player, handler, buf, responseSender) -> {
             ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
@@ -59,25 +72,45 @@ public class WeaponSwingPacket {
 
             C2S_AttackRequest request = C2S_AttackRequest.read(buf);
             WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+            Multimap<EntityAttribute, EntityAttributeModifier> temporaryAttributes = null;
             if (attributes != null) {
-                // player.getAttributes().addTemporaryModifiers();
+                WeaponAttributes.Attack attack = attributes.currentAttack(request.comboCount);
+                var multiplier = attack.damageMultiplier() - 1.0;
+                var key = EntityAttributes.GENERIC_ATTACK_DAMAGE;
+                var value = new EntityAttributeModifier(UUID.randomUUID(), "COMBO_DAMAGE_MULTIPLIER", multiplier, EntityAttributeModifier.Operation.MULTIPLY_BASE);
+                temporaryAttributes = HashMultimap.create();
+                temporaryAttributes.put(key, value);
+                player.getAttributes().addTemporaryModifiers(temporaryAttributes);
+                System.out.println("Apply multiplier " + multiplier);
             }
 
-            // handler.onPlayerInteractEntity();
+            var lastAttackedTicks = ((LivingEntityAccessor)player).getLastAttackedTicks();
 
-            // Set damage multiplier
-            // Save lastAttacked
-            // Iterate targets
-            //   Check things: this.isTeammate
-            //   Restore lastAttacked
-            //   map to interaction packet
-            //   attack using packet
-            // Clear damage multiplier
+            for (int entityId: request.entityIds) {
+                Entity entity = world.getEntityById(entityId);
+                System.out.println("Receive attack request " + 4 + entity);
+                if (entity == null
+                        || entity.isTeammate(player)
+                        || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
+                    continue;
+                }
+                System.out.println("Receive attack request " + 4 + " a");
+                ((LivingEntityAccessor)player).setLastAttackedTicks(lastAttackedTicks);
+                System.out.println("Receive attack request " + 4 + " b");
+                PlayerInteractEntityC2SPacket mappedAttackPacket = PlayerInteractEntityC2SPacket.attack(entity, request.isSneaking);
+                System.out.println("Receive attack request " + 4 + " c");
+                try { // FIXME
+                    handler.onPlayerInteractEntity(mappedAttackPacket);
+                } catch (Throwable ex) {
+                    ex.printStackTrace();
+                }
+                System.out.println("Receive attack request " + 4 + " d");
+            }
 
-            // world.isPlayerInRange()
-            // ServerPlayNetworking.send((ServerPlayerEntity) user, TutorialNetworkingConstants.HIGHLIGHT_PACKET_ID, PacketByteBufs.empty());
-            // world.getChunkManager().sendToOtherNearbyPlayers(player, asd);
-            // ServerChunkManager serverChunkManager = server.chunk
+            if (temporaryAttributes != null) {
+                System.out.println("Receive attack request " + 5);
+                player.getAttributes().removeModifiers(temporaryAttributes);
+            }
         });
     }
 }

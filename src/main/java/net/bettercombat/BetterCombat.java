@@ -13,13 +13,13 @@ public class BetterCombat implements ModInitializer {
 
     public static final String MODID = "bettercombat";
 
-    public static final ClaymoreItem CLAYMORE = new ClaymoreItem(ToolMaterials.IRON, 6, -3.333f, new FabricItemSettings()
+    public static final ClaymoreItem CLAYMORE = new ClaymoreItem(ToolMaterials.IRON, 1, -3.333f, new FabricItemSettings()
             .group(ItemGroup.COMBAT));
 
     @Override
     public void onInitialize() {
-        Registry.register(Registry.ITEM, new Identifier("bettercombat", "claymore"), CLAYMORE);
-        WeaponRegistry.register(new Identifier("bettercombat", "claymore"), ClaymoreItem.attributes);
-        // WeaponSwingPacket.initializeHandlers();
+        Registry.register(Registry.ITEM, new Identifier(MODID, "claymore"), CLAYMORE);
+        WeaponRegistry.register(new Identifier(MODID, "claymore"), ClaymoreItem.attributes);
+        WeaponSwingPacket.initializeHandlers();
     }
 }
