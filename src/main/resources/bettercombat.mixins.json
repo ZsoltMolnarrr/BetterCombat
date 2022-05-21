@@ -11,7 +11,8 @@
     "ColliderDebugRenderer",
     "MinecraftClientAccessor",
     "MinecraftClientInject",
-    "ClientPlayerMixin"
+    "ClientPlayerMixin",
+    "InGameHudInject"
   ],
   "server": [
   ],

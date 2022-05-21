@@ -45,9 +45,10 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         return (MinecraftClient)((Object)this);
     }
     private boolean isHoldingAttack = false;
+    private boolean hasTargetsInRange = false;
 
     // Press to attack
-    @Inject(method = "doAttack",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
     private void pre_doAttack(CallbackInfoReturnable<Boolean> info) {
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
@@ -155,15 +156,37 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         }
     }
 
+    private boolean ranTargetCheckCurrentTick = false;
+
     @Inject(method = "tick",at = @At("HEAD"))
-    private void post_Tick(CallbackInfo ci) {
+    private void pre_Tick(CallbackInfo ci) {
         if (player == null) {
             return;
         }
+        ranTargetCheckCurrentTick = false;
         lastAttacked += 1;
         feintIfNeeded();
         attackFromUpswingIfNeeded();
         resetComboIfNeeded();
+    }
+    @Inject(method = "tick",at = @At("TAIL"))
+    private void post_Tick(CallbackInfo ci) {
+        if (player == null) {
+            return;
+        }
+        if ((BetterCombatClient.config.isHighlightAttackIndicatorEnabled || BetterCombatClient.config.isHighlightCrosshairEnabled)
+                && !ranTargetCheckCurrentTick) {
+            MinecraftClient client = thisClient();
+            WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
+            if (attributes != null) {
+                List<Entity> targets = TargetFinder.findAttackTargets(
+                    player,
+                    MinecraftClientHelper.getCursorTarget(client),
+                    attributes.currentAttack(comboCount),
+                    attributes.attackRange());
+                hasTargetsInRange = targets.size() > 0;
+            }
+        }
     }
 
     private boolean performAttack() {
@@ -179,6 +202,8 @@ public class MinecraftClientInject implements MinecraftClientExtension {
                     MinecraftClientHelper.getCursorTarget(client),
                     attributes.currentAttack(comboCount),
                     attributes.attackRange());
+            hasTargetsInRange = targets.size() > 0;
+            ranTargetCheckCurrentTick = true;
             PacketByteBuf buffer = PacketByteBufs.create();
             ClientPlayNetworking.send(
                     WeaponSwingPacket.C2S_AttackRequest.ID,
@@ -196,5 +221,10 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     @Override
     public int getComboCount() {
         return comboCount;
+    }
+
+    @Override
+    public boolean hasTargetsInRange() {
+        return hasTargetsInRange;
     }
 }

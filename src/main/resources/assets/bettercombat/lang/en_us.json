@@ -5,6 +5,14 @@
   "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled.tooltip" : "Allow mining with weapons",
   "config.bettercombat.clientConfig.isSwingThruGrassEnabled" : "Swing thru grass",
   "config.bettercombat.clientConfig.isSwingThruGrassEnabled.tooltip" : "Attack instead of mining zero hardness blocks with weapons",
+  "config.bettercombat.clientConfig.isAlwaysShowingAttackIndicatorForWeapons" : "Always show attack indicator for weapons",
+  "config.bettercombat.clientConfig.isAlwaysShowingAttackIndicatorForWeapons.tooltip" : "Always shows attack cooldown indicator while wielding weapons",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled" : "Highlight crosshair",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled.tooltip" : "Highlights the crosshair if enemies are close enough to strike.\nWARNING! Enabling this might reduce frame rate significantly.",
+  "config.bettercombat.clientConfig.isHighlightAttackIndicatorEnabled" : "Highlight attack indicator",
+  "config.bettercombat.clientConfig.isHighlightAttackIndicatorEnabled.tooltip" : "Highlights the attack indicator if enemies are close enough to strike.\nWARNING! Enabling this might reduce frame rate significantly.",
+  "config.bettercombat.clientConfig.hudHighlightColor" : "Attack indicator highlight color",
+  "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "Format: Hexadecimal ARGB",
   "config.bettercombat.clientConfig.feintKey" : "Feint",
   "config.bettercombat.clientConfig.feintKey.tooltip" : "Cancel attack during upswing phase"
 }
