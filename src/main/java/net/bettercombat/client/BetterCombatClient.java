@@ -31,6 +31,7 @@ public class BetterCombatClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        ClientNetwork.initializeHandlers();
         ClientLifecycleEvents.CLIENT_STARTED.register((client) -> {
             loadAnimations("slash");
         });

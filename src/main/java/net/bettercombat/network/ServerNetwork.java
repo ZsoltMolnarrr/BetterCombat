@@ -8,6 +8,8 @@ import net.bettercombat.BetterCombat;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.mixin.LivingEntityAccessor;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ExperienceOrbEntity;
@@ -27,7 +29,7 @@ import org.slf4j.Logger;
 import java.util.List;
 import java.util.UUID;
 
-public class Network {
+public class ServerNetwork {
     static final Logger LOGGER = LogUtils.getLogger();
 
     public record C2S_AttackRequest(int comboCount, int stack, boolean isSneaking, int[] entityIds) {
@@ -55,23 +57,50 @@ public class Network {
         }
     }
 
-    public record C2S_AttackAnimation(String name) {
-        public static Identifier ID = new Identifier(BetterCombat.MODID, "c2s_attack_animation");
+    public record AttackAnimation(int playerId, String animationName) {
+        public static Identifier ID = new Identifier(BetterCombat.MODID, "attack_animation");
+        public static String StopSymbol = "STOP";
+
+        public static PacketByteBuf writeStop(PacketByteBuf buffer, int playerId) {
+            return writePlay(buffer, playerId, StopSymbol);
+        }
+
+        public static PacketByteBuf writePlay(PacketByteBuf buffer, int playerId, String animationName) {
+            buffer.writeInt(playerId);
+            buffer.writeString(animationName);
+            return buffer;
+        }
+
+        public static AttackAnimation read(PacketByteBuf buffer) {
+            int playerId = buffer.readInt();
+            String animationName = buffer.readString();
+            return new AttackAnimation(playerId, animationName);
+        }
     }
 
     public static void initializeHandlers() {
-//        ServerPlayNetworking.registerGlobalReceiver(WeaponSwingPacket.C2S_REQUEST_SWING, (server, player, handler, buf, responseSender) -> {
-//            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
-//                    .orNull();
-//            if (world == null) {
-//                return;
-//            }
-//
-//            // world.isPlayerInRange()
-//            // ServerPlayNetworking.send((ServerPlayerEntity) user, TutorialNetworkingConstants.HIGHLIGHT_PACKET_ID, PacketByteBufs.empty());
-//            // world.getChunkManager().sendToOtherNearbyPlayers(player, asd);
-//            // ServerChunkManager serverChunkManager = server.chunk
-//        });
+        ServerPlayNetworking.registerGlobalReceiver(AttackAnimation.ID, (server, player, handler, buf, responseSender) -> {
+            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
+                    .orNull();
+            if (world == null || world.isClient) {
+                return;
+            }
+            final var packet = AttackAnimation.read(buf);
+
+            PacketByteBuf newBuffer = PacketByteBufs.create();
+            AttackAnimation.writePlay(newBuffer, player.getId(), packet.animationName);
+            final var forwardBuffer = newBuffer;
+            PlayerLookup.tracking(player).forEach(serverPlayer -> {
+                try {
+                    if (serverPlayer.getId() != player.getId() && ServerPlayNetworking.canSend(serverPlayer, AttackAnimation.ID)) {
+                        System.out.println("Sending " + player.getName() + " animation " + packet.animationName());
+                        ServerPlayNetworking.send(serverPlayer, AttackAnimation.ID, forwardBuffer);
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            });
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(C2S_AttackRequest.ID, (server, player, handler, buf, responseSender) -> {
             ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
