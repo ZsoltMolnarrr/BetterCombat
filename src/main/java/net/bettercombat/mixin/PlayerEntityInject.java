@@ -1,5 +1,6 @@
 package net.bettercombat.mixin;
 
+import net.bettercombat.WeaponRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,7 +16,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class PlayerEntityInject {
     @Redirect(method = "attack(Lnet/minecraft/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
     public Item replaceSword(ItemStack instance) {
-        return Items.AIR;
+        if (WeaponRegistry.getAttributes(instance) != null) {
+            return Items.AIR;
+        } else {
+            return instance.getItem();
+        }
     }
 
     @Redirect(method = "attack(Lnet/minecraft/entity/Entity;)V",
