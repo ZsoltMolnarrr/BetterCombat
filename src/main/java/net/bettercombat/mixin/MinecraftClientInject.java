@@ -6,7 +6,7 @@ import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.PlayerExtension;
 import net.bettercombat.client.collision.TargetFinder;
-import net.bettercombat.network.ServerNetwork;
+import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
@@ -136,8 +136,8 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         ((PlayerExtension) player).animate(animationName);
         PacketByteBuf buffer = PacketByteBufs.create();
         ClientPlayNetworking.send(
-                ServerNetwork.AttackAnimation.ID,
-                ServerNetwork.AttackAnimation.writePlay(buffer, player.getId(), animationName));
+                Packets.AttackAnimation.ID,
+                Packets.AttackAnimation.writePlay(buffer, player.getId(), animationName));
     }
 
     private void feintIfNeeded() {
@@ -146,8 +146,8 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             ((PlayerExtension) player).stopAnimation();
             PacketByteBuf buffer = PacketByteBufs.create();
             ClientPlayNetworking.send(
-                    ServerNetwork.AttackAnimation.ID,
-                    ServerNetwork.AttackAnimation.writeStop(buffer, player.getId()));
+                    Packets.AttackAnimation.ID,
+                    Packets.AttackAnimation.writeStop(buffer, player.getId()));
             upswingTicks = 0;
             upswingStack = null;
         }
@@ -223,8 +223,8 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             ranTargetCheckCurrentTick = true;
             PacketByteBuf buffer = PacketByteBufs.create();
             ClientPlayNetworking.send(
-                    ServerNetwork.C2S_AttackRequest.ID,
-                    ServerNetwork.C2S_AttackRequest.write(buffer, comboCount, true, player.isSneaking(), targets));
+                    Packets.C2S_AttackRequest.ID,
+                    Packets.C2S_AttackRequest.write(buffer, comboCount, true, player.isSneaking(), targets));
             client.player.resetLastAttackedTicks();
             ((MinecraftClientAccessor) client).setAttackCooldown(10);
             comboCount += 1;
