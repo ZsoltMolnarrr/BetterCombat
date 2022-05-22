@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -33,7 +34,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static net.minecraft.util.hit.HitResult.Type.BLOCK;
 
@@ -111,6 +111,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     private static float UpswingRate = 0.25F; // TODO: Move this constant to config
     private static float ComboResetRate = 3F; // TODO: Move this constant to config
 
+    private ItemStack upswingStack;
     private int upswingTicks = 0;
     private int comboCount = 0;
     private int lastAttacked = 1000;
@@ -127,15 +128,17 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             return;
         }
         lastAttacked = 0;
+        upswingStack = player.getMainHandStack();
         this.upswingTicks = getUpswingLength(player);
         ((PlayerExtension) player).animate("slash");
     }
 
     private void feintIfNeeded() {
-        if (BetterCombatClient.feintKeyBinding.isPressed()
-                && upswingTicks > 0) {
+        if (upswingTicks > 0 &&
+                (BetterCombatClient.feintKeyBinding.isPressed() || player.getMainHandStack() != upswingStack)) {
             ((PlayerExtension) player).stopAnimation();
             upswingTicks = 0;
+            upswingStack = null;
         }
     }
 
@@ -144,6 +147,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             --upswingTicks;
             if (upswingTicks == 0) {
                 performAttack();
+                upswingStack = null;
             }
         }
     }
