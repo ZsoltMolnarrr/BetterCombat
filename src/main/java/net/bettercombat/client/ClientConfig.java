@@ -2,7 +2,7 @@ package net.bettercombat.client;
 
 import me.lortseam.completeconfig.api.ConfigEntry;
 import me.lortseam.completeconfig.api.ConfigGroup;
-import me.shedaniel.math.Color;
+import net.minecraft.text.TextColor;
 
 public class ClientConfig implements ConfigGroup {
     @ConfigEntry
@@ -12,13 +12,11 @@ public class ClientConfig implements ConfigGroup {
     @ConfigEntry
     public boolean isSwingThruGrassEnabled = true;
     @ConfigEntry
-    public boolean isAlwaysShowingAttackIndicatorForWeapons = true;
-    @ConfigEntry
     public boolean isHighlightCrosshairEnabled = false;
     @ConfigEntry
     public boolean isHighlightAttackIndicatorEnabled = false;
     @ConfigEntry
-    public Color hudHighlightColor = Color.ofRGBA(255, 0, 0, 127);
+    public TextColor hudHighlightColor = TextColor.fromRgb(0xFF0000);
 
 //    public Listener listener;
 //    public interface Listener {
