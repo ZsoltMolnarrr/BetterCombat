@@ -27,8 +27,7 @@ import org.slf4j.Logger;
 import java.util.List;
 import java.util.UUID;
 
-public class WeaponSwingPacket {
-
+public class Network {
     static final Logger LOGGER = LogUtils.getLogger();
 
     public record C2S_AttackRequest(int comboCount, int stack, boolean isSneaking, int[] entityIds) {
@@ -56,8 +55,9 @@ public class WeaponSwingPacket {
         }
     }
 
-//    public static Identifier C2S_REQUEST_SWING = new Identifier("C2S_REQUEST_SWING");
-//    public static Identifier S2C_PERFORM_SWING = new Identifier("C2S_REQUEST_SWING");
+    public record C2S_AttackAnimation(String name) {
+        public static Identifier ID = new Identifier(BetterCombat.MODID, "c2s_attack_animation");
+    }
 
     public static void initializeHandlers() {
 //        ServerPlayNetworking.registerGlobalReceiver(WeaponSwingPacket.C2S_REQUEST_SWING, (server, player, handler, buf, responseSender) -> {

@@ -4,10 +4,9 @@ import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
-import net.bettercombat.client.MinecraftClientHelper;
 import net.bettercombat.client.PlayerExtension;
 import net.bettercombat.client.collision.TargetFinder;
-import net.bettercombat.network.WeaponSwingPacket;
+import net.bettercombat.network.Network;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
@@ -108,7 +107,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         return false;
     }
 
-    private static float UpswingRate = 0.25F; // TODO: Move this constant to config
+    private static float UpswingRate = 0.30F; // TODO: Move this constant to config
     private static float ComboResetRate = 3F; // TODO: Move this constant to config
 
     private ItemStack upswingStack;
@@ -185,7 +184,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             if (attributes != null) {
                 List<Entity> targets = TargetFinder.findAttackTargets(
                     player,
-                    MinecraftClientHelper.getCursorTarget(client),
+                    getCursorTarget(),
                     attributes.currentAttack(comboCount),
                     attributes.attackRange());
                 hasTargetsInRange = targets.size() > 0;
@@ -203,15 +202,15 @@ public class MinecraftClientInject implements MinecraftClientExtension {
 
             List<Entity> targets = TargetFinder.findAttackTargets(
                     player,
-                    MinecraftClientHelper.getCursorTarget(client),
+                    getCursorTarget(),
                     attributes.currentAttack(comboCount),
                     attributes.attackRange());
             hasTargetsInRange = targets.size() > 0;
             ranTargetCheckCurrentTick = true;
             PacketByteBuf buffer = PacketByteBufs.create();
             ClientPlayNetworking.send(
-                    WeaponSwingPacket.C2S_AttackRequest.ID,
-                    WeaponSwingPacket.C2S_AttackRequest.write(buffer, comboCount, true, player.isSneaking(), targets));
+                    Network.C2S_AttackRequest.ID,
+                    Network.C2S_AttackRequest.write(buffer, comboCount, true, player.isSneaking(), targets));
             client.player.resetLastAttackedTicks();
             ((MinecraftClientAccessor) client).setAttackCooldown(10);
             comboCount += 1;

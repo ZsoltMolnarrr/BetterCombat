@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.MinecraftClientExtension;
-import net.bettercombat.client.MinecraftClientHelper;
 import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.bettercombat.client.collision.TargetFinder;
 import net.minecraft.client.MinecraftClient;
@@ -45,8 +44,9 @@ public class ColliderDebugRenderer {
         if (attributes == null) {
             return;
         }
-        var comboCount = ((MinecraftClientExtension)client).getComboCount();
-        var cursorTarget = MinecraftClientHelper.getCursorTarget(client);
+        var extendedClient = (MinecraftClientExtension)client;
+        var comboCount = extendedClient.getComboCount();
+        var cursorTarget = extendedClient.getCursorTarget();
         var target = TargetFinder.findAttackTargetResult(
                 player,
                 cursorTarget,
