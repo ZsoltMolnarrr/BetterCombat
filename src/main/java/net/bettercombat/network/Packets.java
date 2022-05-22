@@ -1,6 +1,7 @@
 package net.bettercombat.network;
 
 import net.bettercombat.BetterCombat;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -12,7 +13,8 @@ public class Packets {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "c2s_request_attack");
         public static double RangeTolerance = 2.0;
         public static boolean UseVanillaPacket = true;
-        public static PacketByteBuf write(PacketByteBuf buffer, int comboCount, boolean useMainHand, boolean isSneaking, List<Entity> entities) {
+        public static PacketByteBuf write(int comboCount, boolean useMainHand, boolean isSneaking, List<Entity> entities) {
+            PacketByteBuf buffer = PacketByteBufs.create();
             int[] ids = new int[entities.size()];
             for(int i = 0; i < entities.size(); i++) {
                 ids[i] = entities.get(i).getId();
@@ -37,11 +39,12 @@ public class Packets {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "attack_animation");
         public static String StopSymbol = "STOP";
 
-        public static PacketByteBuf writeStop(PacketByteBuf buffer, int playerId) {
-            return writePlay(buffer, playerId, StopSymbol);
+        public static PacketByteBuf writeStop(int playerId) {
+            return writePlay(playerId, StopSymbol);
         }
 
-        public static PacketByteBuf writePlay(PacketByteBuf buffer, int playerId, String animationName) {
+        public static PacketByteBuf writePlay(int playerId, String animationName) {
+            PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeInt(playerId);
             buffer.writeString(animationName);
             return buffer;
@@ -52,5 +55,9 @@ public class Packets {
             String animationName = buffer.readString();
             return new AttackAnimation(playerId, animationName);
         }
+    }
+
+    public static class WeaponRegistrySync {
+        public static Identifier ID = new Identifier(BetterCombat.MODID, "weapon_registry");
     }
 }

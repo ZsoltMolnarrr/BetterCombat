@@ -134,20 +134,18 @@ public class MinecraftClientInject implements MinecraftClientExtension {
 
         String animationName = attack.animation();
         ((PlayerExtension) player).animate(animationName);
-        PacketByteBuf buffer = PacketByteBufs.create();
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
-                Packets.AttackAnimation.writePlay(buffer, player.getId(), animationName));
+                Packets.AttackAnimation.writePlay(player.getId(), animationName));
     }
 
     private void feintIfNeeded() {
         if (upswingTicks > 0 &&
                 (BetterCombatClient.feintKeyBinding.isPressed() || player.getMainHandStack() != upswingStack)) {
             ((PlayerExtension) player).stopAnimation();
-            PacketByteBuf buffer = PacketByteBufs.create();
             ClientPlayNetworking.send(
                     Packets.AttackAnimation.ID,
-                    Packets.AttackAnimation.writeStop(buffer, player.getId()));
+                    Packets.AttackAnimation.writeStop(player.getId()));
             upswingTicks = 0;
             upswingStack = null;
         }
@@ -224,7 +222,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             PacketByteBuf buffer = PacketByteBufs.create();
             ClientPlayNetworking.send(
                     Packets.C2S_AttackRequest.ID,
-                    Packets.C2S_AttackRequest.write(buffer, comboCount, true, player.isSneaking(), targets));
+                    Packets.C2S_AttackRequest.write(comboCount, true, player.isSneaking(), targets));
             client.player.resetLastAttackedTicks();
             ((MinecraftClientAccessor) client).setAttackCooldown(10);
             comboCount += 1;

@@ -7,8 +7,8 @@ import com.mojang.logging.LogUtils;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.mixin.LivingEntityAccessor;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ExperienceOrbEntity;
@@ -18,7 +18,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
@@ -30,6 +29,10 @@ public class ServerNetwork {
     static final Logger LOGGER = LogUtils.getLogger();
 
     public static void initializeHandlers() {
+        ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
+            sender.sendPacket(Packets.WeaponRegistrySync.ID, WeaponRegistry.getEncodedRegistry());
+        });
+
         ServerPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (server, player, handler, buf, responseSender) -> {
             ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
                     .orNull();
@@ -37,14 +40,10 @@ public class ServerNetwork {
                 return;
             }
             final var packet = Packets.AttackAnimation.read(buf);
-
-            PacketByteBuf newBuffer = PacketByteBufs.create();
-            Packets.AttackAnimation.writePlay(newBuffer, player.getId(), packet.animationName());
-            final var forwardBuffer = newBuffer;
+            final var forwardBuffer = Packets.AttackAnimation.writePlay(player.getId(), packet.animationName());;
             PlayerLookup.tracking(player).forEach(serverPlayer -> {
                 try {
                     if (serverPlayer.getId() != player.getId() && ServerPlayNetworking.canSend(serverPlayer, Packets.AttackAnimation.ID)) {
-                        System.out.println("Sending " + player.getName() + " animation " + packet.animationName());
                         ServerPlayNetworking.send(serverPlayer, Packets.AttackAnimation.ID, forwardBuffer);
                     }
                 } catch (Exception e){
@@ -59,11 +58,9 @@ public class ServerNetwork {
             if (world == null || world.isClient) {
                 return;
             }
-
             final var request = Packets.C2S_AttackRequest.read(buf);
             final WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
             final boolean useVanillaPacket = Packets.C2S_AttackRequest.UseVanillaPacket;
-
             world.getServer().executeSync(() -> {
                 Multimap<EntityAttribute, EntityAttributeModifier> temporaryAttributes = null;
                 double range = 18.0;

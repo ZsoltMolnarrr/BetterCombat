@@ -1,6 +1,7 @@
 package net.bettercombat;
 
 import net.bettercombat.example.ClaymoreItem;
+import net.bettercombat.network.Packets;
 import net.bettercombat.network.ServerNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -20,6 +21,7 @@ public class BetterCombat implements ModInitializer {
     public void onInitialize() {
         Registry.register(Registry.ITEM, new Identifier(MODID, "claymore"), CLAYMORE);
         WeaponRegistry.register(new Identifier(MODID, "claymore"), ClaymoreItem.attributes);
+        WeaponRegistry.updateEncodedRegistry();
         ServerNetwork.initializeHandlers();
     }
 }
