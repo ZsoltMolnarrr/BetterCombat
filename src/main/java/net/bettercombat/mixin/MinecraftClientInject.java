@@ -23,6 +23,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -55,7 +56,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             if (isTargetingMineableBlock()) {
                 return;
             }
-            startUpswing();
+            startUpswing(attributes);
             info.setReturnValue(false);
             info.cancel();
         }
@@ -78,7 +79,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
 
             if (BetterCombatClient.config.isHoldToAttackEnabled && isPressed) {
                 isHoldingAttack = true;
-                startUpswing();
+                startUpswing(attributes);
                 ci.cancel();
             } else {
                 isHoldingAttack = false;
@@ -107,29 +108,30 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         return false;
     }
 
-    private static float UpswingRate = 0.30F; // TODO: Move this constant to config
-    private static float ComboResetRate = 3F; // TODO: Move this constant to config
+    private static float ComboResetRate = 3F;
 
     private ItemStack upswingStack;
     private int upswingTicks = 0;
     private int comboCount = 0;
     private int lastAttacked = 1000;
 
-    private int getUpswingLength(PlayerEntity player) {
+    private int getUpswingLength(PlayerEntity player, double upswingRate) {
         Item item = player.getMainHandStack().getItem();
         Identifier id = Registry.ITEM.getId(item);
         double attackCooldownTicks = 20.0 / player.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED);
-        return (int)(Math.round(attackCooldownTicks * UpswingRate));
+        return (int)(Math.round(attackCooldownTicks * upswingRate));
     }
 
-    private void startUpswing() {
-        if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - UpswingRate)) {
+    private void startUpswing(WeaponAttributes attributes) {
+        var attack = attributes.currentAttack(comboCount);
+        double upswingRate = upswingRate(attack);
+        if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
             return;
         }
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
-        this.upswingTicks = getUpswingLength(player);
-        ((PlayerExtension) player).animate("slash");
+        this.upswingTicks = getUpswingLength(player, upswingRate);
+        ((PlayerExtension) player).animate(attack.animation());
     }
 
     private void feintIfNeeded() {
@@ -196,14 +198,16 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null) {
-            if (client.player.getAttackCooldownProgress(0) < (1.0 - UpswingRate)) {
+            var attack = attributes.currentAttack(comboCount);
+            double upswingRate = upswingRate(attack);
+            if (client.player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
                 return true;
             }
 
             List<Entity> targets = TargetFinder.findAttackTargets(
                     player,
                     getCursorTarget(),
-                    attributes.currentAttack(comboCount),
+                    attack,
                     attributes.attackRange());
             hasTargetsInRange = targets.size() > 0;
             ranTargetCheckCurrentTick = true;
@@ -229,5 +233,9 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     @Override
     public boolean hasTargetsInRange() {
         return hasTargetsInRange;
+    }
+
+    private double upswingRate(WeaponAttributes.Attack attack) {
+        return MathHelper.clamp(attack.upswing(), 0, 1);
     }
 }

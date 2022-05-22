@@ -36,6 +36,8 @@ public record WeaponAttributes(
             SwingDirection direction,
             double damageMultiplier,
             double angle,
+            double upswing,
+            String animation,
             Sound swingSound,
             Sound impactSound
     ) {
