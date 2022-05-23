@@ -1,7 +1,6 @@
 package net.bettercombat;
 
 import net.bettercombat.example.ClaymoreItem;
-import net.bettercombat.network.Packets;
 import net.bettercombat.network.ServerNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;

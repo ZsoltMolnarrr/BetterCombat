@@ -1,5 +1,6 @@
 package net.bettercombat.example;
 
+import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.SwordItem;
@@ -16,7 +17,13 @@ public class ClaymoreItem extends SwordItem {
                             150,
                             0.3,
                             "slash",
-                            null,
+                            new WeaponAttributes.Sound[] {
+                                    new WeaponAttributes.Sound(
+                                            BetterCombat.MODID + ":" + "claymore-swing",
+                                            1F,
+                                            1F,
+                                            0.1F)
+                            },
                             null),
                     new WeaponAttributes.Attack(
                             WeaponAttributes.SwingDirection.FORWARD,
@@ -24,7 +31,13 @@ public class ClaymoreItem extends SwordItem {
                             0,
                             0.3,
                             "slash",
-                            null,
+                            new WeaponAttributes.Sound[] {
+                                    new WeaponAttributes.Sound(
+                                            BetterCombat.MODID + ":" + "claymore-stab",
+                                            1F,
+                                            1F,
+                                            0.1F)
+                            },
                             null),
                     new WeaponAttributes.Attack(
                             WeaponAttributes.SwingDirection.VERTICAL_TOP_TO_BOTTOM,
@@ -32,7 +45,13 @@ public class ClaymoreItem extends SwordItem {
                             150,
                             0.3,
                             "slash",
-                            null,
+                            new WeaponAttributes.Sound[] {
+                                    new WeaponAttributes.Sound(
+                                            BetterCombat.MODID + ":" + "claymore-slam",
+                                            1F,
+                                            1F,
+                                            0.1F)
+                            },
                             null)
             }
     );

@@ -1,12 +1,20 @@
 {
-  "claymore-impact": {
-    "sounds": [
-      "bettercombat:claymore-impact-01"
-    ]
-  },
   "claymore-swing": {
     "sounds": [
       "bettercombat:claymore-swing-01"
+    ]
+  },
+  "claymore-stab": {
+    "sounds": [
+      "bettercombat:claymore-stab-01"
+    ]
+  },
+  "claymore-slam": {
+    "sounds": [
+      {
+        "name": "bettercombat:claymore-slam-02",
+        "pitch": 0.87
+      }
     ]
   }
 }

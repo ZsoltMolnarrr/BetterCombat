@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.mojang.logging.LogUtils;
+import net.bettercombat.SoundHelper;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.mixin.LivingEntityAccessor;
@@ -73,6 +74,8 @@ public class ServerNetwork {
                     temporaryAttributes = HashMultimap.create();
                     temporaryAttributes.put(key, value);
                     player.getAttributes().addTemporaryModifiers(temporaryAttributes);
+
+                    SoundHelper.playSounds(world, player, attack.swingSound());
                 }
 
                 var lastAttackedTicks = ((LivingEntityAccessor)player).getLastAttackedTicks();

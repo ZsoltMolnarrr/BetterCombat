@@ -49,8 +49,8 @@ public final class WeaponAttributes {
         private final double angle;
         private final double upswing;
         private final String animation;
-        private final Sound swingSound;
-        private final Sound impactSound;
+        private final Sound[] swingSound;
+        private final Sound[] impactSound;
 
         public Attack(
                 SwingDirection direction,
@@ -58,8 +58,8 @@ public final class WeaponAttributes {
                 double angle,
                 double upswing,
                 String animation,
-                Sound swingSound,
-                Sound impactSound
+                Sound[] swingSound,
+                Sound[] impactSound
         ) {
             this.direction = direction;
             this.damageMultiplier = damageMultiplier;
@@ -90,11 +90,11 @@ public final class WeaponAttributes {
             return animation;
         }
 
-        public Sound swingSound() {
+        public Sound[] swingSound() {
             return swingSound;
         }
 
-        public Sound impactSound() {
+        public Sound[] impactSound() {
             return impactSound;
         }
 
@@ -139,22 +139,31 @@ public final class WeaponAttributes {
 
     public static final class Sound {
         private final String id;
-        private final float pitchRandomness;
+        private final float volume;
+        private final float pitch;
+        private final float randomness;
 
-        public Sound(
-                String id,
-                float pitchRandomness
-        ) {
+        public Sound(String id, float volume, float pitch, float randomness) {
             this.id = id;
-            this.pitchRandomness = pitchRandomness;
+            this.volume = volume;
+            this.pitch = pitch;
+            this.randomness = randomness;
         }
 
         public String id() {
             return id;
         }
 
-        public float pitchRandomness() {
-            return pitchRandomness;
+        public float volume() {
+            return volume;
+        }
+
+        public float pitch() {
+            return pitch;
+        }
+
+        public float randomness() {
+            return randomness;
         }
 
         @Override
@@ -163,20 +172,25 @@ public final class WeaponAttributes {
             if (obj == null || obj.getClass() != this.getClass()) return false;
             var that = (Sound) obj;
             return Objects.equals(this.id, that.id) &&
-                    Float.floatToIntBits(this.pitchRandomness) == Float.floatToIntBits(that.pitchRandomness);
+                    Float.floatToIntBits(this.volume) == Float.floatToIntBits(that.volume) &&
+                    Float.floatToIntBits(this.pitch) == Float.floatToIntBits(that.pitch) &&
+                    Float.floatToIntBits(this.randomness) == Float.floatToIntBits(that.randomness);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, pitchRandomness);
+            return Objects.hash(id, volume, pitch, randomness);
         }
 
         @Override
         public String toString() {
-            return "Sound[" +
+            return "SoundV2[" +
                     "id=" + id + ", " +
-                    "pitchRandomness=" + pitchRandomness + ']';
+                    "volume=" + volume + ", " +
+                    "pitch=" + pitch + ", " +
+                    "randomness=" + randomness + ']';
         }
+
 
     }
 
