@@ -128,7 +128,6 @@ public final class WeaponAttributes {
                     "swingSound=" + swingSound + ", " +
                     "impactSound=" + impactSound + ']';
         }
-
     }
 
     public enum SwingDirection {

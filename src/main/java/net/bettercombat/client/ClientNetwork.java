@@ -12,7 +12,7 @@ public class ClientNetwork {
             client.execute(() -> {
                 var entity = client.world.getEntityById(packet.playerId());
                 if (entity instanceof PlayerEntity) {
-                    if (packet.animationName() == Packets.AttackAnimation.StopSymbol) {
+                    if (packet.animationName().equals(Packets.AttackAnimation.StopSymbol)) {
                         ((PlayerExtension)entity).stopAnimation();
                     } else {
                         ((PlayerExtension)entity).animate(packet.animationName());

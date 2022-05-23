@@ -37,7 +37,7 @@ public class Packets {
 
     public record AttackAnimation(int playerId, String animationName) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "attack_animation");
-        public static String StopSymbol = "STOP";
+        public static String StopSymbol = "!STOP!";
 
         public static PacketByteBuf writeStop(int playerId) {
             return writePlay(playerId, StopSymbol);
