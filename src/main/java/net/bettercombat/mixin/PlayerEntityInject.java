@@ -1,6 +1,7 @@
 package net.bettercombat.mixin;
 
 import net.bettercombat.WeaponRegistry;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,7 +11,9 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityInject {
@@ -44,4 +47,15 @@ public abstract class PlayerEntityInject {
 //        }
     }
 
+    @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
+    public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
+        if (slot == EquipmentSlot.OFFHAND) {
+            var mainHandStack = ((PlayerEntityAccessor)this).getInventory().getMainHandStack();
+            var attributes = WeaponRegistry.getAttributes(mainHandStack);
+            if(attributes != null && attributes.held().isTwoHanded()) {
+                cir.setReturnValue(ItemStack.EMPTY);
+                cir.cancel();
+            }
+        }
+    }
 }
