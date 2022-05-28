@@ -50,11 +50,21 @@ public abstract class PlayerEntityInject {
     @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
     public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
         if (slot == EquipmentSlot.OFFHAND) {
-            var mainHandStack = ((PlayerEntityAccessor)this).getInventory().getMainHandStack();
+            var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
             var attributes = WeaponRegistry.getAttributes(mainHandStack);
+            if (attributes != null && attributes.held().isTwoHanded()) {
+                cir.setReturnValue(ItemStack.EMPTY);
+                cir.cancel();
+                return;
+            }
+        }
+        if (slot == EquipmentSlot.MAINHAND) {
+            var offHandStack = ((PlayerEntityAccessor)this).getInventory().offHand.get(0);
+            var attributes = WeaponRegistry.getAttributes(offHandStack);
             if(attributes != null && attributes.held().isTwoHanded()) {
                 cir.setReturnValue(ItemStack.EMPTY);
                 cir.cancel();
+                return;
             }
         }
     }

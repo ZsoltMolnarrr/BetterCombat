@@ -6,7 +6,8 @@
   "mixins": [
     "PlayerEntityAccessor",
     "PlayerEntityInject",
-    "LivingEntityAccessor"
+    "LivingEntityAccessor",
+    "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
     "ColliderDebugRenderer",
