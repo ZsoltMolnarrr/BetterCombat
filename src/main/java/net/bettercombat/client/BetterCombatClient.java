@@ -48,13 +48,17 @@ public class BetterCombatClient implements ClientModInitializer {
         if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
             ConfigScreenBuilder.setMain(BetterCombat.MODID, new ClothConfigScreenBuilder());
         }
+        registerKeyBindings();
+        registerSounds();
+    }
+
+    private void registerKeyBindings() {
         feintKeyBinding = new KeyBinding(
                 "config.bettercombat.clientConfig.feintKey",
                 InputUtil.Type.KEYSYM,
                 InputUtil.GLFW_KEY_R,
                 "Better Combat");
         KeyBindingHelper.registerKeyBinding(feintKeyBinding);
-        registerSounds();
     }
 
     private void registerSounds() {

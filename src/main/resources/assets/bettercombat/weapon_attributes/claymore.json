@@ -1,0 +1,54 @@
+{
+  "attributes": {
+    "attackRange": 2.5,
+    "held": "SWORD_TWO_HANDED",
+    "attacks": [
+      {
+        "direction": "HORIZONTAL_RIGHT_TO_LEFT",
+        "damageMultiplier": -0.5,
+        "angle": 150,
+        "upswing": 0.3,
+        "animation": "slash",
+        "swingSound": [
+          {
+            "id": "bettercombat:claymore-swing",
+            "volume": 1,
+            "pitch": 1,
+            "randomness": 0.1
+          }
+        ]
+      },
+      {
+        "direction": "FORWARD",
+        "damageMultiplier": 0,
+        "angle": 0,
+        "upswing": 0.3,
+        "animation": "slash",
+        "swingSound": [
+          {
+            "id": "bettercombat:claymore-stab",
+            "volume": 1,
+            "pitch": 1,
+            "randomness": 0.1
+          }
+        ]
+      },
+      {
+        "direction": "VERTICAL_TOP_TO_BOTTOM",
+        "damageMultiplier": 0.5,
+        "angle": 150,
+        "upswing": 0.3,
+        "animation": "slash",
+        "swingSound": [
+          {
+            "id": "bettercombat:claymore-slam",
+            "volume": 1,
+            "pitch": 1,
+            "randomness": 0.1
+          }
+        ]
+      }
+    ]
+  }
+}
+
