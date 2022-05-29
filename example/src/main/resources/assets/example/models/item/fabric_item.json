@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "bettercombat:item/fabric_item"
+    "layer0": "example:item/fabric_item"
   }
 }

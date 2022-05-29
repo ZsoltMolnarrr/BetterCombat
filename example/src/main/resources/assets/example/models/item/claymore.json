@@ -1,7 +1,7 @@
 {
-  "parent": "bettercombat:item/claymore-base",
+  "parent": "example:item/claymore-base",
   "textures": {
-    "layer0": "bettercombat:item/claymore"
+    "layer0": "example:item/claymore"
   },
   "display": {
     "head": {
