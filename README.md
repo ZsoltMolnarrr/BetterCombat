@@ -12,17 +12,25 @@ Each weapon can have unique behaviour, by specifying weapon attributes via a JSO
 
 ## ⭐️ Features
 
-- [ ] JSON API to assign attributes to any weapon
-- [X] Holding weapons as one-handed or two-handed
-- [ ] Custom holding stance for weapons
-- [ ] Custom weapon swing animations
-- [X] Upswing weapon before hitting (can also feint)
-- [X] Accurate hit box calculation (based on [OBB+SAT](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem))
+Primary features:
+- [ ] Assign attributes to weapons via JSON API
+- [ ] Define how the weapon is held (for example: `1H_Sword`, `2H_sword`, etc...)
+- [X] Define combos for the weapon (each attack in a combo can have different propeties)
+- [ ] Define swing animations for the weapon 
+- [X] Upswing weapon before hitting
+- [X] Accurate hitbox calculation (based on [OBB](https://www.sciencedirect.com/topics/computer-science/oriented-bounding-box)+[SAT](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem))
 - [X] Hitting multiple enemies with a single strike
-- [X] Combos (each weapon can have its own specific sequence of attacks)
-- [ ] Attacking with dual wielded weapons
 - [X] Configurable auxiliary client features (hold attack key to spam attack, disable mining with weapons, swing thru grass, target indication)
+- [X] Weapon attributes are synchronized (server sends to client)
 
+Auxiliary features:
+- [ ] Attacking with dual wielded weapons
+- [X] Two-handed weapons ignore offhand slot
+- [X] Cancel attack during upswing (aka "feint")
+- [X] Hold attack key to spam attack
+- [X] Target in hitbox indication
+- [X] Swing thru grass
+- [X] Can disable mining with weapons
 
 Future plans:
 - Rolling
