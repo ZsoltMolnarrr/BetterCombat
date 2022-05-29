@@ -56,6 +56,7 @@ java {
 }
 
 jar {
+    destinationDir = file("$rootDir/../run/mods")
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
