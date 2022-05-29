@@ -10,7 +10,7 @@
 This Minecraft mod upgrades the outdated melee combat system, to feel as good and easy to use as Minecraft Dungeons.   
 Each weapon can have unique behaviour, by specifying weapon attributes via a JSON API.
 
-## Features
+## ⭐️ Features
 
 - [ ] JSON API to assign attributes to any weapon
 - [X] Holding weapons as one-handed or two-handed
@@ -20,7 +20,6 @@ Each weapon can have unique behaviour, by specifying weapon attributes via a JSO
 - [X] Accurate hit box calculation (based on [OBB+SAT](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem))
 - [X] Hitting multiple enemies with a single strike
 - [X] Combos (each weapon can have its own specific sequence of attacks)
-- [ ] Custom weapon swing sounds
 - [ ] Attacking with dual wielded weapons
 - [X] Configurable auxiliary client features (hold attack key to spam attack, disable mining with weapons, swing thru grass, target indication)
 
@@ -31,16 +30,20 @@ Future plans:
 - External weapon swing animations
 - Attributes from ItemStack metadata
 
-## Integrate your mod
+## 🔨 Integrate your mod
 
 ### Using a preset
 
 ### Attributes from scratch
 
-## Configuration
+## 🔧 Configuration
 
 ### Client
 
 ### Common
 
 ### Server
+
+## ⛓ Compatibility
+
+This mod has been created in the spirit of maximal compatibility. However since some core mechanics are overridden, mods trying to change the same thing will never be compatible.
