@@ -11,13 +11,13 @@
 Upgrades the outdated melee combat system of Minecraft, to feel as good and easy to use as Minecraft Dungeons.   
 Each weapon can have unique behaviour, by specifying weapon attributes via a JSON API.
 
-## ⭐️ Features
+# ⭐️ Features
 
 Primary features:
 - [X] Assign attributes to weapons via JSON API
 - [ ] Define how the weapon is held (for example: `1H_SWORD`, `2H_SWORD`, etc...)
 - [X] Define combos for the weapon (each attack in a combo can have different propeties)
-- [ ] Define swing animations and sounds for the weapon 
+- [ ] Define swing animations and sounds for the weapon
 - [X] Upswing weapon before hitting
 - [X] Accurate hitbox calculation (based on [OBB](https://www.sciencedirect.com/topics/computer-science/oriented-bounding-box)+[SAT](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem))
 - [X] Hitting multiple enemies with a single strike
@@ -38,9 +38,9 @@ Future plans:
 - External weapon swing animations
 - Attributes from ItemStack metadata
 
-## 🔨 Integrate your mod
+# 🔨 Integrate your mod
 
-Weapon attributes are the behaviour of a weapon including: range, combos (list of attacks), animations and sounds, etc... 
+Weapon attributes are the behaviour of a weapon including: range, combos (list of attacks), animations and sounds, etc...
 
 Assign weapon attributes to weapons of your mod, just by creating **resource files** describing them. This is done similar to how you assign crafting recipes to an item.
 **No need for any java or gradle dependency**.
@@ -53,9 +53,9 @@ To assign weapon attributes to the Claymore, create a new json file at the follo
 
 ```resources/data/my-mod-id/weapon_attributes/claymore.json```
 
-The content of this json file can be written the following ways:
+The content of this json file should be the following:
 
-### Using a preset
+## Using a preset
 
 Presets are a collection of weapon attributes bundled with this mod, covering the most common use cases.
 
@@ -71,7 +71,7 @@ You can check out all available presets [here](https://github.com/ZsoltMolnarrr/
 
 You can make and reference your own presets the same way.
 
-### Custom attributes
+## Custom attributes
 
 If you want custom behaviour for your weapon, you can create them from scratch.
 
@@ -84,7 +84,7 @@ When no parent is specified, the value for `"attributes"` key must be a full jso
 
 ---
 
-When parent is specified, you can partially override its properites: 
+When parent is specified, you can partially override its properites:
 ```
 {
   "parent": "bettercombat:claymore",
@@ -116,14 +116,14 @@ You can create and use your own presets:
 }
 ```
 
-## 🔧 Configuration
+# 🔧 Configuration
 
-### Client
+## Client
 
-### Common
+## Common
 
-### Server
+## Server
 
-## ⛓ Compatibility
+# ⛓ Compatibility
 
 This mod has been created in the spirit of maximal compatibility. However since some core mechanics are overridden, mods trying to change the same thing will never be compatible.
