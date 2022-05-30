@@ -14,7 +14,7 @@ Each weapon can have unique behaviour, by specifying weapon attributes via a JSO
 ## ⭐️ Features
 
 Primary features:
-- [ ] Assign attributes to weapons via JSON API
+- [X] Assign attributes to weapons via JSON API
 - [ ] Define how the weapon is held (for example: `1H_SWORD`, `2H_SWORD`, etc...)
 - [X] Define combos for the weapon (each attack in a combo can have different propeties)
 - [ ] Define swing animations and sounds for the weapon 
@@ -40,9 +40,65 @@ Future plans:
 
 ## 🔨 Integrate your mod
 
+Weapon attributes are the behaviour of a weapon including: range, combos (list of attacks), animations and sounds, etc... 
+
+Assign weapon attributes to weapons of your mod, just by creating **resource files** describing them. This is done similar to how you assign crafting recipes to an item.
+**No need for any java or gradle dependency**.
+
+For example adding attributes to a custom sword called Claymore from your mod:
+- mod id is `my-mod-id`
+- item id of the Claymore is `my-mod-id:claymore`
+
+To assign weapon attributes to the Claymore, create a new json file at the following location:
+
+```resources/data/my-mod-id/weapon_attributes/claymore.json```
+
+The content of this json file can be written the following ways:
+
 ### Using a preset
 
-### Attributes from scratch
+Presets are a collection of weapon attributes bundled with this mod, covering the most common use cases.
+
+Example for using the `bettercombat:claymore` for our Claymore:
+
+```
+{
+  "parent": "bettercombat:claymore"
+}
+```
+
+You can check out all available presets [here](https://github.com/ZsoltMolnarrr/BetterCombat/tree/main/src/main/resources/data/bettercombat/weapon_attributes).
+
+You can make and reference your own presets the same way.
+
+### Custom attributes
+
+If you want custom behaviour for your weapon, you can create them from scratch: 
+
+```
+{
+  "attributes": { ATTRIBUTES OBJECT }
+}
+```
+`{ ATTRIBUTES OBJECT }` must be a json object that can be parsed into [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) java object.
+
+You can reuse and partially override already existing presets: 
+```
+{
+  "parent": "bettercombat:claymore",
+  "attributes": {
+    "attackRange": 3.5
+  }
+}
+```
+
+You can create and use your own presets:
+```
+{
+  "parent": "my-mod-id:longsword",
+  "attributes": { ... }
+}
+```
 
 ## 🔧 Configuration
 
