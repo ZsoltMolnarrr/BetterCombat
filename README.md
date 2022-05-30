@@ -21,7 +21,6 @@ Primary features:
 - [X] Upswing weapon before hitting
 - [X] Accurate hitbox calculation (based on [OBB](https://www.sciencedirect.com/topics/computer-science/oriented-bounding-box)+[SAT](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem))
 - [X] Hitting multiple enemies with a single strike
-- [X] Configurable auxiliary client features (hold attack key to spam attack, disable mining with weapons, swing thru grass, target indication)
 - [X] Weapon attributes are synchronized (server sends to client)
 
 Auxiliary features:

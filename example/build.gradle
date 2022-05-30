@@ -3,12 +3,6 @@ plugins {
     id 'maven-publish'
 }
 
-//def props = new Properties()
-//props.load(new FileInputStream('./../gradle.properties'))
-//props.each { key, val ->
-//    project.set(key, val)
-//}
-
 version = project.mod_version
 group = project.maven_group
 

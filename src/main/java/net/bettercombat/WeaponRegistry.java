@@ -5,16 +5,15 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import net.bettercombat.api.AttributesContainer;
 import net.bettercombat.api.WeaponAttributes;
-import net.bettercombat.client.BetterCombatClient;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -41,32 +40,21 @@ public class WeaponRegistry {
 
     // LOADING
 
-    public static void loadAttributes() {
+    public static void loadAttributes(ResourceManager resourceManager) {
         var gson = new Gson();
         Type fileFormat = new TypeToken<AttributesContainer>() {}.getType();
-        List<String> modids = Arrays.asList(new String[]{"bettercombat"}); // TODO: All mods
         Map<Identifier, AttributesContainer> containers = new HashMap();
-
         // Reading all attribute files
-        for (String modid0 : modids) {
-            var modid = "example"; // TODO: Remove
+        for (Identifier identifier : resourceManager.findResources("weapon_attributes", fileName -> fileName.endsWith(".json"))) {
             try {
-                var directoryURL = BetterCombatClient.class.getResource("/assets/" + modid0 + "/weapon_attributes"); // TODO: BetterCombatClient.class?
-                var directory = directoryURL.getPath();
-                var files = new File(directory).listFiles();; // new File(String.valueOf(directory)).list();
-                System.out.println("Seeing dir: " + String.valueOf(directory) + " files: " + files.toString());
-                for (File file : files) {
-                    try {
-                        String fileName = file.getName().substring(0, file.getName().lastIndexOf('.')); // Drop extension
-                        String filePath = file.getPath(); // directory + "/" + file;
-                        JsonReader reader = new JsonReader(new FileReader(filePath));
-                        AttributesContainer container = gson.fromJson(reader, fileFormat);
-                        var id = new Identifier(modid, fileName);
-                        containers.put(id, container);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                System.out.println("Checking resource: " + identifier);
+                var resource = resourceManager.getResource(identifier);
+                JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
+                AttributesContainer container = gson.fromJson(reader, fileFormat);
+                var id = identifier
+                        .toString().replace("weapon_attributes/", "");
+                id = id.substring(0, id.lastIndexOf('.'));
+                containers.put(new Identifier(id), container);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -82,13 +70,18 @@ public class WeaponRegistry {
                 AttributesContainer current = value;
                 while (current != null) {
                     resolutionChain.add(0, current.attributes());
-                    current = containers.get(current.parent());
+                    if (current.parent() != null) {
+                        current = containers.get(new Identifier(current.parent()));
+                    } else {
+                        current = null;
+                    }
                 }
 
+                var empty = new WeaponAttributes(0, null, null);
                 var resolvedAttributes = resolutionChain
                     .stream()
-                    .reduce(new WeaponAttributes(0, null, null), (a, b) -> {
-                        return override(a, b);
+                    .reduce(empty, (a, b) -> {
+                        return override(a, (b == null ? empty : b));
                     });
 
                 register(key, resolvedAttributes);
@@ -115,7 +108,7 @@ public class WeaponRegistry {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
         var json = gson.toJson(registrations);
-        System.out.println("Updated WA registry: " + json);
+        System.out.println("Updated Weapon Attribute registry: " + json);
         buffer.writeString(json);
         encodedRegistrations = buffer;
     }
