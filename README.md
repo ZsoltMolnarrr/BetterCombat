@@ -75,10 +75,10 @@ You can make and reference your own presets the same way.
 
 If you want custom behaviour for your weapon, you can create them from scratch.
 
-When no parent is specified, `{ ATTRIBUTES OBJECT }` must be a full json object that can be parsed into [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
+When no parent is specified, the value for `"attributes"` key must be a full json object that can be parsed into [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
 ```
 {
-  "attributes": { ATTRIBUTES OBJECT }
+  "attributes": { ... }
 }
 ```
 
