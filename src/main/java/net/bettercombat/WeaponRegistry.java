@@ -96,7 +96,26 @@ public class WeaponRegistry {
     private static WeaponAttributes override(WeaponAttributes a, WeaponAttributes b) {
         var attackRange = b.attackRange() > 0 ? b.attackRange() : a.attackRange();
         var held = b.held() != null ? b.held() : a.held();
-        var attacks = (b.attacks() != null && b.attacks().length > 0) ? b.attacks() : a.attacks();
+        WeaponAttributes.Attack[] attacks = a.attacks(); // (b.attacks() != null && b.attacks().length > 0) ? b.attacks() : a.attacks();
+        if (b.attacks() != null && b.attacks().length > 0) {
+            var overrideAttacks = new ArrayList<WeaponAttributes.Attack>();
+            for(int i = 0; i < b.attacks().length; ++i) {
+                var base = (a.attacks() != null && a.attacks().length > i)
+                        ? a.attacks()[i]
+                        : new WeaponAttributes.Attack(null, 0, 0, 0, null, null, null);
+                var override = b.attacks()[i];
+                var attack = new WeaponAttributes.Attack(
+                        override.direction() != null ? override.direction() : base.direction(),
+                        override.damageMultiplier() != 0 ? override.damageMultiplier() : base.damageMultiplier(),
+                        override.angle() != 0 ? override.angle() : base.angle(),
+                        override.upswing() != 0 ? override.upswing() : base.upswing(),
+                        override.animation() != null ? override.animation() : base.animation(),
+                        override.swingSound() != null ? override.swingSound() : base.swingSound(),
+                        override.impactSound() != null ? override.impactSound() : base.impactSound());
+                overrideAttacks.add(attack);
+            }
+            attacks = overrideAttacks.toArray(new WeaponAttributes.Attack[0]);
+        }
         return new WeaponAttributes(attackRange, held, attacks);
     }
 

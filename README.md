@@ -73,24 +73,40 @@ You can make and reference your own presets the same way.
 
 ### Custom attributes
 
-If you want custom behaviour for your weapon, you can create them from scratch: 
+If you want custom behaviour for your weapon, you can create them from scratch.
 
+When no parent is specified, `{ ATTRIBUTES OBJECT }` must be a full json object that can be parsed into [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
 ```
 {
   "attributes": { ATTRIBUTES OBJECT }
 }
 ```
-`{ ATTRIBUTES OBJECT }` must be a json object that can be parsed into [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) java object.
 
-You can reuse and partially override already existing presets: 
+---
+
+When parent is specified, you can partially override its properites: 
 ```
 {
   "parent": "bettercombat:claymore",
   "attributes": {
     "attackRange": 3.5
+    "attacks": [
+      {
+        "angle" = 100
+      },
+      {
+        "damageMultiplier" = 0.1 
+      },
+      {
+        "damageMultiplier" = 0.3,
+        "angle" = 90
+      }
+    ]
   }
 }
 ```
+
+---
 
 You can create and use your own presets:
 ```
