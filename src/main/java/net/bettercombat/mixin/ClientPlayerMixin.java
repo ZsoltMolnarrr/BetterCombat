@@ -35,7 +35,7 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerEx
     }
 
     @Override
-    public void animate(String name) {
+    public void playAttackAnimation(String name, boolean isOffHand) {
         EmoteData data = BetterCombatClient.emotes.get(name);
         container.setAnim(new EmoteDataPlayer(data, 0));
         this.bodyYaw = this.headYaw;

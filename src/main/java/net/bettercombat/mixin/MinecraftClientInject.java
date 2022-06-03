@@ -2,6 +2,8 @@ package net.bettercombat.mixin;
 
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.attack.AttackHand;
+import net.bettercombat.attack.PlayerAttackHelper;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.PlayerExtension;
@@ -23,7 +25,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,7 +45,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     private MinecraftClient thisClient() {
         return (MinecraftClient)((Object)this);
     }
-    private boolean isHoldingAttack = false;
+    private boolean isHoldingAttackInput = false;
     private boolean hasTargetsInRange = false;
 
     // Press to attack
@@ -69,7 +70,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null) {
             boolean isPressed = client.options.attackKey.isPressed();
-            if(isPressed && !isHoldingAttack) {
+            if(isPressed && !isHoldingAttackInput) {
                 if (isTargetingMineableBlock()) {
                     return;
                 } else {
@@ -78,11 +79,11 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             }
 
             if (BetterCombatClient.config.isHoldToAttackEnabled && isPressed) {
-                isHoldingAttack = true;
+                isHoldingAttackInput = true;
                 startUpswing(attributes);
                 ci.cancel();
             } else {
-                isHoldingAttack = false;
+                isHoldingAttackInput = false;
             }
         }
     }
@@ -123,8 +124,9 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     }
 
     private void startUpswing(WeaponAttributes attributes) {
-        var attack = attributes.currentAttack(comboCount);
-        double upswingRate = upswingRate(attack);
+        var hand = getCurrentHand();
+        if (hand == null) { return; }
+        double upswingRate = hand.upswingRate();
         if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
             return;
         }
@@ -132,11 +134,12 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         upswingStack = player.getMainHandStack();
         this.upswingTicks = getUpswingLength(player, upswingRate);
 
-        String animationName = attack.animation();
-        ((PlayerExtension) player).animate(animationName);
+        String animationName = hand.attack().animation();
+        boolean isOffHand = hand.isOffHand();
+        ((PlayerExtension) player).playAttackAnimation(animationName, isOffHand);
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
-                Packets.AttackAnimation.writePlay(player.getId(), animationName));
+                Packets.AttackAnimation.writePlay(player.getId(), isOffHand, animationName));
     }
 
     private void feintIfNeeded() {
@@ -197,38 +200,42 @@ public class MinecraftClientInject implements MinecraftClientExtension {
                     getCursorTarget(),
                     attributes.currentAttack(comboCount),
                     attributes.attackRange());
-                hasTargetsInRange = targets.size() > 0;
+                updateTargetsInRage(targets);
             }
         }
     }
 
-    private boolean performAttack() {
+    private void performAttack() {
         MinecraftClient client = thisClient();
-        WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
-        if (attributes != null) {
-            var attack = attributes.currentAttack(comboCount);
-            double upswingRate = upswingRate(attack);
-            if (client.player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
-                return true;
-            }
-
-            List<Entity> targets = TargetFinder.findAttackTargets(
-                    player,
-                    getCursorTarget(),
-                    attack,
-                    attributes.attackRange());
-            hasTargetsInRange = targets.size() > 0;
-            ranTargetCheckCurrentTick = true;
-            PacketByteBuf buffer = PacketByteBufs.create();
-            ClientPlayNetworking.send(
-                    Packets.C2S_AttackRequest.ID,
-                    Packets.C2S_AttackRequest.write(comboCount, true, player.isSneaking(), targets));
-            client.player.resetLastAttackedTicks();
-            ((MinecraftClientAccessor) client).setAttackCooldown(10);
-            comboCount += 1;
-            return true;
+        var hand = getCurrentHand();
+        if (hand == null) { return; }
+        var attack = hand.attack();
+        var upswingRate = hand.upswingRate();
+        if (client.player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
+            return;
         }
-        return false;
+
+        List<Entity> targets = TargetFinder.findAttackTargets(
+                player,
+                getCursorTarget(),
+                attack,
+                hand.attributes().attackRange());
+        updateTargetsInRage(targets);
+        ClientPlayNetworking.send(
+                Packets.C2S_AttackRequest.ID,
+                Packets.C2S_AttackRequest.write(comboCount, player.isSneaking(), targets));
+        client.player.resetLastAttackedTicks();
+        ((MinecraftClientAccessor) client).setAttackCooldown(10);
+        comboCount += 1;
+    }
+
+    private AttackHand getCurrentHand() {
+        return PlayerAttackHelper.getCurrentAttack(player, getComboCount());
+    }
+
+    private void updateTargetsInRage(List<Entity> targets) {
+        hasTargetsInRange = targets.size() > 0;
+        ranTargetCheckCurrentTick = true;
     }
 
     // MinecraftClientExtension
@@ -241,9 +248,5 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     @Override
     public boolean hasTargetsInRange() {
         return hasTargetsInRange;
-    }
-
-    private double upswingRate(WeaponAttributes.Attack attack) {
-        return MathHelper.clamp(attack.upswing(), 0, 1);
     }
 }

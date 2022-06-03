@@ -1,6 +1,6 @@
 # Better Combat
 
-![Java 17](https://img.shields.io/badge/Java%2017-9B599A?logo=java&logoColor=ffffff&style=flat-square)
+![Java 17](https://img.shields.io/badge/Java%2017-ee9258?logo=java&logoColor=ffffff&labelColor=606060&style=flat-square)
 ![Environment: Client & Server](https://img.shields.io/badge/environment-Client%20&%20Server-1976d2?style=flat-square)
 [![Mod loader: Fabric]][fabric]
 [![Discord](https://img.shields.io/discord/973561601519149057.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/UTbHdnwK)
