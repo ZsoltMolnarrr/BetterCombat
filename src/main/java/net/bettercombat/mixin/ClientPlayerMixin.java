@@ -7,7 +7,7 @@ import io.github.kosmx.playerAnim.layered.AnimationContainer;
 import io.github.kosmx.playerAnim.layered.EmoteDataPlayer;
 import io.github.kosmx.playerAnim.layered.IAnimation;
 import net.bettercombat.client.BetterCombatClient;
-import net.bettercombat.client.PlayerExtension;
+import net.bettercombat.client.PlayerAnimatable;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerExtension {
+public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerAnimatable {
 
     private AnimationContainer container = new AnimationContainer(null);
 

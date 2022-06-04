@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "attackRange": 2.5,
+    "held": "SWORD_ONE_HANDED",
+    "attacks": [
+      {
+        "direction": "HORIZONTAL_RIGHT_TO_LEFT",
+        "damageMultiplier": -0.5,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "2h_sword_stab",
+        "swingSound": []
+      }
+    ]
+  }
+}

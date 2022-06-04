@@ -6,11 +6,10 @@ import net.bettercombat.attack.AttackHand;
 import net.bettercombat.attack.PlayerAttackHelper;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
-import net.bettercombat.client.PlayerExtension;
+import net.bettercombat.client.PlayerAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -20,7 +19,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -136,7 +134,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
 
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
-        ((PlayerExtension) player).playAttackAnimation(animationName, isOffHand);
+        ((PlayerAnimatable) player).playAttackAnimation(animationName, isOffHand);
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
                 Packets.AttackAnimation.writePlay(player.getId(), isOffHand, animationName));
@@ -145,7 +143,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     private void feintIfNeeded() {
         if (upswingTicks > 0 &&
                 (BetterCombatClient.feintKeyBinding.isPressed() || player.getMainHandStack() != upswingStack)) {
-            ((PlayerExtension) player).stopAnimation();
+            ((PlayerAnimatable) player).stopAnimation();
             ClientPlayNetworking.send(
                     Packets.AttackAnimation.ID,
                     Packets.AttackAnimation.writeStop(player.getId()));

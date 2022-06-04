@@ -8,6 +8,7 @@ import net.bettercombat.SoundHelper;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.attack.PlayerAttackHelper;
+import net.bettercombat.attack.PlayerAttackProperties;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -66,6 +67,7 @@ public class ServerNetwork {
             final var attributes = hand.attributes();
             final boolean useVanillaPacket = Packets.C2S_AttackRequest.UseVanillaPacket;
             world.getServer().executeSync(() -> {
+                ((PlayerAttackProperties)player).setComboCount(request.comboCount());
                 Multimap<EntityAttribute, EntityAttributeModifier> temporaryAttributes = null;
                 double range = 18.0;
                 if (attributes != null && attack != null) {

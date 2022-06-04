@@ -1,6 +1,6 @@
 package net.bettercombat.client;
 
-public interface PlayerExtension {
+public interface PlayerAnimatable {
     void playAttackAnimation(String name, boolean isOffHand);
     void stopAnimation();
 }

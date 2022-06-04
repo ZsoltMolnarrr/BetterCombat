@@ -19,15 +19,17 @@ public class PlayerAttackHelper {
     public static AttackHand getCurrentAttack(PlayerEntity player, int comboCount) {
         if (isDualWielding(player)) {
             boolean isOffHand = shouldAttackWithOffHand(player,comboCount);
-            var attributes = isOffHand
-                    ? WeaponRegistry.getAttributes(player.getOffHandStack())
-                    : WeaponRegistry.getAttributes(player.getMainHandStack());
+            var itemStack = isOffHand
+                    ? player.getOffHandStack()
+                    : player.getMainHandStack();
+            var attributes = WeaponRegistry.getAttributes(itemStack);
             int handSpecificComboCount = ( (isOffHand && comboCount > 0) ? (comboCount - 1) : (comboCount) ) / 2;
-            return new AttackHand(attributes.currentAttack(handSpecificComboCount), isOffHand, attributes);
+            return new AttackHand(attributes.currentAttack(handSpecificComboCount), isOffHand, attributes, itemStack);
         } else {
-            WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+            var itemStack = player.getMainHandStack();
+            WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
             if (attributes != null) {
-                return new AttackHand(attributes.currentAttack(comboCount), false, attributes);
+                return new AttackHand(attributes.currentAttack(comboCount), false, attributes, itemStack);
             }
         }
         return null;

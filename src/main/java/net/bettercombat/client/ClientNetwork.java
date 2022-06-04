@@ -13,9 +13,9 @@ public class ClientNetwork {
                 var entity = client.world.getEntityById(packet.playerId());
                 if (entity instanceof PlayerEntity) {
                     if (packet.animationName().equals(Packets.AttackAnimation.StopSymbol)) {
-                        ((PlayerExtension)entity).stopAnimation();
+                        ((PlayerAnimatable)entity).stopAnimation();
                     } else {
-                        ((PlayerExtension)entity).playAttackAnimation(packet.animationName(), packet.isOffHand());
+                        ((PlayerAnimatable)entity).playAttackAnimation(packet.animationName(), packet.isOffHand());
                     }
                 }
             });

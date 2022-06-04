@@ -1,6 +1,8 @@
 package net.bettercombat.mixin;
 
 import net.bettercombat.WeaponRegistry;
+import net.bettercombat.attack.PlayerAttackHelper;
+import net.bettercombat.attack.PlayerAttackProperties;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -8,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +19,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityInject {
+public abstract class PlayerEntityInject implements PlayerAttackProperties {
+
+    // FEATURE: Disable sweeping for our weapons
+
     @Redirect(method = "attack(Lnet/minecraft/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
     public Item replaceSword(ItemStack instance) {
         if (WeaponRegistry.getAttributes(instance) != null) {
@@ -47,6 +53,8 @@ public abstract class PlayerEntityInject {
 //        }
     }
 
+    // FEATURE: Two-handed weapons
+
     @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
     public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
         if (slot == EquipmentSlot.OFFHAND) {
@@ -67,5 +75,41 @@ public abstract class PlayerEntityInject {
                 return;
             }
         }
+    }
+
+    // FEATURE: Dual wielded attacking
+
+    int comboCount = 0;
+
+    public int getComboCount() {
+        return comboCount;
+    }
+
+    public void setComboCount(int comboCount) {
+        this.comboCount = comboCount;
+    }
+
+    @Redirect(method = "attack", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;"))
+    public ItemStack getMainHandStack_Redirect(PlayerEntity instance) {
+        var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+        return hand.itemStack();
+    }
+
+    @Redirect(method = "attack", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/entity/player/PlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"))
+    public ItemStack getStackInHand_Redirect(PlayerEntity instance, Hand handArg) {
+        // `handArg` argument is always `MAIN`, we can ignore it
+        var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+        return hand.itemStack();
+    }
+
+    @Redirect(method = "attack", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/entity/player/PlayerEntity;setStackInHand(Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V"))
+    public void setStackInHand_Redirect(PlayerEntity instance, Hand handArg, ItemStack itemStack) {
+        // `handArg` argument is always `MAIN`, we can ignore it
+        var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+        var redirectedHand = hand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
+        instance.setStackInHand(redirectedHand, itemStack);
     }
 }
