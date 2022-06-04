@@ -42,6 +42,8 @@ public class BetterCombatClient implements ClientModInitializer {
         ClientNetwork.initializeHandlers();
         ClientLifecycleEvents.CLIENT_STARTED.register((client) -> {
             loadAnimations("slash");
+            loadAnimations("2h_sword_stab");
+            loadAnimations("2h_sword_slam");
         });
         settings.load();
         ConfigRegistry.setMainConfig(settings);

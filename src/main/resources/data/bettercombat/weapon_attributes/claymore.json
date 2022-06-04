@@ -22,8 +22,8 @@
         "direction": "FORWARD",
         "damageMultiplier": 0,
         "angle": 0,
-        "upswing": 0.3,
-        "animation": "slash",
+        "upswing": 0.5,
+        "animation": "2h_sword_stab",
         "swingSound": [
           {
             "id": "bettercombat:claymore-stab",
@@ -37,8 +37,8 @@
         "direction": "VERTICAL_TOP_TO_BOTTOM",
         "damageMultiplier": 0.5,
         "angle": 150,
-        "upswing": 0.3,
-        "animation": "slash",
+        "upswing": 0.5,
+        "animation": "2h_sword_slam",
         "swingSound": [
           {
             "id": "bettercombat:claymore-slam",
