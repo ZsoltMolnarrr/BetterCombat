@@ -44,7 +44,7 @@ public final class WeaponAttributes {
     }
 
     public static final class Attack {
-        private final SwingDirection direction;
+        private final HitBoxShape hitbox;
         private final double damageMultiplier;
         private final double angle;
         private final double upswing;
@@ -53,7 +53,7 @@ public final class WeaponAttributes {
         private final Sound[] impactSound;
 
         public Attack(
-                SwingDirection direction,
+                HitBoxShape hitbox,
                 double damageMultiplier,
                 double angle,
                 double upswing,
@@ -61,7 +61,7 @@ public final class WeaponAttributes {
                 Sound[] swingSound,
                 Sound[] impactSound
         ) {
-            this.direction = direction;
+            this.hitbox = hitbox;
             this.damageMultiplier = damageMultiplier;
             this.angle = angle;
             this.upswing = upswing;
@@ -70,8 +70,8 @@ public final class WeaponAttributes {
             this.impactSound = impactSound;
         }
 
-        public SwingDirection direction() {
-            return direction;
+        public HitBoxShape hitbox() {
+            return hitbox;
         }
 
         public double damageMultiplier() {
@@ -103,7 +103,7 @@ public final class WeaponAttributes {
             if (obj == this) return true;
             if (obj == null || obj.getClass() != this.getClass()) return false;
             var that = (Attack) obj;
-            return Objects.equals(this.direction, that.direction) &&
+            return Objects.equals(this.hitbox, that.hitbox) &&
                     Double.doubleToLongBits(this.damageMultiplier) == Double.doubleToLongBits(that.damageMultiplier) &&
                     Double.doubleToLongBits(this.angle) == Double.doubleToLongBits(that.angle) &&
                     Double.doubleToLongBits(this.upswing) == Double.doubleToLongBits(that.upswing) &&
@@ -114,13 +114,13 @@ public final class WeaponAttributes {
 
         @Override
         public int hashCode() {
-            return Objects.hash(direction, damageMultiplier, angle, upswing, animation, swingSound, impactSound);
+            return Objects.hash(hitbox, damageMultiplier, angle, upswing, animation, swingSound, impactSound);
         }
 
         @Override
         public String toString() {
             return "Attack[" +
-                    "direction=" + direction + ", " +
+                    "hitbox=" + hitbox + ", " +
                     "damageMultiplier=" + damageMultiplier + ", " +
                     "angle=" + angle + ", " +
                     "upswing=" + upswing + ", " +
@@ -130,11 +130,10 @@ public final class WeaponAttributes {
         }
     }
 
-    public enum SwingDirection {
-        FORWARD,
-        VERTICAL_TOP_TO_BOTTOM,
-        HORIZONTAL_RIGHT_TO_LEFT,
-        HORIZONTAL_LEFT_TO_RIGHT,
+    public enum HitBoxShape {
+        FORWARD_BOX,
+        VERTICAL_PLANE,
+        HORIZONTAL_PLANE
     }
 
     public static final class Sound {

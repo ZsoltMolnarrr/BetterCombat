@@ -4,7 +4,7 @@
     "held": "SWORD_ONE_HANDED",
     "attacks": [
       {
-        "direction": "HORIZONTAL_RIGHT_TO_LEFT",
+        "hitbox": "FORWARD_BOX",
         "damageMultiplier": -0.5,
         "angle": 150,
         "upswing": 0.5,

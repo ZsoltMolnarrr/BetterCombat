@@ -105,7 +105,7 @@ public class WeaponRegistry {
                         : new WeaponAttributes.Attack(null, 0, 0, 0, null, null, null);
                 var override = b.attacks()[i];
                 var attack = new WeaponAttributes.Attack(
-                        override.direction() != null ? override.direction() : base.direction(),
+                        override.hitbox() != null ? override.hitbox() : base.hitbox(),
                         override.damageMultiplier() != 0 ? override.damageMultiplier() : base.damageMultiplier(),
                         override.angle() != 0 ? override.angle() : base.angle(),
                         override.upswing() != 0 ? override.upswing() : base.upswing(),

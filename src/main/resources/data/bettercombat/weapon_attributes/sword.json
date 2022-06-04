@@ -1,7 +1,7 @@
 {
   "attributes": {
     "attackRange": 2.5,
-    "held": "SWORD_TWO_HANDED",
+    "held": "SWORD_ONE_HANDED",
     "attacks": [
       {
         "direction": "HORIZONTAL_RIGHT_TO_LEFT",

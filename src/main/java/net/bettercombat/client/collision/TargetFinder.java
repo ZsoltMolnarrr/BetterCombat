@@ -24,7 +24,7 @@ public class TargetFinder {
     public static TargetResult findAttackTargetResult(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
         Vec3d origin = getInitialTracingPoint(player);
         List<Entity> entities = getInitialTargets(player, cursorTarget, attackRange);
-        var obb = new OrientedBoundingBoxFilter(player, origin, attack.direction(), attackRange);
+        var obb = new OrientedBoundingBoxFilter(player, origin, attack.hitbox(), attackRange);
         entities = obb.filter(entities);
         var radial = new RadialFilter(origin, obb.obb.axisZ, attackRange, attack.angle());
         entities = radial.filter(entities);
@@ -63,7 +63,7 @@ public class TargetFinder {
         final private double attackRange;
         public OrientedBoundingBox obb;
 
-        public OrientedBoundingBoxFilter(PlayerEntity player, Vec3d origin, WeaponAttributes.SwingDirection direction, double attackRange) {
+        public OrientedBoundingBoxFilter(PlayerEntity player, Vec3d origin, WeaponAttributes.HitBoxShape direction, double attackRange) {
             this.player = player;
             this.attackRange = attackRange;
             Vec3d size = WeaponHitBoxes.createHitbox(direction, attackRange);
