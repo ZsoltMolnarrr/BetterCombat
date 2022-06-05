@@ -4,6 +4,7 @@ import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.attack.AttackHand;
 import net.bettercombat.attack.PlayerAttackHelper;
+import net.bettercombat.attack.PlayerAttackProperties;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.PlayerAnimatable;
@@ -111,13 +112,10 @@ public class MinecraftClientInject implements MinecraftClientExtension {
 
     private ItemStack upswingStack;
     private int upswingTicks = 0;
-    private int comboCount = 0;
     private int lastAttacked = 1000;
 
     private int getUpswingLength(PlayerEntity player, double upswingRate) {
-        Item item = player.getMainHandStack().getItem();
-        Identifier id = Registry.ITEM.getId(item);
-        double attackCooldownTicks = 20.0 / player.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED);
+        double attackCooldownTicks = player.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
         return (int)(Math.round(attackCooldownTicks * upswingRate));
     }
 
@@ -126,12 +124,15 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         if (hand == null) { return; }
         double upswingRate = hand.upswingRate();
         if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
+            double attackCooldownTicks = player.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
+            var currentCD = Math.round(attackCooldownTicks * player.getAttackCooldownProgress(0));
+            System.out.println("Waiting for cooldown: " + currentCD + "/" + attackCooldownTicks);
             return;
         }
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
         this.upswingTicks = getUpswingLength(player, upswingRate);
-
+        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
         ((PlayerAnimatable) player).playAttackAnimation(animationName, isOffHand);
@@ -163,10 +164,10 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     }
 
     private void resetComboIfNeeded() {
-        double attackCooldownTicks = 20.0 / player.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED);
+        double attackCooldownTicks = player.getAttackCooldownProgressPerTick();
         int comboReset = (int)Math.round(attackCooldownTicks * ComboResetRate);
-        if(lastAttacked > comboReset && comboCount > 0) {
-            comboCount = 0;
+        if(lastAttacked > comboReset && getComboCount() > 0) {
+            setComboCount(0);
         }
     }
 
@@ -196,7 +197,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
                 List<Entity> targets = TargetFinder.findAttackTargets(
                     player,
                     getCursorTarget(),
-                    attributes.currentAttack(comboCount),
+                    attributes.currentAttack(getComboCount()),
                     attributes.attackRange());
                 updateTargetsInRage(targets);
             }
@@ -213,6 +214,8 @@ public class MinecraftClientInject implements MinecraftClientExtension {
             return;
         }
 
+        System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
+
         List<Entity> targets = TargetFinder.findAttackTargets(
                 player,
                 getCursorTarget(),
@@ -221,10 +224,10 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         updateTargetsInRage(targets);
         ClientPlayNetworking.send(
                 Packets.C2S_AttackRequest.ID,
-                Packets.C2S_AttackRequest.write(comboCount, player.isSneaking(), targets));
+                Packets.C2S_AttackRequest.write(getComboCount(), player.isSneaking(), targets));
         client.player.resetLastAttackedTicks();
         ((MinecraftClientAccessor) client).setAttackCooldown(10);
-        comboCount += 1;
+        setComboCount(getComboCount() + 1);
     }
 
     private AttackHand getCurrentHand() {
@@ -236,11 +239,15 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         ranTargetCheckCurrentTick = true;
     }
 
+    private void setComboCount(int comboCount) {
+        ((PlayerAttackProperties)player).setComboCount(comboCount);
+    }
+
     // MinecraftClientExtension
 
     @Override
     public int getComboCount() {
-        return comboCount;
+        return ((PlayerAttackProperties)player).getComboCount();
     }
 
     @Override

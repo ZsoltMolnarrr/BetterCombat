@@ -79,6 +79,10 @@ public class ServerNetwork {
                     temporaryAttributes.put(key, value);
                     player.getAttributes().addTemporaryModifiers(temporaryAttributes);
 
+                    if (hand.isOffHand()) {
+                        PlayerAttackHelper.setAttributesForOffHandAttack(player, true);
+                    }
+
                     SoundHelper.playSounds(world, player, attack.swingSound());
                 }
 
@@ -95,6 +99,7 @@ public class ServerNetwork {
                         continue;
                     }
                     ((LivingEntityAccessor) player).setLastAttackedTicks(lastAttackedTicks);
+                    System.out.println("Server - Attacking hand: " + (hand.isOffHand() ? "offhand" : "mainhand") + " CD: " + player.getAttackCooldownProgress(0));
                     if (useVanillaPacket) {
                         PlayerInteractEntityC2SPacket vanillaAttackPacket = PlayerInteractEntityC2SPacket.attack(entity, request.isSneaking());
                         handler.onPlayerInteractEntity(vanillaAttackPacket);
@@ -116,7 +121,11 @@ public class ServerNetwork {
 
                 if (temporaryAttributes != null) {
                     player.getAttributes().removeModifiers(temporaryAttributes);
+                    if (hand.isOffHand()) {
+                        PlayerAttackHelper.setAttributesForOffHandAttack(player, false);
+                    }
                 }
+                ((PlayerAttackProperties)player).setComboCount(-1);
             });
         });
     }

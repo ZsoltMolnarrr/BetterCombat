@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.minecraft.entity.EquipmentSlot.MAINHAND;
+
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityInject implements PlayerAttackProperties {
 
@@ -53,7 +55,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
 //        }
     }
 
-    // FEATURE: Two-handed weapons
+    // FEATURE: Two-handed wielding
 
     @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
     public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
@@ -66,7 +68,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
                 return;
             }
         }
-        if (slot == EquipmentSlot.MAINHAND) {
+        if (slot == MAINHAND) {
             var offHandStack = ((PlayerEntityAccessor)this).getInventory().offHand.get(0);
             var attributes = WeaponRegistry.getAttributes(offHandStack);
             if(attributes != null && attributes.held().isTwoHanded()) {
@@ -89,26 +91,65 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
         this.comboCount = comboCount;
     }
 
+    @Redirect(method = "getAttackCooldownProgress", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/entity/player/PlayerEntity;getAttackCooldownProgressPerTick()F"))
+    public float getAttackCooldownProgressPerTick_Redirect(PlayerEntity instance) {
+        // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownTicks`
+        return instance.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(instance);
+    }
+
     @Redirect(method = "attack", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;"))
     public ItemStack getMainHandStack_Redirect(PlayerEntity instance) {
+        if (comboCount < 0) {
+            // Vanilla behaviour
+            return instance.getMainHandStack();
+        }
         var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+        if (hand == null) {
+            var isOffHand = PlayerAttackHelper.shouldAttackWithOffHand(instance, comboCount);
+            if (isOffHand) {
+                return ItemStack.EMPTY;
+            } else {
+                return instance.getMainHandStack();
+            }
+        }
         return hand.itemStack();
     }
 
     @Redirect(method = "attack", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"))
     public ItemStack getStackInHand_Redirect(PlayerEntity instance, Hand handArg) {
+        if (comboCount < 0) {
+            // Vanilla behaviour
+            return instance.getStackInHand(handArg);
+        }
         // `handArg` argument is always `MAIN`, we can ignore it
         var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+        if (hand == null) {
+            var isOffHand = PlayerAttackHelper.shouldAttackWithOffHand(instance, comboCount);
+            if (isOffHand) {
+                return ItemStack.EMPTY;
+            } else {
+                return instance.getStackInHand(handArg);
+            }
+        }
         return hand.itemStack();
     }
 
     @Redirect(method = "attack", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;setStackInHand(Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V"))
     public void setStackInHand_Redirect(PlayerEntity instance, Hand handArg, ItemStack itemStack) {
+        if (comboCount < 0) {
+            // Vanilla behaviour
+            instance.setStackInHand(handArg, itemStack);
+        }
         // `handArg` argument is always `MAIN`, we can ignore it
         var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+        if (hand == null) {
+            instance.setStackInHand(handArg, itemStack);
+            return;
+        }
         var redirectedHand = hand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
         instance.setStackInHand(redirectedHand, itemStack);
     }
