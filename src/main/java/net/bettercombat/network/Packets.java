@@ -1,6 +1,7 @@
 package net.bettercombat.network;
 
 import net.bettercombat.BetterCombat;
+import net.bettercombat.ServerConfig;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -59,5 +60,27 @@ public class Packets {
 
     public static class WeaponRegistrySync {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "weapon_registry");
+    }
+
+    public static class ConfigSync {
+        public static Identifier ID = new Identifier(BetterCombat.MODID, "config_sync");
+
+        // TODO: Read/write whole object
+
+        public static PacketByteBuf write(ServerConfig config) {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeBoolean(config.allow_fast_attacks);
+            buffer.writeFloat(config.dual_wielding_attack_speed_multiplier);
+            buffer.writeFloat(config.dual_wielding_main_hand_damage_multiplier);
+            buffer.writeFloat(config.dual_wielding_off_hand_damage_multiplier);
+            return buffer;
+        }
+
+        public static void readInPlace(PacketByteBuf buffer, ServerConfig config) {
+            config.allow_fast_attacks = buffer.readBoolean();
+            config.dual_wielding_attack_speed_multiplier = buffer.readFloat();
+            config.dual_wielding_main_hand_damage_multiplier = buffer.readFloat();
+            config.dual_wielding_off_hand_damage_multiplier = buffer.readFloat();
+        }
     }
 }

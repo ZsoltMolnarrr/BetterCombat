@@ -1,5 +1,6 @@
 package net.bettercombat.attack;
 
+import net.bettercombat.BetterCombat;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,7 +10,15 @@ import static net.minecraft.entity.EquipmentSlot.MAINHAND;
 
 public class PlayerAttackHelper {
     public static float getDualWieldingAttackSpeedMultiplier(PlayerEntity player) {
-        return isDualWielding(player) ? 2F : 1F;
+        return isDualWielding(player) ? BetterCombat.config.dual_wielding_attack_speed_multiplier : 1F;
+    }
+
+    public static float getDualWieldingAttackDamageMultiplier(PlayerEntity player, AttackHand hand) {
+        return isDualWielding(player)
+                ? (hand.isOffHand()
+                    ? BetterCombat.config.dual_wielding_off_hand_damage_multiplier
+                    : BetterCombat.config.dual_wielding_main_hand_damage_multiplier)
+                : 1;
     }
 
     public static boolean shouldAttackWithOffHand(PlayerEntity player, int comboCount) {

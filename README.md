@@ -26,7 +26,7 @@ Primary features:
 - [ ] Bundled resources: weapon animations, weapon sounds, weapon attribute presets
 
 Auxiliary features:
-- [ ] Attacking with dual wielded weapons
+- [X] Attacking with dual wielded weapons
 - [X] Two-handed weapons ignore offhand slot
 - [X] Cancel attack during upswing (aka "feint")
 - [X] Hold attack key to spam attack

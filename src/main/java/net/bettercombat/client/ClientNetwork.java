@@ -1,5 +1,6 @@
 package net.bettercombat.client;
 
+import net.bettercombat.BetterCombat;
 import net.bettercombat.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -23,6 +24,10 @@ public class ClientNetwork {
 
         ClientPlayNetworking.registerGlobalReceiver(Packets.WeaponRegistrySync.ID, (client, handler, buf, responseSender) -> {
             WeaponRegistry.loadEncodedRegistry(buf);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(Packets.ConfigSync.ID, (client, handler, buf, responseSender) -> {
+            Packets.ConfigSync.readInPlace(buf, BetterCombat.config);
         });
     }
 }

@@ -4,9 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.mojang.logging.LogUtils;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.SoundHelper;
 import net.bettercombat.WeaponRegistry;
-import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.attack.PlayerAttackHelper;
 import net.bettercombat.attack.PlayerAttackProperties;
 import net.bettercombat.mixin.LivingEntityAccessor;
@@ -35,6 +35,7 @@ public class ServerNetwork {
     public static void initializeHandlers() {
         ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
             sender.sendPacket(Packets.WeaponRegistrySync.ID, WeaponRegistry.getEncodedRegistry());
+            sender.sendPacket(Packets.ConfigSync.ID, Packets.ConfigSync.write(BetterCombat.config));
         });
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (server, player, handler, buf, responseSender) -> {
@@ -69,16 +70,26 @@ public class ServerNetwork {
             final boolean useVanillaPacket = Packets.C2S_AttackRequest.UseVanillaPacket;
             world.getServer().executeSync(() -> {
                 ((PlayerAttackProperties)player).setComboCount(request.comboCount());
-                Multimap<EntityAttribute, EntityAttributeModifier> temporaryAttributes = null;
+                Multimap<EntityAttribute, EntityAttributeModifier> comboAttributes = null;
+                Multimap<EntityAttribute, EntityAttributeModifier> dualWieldingAttributes = null;
                 double range = 18.0;
-                if (attributes != null && attack != null) {
+                if (hand != null && attributes != null && attack != null) {
                     range = attributes.attackRange();
-                    var multiplier = attack.damageMultiplier();
-                    var key = EntityAttributes.GENERIC_ATTACK_DAMAGE;
-                    var value = new EntityAttributeModifier(UUID.randomUUID(), "COMBO_DAMAGE_MULTIPLIER", multiplier, EntityAttributeModifier.Operation.MULTIPLY_BASE);
-                    temporaryAttributes = HashMultimap.create();
-                    temporaryAttributes.put(key, value);
-                    player.getAttributes().addTemporaryModifiers(temporaryAttributes);
+
+                    comboAttributes = HashMultimap.create();
+                    comboAttributes.put(
+                            EntityAttributes.GENERIC_ATTACK_DAMAGE,
+                            new EntityAttributeModifier(UUID.randomUUID(), "COMBO_DAMAGE_MULTIPLIER", attack.damageMultiplier(), EntityAttributeModifier.Operation.MULTIPLY_BASE));
+                    player.getAttributes().addTemporaryModifiers(comboAttributes);
+
+                    var dualWieldingMultiplier = PlayerAttackHelper.getDualWieldingAttackDamageMultiplier(player, hand) - 1;
+                    if (dualWieldingMultiplier != 0) {
+                        dualWieldingAttributes = HashMultimap.create();
+                        dualWieldingAttributes.put(
+                                EntityAttributes.GENERIC_ATTACK_DAMAGE,
+                                new EntityAttributeModifier(UUID.randomUUID(), "DUAL_WIELDING_DAMAGE_MULTIPLIER", dualWieldingMultiplier, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
+                        player.getAttributes().addTemporaryModifiers(dualWieldingAttributes);
+                    }
 
                     if (hand.isOffHand()) {
                         PlayerAttackHelper.setAttributesForOffHandAttack(player, true);
@@ -123,11 +134,14 @@ public class ServerNetwork {
                     player.updateLastActionTime();
                 }
 
-                if (temporaryAttributes != null) {
-                    player.getAttributes().removeModifiers(temporaryAttributes);
+                if (comboAttributes != null) {
+                    player.getAttributes().removeModifiers(comboAttributes);
                     if (hand.isOffHand()) {
                         PlayerAttackHelper.setAttributesForOffHandAttack(player, false);
                     }
+                }
+                if (dualWieldingAttributes != null) {
+                    player.getAttributes().removeModifiers(dualWieldingAttributes);
                 }
                 ((PlayerAttackProperties)player).setComboCount(-1);
             });
