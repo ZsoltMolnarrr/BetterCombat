@@ -124,15 +124,15 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         if (hand == null) { return; }
         double upswingRate = hand.upswingRate();
         if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
-            double attackCooldownTicks = player.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
-            var currentCD = Math.round(attackCooldownTicks * player.getAttackCooldownProgress(0));
-            System.out.println("Waiting for cooldown: " + currentCD + "/" + attackCooldownTicks);
+//            double attackCooldownTicks = player.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
+//            var currentCD = Math.round(attackCooldownTicks * player.getAttackCooldownProgress(0));
+//            System.out.println("Waiting for cooldown: " + currentCD + "/" + attackCooldownTicks);
             return;
         }
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
         this.upswingTicks = getUpswingLength(player, upswingRate);
-        System.out.println("Starting upswingTicks: " + upswingTicks);
+//        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
         ((PlayerAnimatable) player).playAttackAnimation(animationName, isOffHand);
@@ -213,9 +213,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         if (client.player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
             return;
         }
-
-        System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
-
+        // System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
         List<Entity> targets = TargetFinder.findAttackTargets(
                 player,
                 getCursorTarget(),
@@ -226,7 +224,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
                 Packets.C2S_AttackRequest.ID,
                 Packets.C2S_AttackRequest.write(getComboCount(), player.isSneaking(), targets));
         client.player.resetLastAttackedTicks();
-        ((MinecraftClientAccessor) client).setAttackCooldown(10);
+        ((MinecraftClientAccessor) client).setAttackCooldown(10); // This is actually the mining cooldown
         setComboCount(getComboCount() + 1);
     }
 
