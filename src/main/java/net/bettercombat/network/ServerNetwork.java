@@ -10,6 +10,7 @@ import net.bettercombat.WeaponRegistry;
 import net.bettercombat.attack.PlayerAttackHelper;
 import net.bettercombat.attack.PlayerAttackProperties;
 import net.bettercombat.mixin.LivingEntityAccessor;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -22,6 +23,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
@@ -32,10 +34,13 @@ import java.util.UUID;
 public class ServerNetwork {
     static final Logger LOGGER = LogUtils.getLogger();
 
+    private static PacketByteBuf configSerialized = PacketByteBufs.create();
+
     public static void initializeHandlers() {
+        configSerialized = Packets.ConfigSync.write(BetterCombat.configWrapper);
         ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
             sender.sendPacket(Packets.WeaponRegistrySync.ID, WeaponRegistry.getEncodedRegistry());
-            sender.sendPacket(Packets.ConfigSync.ID, Packets.ConfigSync.write(BetterCombat.config));
+            sender.sendPacket(Packets.ConfigSync.ID, configSerialized);
         });
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (server, player, handler, buf, responseSender) -> {

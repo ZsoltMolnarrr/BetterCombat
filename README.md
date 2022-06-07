@@ -123,9 +123,13 @@ You can create and use your own presets:
 
 ## Client
 
-## Common
+You can access the client side settings via the [Mod Menu](https://github.com/TerraformersMC/ModMenu).
 
 ## Server
+
+Server config can be found at: `config/bettercombat/server.conf`
+
+Automatically created with default values, upon loading any game world for the first time. 
 
 # ⛓ Compatibility
 

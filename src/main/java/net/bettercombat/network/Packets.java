@@ -1,12 +1,16 @@
 package net.bettercombat.network;
 
+import me.lortseam.completeconfig.data.Config;
 import net.bettercombat.BetterCombat;
-import net.bettercombat.ServerConfig;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.List;
 
 public class Packets {
@@ -65,22 +69,16 @@ public class Packets {
     public static class ConfigSync {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "config_sync");
 
-        // TODO: Read/write whole object
-
-        public static PacketByteBuf write(ServerConfig config) {
-            PacketByteBuf buffer = PacketByteBufs.create();
-            buffer.writeBoolean(config.allow_fast_attacks);
-            buffer.writeFloat(config.dual_wielding_attack_speed_multiplier);
-            buffer.writeFloat(config.dual_wielding_main_hand_damage_multiplier);
-            buffer.writeFloat(config.dual_wielding_off_hand_damage_multiplier);
+        public static PacketByteBuf write(Config config) {
+            var writer = new StringWriter();
+            config.serialize(() -> new BufferedWriter(writer));
+            var buffer = PacketByteBufs.create();
+            buffer.writeString(writer.toString());
             return buffer;
         }
 
-        public static void readInPlace(PacketByteBuf buffer, ServerConfig config) {
-            config.allow_fast_attacks = buffer.readBoolean();
-            config.dual_wielding_attack_speed_multiplier = buffer.readFloat();
-            config.dual_wielding_main_hand_damage_multiplier = buffer.readFloat();
-            config.dual_wielding_off_hand_damage_multiplier = buffer.readFloat();
+        public static void readInPlace(PacketByteBuf buffer, Config config) {
+            config.deserialize(() -> new BufferedReader(new StringReader(buffer.readString())));
         }
     }
 }

@@ -13,10 +13,10 @@ public class BetterCombat implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        configWrapper.load();
         ServerNetwork.initializeHandlers();
         ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
             WeaponRegistry.loadAttributes(minecraftServer.getResourceManager());
         });
-        configWrapper.load();
     }
 }
