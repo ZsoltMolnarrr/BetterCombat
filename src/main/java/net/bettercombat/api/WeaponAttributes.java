@@ -3,15 +3,15 @@ package net.bettercombat.api;
 import java.util.Objects;
 
 public final class WeaponAttributes {
-    private final double attackRange;
+    private final double attack_range;
     private final Held held;
     private final Attack[] attacks;
 
     public WeaponAttributes(
-            double attackRange,
+            double attack_range,
             Held held,
             Attack[] attacks) {
-        this.attackRange = attackRange;
+        this.attack_range = attack_range;
         this.held = held;
         this.attacks = attacks;
     }
@@ -45,29 +45,29 @@ public final class WeaponAttributes {
 
     public static final class Attack {
         private final HitBoxShape hitbox;
-        private final double damageMultiplier;
+        private final double damage_multiplier;
         private final double angle;
         private final double upswing;
         private final String animation;
-        private final Sound[] swingSound;
-        private final Sound[] impactSound;
+        private final Sound[] swing_sound;
+        private final Sound[] impact_sound;
 
         public Attack(
                 HitBoxShape hitbox,
-                double damageMultiplier,
+                double damage_multiplier,
                 double angle,
                 double upswing,
                 String animation,
-                Sound[] swingSound,
-                Sound[] impactSound
+                Sound[] swing_sound,
+                Sound[] impact_sound
         ) {
             this.hitbox = hitbox;
-            this.damageMultiplier = damageMultiplier;
+            this.damage_multiplier = damage_multiplier;
             this.angle = angle;
             this.upswing = upswing;
             this.animation = animation;
-            this.swingSound = swingSound;
-            this.impactSound = impactSound;
+            this.swing_sound = swing_sound;
+            this.impact_sound = impact_sound;
         }
 
         public HitBoxShape hitbox() {
@@ -75,7 +75,7 @@ public final class WeaponAttributes {
         }
 
         public double damageMultiplier() {
-            return damageMultiplier;
+            return damage_multiplier;
         }
 
         public double angle() {
@@ -91,11 +91,11 @@ public final class WeaponAttributes {
         }
 
         public Sound[] swingSound() {
-            return swingSound;
+            return swing_sound;
         }
 
         public Sound[] impactSound() {
-            return impactSound;
+            return impact_sound;
         }
 
         @Override
@@ -104,29 +104,29 @@ public final class WeaponAttributes {
             if (obj == null || obj.getClass() != this.getClass()) return false;
             var that = (Attack) obj;
             return Objects.equals(this.hitbox, that.hitbox) &&
-                    Double.doubleToLongBits(this.damageMultiplier) == Double.doubleToLongBits(that.damageMultiplier) &&
+                    Double.doubleToLongBits(this.damage_multiplier) == Double.doubleToLongBits(that.damage_multiplier) &&
                     Double.doubleToLongBits(this.angle) == Double.doubleToLongBits(that.angle) &&
                     Double.doubleToLongBits(this.upswing) == Double.doubleToLongBits(that.upswing) &&
                     Objects.equals(this.animation, that.animation) &&
-                    Objects.equals(this.swingSound, that.swingSound) &&
-                    Objects.equals(this.impactSound, that.impactSound);
+                    Objects.equals(this.swing_sound, that.swing_sound) &&
+                    Objects.equals(this.impact_sound, that.impact_sound);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(hitbox, damageMultiplier, angle, upswing, animation, swingSound, impactSound);
+            return Objects.hash(hitbox, damage_multiplier, angle, upswing, animation, swing_sound, impact_sound);
         }
 
         @Override
         public String toString() {
             return "Attack[" +
                     "hitbox=" + hitbox + ", " +
-                    "damageMultiplier=" + damageMultiplier + ", " +
+                    "damage_multiplier=" + damage_multiplier + ", " +
                     "angle=" + angle + ", " +
                     "upswing=" + upswing + ", " +
                     "animation=" + animation + ", " +
-                    "swingSound=" + swingSound + ", " +
-                    "impactSound=" + impactSound + ']';
+                    "swing_sound=" + swing_sound + ", " +
+                    "impact_sound=" + impact_sound + ']';
         }
     }
 
@@ -201,7 +201,7 @@ public final class WeaponAttributes {
     }
 
     public double attackRange() {
-        return attackRange;
+        return attack_range;
     }
 
     public Held held() {
@@ -217,20 +217,20 @@ public final class WeaponAttributes {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (WeaponAttributes) obj;
-        return Double.doubleToLongBits(this.attackRange) == Double.doubleToLongBits(that.attackRange) &&
+        return Double.doubleToLongBits(this.attack_range) == Double.doubleToLongBits(that.attack_range) &&
                 Objects.equals(this.held, that.held) &&
                 Objects.equals(this.attacks, that.attacks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(attackRange, held, attacks);
+        return Objects.hash(attack_range, held, attacks);
     }
 
     @Override
     public String toString() {
         return "WeaponAttributes[" +
-                "attackRange=" + attackRange + ", " +
+                "attack_range=" + attack_range + ", " +
                 "held=" + held + ", " +
                 "attacks=" + attacks + ']';
     }

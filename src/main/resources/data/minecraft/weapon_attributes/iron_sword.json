@@ -1,15 +1,15 @@
 {
   "attributes": {
-    "attackRange": 2.5,
+    "attack_range": 2.5,
     "held": "SWORD_ONE_HANDED",
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
-        "damageMultiplier": 0,
+        "damage_multiplier": 0,
         "angle": 150,
         "upswing": 0.5,
         "animation": "slash",
-        "swingSound": []
+        "swing_sound": []
       }
     ]
   }

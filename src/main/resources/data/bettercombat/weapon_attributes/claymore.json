@@ -1,15 +1,15 @@
 {
   "attributes": {
-    "attackRange": 2.5,
+    "attack_range": 2.5,
     "held": "SWORD_TWO_HANDED",
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
-        "damageMultiplier": -0.5,
+        "damage_multiplier": -0.5,
         "angle": 150,
         "upswing": 0.5,
         "animation": "slash",
-        "swingSound": [
+        "swing_sound": [
           {
             "id": "bettercombat:claymore-swing",
             "pitch": 1,
@@ -19,11 +19,11 @@
       },
       {
         "hitbox": "FORWARD_BOX",
-        "damageMultiplier": 0,
+        "damage_multiplier": 0,
         "angle": 0,
         "upswing": 0.5,
         "animation": "2h_sword_stab",
-        "swingSound": [
+        "swing_sound": [
           {
             "id": "bettercombat:claymore-stab",
             "volume": 1,
@@ -33,11 +33,11 @@
       },
       {
         "hitbox": "VERTICAL_PLANE",
-        "damageMultiplier": 0.5,
+        "damage_multiplier": 0.5,
         "angle": 150,
         "upswing": 0.5,
         "animation": "2h_sword_slam",
-        "swingSound": [
+        "swing_sound": [
           {
             "id": "bettercombat:claymore-slam",
             "volume": 1,
