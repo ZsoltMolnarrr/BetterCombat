@@ -16,7 +16,6 @@ import java.util.List;
 public class Packets {
     public record C2S_AttackRequest(int comboCount, boolean isSneaking, int[] entityIds) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "c2s_request_attack");
-        public static double RangeTolerance = 2.0;
         public static boolean UseVanillaPacket = true;
         public static PacketByteBuf write(int comboCount, boolean isSneaking, List<Entity> entities) {
             PacketByteBuf buffer = PacketByteBufs.create();

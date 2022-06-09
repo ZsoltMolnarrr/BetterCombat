@@ -115,7 +115,7 @@ public class ServerNetwork {
                             || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
                         continue;
                     }
-                    if (entity instanceof LivingEntity) {
+                    if (BetterCombat.config.allow_fast_attacks && entity instanceof LivingEntity) {
                         ((LivingEntity)entity).timeUntilRegen = 0;
                     }
                     ((LivingEntityAccessor) player).setLastAttackedTicks(lastAttackedTicks);
@@ -124,7 +124,7 @@ public class ServerNetwork {
                         PlayerInteractEntityC2SPacket vanillaAttackPacket = PlayerInteractEntityC2SPacket.attack(entity, request.isSneaking());
                         handler.onPlayerInteractEntity(vanillaAttackPacket);
                     } else {
-                        if (player.squaredDistanceTo(entity) < range * Packets.C2S_AttackRequest.RangeTolerance) {
+                        if (player.squaredDistanceTo(entity) < range * BetterCombat.config.target_search_range_multiplier) {
                             if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity || entity instanceof PersistentProjectileEntity || entity == player) {
                                 handler.disconnect(new TranslatableText("multiplayer.disconnect.invalid_entity_attacked"));
                                 LOGGER.warn("Player {} tried to attack an invalid entity", (Object)player.getName().getString());

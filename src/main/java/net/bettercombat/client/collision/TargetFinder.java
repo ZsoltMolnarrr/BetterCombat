@@ -1,5 +1,6 @@
 package net.bettercombat.client.collision;
 
+import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.WeaponAttributes.Attack;
 import net.minecraft.entity.Entity;
@@ -41,7 +42,7 @@ public class TargetFinder {
     }
 
     public static List<Entity> getInitialTargets(PlayerEntity player, Entity cursorTarget, double attackRange) {
-        Box box = player.getBoundingBox().expand(attackRange * 2.0 + 1.0);
+        Box box = player.getBoundingBox().expand(attackRange * BetterCombat.config.target_search_range_multiplier + 1.0);
         List<Entity> entities = player
                 .world
                 .getNonSpectatingEntities(LivingEntity.class, box)
