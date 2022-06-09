@@ -111,7 +111,7 @@ public class ServerNetwork {
                 for (int entityId: request.entityIds()) {
                     Entity entity = world.getEntityById(entityId);
                     if (entity == null
-                            || entity.isTeammate(player)
+                            || (!BetterCombat.config.allow_attacking_mount && entity.equals(player.getVehicle()))
                             || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
                         continue;
                     }

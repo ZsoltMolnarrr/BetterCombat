@@ -47,7 +47,10 @@ public class TargetFinder {
                 .world
                 .getNonSpectatingEntities(LivingEntity.class, box)
                 .stream()
-                .filter(entity -> entity != player && entity != cursorTarget && entity.isAttackable())
+                .filter(entity -> entity != player
+                        && entity != cursorTarget
+                        && entity.isAttackable()
+                        && (BetterCombat.config.allow_attacking_mount && entity.equals(player.getVehicle())))
                 .collect(Collectors.toList());
         if (cursorTarget != null && cursorTarget.isAttackable()) {
             entities.add(cursorTarget);
