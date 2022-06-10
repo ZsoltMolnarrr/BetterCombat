@@ -8,45 +8,21 @@
         "damage_multiplier": -0.5,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "slash",
-        "swing_sound": [
-          {
-            "id": "bettercombat:claymore-swing",
-            "volume": 1,
-            "pitch": 1,
-            "randomness": 0.1
-          }
-        ]
+        "animation": "slash"
       },
       {
         "direction": "FORWARD",
         "damage_multiplier": 0,
         "angle": 0,
         "upswing": 0.5,
-        "animation": "2h_sword_stab",
-        "swing_sound": [
-          {
-            "id": "bettercombat:claymore-stab",
-            "volume": 1,
-            "pitch": 1,
-            "randomness": 0.1
-          }
-        ]
+        "animation": "2h_sword_stab"
       },
       {
         "direction": "VERTICAL_TOP_TO_BOTTOM",
         "damage_multiplier": 0.5,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "2h_sword_slam",
-        "swing_sound": [
-          {
-            "id": "bettercombat:claymore-slam",
-            "volume": 1,
-            "pitch": 1,
-            "randomness": 0.1
-          }
-        ]
+        "animation": "2h_sword_slam"
       }
     ]
   }

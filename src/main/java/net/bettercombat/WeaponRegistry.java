@@ -56,6 +56,7 @@ public class WeaponRegistry {
                 id = id.substring(0, id.lastIndexOf('.'));
                 containers.put(new Identifier(id), container);
             } catch (Exception e) {
+                System.err.println("Failed to parse: " + identifier);
                 e.printStackTrace();
             }
         }
