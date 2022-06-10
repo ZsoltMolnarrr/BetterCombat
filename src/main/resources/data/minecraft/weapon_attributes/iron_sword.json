@@ -8,8 +8,7 @@
         "damage_multiplier": 0,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "bettercombat:2h_sword_slash",
-        "swing_sound": []
+        "animation": "bettercombat:2h_sword_slash"
       }
     ]
   }

@@ -49,8 +49,8 @@ public final class WeaponAttributes {
         private final double angle;
         private final double upswing;
         private final String animation;
-        private final Sound[] swing_sound;
-        private final Sound[] impact_sound;
+        private final Sound swing_sound;
+        private final Sound impact_sound;
 
         public Attack(
                 HitBoxShape hitbox,
@@ -58,8 +58,8 @@ public final class WeaponAttributes {
                 double angle,
                 double upswing,
                 String animation,
-                Sound[] swing_sound,
-                Sound[] impact_sound
+                Sound swing_sound,
+                Sound impact_sound
         ) {
             this.hitbox = hitbox;
             this.damage_multiplier = damage_multiplier;
@@ -90,11 +90,11 @@ public final class WeaponAttributes {
             return animation;
         }
 
-        public Sound[] swingSound() {
+        public Sound swingSound() {
             return swing_sound;
         }
 
-        public Sound[] impactSound() {
+        public Sound impactSound() {
             return impact_sound;
         }
 

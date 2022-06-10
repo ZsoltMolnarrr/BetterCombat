@@ -9,11 +9,9 @@
         "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:2h_sword_slash",
-        "swing_sound": [
-          {
-            "id": "bettercombat:claymore-swing"
-          }
-        ]
+        "swing_sound": {
+          "id": "bettercombat:claymore-swing"
+        }
       },
       {
         "hitbox": "FORWARD_BOX",
@@ -21,11 +19,9 @@
         "angle": 0,
         "upswing": 0.5,
         "animation": "bettercombat:2h_sword_stab",
-        "swing_sound": [
-          {
-            "id": "bettercombat:claymore-stab"
-          }
-        ]
+        "swing_sound": {
+          "id": "bettercombat:claymore-stab"
+        }
       },
       {
         "hitbox": "VERTICAL_PLANE",
@@ -33,12 +29,10 @@
         "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:2h_sword_slam",
-        "swing_sound": [
-          {
-            "id": "bettercombat:claymore-slam",
-            "randomness": 0
-          }
-        ]
+        "swing_sound": {
+          "id": "bettercombat:claymore-slam",
+          "randomness": 0
+        }
       }
     ]
   }

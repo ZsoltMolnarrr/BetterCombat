@@ -100,7 +100,7 @@ public class ServerNetwork {
                         PlayerAttackHelper.setAttributesForOffHandAttack(player, true);
                     }
 
-                    SoundHelper.playSounds(world, player, attack.swingSound());
+                    SoundHelper.playSound(world, player, attack.swingSound());
                 }
 
                 var lastAttackedTicks = ((LivingEntityAccessor)player).getLastAttackedTicks();
