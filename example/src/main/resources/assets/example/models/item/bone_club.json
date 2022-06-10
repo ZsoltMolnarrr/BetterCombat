@@ -1,0 +1,13 @@
+{
+  "parent": "example:item/claymore-base",
+  "textures": {
+    "layer0": "example:item/bone_club"
+  },
+  "display": {
+    "head": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 2, 0],
+      "scale":[ 1, 1, 0.5 ]
+    }
+  }
+}

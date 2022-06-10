@@ -26,20 +26,20 @@ Primary features:
 - [ ] Bundled resources: weapon animations, weapon sounds, weapon attribute presets
 
 Auxiliary features:
-- [X] Attacking with dual wielded weapons
 - [X] Two-handed weapons ignore offhand slot
-- [X] Cancel attack during upswing (aka "feint")
-- [X] Hold attack key to spam attack
-- [X] Target in hitbox indication
-- [X] Swing thru grass
-- [X] Can disable mining with weapons
+- [X] Attacking with dual wielded weapons (Server configurable)
+- [X] Cancel attack during upswing (aka "feint") (Client configurable)
+- [X] Hold attack key to spam attack (Client configurable)
+- [X] Target in hitbox indication (Client configurable)
+- [X] Swing thru grass (Client configurable)
+- [X] Can disable mining with weapons (Client configurable)
 
 Future plans:
+- Conditional attacks inside combos (for example: `OFF_HAND_ONLY`, `MAIN_HAND_ONLY`, `REQURES_SAME_OFFHAND`)
 - Rolling
-- Additional weapon attributes: movement penalty, pushback
+- Additional weapon attributes (for example: movement penalty, pushback)
 - Weapon trail animation while hitting 
 - External weapon swing animations
-- Attributes from ItemStack metadata
 
 # 🔨 Integrate your mod
 
