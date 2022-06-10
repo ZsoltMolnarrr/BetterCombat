@@ -95,13 +95,13 @@ When parent is specified, you can partially override its properites:
     "attackRange": 3.5
     "attacks": [
       {
-        "angle" = 100
+        "angle": 100
       },
       {
-        "damageMultiplier" = 0.1 
+        "damageMultiplier": 0.1 
       },
       {
-        "damageMultiplier" = 0.3,
+        "damageMultiplier": 0.3,
         "angle" = 90
       }
     ]
@@ -116,6 +116,43 @@ You can create and use your own presets:
 {
   "parent": "my-mod-id:longsword",
   "attributes": { ... }
+}
+```
+
+## Custom animations
+
+This mod supports custom attack animations 
+Let's say you want to create a custom attack animation with the following name: `my_claymore_slash`
+
+### Creating animation
+
+TODO: Animation guide (maybe link to external source?)
+
+### Adding animation
+
+Add the created animation to the following location
+
+```resources/assets/my-mod-id/weapon_animations/my_claymore_slash.json```
+
+### Using the animation
+
+You can use your custom animation following the id pattern. 
+
+Make sure to specify a fitting `upswing` value next to your animation (to make it look and feel nice to use).
+
+```
+{
+  // ...
+  "attributes": {
+    // ...
+    "attacks": [
+      {
+        "animation": "my-mod-id:my_claymore_slash",
+        "upswing": 0.4
+      },
+      // ...
+    ]
+  }
 }
 ```
 
