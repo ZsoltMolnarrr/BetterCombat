@@ -8,7 +8,7 @@
         "damage_multiplier": -0.5,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "slash",
+        "animation": "bettercombat:2h_sword_slash",
         "swing_sound": [
           {
             "id": "bettercombat:claymore-swing",
@@ -22,7 +22,7 @@
         "damage_multiplier": 0,
         "angle": 0,
         "upswing": 0.5,
-        "animation": "2h_sword_stab",
+        "animation": "bettercombat:2h_sword_stab",
         "swing_sound": [
           {
             "id": "bettercombat:claymore-stab",
@@ -36,7 +36,7 @@
         "damage_multiplier": 0.5,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "2h_sword_slam",
+        "animation": "bettercombat:2h_sword_slam",
         "swing_sound": [
           {
             "id": "bettercombat:claymore-slam",

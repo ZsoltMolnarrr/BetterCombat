@@ -8,7 +8,7 @@
         "damage_multiplier": -0.5,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "2h_sword_stab",
+        "animation": "bettercombat:2h_sword_stab",
         "swing_sound": []
       }
     ]

@@ -6,7 +6,7 @@ import io.github.kosmx.playerAnim.IAnimatedPlayer;
 import io.github.kosmx.playerAnim.layered.AnimationContainer;
 import io.github.kosmx.playerAnim.layered.EmoteDataPlayer;
 import io.github.kosmx.playerAnim.layered.IAnimation;
-import net.bettercombat.client.BetterCombatClient;
+import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.PlayerAnimatable;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -19,11 +19,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerAnimatable {
+public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAnimatable {
 
     private AnimationContainer container = new AnimationContainer(null);
 
-    public ClientPlayerMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
+    public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
     }
 
@@ -36,7 +36,7 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerAn
 
     @Override
     public void playAttackAnimation(String name, boolean isOffHand) {
-        EmoteData data = BetterCombatClient.emotes.get(name);
+        EmoteData data = AnimationRegistry.emotes.get(name);
         container.setAnim(new EmoteDataPlayer(data, 0));
         this.bodyYaw = this.headYaw;
     }

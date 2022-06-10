@@ -47,7 +47,7 @@ public class WeaponRegistry {
         // Reading all attribute files
         for (Identifier identifier : resourceManager.findResources("weapon_attributes", fileName -> fileName.endsWith(".json"))) {
             try {
-                System.out.println("Checking resource: " + identifier);
+                // System.out.println("Checking resource: " + identifier);
                 var resource = resourceManager.getResource(identifier);
                 JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
                 AttributesContainer container = gson.fromJson(reader, fileFormat);
