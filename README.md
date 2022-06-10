@@ -86,7 +86,9 @@ When no parent is specified, the value for `"attributes"` key must be a full jso
 
 ---
 
-When parent is specified, you can partially override its properites:
+When `"parent"` and `"attributes"` are both specified, you can customize attributes by partially (or fully) overriding the properties. Make sure the inheritance results in fully parsable [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
+
+(Attributes are merged in parent -> child order. So parent properties are copied and overridden with child. The chain of inheritance can be any length.)
 ```
 {
   "parent": "bettercombat:claymore",

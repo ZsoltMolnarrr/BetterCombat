@@ -129,6 +129,7 @@ public class WeaponRegistry {
         var json = gson.toJson(registrations);
         System.out.println("Updated Weapon Attribute registry: " + json);
         buffer.writeString(json);
+        System.out.println("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes() + " bytes");
         encodedRegistrations = buffer;
     }
 
