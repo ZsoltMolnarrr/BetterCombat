@@ -39,7 +39,6 @@ Future plans:
 - Rolling
 - Additional weapon attributes (for example: movement penalty, pushback)
 - Weapon trail animation while hitting 
-- External weapon swing animations
 
 # 🔨 Integrate your mod
 
