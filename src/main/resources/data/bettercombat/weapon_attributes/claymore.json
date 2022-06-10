@@ -11,10 +11,7 @@
         "animation": "bettercombat:2h_sword_slash",
         "swing_sound": [
           {
-            "id": "bettercombat:claymore-swing",
-            "volume": 1,
-            "pitch": 1,
-            "randomness": 0.1
+            "id": "bettercombat:claymore-swing"
           }
         ]
       },
@@ -26,10 +23,7 @@
         "animation": "bettercombat:2h_sword_stab",
         "swing_sound": [
           {
-            "id": "bettercombat:claymore-stab",
-            "volume": 1,
-            "pitch": 1,
-            "randomness": 0.1
+            "id": "bettercombat:claymore-stab"
           }
         ]
       },
@@ -42,8 +36,7 @@
         "swing_sound": [
           {
             "id": "bettercombat:claymore-slam",
-            "volume": 1,
-            "pitch": 1
+            "randomness": 0
           }
         ]
       }

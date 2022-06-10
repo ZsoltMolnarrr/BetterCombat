@@ -36,9 +36,13 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public void playAttackAnimation(String name, boolean isOffHand) {
-        EmoteData data = AnimationRegistry.emotes.get(name);
-        container.setAnim(new EmoteDataPlayer(data, 0));
-        this.bodyYaw = this.headYaw;
+        try {
+            EmoteData data = AnimationRegistry.emotes.get(name);
+            container.setAnim(new EmoteDataPlayer(data, 0));
+            this.bodyYaw = this.headYaw;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -137,17 +137,10 @@ public final class WeaponAttributes {
     }
 
     public static final class Sound {
-        private final String id;
-        private final float volume;
-        private final float pitch;
-        private final float randomness;
-
-        public Sound(String id, float volume, float pitch, float randomness) {
-            this.id = id;
-            this.volume = volume;
-            this.pitch = pitch;
-            this.randomness = randomness;
-        }
+        private final String id = null;
+        private final float volume = 1;
+        private final float pitch = 1;
+        private final float randomness = 0.1F;
 
         public String id() {
             return id;
