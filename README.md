@@ -38,7 +38,7 @@ Future plans:
 - Conditional attacks inside combos (for example: `OFF_HAND_ONLY`, `MAIN_HAND_ONLY`, `REQURES_SAME_OFFHAND`)
 - Rolling
 - Additional weapon attributes (for example: movement penalty, pushback)
-- Weapon trail animation while hitting 
+- Weapon trail animation while hitting
 
 # 🔨 Integrate your mod
 
@@ -120,7 +120,6 @@ You can create and use your own presets:
 
 ## Custom animations
 
-This mod supports custom attack animations 
 Let's say you want to create a custom attack animation with the following name: `my_claymore_slash`
 
 ### Creating animation
@@ -135,7 +134,7 @@ Add the created animation to the following location
 
 ### Using the animation
 
-You can use your custom animation following the id pattern. 
+You can use your custom animation by referencing it, following the resource identifier pattern. 
 
 Make sure to specify a fitting `upswing` value next to your animation (to make it look and feel nice to use).
 
