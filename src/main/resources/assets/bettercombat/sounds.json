@@ -1,4 +1,9 @@
 {
+  "axe-swing": {
+    "sounds": [
+      "bettercombat:axe-swing-01"
+    ]
+  },
   "claymore-swing": {
     "sounds": [
       "bettercombat:claymore-swing-01"
@@ -12,9 +17,54 @@
   "claymore-slam": {
     "sounds": [
       {
-        "name": "bettercombat:claymore-slam-02",
+        "name": "bettercombat:claymore-slam-01",
         "pitch": 0.87
       }
+    ]
+  },
+  "dagger-swing": {
+    "sounds": [
+      "bettercombat:dagger-swing-01"
+    ]
+  },
+  "double-axe-swing": {
+    "sounds": [
+      "bettercombat:double-axe-swing-01"
+    ]
+  },
+  "fist-swing": {
+    "sounds": [
+      "bettercombat:fist-swing-01"
+    ]
+  },
+  "glaive-swing": {
+    "sounds": [
+      "bettercombat:glaive-swing-01"
+    ]
+  },
+  "hammer-swing": {
+    "sounds": [
+      "bettercombat:hammer-swing-01"
+    ]
+  },
+  "mace-swing": {
+    "sounds": [
+      "bettercombat:mace-swing-01"
+    ]
+  },
+  "pickaxe-swing": {
+    "sounds": [
+      "bettercombat:pickaxe-swing-01"
+    ]
+  },
+  "spear-swing": {
+    "sounds": [
+      "bettercombat:spear-swing-01"
+    ]
+  },
+  "sword-swing": {
+    "sounds": [
+      "bettercombat:sword-swing-01"
     ]
   }
 }

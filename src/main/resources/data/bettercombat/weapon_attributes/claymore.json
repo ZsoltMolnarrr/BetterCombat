@@ -12,6 +12,7 @@
         "swing_sound": [
           {
             "id": "bettercombat:claymore-swing",
+            "volume": 1,
             "pitch": 1,
             "randomness": 0.1
           }
@@ -27,6 +28,7 @@
           {
             "id": "bettercombat:claymore-stab",
             "volume": 1,
+            "pitch": 1,
             "randomness": 0.1
           }
         ]
@@ -48,4 +50,3 @@
     ]
   }
 }
-
