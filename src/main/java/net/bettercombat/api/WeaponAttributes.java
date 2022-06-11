@@ -30,7 +30,7 @@ public final class WeaponAttributes {
      * Example reducing (inherited attributes have a sequence of 3 attack):
      *   "attacks": [ {}, {} ]
      * Example of extending  (inherited attributes have a sequence of 2 attack):
-     *    "attacks": [ {}, {}, { ... my new fully parsable attack object ... } ]
+     *   "attacks": [ {}, {}, { ... my new fully parsable attack object ... } ]
      * The properties of inherited attack objects can be overridden.
      */
     private final Attack[] attacks;
@@ -111,15 +111,16 @@ public final class WeaponAttributes {
          *
          * Try to align the tipping point of the animation and the time at which the attack is performed
          * as close as possible.
+         * Formula to calculate attack cooldown in ticks: ()
          */
         private final double upswing;
 
         /**
          * The attack animation to play.
          * Value must be an identifier, formula: "namespace:resource".
-         * Examples:
-         *  "bettercombat:sword-slash"
-         *  "my-mod-id:my-sword-swing"
+         * Example values:
+         *   "bettercombat:sword-slash"
+         *   "my-mod-id:my-sword-swing"
          */
         private final String animation;
 
@@ -228,23 +229,23 @@ public final class WeaponAttributes {
          * If using your own sounds, make sure you register in your mod initializer.
          *
          * Value must be an identifier, formula: "namespace:resource".
-         * Examples:
-         *  "bettercombat:sword-swing"
-         *  "my-mod-id:my-sword-sound"
+         * Example values:
+         *   "bettercombat:sword-swing"
+         *   "my-mod-id:my-sword-sound"
          */
-        private final String id = null;
+        private String id = null;
 
         /**
          * Volume of the sound
          * Has default value, optional to specify.
          */
-        private final float volume = 1;
+        private float volume = 1;
 
         /**
          * Pitch of the sound
          * Has default value, optional to specify.
          */
-        private final float pitch = 1;
+        private float pitch = 1;
 
         /**
          * Pitch randomness of the sound.
@@ -252,7 +253,7 @@ public final class WeaponAttributes {
          * Example values:
          *   for additional pitch within a range of +/- 10%, use the value `0.1`
          */
-        private final float randomness = 0.1F;
+        private float randomness = 0.1F;
 
         public String id() {
             return id;
