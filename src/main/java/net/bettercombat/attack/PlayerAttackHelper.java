@@ -1,7 +1,6 @@
 package net.bettercombat.attack;
 
 import net.bettercombat.BetterCombat;
-import net.bettercombat.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

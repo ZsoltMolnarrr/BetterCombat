@@ -1,6 +1,7 @@
 package net.bettercombat;
 
 import me.lortseam.completeconfig.data.Config;
+import net.bettercombat.attack.WeaponRegistry;
 import net.bettercombat.network.ServerNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;

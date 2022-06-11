@@ -1,6 +1,6 @@
 package net.bettercombat.mixin;
 
-import net.bettercombat.WeaponRegistry;
+import net.bettercombat.attack.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.attack.AttackHand;
 import net.bettercombat.attack.PlayerAttackHelper;
@@ -16,15 +16,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

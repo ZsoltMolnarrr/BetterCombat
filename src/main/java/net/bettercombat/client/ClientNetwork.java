@@ -1,7 +1,7 @@
 package net.bettercombat.client;
 
 import net.bettercombat.BetterCombat;
-import net.bettercombat.WeaponRegistry;
+import net.bettercombat.attack.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;

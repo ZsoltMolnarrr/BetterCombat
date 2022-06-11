@@ -1,4 +1,4 @@
-package net.bettercombat;
+package net.bettercombat.attack;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

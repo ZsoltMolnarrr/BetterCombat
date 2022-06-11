@@ -1,4 +1,4 @@
-package net.bettercombat;
+package net.bettercombat.utils;
 
 import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.entity.Entity;
@@ -13,6 +13,9 @@ public class SoundHelper {
     private static Random rng = new Random();
 
     public static void playSound(World world, Entity entity, WeaponAttributes.Sound sound) {
+        if (sound == null) {
+            return;
+        }
         try {
             var id = new Identifier(sound.id());
             var soundEvent = Registry.SOUND_EVENT.get(new Identifier(sound.id()));
