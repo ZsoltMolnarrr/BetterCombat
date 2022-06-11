@@ -30,7 +30,7 @@ public final class WeaponAttributes {
      * Example reducing (inherited attributes have a sequence of 3 attack):
      *   "attacks": [ {}, {} ]
      * Example of extending  (inherited attributes have a sequence of 2 attack):
-     *     "attacks": [ {}, {}, { ... my new fully parsable attack object ... } ]
+     *    "attacks": [ {}, {}, { ... my new fully parsable attack object ... } ]
      * The properties of inherited attack objects can be overridden.
      */
     private final Attack[] attacks;
@@ -86,8 +86,8 @@ public final class WeaponAttributes {
          * Applies damage multiplier to a single attack in the sequence.
          * (So different attacks in a combo can do more or less damage compared to each other.)
          * Example values:
-         *   for +30% damage, use `0.3`
-         *   for -30% damage, use `-0.3`
+         *   for +30% damage, use the value `0.3`
+         *   for -30% damage, use the value `-0.3`
          */
         private final double damage_multiplier;
 
@@ -103,15 +103,19 @@ public final class WeaponAttributes {
 
         /**
          * Determines the amount of time, after the attack is performed during the attack animation.
-         * The actual amount of time is relative to the attack cooldown of the weapon.
+         * The actual amount of time is relative to the cooldown of the weapon.
          * Example values:
-         *   to perform an attack at 60% of the animation progress, use the value `0.6`
-         *                                   FIXME: THIS IS WRONG, IT ACTUALLY COMPARES TO WEAPONSPEED!
+         *   to perform an attack at 60% of the attack cooldown, use the value `0.6`
+         *   (in case of a sword with 1.6 speed (12 ticks attack cooldown), the attack will be performed
+         *   after 7.2 (rounded to 7) ticks of upswing)
+         *
+         * Try to align the tipping point of the animation and the time at which the attack is performed
+         * as close as possible.
          */
         private final double upswing;
 
         /**
-         * The attack animation to play
+         * The attack animation to play.
          * Value must be an identifier, formula: "namespace:resource".
          * Examples:
          *  "bettercombat:sword-slash"
