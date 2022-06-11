@@ -18,7 +18,7 @@ Primary features:
 - [X] Assign attributes to weapons via JSON API
 - [ ] Define how the weapon is held (for example: `1H_SWORD`, `2H_SWORD`, etc...)
 - [X] Define combos for the weapon (each attack in a combo can have different properties)
-- [ ] Define swing animations and sounds for the weapon
+- [X] Define swing animations and sounds for the weapon
 - [X] Upswing weapon before hitting
 - [X] Accurate hitbox calculation (based on [OBB](https://www.sciencedirect.com/topics/computer-science/oriented-bounding-box)+[SAT](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem))
 - [X] Hitting multiple enemies with a single strike
