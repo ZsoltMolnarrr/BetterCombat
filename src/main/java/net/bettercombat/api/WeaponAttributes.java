@@ -15,20 +15,23 @@ public final class WeaponAttributes {
     /**
      * Specifies the held (idle) animation of the weapon, and if it counts as two-handed or one-handed weapon.
      * When the player's selected item is two-handed weapon, the off-hand slot is completely disabled.
-     * When the player's selected item is one-handed weapon, an other one-handed weapon can be place into
-     * the off-hand slot for alternating dual wielding attacks.
+     * When the player's selected item is one-handed weapon, another one-handed weapon can be placed into
+     * the off-hand slot for alternating dual wielded attacks.
      */
     private final Held held;
 
     /**
-     * Specifies the sequence of attacks that follow each other when the user is attacking continuously.
+     * Specifies the sequence of attacks following each other, when the user is attacking continuously.
+     * (When last attack of the sequence is reached, it restarts)
      * With a sequence of different attacks, you can create combos.
+     * Check out the member wise documentation of `Attack` (in this file), to see how they can be different.
      *
-     * When using attribute inheritance, the sequence of attacks can be reduced or extended.
+     * When using attribute inheritance, the inherited sequence of attacks can be reduced or extended.
      * Example reducing (inherited attributes have a sequence of 3 attack):
      *   "attacks": [ {}, {} ]
      * Example of extending  (inherited attributes have a sequence of 2 attack):
      *     "attacks": [ {}, {}, { ... my new fully parsable attack object ... } ]
+     * The properties of inherited attack objects can be overridden.
      */
     private final Attack[] attacks;
 
@@ -68,13 +71,63 @@ public final class WeaponAttributes {
         }
     }
 
+    /**
+     * Represents a single weapon swing.
+     */
     public static final class Attack {
+        /**
+         * Determines the shape of the attack hitbox.
+         * (This shape is scaled by the `attack_range` property from the embedding object.)
+         * For accepted values check out `HitBoxShape` (in this file).
+         */
         private final HitBoxShape hitbox;
+
+        /**
+         * Applies damage multiplier to a single attack in the sequence.
+         * (So different attacks in a combo can do more or less damage compared to each other.)
+         * Example values:
+         *   for +30% damage, use `0.3`
+         *   for -30% damage, use `-0.3`
+         */
         private final double damage_multiplier;
+
+        /**
+         * Determines the angle (measured in degrees) of the attack's hitbox, centered to the player's look vector.
+         * Targeted entities outside of this 3D slice are not hit.
+         * If set to `0`, no angle check is done.
+         * Example values:
+         *   for an attack with an angle of 90 degrees, use the value `90`
+         *   (targeted entities where position vector compared to player's look vector is bigger than 45, will not be hit)
+         */
         private final double angle;
+
+        /**
+         * Determines the amount of time, after the attack is performed during the attack animation.
+         * The actual amount of time is relative to the attack cooldown of the weapon.
+         * Example values:
+         *   to perform an attack at 60% of the animation progress, use the value `0.6`
+         *                                   FIXME: THIS IS WRONG, IT ACTUALLY COMPARES TO WEAPONSPEED!
+         */
         private final double upswing;
+
+        /**
+         * The attack animation to play
+         * Value must be an identifier, formula: "namespace:resource".
+         * Examples:
+         *  "bettercombat:sword-slash"
+         *  "my-mod-id:my-sword-swing"
+         */
         private final String animation;
+
+        /**
+         * The sound to play upon executing the attack.
+         * Check out the member wise documentation of `Sound` (in this file).
+         */
         private final Sound swing_sound;
+
+        /**
+         * Not working at the moment.
+         */
         private final Sound impact_sound;
 
         public Attack(
@@ -161,10 +214,40 @@ public final class WeaponAttributes {
         HORIZONTAL_PLANE
     }
 
+    /**
+     * Represents a sound to be played with arguments.
+     */
     public static final class Sound {
+        /**
+         * The id of the sound.
+         * Must be specified with a non-null and non-empty value!
+         * If using your own sounds, make sure you register in your mod initializer.
+         *
+         * Value must be an identifier, formula: "namespace:resource".
+         * Examples:
+         *  "bettercombat:sword-swing"
+         *  "my-mod-id:my-sword-sound"
+         */
         private final String id = null;
+
+        /**
+         * Volume of the sound
+         * Has default value, optional to specify.
+         */
         private final float volume = 1;
+
+        /**
+         * Pitch of the sound
+         * Has default value, optional to specify.
+         */
         private final float pitch = 1;
+
+        /**
+         * Pitch randomness of the sound.
+         * Has default value, optional to specify.
+         * Example values:
+         *   for additional pitch within a range of +/- 10%, use the value `0.1`
+         */
         private final float randomness = 0.1F;
 
         public String id() {
