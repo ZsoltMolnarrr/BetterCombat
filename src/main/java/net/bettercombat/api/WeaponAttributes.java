@@ -2,9 +2,34 @@ package net.bettercombat.api;
 
 import java.util.Objects;
 
+/**
+ * Represents how a weapon behaves when player performs attack with it.
+ */
 public final class WeaponAttributes {
+
+    /**
+     * The maximal range of any attacks made with this weapon.
+     */
     private final double attack_range;
+
+    /**
+     * Specifies the held (idle) animation of the weapon, and if it counts as two-handed or one-handed weapon.
+     * When the player's selected item is two-handed weapon, the off-hand slot is completely disabled.
+     * When the player's selected item is one-handed weapon, an other one-handed weapon can be place into
+     * the off-hand slot for alternating dual wielding attacks.
+     */
     private final Held held;
+
+    /**
+     * Specifies the sequence of attacks that follow each other when the user is attacking continuously.
+     * With a sequence of different attacks, you can create combos.
+     *
+     * When using attribute inheritance, the sequence of attacks can be reduced or extended.
+     * Example reducing (inherited attributes have a sequence of 3 attack):
+     *   "attacks": [ {}, {} ]
+     * Example of extending  (inherited attributes have a sequence of 2 attack):
+     *     "attacks": [ {}, {}, { ... my new fully parsable attack object ... } ]
+     */
     private final Attack[] attacks;
 
     public WeaponAttributes(

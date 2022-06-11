@@ -87,6 +87,7 @@ public class WeaponRegistry {
 
                 register(key, resolvedAttributes);
             } catch (Exception e) {
+                System.err.println("Failed to resolve inheritance path of: " + key);
                 e.printStackTrace();
             }
         });
@@ -97,7 +98,7 @@ public class WeaponRegistry {
     private static WeaponAttributes override(WeaponAttributes a, WeaponAttributes b) {
         var attackRange = b.attackRange() > 0 ? b.attackRange() : a.attackRange();
         var held = b.held() != null ? b.held() : a.held();
-        WeaponAttributes.Attack[] attacks = a.attacks(); // (b.attacks() != null && b.attacks().length > 0) ? b.attacks() : a.attacks();
+        var attacks = a.attacks();
         if (b.attacks() != null && b.attacks().length > 0) {
             var overrideAttacks = new ArrayList<WeaponAttributes.Attack>();
             for(int i = 0; i < b.attacks().length; ++i) {
