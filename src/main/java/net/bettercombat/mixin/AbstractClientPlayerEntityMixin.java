@@ -6,8 +6,9 @@ import io.github.kosmx.playerAnim.IAnimatedPlayer;
 import io.github.kosmx.playerAnim.layered.AnimationContainer;
 import io.github.kosmx.playerAnim.layered.EmoteDataPlayer;
 import io.github.kosmx.playerAnim.layered.IAnimation;
+import net.bettercombat.attack.WeaponRegistry;
 import net.bettercombat.client.AnimationRegistry;
-import net.bettercombat.client.PlayerAnimatable;
+import net.bettercombat.client.PlayerAttackAnimatable;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,10 +19,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAnimatable {
+import javax.annotation.Nullable;
 
-    private AnimationContainer container = new AnimationContainer(null);
+@Mixin(AbstractClientPlayerEntity.class)
+public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
+
+    private AnimationContainer pose = new AnimationContainer(null);
+    private AnimationContainer attack = new AnimationContainer(null);
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
@@ -31,14 +35,45 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
         ((IAnimatedPlayer) this)
                 .getAnimationStack()
-                .addAnimLayer(2000, container);
+                .addAnimLayer(1, pose);
+        ((IAnimatedPlayer) this)
+                .getAnimationStack()
+                .addAnimLayer(2000, attack);
+    }
+
+    private EmoteData lastPose;
+
+    @Override
+    public void updatePose() {
+        var instance = (Object)this;
+        var player = (PlayerEntity)instance;
+        var attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+        EmoteData newPose = null;
+        if (attributes != null) {
+            newPose = AnimationRegistry.getPose(attributes);
+        }
+        setPose(newPose);
+    }
+
+    private void setPose(@Nullable EmoteData pose) {
+        if (pose == lastPose) {
+            return;
+        }
+
+        if (pose == null) {
+            this.pose.setAnim(null);
+        } else {
+            this.pose.setAnim(new EmoteDataPlayer(pose, 0));
+        }
+
+        lastPose = pose;
     }
 
     @Override
     public void playAttackAnimation(String name, boolean isOffHand) {
         try {
             EmoteData data = AnimationRegistry.emotes.get(name);
-            container.setAnim(new EmoteDataPlayer(data, 0));
+            attack.setAnim(new EmoteDataPlayer(data, 0));
             this.bodyYaw = this.headYaw;
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,8 +81,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     @Override
-    public void stopAnimation() {
-        IAnimation currentAnimation = container.getAnim();
+    public void stopAttackAnimation() {
+        IAnimation currentAnimation = attack.getAnim();
         if (currentAnimation != null && currentAnimation instanceof EmoteDataPlayer) {
             ((EmoteDataPlayer)currentAnimation).stop();
         }

@@ -7,7 +7,7 @@ import net.bettercombat.attack.PlayerAttackHelper;
 import net.bettercombat.attack.PlayerAttackProperties;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
-import net.bettercombat.client.PlayerAnimatable;
+import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -131,7 +131,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
 //        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
-        ((PlayerAnimatable) player).playAttackAnimation(animationName, isOffHand);
+        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, isOffHand);
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
                 Packets.AttackAnimation.writePlay(player.getId(), isOffHand, animationName));
@@ -140,7 +140,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     private void feintIfNeeded() {
         if (upswingTicks > 0 &&
                 (BetterCombatClient.feintKeyBinding.isPressed() || player.getMainHandStack() != upswingStack)) {
-            ((PlayerAnimatable) player).stopAnimation();
+            ((PlayerAttackAnimatable) player).stopAttackAnimation();
             ClientPlayNetworking.send(
                     Packets.AttackAnimation.ID,
                     Packets.AttackAnimation.writeStop(player.getId()));

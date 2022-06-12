@@ -3,6 +3,7 @@ package net.bettercombat.mixin;
 import net.bettercombat.attack.WeaponRegistry;
 import net.bettercombat.attack.PlayerAttackHelper;
 import net.bettercombat.attack.PlayerAttackProperties;
+import net.bettercombat.client.PlayerAttackAnimatable;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -16,12 +17,21 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.minecraft.entity.EquipmentSlot.MAINHAND;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityInject implements PlayerAttackProperties {
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    public void post_Tick(CallbackInfo ci) {
+        var instance = (Object)this;
+        if (((PlayerEntity)instance).world.isClient()) {
+            ((PlayerAttackAnimatable) this).updatePose();
+        }
+    }
 
     // FEATURE: Disable sweeping for our weapons
 

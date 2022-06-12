@@ -111,7 +111,7 @@ public final class WeaponAttributes {
          *
          * Try to align the tipping point of the animation and the time at which the attack is performed
          * as close as possible.
-         * Formula to calculate attack cooldown in ticks: ()
+         * Formula to calculate attack cooldown in ticks: (1 / (4 - ATTACK_SPEED)) * 20
          */
         private final double upswing;
 
