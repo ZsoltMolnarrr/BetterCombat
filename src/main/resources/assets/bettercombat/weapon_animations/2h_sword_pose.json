@@ -6,8 +6,8 @@
         "isLoop": "true",
         "returnTick": 1,
         "beginTick":0,
-        "endTick":60,
-        "stopTick":61,
+        "endTick":1,
+        "stopTick":2,
         "degrees":false,
         "moves":[
             
@@ -24,7 +24,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightArm":{
-                    "yaw":-0.9285885691642761
+                    "yaw":-0.7664720416069031
                 }
             },
             {
@@ -40,7 +40,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightArm":{
-                    "roll":-0.2727513611316681
+                    "roll":-0.22590157389640808
                 }
             },
             {
@@ -104,7 +104,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightArm":{
-                    "pitch":-0.9519222974777222
+                    "pitch":-1.0142040252685547
                 }
             },
             {
@@ -216,7 +216,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "x":-0.6114312410354614
+                    "x":-0.711785078048706
                 }
             },
             {
@@ -232,7 +232,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "z":1.0910794734954834
+                    "z":1.3292704820632935
                 }
             },
             {
@@ -248,7 +248,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "y":-0.5678582191467285
+                    "y":-0.0021451711654663086
                 }
             },
             {

@@ -1,5 +1,6 @@
 package net.bettercombat.api;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
@@ -13,12 +14,23 @@ public final class WeaponAttributes {
     private final double attack_range;
 
     /**
-     * Specifies the held (idle) animation of the weapon, and if it counts as two-handed or one-handed weapon.
+     * The pose animation to play when idling.
+     * Value must be an identifier, formula: "namespace:resource".
+     * Suggested to be only used for two-handed weapons.
+     *
+     * Example values:
+     *   "bettercombat:sword-pose"
+     *   "my-mod-id:my-sword-pose"
+     */
+    @Nullable
+    private final String pose;
+
+    /**
+     * Determines whether the weapon counts as two-handed or one-handed weapon.
      * When the player's selected item is two-handed weapon, the off-hand slot is completely disabled.
      * When the player's selected item is one-handed weapon, another one-handed weapon can be placed into
-     * the off-hand slot for alternating dual wielded attacks.
      */
-    private final Held held;
+    private final boolean two_handed;
 
     /**
      * Specifies the sequence of attacks following each other, when the user is attacking continuously.
@@ -37,38 +49,13 @@ public final class WeaponAttributes {
 
     public WeaponAttributes(
             double attack_range,
-            Held held,
+            @Nullable String pose,
+            boolean isTwoHanded,
             Attack[] attacks) {
         this.attack_range = attack_range;
-        this.held = held;
+        this.pose = pose;
+        this.two_handed = isTwoHanded;
         this.attacks = attacks;
-    }
-
-    public enum Held {
-        SWORD_ONE_HANDED,
-        SWORD_TWO_HANDED,
-        AXE_ONE_HANDED,
-        AXE_TWO_HANDED,
-        HAMMER_ONE_HANDED,
-        HAMMER_TWO_HANDED,
-        POLEARM_ONE_HANDED,
-        POLEARM_TWO_HANDED,
-        STAFF,
-        DAGGER,
-        FIST;
-
-        public boolean isTwoHanded() {
-            switch (this) {
-                case SWORD_TWO_HANDED,
-                        AXE_TWO_HANDED,
-                        HAMMER_TWO_HANDED,
-                        POLEARM_TWO_HANDED,
-                        STAFF -> {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 
     /**
@@ -310,8 +297,13 @@ public final class WeaponAttributes {
         return attack_range;
     }
 
-    public Held held() {
-        return held;
+    @Nullable
+    public String pose() {
+        return pose;
+    }
+
+    public boolean isTwoHanded() {
+        return two_handed;
     }
 
     public Attack[] attacks() {
@@ -324,20 +316,22 @@ public final class WeaponAttributes {
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (WeaponAttributes) obj;
         return Double.doubleToLongBits(this.attack_range) == Double.doubleToLongBits(that.attack_range) &&
-                Objects.equals(this.held, that.held) &&
+                Objects.equals(this.pose, that.pose) &&
+                Objects.equals(this.two_handed, that.two_handed) &&
                 Objects.equals(this.attacks, that.attacks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(attack_range, held, attacks);
+        return Objects.hash(attack_range, two_handed, attacks);
     }
 
     @Override
     public String toString() {
         return "WeaponAttributes[" +
                 "attack_range=" + attack_range + ", " +
-                "held=" + held + ", " +
+                "pose=" + pose + ", " +
+                "isTwoHanded=" + two_handed + ", " +
                 "attacks=" + attacks + ']';
     }
 

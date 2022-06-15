@@ -33,48 +33,4 @@ public class AnimationRegistry {
             }
         }
     }
-
-    public static EmoteData getPose(WeaponAttributes attributes) {
-        var namespace = "bettercombat:";
-        String animationName = null;
-        if (attributes == null) {
-            return null;
-        }
-        switch (attributes.held()) {
-            case SWORD_ONE_HANDED -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case SWORD_TWO_HANDED -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case AXE_ONE_HANDED -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case AXE_TWO_HANDED -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case HAMMER_ONE_HANDED -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case HAMMER_TWO_HANDED -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case POLEARM_ONE_HANDED -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case POLEARM_TWO_HANDED -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case STAFF -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case DAGGER -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-            case FIST -> {
-                animationName = namespace + "2h_sword_pose";
-            }
-        }
-        return emotes.get(animationName);
-    }
 }

@@ -49,8 +49,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var player = (PlayerEntity)instance;
         var attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
         EmoteData newPose = null;
-        if (attributes != null) {
-            newPose = AnimationRegistry.getPose(attributes);
+        if (attributes != null && attributes.pose() != null) {
+            newPose = AnimationRegistry.emotes.get(attributes.pose());
         }
         setPose(newPose);
     }
@@ -86,6 +86,5 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         if (currentAnimation != null && currentAnimation instanceof EmoteDataPlayer) {
             ((EmoteDataPlayer)currentAnimation).stop();
         }
-        // container.setAnim(null);
     }
 }

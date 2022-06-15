@@ -78,11 +78,14 @@ public class WeaponRegistry {
                     }
                 }
 
-                var empty = new WeaponAttributes(0, null, null);
+                var empty = new WeaponAttributes(0, null, false, null);
                 var resolvedAttributes = resolutionChain
                     .stream()
                     .reduce(empty, (a, b) -> {
-                        return override(a, (b == null ? empty : b));
+                        if (b == null) { // I'm not sure why null can enter as `b`
+                            return a;
+                        }
+                        return override(a, b);
                     });
 
                 register(key, resolvedAttributes);
@@ -97,7 +100,8 @@ public class WeaponRegistry {
 
     private static WeaponAttributes override(WeaponAttributes a, WeaponAttributes b) {
         var attackRange = b.attackRange() > 0 ? b.attackRange() : a.attackRange();
-        var held = b.held() != null ? b.held() : a.held();
+        var pose = b.pose() != null ? b.pose() : a.pose();
+        var isTwoHanded = b.isTwoHanded();
         var attacks = a.attacks();
         if (b.attacks() != null && b.attacks().length > 0) {
             var overrideAttacks = new ArrayList<WeaponAttributes.Attack>();
@@ -118,7 +122,7 @@ public class WeaponRegistry {
             }
             attacks = overrideAttacks.toArray(new WeaponAttributes.Attack[0]);
         }
-        return new WeaponAttributes(attackRange, held, attacks);
+        return new WeaponAttributes(attackRange, pose, isTwoHanded, attacks);
     }
 
     // NETWORK SYNC

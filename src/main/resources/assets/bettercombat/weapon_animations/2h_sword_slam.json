@@ -6,8 +6,8 @@
         "isLoop": "false",
         "returnTick": 17,
         "beginTick":0,
-        "endTick":60,
-        "stopTick":61,
+        "endTick":17,
+        "stopTick":27,
         "degrees":false,
         "moves":[
             

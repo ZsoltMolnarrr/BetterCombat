@@ -72,7 +72,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
         if (slot == EquipmentSlot.OFFHAND) {
             var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
             var attributes = WeaponRegistry.getAttributes(mainHandStack);
-            if (attributes != null && attributes.held().isTwoHanded()) {
+            if (attributes != null && attributes.isTwoHanded()) {
                 cir.setReturnValue(ItemStack.EMPTY);
                 cir.cancel();
                 return;
@@ -81,7 +81,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
         if (slot == MAINHAND) {
             var offHandStack = ((PlayerEntityAccessor)this).getInventory().offHand.get(0);
             var attributes = WeaponRegistry.getAttributes(offHandStack);
-            if(attributes != null && attributes.held().isTwoHanded()) {
+            if(attributes != null && attributes.isTwoHanded()) {
                 cir.setReturnValue(ItemStack.EMPTY);
                 cir.cancel();
                 return;

@@ -1,7 +1,6 @@
 {
   "attributes": {
     "attack_range": 2.5,
-    "held": "SWORD_ONE_HANDED",
     "attacks": [
       {
         "hitbox": "FORWARD_BOX",
