@@ -1,0 +1,23 @@
+{
+  "attributes": {
+    "attack_range": 2,
+    "attacks": [
+      {
+        "hitbox": "FORWARD_BOX",
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:fist-swing"
+        }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:fist-swing"
+        }
+      }
+    ]
+  }
+}

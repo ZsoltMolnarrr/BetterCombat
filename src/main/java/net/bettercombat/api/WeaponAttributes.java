@@ -67,7 +67,7 @@ public final class WeaponAttributes {
          * (This shape is scaled by the `attack_range` property from the embedding object.)
          * For accepted values check out `HitBoxShape` (in this file).
          */
-        private final HitBoxShape hitbox;
+        private HitBoxShape hitbox;
 
         /**
          * Applies damage multiplier to a single attack in the sequence.
@@ -76,7 +76,7 @@ public final class WeaponAttributes {
          *   for +30% damage, use the value `0.3`
          *   for -30% damage, use the value `-0.3`
          */
-        private final double damage_multiplier;
+        private double damage_multiplier = 1;
 
         /**
          * Determines the angle (measured in degrees) of the attack's hitbox, centered to the player's look vector.
@@ -86,7 +86,7 @@ public final class WeaponAttributes {
          *   for an attack with an angle of 90 degrees, use the value `90`
          *   (targeted entities where position vector compared to player's look vector is bigger than 45, will not be hit)
          */
-        private final double angle;
+        private double angle = 0;
 
         /**
          * Determines the amount of time, after the attack is performed during the attack animation.
@@ -100,7 +100,7 @@ public final class WeaponAttributes {
          * as close as possible.
          * Formula to calculate attack cooldown in ticks: (1 / (4 - ATTACK_SPEED)) * 20
          */
-        private final double upswing;
+        private double upswing = 0;
 
         /**
          * The attack animation to play.
@@ -109,18 +109,18 @@ public final class WeaponAttributes {
          *   "bettercombat:sword-slash"
          *   "my-mod-id:my-sword-swing"
          */
-        private final String animation;
+        private String animation = null;
 
         /**
          * The sound to play upon executing the attack.
          * Check out the member wise documentation of `Sound` (in this file).
          */
-        private final Sound swing_sound;
+        private Sound swing_sound = null;
 
         /**
          * Not working at the moment.
          */
-        private final Sound impact_sound;
+        private Sound impact_sound = null;
 
         public Attack(
                 HitBoxShape hitbox,
@@ -233,6 +233,10 @@ public final class WeaponAttributes {
          * Has default value, optional to specify.
          */
         private float pitch = 1;
+
+        public Sound(String id) {
+            this.id = id;
+        }
 
         /**
          * Pitch randomness of the sound.

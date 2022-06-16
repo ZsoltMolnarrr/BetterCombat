@@ -1,0 +1,28 @@
+{
+  "attributes": {
+    "attack_range": 2,
+    "two_handed": false,
+    "attacks": [
+      {
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 1,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:dagger-swing"
+        }
+      },
+      {
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 1,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:dagger-swing"
+        }
+      }
+    ]
+  }
+}
