@@ -77,14 +77,18 @@ You can make and reference your own presets the same way.
 
 If you want custom behaviour for your weapon, you can create them from scratch.
 
-The content of your weapon attributes JSON file is parsed into an [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) object. Check its inline java documentation for details.
+The content of your weapon attributes JSON file is parsed into an [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) object. 
 
-When no parent is specified, the value for `"attributes"` key must be a full json object that can be parsed into [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) object. Check its inline java documentation for details.
+(Check out the inline java documentation of [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) for details.)
+
+When no parent is specified, the value for `"attributes"` key must be a full json object that can be parsed into [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
 ```
 {
   "attributes": { ... }
 }
 ```
+
+Check out the inline java documentation of [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) for details.
 
 ---
 
