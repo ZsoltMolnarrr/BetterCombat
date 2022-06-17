@@ -25,7 +25,7 @@
       {
         "hitbox": "VERTICAL_PLANE",
         "damage_multiplier": 1.2,
-        "angle": 180,
+        "angle": 90,
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {

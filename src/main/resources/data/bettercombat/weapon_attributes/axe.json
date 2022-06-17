@@ -4,7 +4,7 @@
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
-        "angle": 150,
+        "angle": 90,
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
@@ -13,7 +13,7 @@
       },
       {
         "hitbox": "HORIZONTAL_PLANE",
-        "angle": 150,
+        "angle": 90,
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
