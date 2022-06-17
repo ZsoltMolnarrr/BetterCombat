@@ -73,8 +73,8 @@ public final class WeaponAttributes {
          * Applies damage multiplier to a single attack in the sequence.
          * (So different attacks in a combo can do more or less damage compared to each other.)
          * Example values:
-         *   for +30% damage, use the value `0.3`
-         *   for -30% damage, use the value `-0.3`
+         *   for +30% damage, use the value `1.3`
+         *   for -30% damage, use the value `0.7`
          */
         private double damage_multiplier = 1;
 

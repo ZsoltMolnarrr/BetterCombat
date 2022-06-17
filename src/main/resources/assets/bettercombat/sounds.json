@@ -62,6 +62,26 @@
       "bettercombat:spear-swing-01"
     ]
   },
+  "staff-slam": {
+    "sounds": [
+      "bettercombat:staff-slam-01"
+    ]
+  },
+  "staff-slash": {
+    "sounds": [
+      "bettercombat:staff-slash-01"
+    ]
+  },
+  "staff-spin": {
+    "sounds": [
+      "bettercombat:staff-spin-01"
+    ]
+  },
+  "staff-stab": {
+    "sounds": [
+      "bettercombat:staff-stab-01"
+    ]
+  },
   "sword-swing": {
     "sounds": [
       "bettercombat:sword-swing-01"

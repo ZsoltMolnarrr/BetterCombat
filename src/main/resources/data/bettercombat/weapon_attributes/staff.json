@@ -11,7 +11,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:staff-swing"
+          "id": "bettercombat:staff-slash"
         }
       },
       {
@@ -21,7 +21,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:staff-swing"
+          "id": "bettercombat:staff-slash"
         }
       },
       {
@@ -31,7 +31,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:staff-swing"
+          "id": "bettercombat:staff-slam"
         }
       },
       {
@@ -41,7 +41,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:staff-swing"
+          "id": "bettercombat:staff-stab"
         }
       }
     ]

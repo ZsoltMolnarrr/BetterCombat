@@ -82,9 +82,10 @@ public class ServerNetwork {
                     range = attributes.attackRange();
 
                     comboAttributes = HashMultimap.create();
+                    double comboMultiplier = attack.damageMultiplier() - 1;
                     comboAttributes.put(
                             EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                            new EntityAttributeModifier(UUID.randomUUID(), "COMBO_DAMAGE_MULTIPLIER", attack.damageMultiplier(), EntityAttributeModifier.Operation.MULTIPLY_BASE));
+                            new EntityAttributeModifier(UUID.randomUUID(), "COMBO_DAMAGE_MULTIPLIER", comboMultiplier, EntityAttributeModifier.Operation.MULTIPLY_BASE));
                     player.getAttributes().addTemporaryModifiers(comboAttributes);
 
                     var dualWieldingMultiplier = PlayerAttackHelper.getDualWieldingAttackDamageMultiplier(player, hand) - 1;

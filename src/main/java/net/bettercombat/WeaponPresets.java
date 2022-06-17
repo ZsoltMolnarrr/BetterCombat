@@ -15,7 +15,7 @@ public class WeaponPresets {
                             150,
                             0.5,
                             "bettercombat:placeholder",
-                            new WeaponAttributes.Sound("asd"),
+                            new WeaponAttributes.Sound("bettercombat:axe-swing"),
                             null
                     ),
                     new WeaponAttributes.Attack(
@@ -24,7 +24,7 @@ public class WeaponPresets {
                             150,
                             0.5,
                             "bettercombat:placeholder",
-                            new WeaponAttributes.Sound("asd"),
+                            new WeaponAttributes.Sound("bettercombat:axe-swing"),
                             null
                     )
             }
@@ -41,7 +41,7 @@ public class WeaponPresets {
                             150,
                             0.5,
                             "bettercombat:placeholder",
-                            new WeaponAttributes.Sound("asd"),
+                            new WeaponAttributes.Sound("bettercombat:dagger-swing"),
                             null
                     ),
                     new WeaponAttributes.Attack(
@@ -50,7 +50,7 @@ public class WeaponPresets {
                             150,
                             0.5,
                             "bettercombat:placeholder",
-                            new WeaponAttributes.Sound("asd"),
+                            new WeaponAttributes.Sound("bettercombat:dagger-swing"),
                             null
                     )
             }
