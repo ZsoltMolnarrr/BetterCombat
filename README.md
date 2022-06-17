@@ -16,7 +16,7 @@ Add unique behaviour to your weapon, or just reuse a preset, via the JSON API.
 
 Primary features:
 - [X] Assign attributes to weapons via JSON API
-- [X] Define how the weapon is held (for example: `1H_SWORD`, `2H_SWORD`, etc...)
+- [X] Define how the weapon is held (one-handed or two-handed, pose)
 - [X] Define combos for the weapon (each attack in a combo can have different properties)
 - [X] Define swing animations and sounds for the weapon
 - [X] Upswing weapon before hitting
