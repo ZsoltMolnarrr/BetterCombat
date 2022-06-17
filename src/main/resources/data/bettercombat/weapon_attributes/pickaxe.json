@@ -1,0 +1,17 @@
+{
+  "attirubtes": {
+    "attack_range": 2.5,
+    "attacks": [
+      {
+        "hitbox": "VERTICAL_PLANE",
+        "damage_multiplier": 1,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:pickaxe-swing"
+        }
+      }
+    ]
+  }
+}

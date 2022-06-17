@@ -4,20 +4,32 @@
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 0.8,
         "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:axe-swing"
+          "id": "bettercombat:mace-swing"
         }
       },
       {
         "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 1,
         "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:axe-swing"
+          "id": "bettercombat:mace-swing"
+        }
+      },
+      {
+        "hitbox": "VERTICAL_PLANE",
+        "damage_multiplier": 1.2,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:mace-swing"
         }
       }
     ]

@@ -1,0 +1,49 @@
+{
+  "attributes": {
+    "attack_range": 3.5,
+    "pose": "bettercombat:2h_polearm_pose",
+    "two_handed": true,
+    "attacks": [
+      {
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 0.8,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:staff-swing"
+        }
+      },
+      {
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 1,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:staff-swing"
+        }
+      },
+      {
+        "hitbox": "VERTICAL_PLANE",
+        "damage_multiplier": 1.2,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:staff-swing"
+        }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1.4,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:placeholder",
+        "swing_sound": {
+          "id": "bettercombat:staff-swing"
+        }
+      }
+    ]
+  }
+}
