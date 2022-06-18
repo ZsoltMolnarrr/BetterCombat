@@ -1,4 +1,4 @@
-# Better Combat
+![Better Combat](./logo.png)
 
 ![Java 17](https://img.shields.io/badge/Java%2017-ee9258?logo=java&logoColor=ffffff&labelColor=606060&style=flat-square)
 ![Environment: Client & Server](https://img.shields.io/badge/environment-Client%20&%20Server-1976d2?style=flat-square)
