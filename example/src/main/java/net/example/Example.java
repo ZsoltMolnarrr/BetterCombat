@@ -20,7 +20,7 @@ public class Example implements ModInitializer {
             .group(ItemGroup.COMBAT));
     public static final SwordItem DOUBLEAXE = new SwordItem(ToolMaterials.IRON, 1, -3f, new FabricItemSettings()
             .group(ItemGroup.COMBAT));
-
+    
     @Override
     public void onInitialize() {
         Registry.register(Registry.ITEM, new Identifier(MODID, "claymore"), CLAYMORE);
