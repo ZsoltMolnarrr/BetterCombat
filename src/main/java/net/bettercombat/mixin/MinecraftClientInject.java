@@ -1,10 +1,10 @@
 package net.bettercombat.mixin;
 
-import net.bettercombat.attack.WeaponRegistry;
+import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
-import net.bettercombat.attack.AttackHand;
-import net.bettercombat.attack.PlayerAttackHelper;
-import net.bettercombat.attack.PlayerAttackProperties;
+import net.bettercombat.logic.AttackHand;
+import net.bettercombat.logic.PlayerAttackHelper;
+import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.PlayerAttackAnimatable;

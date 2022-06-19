@@ -1,4 +1,4 @@
-package net.bettercombat.attack;
+package net.bettercombat.logic;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -85,44 +85,18 @@ public class WeaponRegistry {
                         if (b == null) { // I'm not sure why null can enter as `b`
                             return a;
                         }
-                        return override(a, b);
+                        return WeaponAttributesHelper.override(a, b);
                     });
 
+                WeaponAttributesHelper.validate(resolvedAttributes);
                 register(key, resolvedAttributes);
             } catch (Exception e) {
-                System.err.println("Failed to resolve inheritance path of: " + key);
-                e.printStackTrace();
+                System.err.println("Failed to resolve attributes for: " + key);
+                System.err.println(e.getMessage());
             }
         });
 
         updateEncodedRegistry();
-    }
-
-    private static WeaponAttributes override(WeaponAttributes a, WeaponAttributes b) {
-        var attackRange = b.attackRange() > 0 ? b.attackRange() : a.attackRange();
-        var pose = b.pose() != null ? b.pose() : a.pose();
-        var isTwoHanded = b.isTwoHanded();
-        var attacks = a.attacks();
-        if (b.attacks() != null && b.attacks().length > 0) {
-            var overrideAttacks = new ArrayList<WeaponAttributes.Attack>();
-            for(int i = 0; i < b.attacks().length; ++i) {
-                var base = (a.attacks() != null && a.attacks().length > i)
-                        ? a.attacks()[i]
-                        : new WeaponAttributes.Attack(null, 0, 0, 0, null, null, null);
-                var override = b.attacks()[i];
-                var attack = new WeaponAttributes.Attack(
-                        override.hitbox() != null ? override.hitbox() : base.hitbox(),
-                        override.damageMultiplier() != 0 ? override.damageMultiplier() : base.damageMultiplier(),
-                        override.angle() != 0 ? override.angle() : base.angle(),
-                        override.upswing() != 0 ? override.upswing() : base.upswing(),
-                        override.animation() != null ? override.animation() : base.animation(),
-                        override.swingSound() != null ? override.swingSound() : base.swingSound(),
-                        override.impactSound() != null ? override.impactSound() : base.impactSound());
-                overrideAttacks.add(attack);
-            }
-            attacks = overrideAttacks.toArray(new WeaponAttributes.Attack[0]);
-        }
-        return new WeaponAttributes(attackRange, pose, isTwoHanded, attacks);
     }
 
     // NETWORK SYNC

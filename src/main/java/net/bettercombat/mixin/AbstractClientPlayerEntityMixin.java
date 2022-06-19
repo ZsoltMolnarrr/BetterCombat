@@ -6,7 +6,7 @@ import io.github.kosmx.playerAnim.IAnimatedPlayer;
 import io.github.kosmx.playerAnim.layered.AnimationContainer;
 import io.github.kosmx.playerAnim.layered.EmoteDataPlayer;
 import io.github.kosmx.playerAnim.layered.IAnimation;
-import net.bettercombat.attack.WeaponRegistry;
+import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.minecraft.client.network.AbstractClientPlayerEntity;

@@ -1,4 +1,4 @@
-package net.bettercombat.attack;
+package net.bettercombat.logic;
 
 public interface PlayerAttackProperties {
     int getComboCount();

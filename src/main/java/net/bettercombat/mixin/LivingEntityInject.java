@@ -1,7 +1,7 @@
 package net.bettercombat.mixin;
 
-import net.bettercombat.attack.PlayerAttackHelper;
-import net.bettercombat.attack.PlayerAttackProperties;
+import net.bettercombat.logic.PlayerAttackHelper;
+import net.bettercombat.logic.PlayerAttackProperties;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,8 +1,8 @@
 package net.bettercombat.mixin;
 
-import net.bettercombat.attack.WeaponRegistry;
-import net.bettercombat.attack.PlayerAttackHelper;
-import net.bettercombat.attack.PlayerAttackProperties;
+import net.bettercombat.logic.WeaponRegistry;
+import net.bettercombat.logic.PlayerAttackHelper;
+import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,35 +1,37 @@
 {
-  "attack_range": 2.5,
-  "attacks": [
-    {
-      "hitbox": "HORIZONTAL_PLANE",
-      "damage_multiplier": 1,
-      "angle": 150,
-      "upswing": 0.5,
-      "animation": "bettercombat:placeholder",
-      "swing_sound": {
-        "id": "bettercombat:1h_slash_horizontal"
+  "attributes": {
+    "attack_range": 2.5,
+    "attacks": [
+      {
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 1,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "bettercombat:1h_slash_horizontal",
+        "swing_sound": {
+          "id": "bettercombat:sword-swing"
+        }
+      },
+      {
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 1,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "bettercombat:1h_slash_horizontal_backhand",
+        "swing_sound": {
+          "id": "bettercombat:sword-swing"
+        }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1,
+        "angle": 0,
+        "upswing": 0.5,
+        "animation": "bettercombat:1h_stab",
+        "swing_sound": {
+          "id": "bettercombat:sword-swing"
+        }
       }
-    },
-    {
-      "hitbox": "HORIZONTAL_PLANE",
-      "damage_multiplier": 1,
-      "angle": 150,
-      "upswing": 0.5,
-      "animation": "bettercombat:placeholder",
-      "swing_sound": {
-        "id": "bettercombat:1h_slash_horizontal_backhand"
-      }
-    },
-    {
-      "hitbox": "FORWARD_BOX",
-      "damage_multiplier": 1,
-      "angle": 0,
-      "upswing": 0.5,
-      "animation": "bettercombat:placeholder",
-      "swing_sound": {
-        "id": "bettercombat:1h_stab"
-      }
-    }
-  ]
+    ]
+  }
 }

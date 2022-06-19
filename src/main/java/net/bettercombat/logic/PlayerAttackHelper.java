@@ -1,4 +1,4 @@
-package net.bettercombat.attack;
+package net.bettercombat.logic;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes;

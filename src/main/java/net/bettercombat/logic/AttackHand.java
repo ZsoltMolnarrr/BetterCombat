@@ -1,4 +1,4 @@
-package net.bettercombat.attack;
+package net.bettercombat.logic;
 
 import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.item.ItemStack;
