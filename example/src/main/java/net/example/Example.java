@@ -20,6 +20,16 @@ public class Example implements ModInitializer {
             .group(ItemGroup.COMBAT));
     public static final SwordItem DOUBLEAXE = new SwordItem(ToolMaterials.IRON, 1, -3f, new FabricItemSettings()
             .group(ItemGroup.COMBAT));
+    public static final SwordItem FIST = new SwordItem(ToolMaterials.IRON, 1, -3f, new FabricItemSettings()
+            .group(ItemGroup.COMBAT));
+    public static final SwordItem GLAIVE = new SwordItem(ToolMaterials.IRON, 1, -3f, new FabricItemSettings()
+            .group(ItemGroup.COMBAT));
+    public static final SwordItem MACE = new SwordItem(ToolMaterials.IRON, 1, -3f, new FabricItemSettings()
+            .group(ItemGroup.COMBAT));
+    public static final SwordItem SPEAR = new SwordItem(ToolMaterials.IRON, 1, -3f, new FabricItemSettings()
+            .group(ItemGroup.COMBAT));
+    public static final SwordItem STAFF = new SwordItem(ToolMaterials.IRON, 1, -3f, new FabricItemSettings()
+            .group(ItemGroup.COMBAT));
 
     @Override
     public void onInitialize() {
@@ -27,5 +37,10 @@ public class Example implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "bone_club"), BONECLUB);
         Registry.register(Registry.ITEM, new Identifier(MODID, "dagger"), DAGGER);
         Registry.register(Registry.ITEM, new Identifier(MODID, "double_axe"), DOUBLEAXE);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "fist"), FIST);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "glaive"), GLAIVE);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "mace"), MACE);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "spear"), SPEAR);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "staff"), STAFF);
     }
 }
