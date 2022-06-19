@@ -784,7 +784,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "x":0.0
+                    "x":1.8713053464889526
                 }
             },
             {
@@ -792,7 +792,7 @@
                 "easing": "EASEOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "x":0.0
+                    "x":1.069580078125
                 }
             },
             {
@@ -800,7 +800,7 @@
                 "easing": "EASEOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "x":0.0
+                    "x":-1.0477393865585327
                 }
             },
             {
@@ -808,7 +808,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "z":0.0
+                    "z":-0.8238407373428345
                 }
             },
             {
@@ -816,7 +816,7 @@
                 "easing": "EASEOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "z":0.0
+                    "z":-0.38951587677001953
                 }
             },
             {
@@ -824,7 +824,7 @@
                 "easing": "EASEOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "z":0.0
+                    "z":-0.6269928216934204
                 }
             },
             {
@@ -832,7 +832,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "y":0.0
+                    "y":-1.5061185359954834
                 }
             },
             {
@@ -840,7 +840,7 @@
                 "easing": "EASEOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "y":0.0
+                    "y":-2.2233574390411377
                 }
             },
             {
@@ -848,7 +848,7 @@
                 "easing": "EASEOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "y":0.0
+                    "y":-2.0429208278656006
                 }
             },
             {

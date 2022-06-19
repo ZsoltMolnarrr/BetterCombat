@@ -17,16 +17,16 @@ public class AnimationRegistry {
         var dataFolder = "weapon_animations";
         for (Identifier identifier : resourceManager.findResources(dataFolder, fileName -> fileName.endsWith(".json"))) {
             try {
-                // System.out.println("Checking resource: " + identifier);
                 var resource = resourceManager.getResource(identifier);
                 List<EmoteData> emotes = UniversalEmoteSerializer.readData(resource.getInputStream(), null, "json");
                 EmoteData emote = emotes.get(0);
                 emote.isBuiltin = true;
+                emote.bodyParts.get("head").pitch.isEnabled = false;
+
                 var id = identifier
                         .toString()
                         .replace(dataFolder + "/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
-                // System.out.println("Registering id: " + id + " animation:" + emote);
                 AnimationRegistry.emotes.put(id, emote);
             } catch (Exception e) {
                 e.printStackTrace();
