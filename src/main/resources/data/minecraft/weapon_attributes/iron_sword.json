@@ -7,7 +7,21 @@
         "damage_multiplier": 1,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "bettercombat:1h_slash_right_to_left"
+        "animation": "bettercombat:1h_slash_horizontal"
+      },
+      {
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 1,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "bettercombat:1h_slash_horizontal_backhand"
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "bettercombat:1h_stab"
       }
     ]
   }
