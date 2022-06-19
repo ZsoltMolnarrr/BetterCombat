@@ -34,7 +34,7 @@ import java.util.List;
 import static net.minecraft.util.hit.HitResult.Type.BLOCK;
 
 @Mixin(MinecraftClient.class)
-public class MinecraftClientInject implements MinecraftClientExtension {
+public abstract class MinecraftClientInject implements MinecraftClientExtension {
     @Shadow public ClientWorld world;
     @Shadow @Nullable public ClientPlayerEntity player;
     private MinecraftClient thisClient() {
@@ -107,6 +107,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     private static float ComboResetRate = 3F;
 
     private ItemStack upswingStack;
+    private ItemStack lastAttacedWithItemStack;
     private int upswingTicks = 0;
     private int lastAttacked = 1000;
 
@@ -162,7 +163,13 @@ public class MinecraftClientInject implements MinecraftClientExtension {
     private void resetComboIfNeeded() {
         double attackCooldownTicks = player.getAttackCooldownProgressPerTick();
         int comboReset = (int)Math.round(attackCooldownTicks * ComboResetRate);
+        // Combo timeout
         if(lastAttacked > comboReset && getComboCount() > 0) {
+            setComboCount(0);
+        }
+        // Switching main-hand weapon
+        if(player.getMainHandStack() == null
+                || (lastAttacedWithItemStack != null && !lastAttacedWithItemStack.getItem().equals(player.getMainHandStack().getItem()) ) ) {
             setComboCount(0);
         }
     }
@@ -222,6 +229,7 @@ public class MinecraftClientInject implements MinecraftClientExtension {
         client.player.resetLastAttackedTicks();
         ((MinecraftClientAccessor) client).setAttackCooldown(10); // This is actually the mining cooldown
         setComboCount(getComboCount() + 1);
+        lastAttacedWithItemStack = hand.itemStack();
     }
 
     private AttackHand getCurrentHand() {
