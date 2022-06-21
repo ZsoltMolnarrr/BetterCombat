@@ -24,12 +24,11 @@ import static net.minecraft.entity.EquipmentSlot.MAINHAND;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityInject implements PlayerAttackProperties {
-
     @Inject(method = "tick", at = @At("TAIL"))
     public void post_Tick(CallbackInfo ci) {
         var instance = (Object)this;
         if (((PlayerEntity)instance).world.isClient()) {
-            ((PlayerAttackAnimatable) this).updatePose();
+            ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
         }
     }
 
@@ -44,9 +43,9 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
         }
     }
 
-    @Redirect(method = "attack(Lnet/minecraft/entity/Entity;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))
-    public void playSweep(World instance, PlayerEntity entity, double x, double y, double z, SoundEvent soundEvent, SoundCategory soundCategory, float volume, float pitch) {
+//    @Redirect(method = "attack(Lnet/minecraft/entity/Entity;)V",
+//            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))
+//    public void playSweep(World instance, PlayerEntity entity, double x, double y, double z, SoundEvent soundEvent, SoundCategory soundCategory, float volume, float pitch) {
 //        // Get an instance of player entity because player is always null here
 //        PlayerEntity playerEntity = (PlayerEntity) ((Object)this);
 //        // Create a list with sword sweep sounds
@@ -63,7 +62,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
 //            // Otherwise play the sound that the game chose by default
 //            instance.playSound(null, x, y, z, soundEvent, soundCategory, volume, pitch);
 //        }
-    }
+//    }
 
     // FEATURE: Two-handed wielding
 

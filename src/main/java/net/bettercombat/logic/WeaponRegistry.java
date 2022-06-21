@@ -3,6 +3,7 @@ package net.bettercombat.logic;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.mojang.logging.LogUtils;
 import net.bettercombat.api.AttributesContainer;
 import net.bettercombat.api.WeaponAttributes;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -12,12 +13,14 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.*;
 
 public class WeaponRegistry {
+    static final Logger LOGGER = LogUtils.getLogger();
     static Map<Identifier, WeaponAttributes> registrations = new HashMap();
 
     public static void register(Identifier itemId, WeaponAttributes attributes) {
@@ -91,8 +94,7 @@ public class WeaponRegistry {
                 WeaponAttributesHelper.validate(resolvedAttributes);
                 register(key, resolvedAttributes);
             } catch (Exception e) {
-                System.err.println("Failed to resolve attributes for: " + key);
-                System.err.println(e.getMessage());
+                LOGGER.error("Failed to resolve weapon attributes for: " + key + ". Reason: " + e.getMessage());
             }
         });
 
@@ -107,9 +109,9 @@ public class WeaponRegistry {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
         var json = gson.toJson(registrations);
-        System.out.println("Updated Weapon Attribute registry: " + json);
+        LOGGER.info("Updated Weapon Attribute registry: " + json);
         buffer.writeString(json);
-        System.out.println("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes() + " bytes");
+        LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes() + " bytes");
         encodedRegistrations = buffer;
     }
 

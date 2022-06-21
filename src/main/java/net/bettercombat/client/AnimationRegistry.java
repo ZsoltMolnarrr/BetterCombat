@@ -2,7 +2,6 @@ package net.bettercombat.client;
 
 import io.github.kosmx.emotes.common.emote.EmoteData;
 import io.github.kosmx.emotes.server.serializer.UniversalEmoteSerializer;
-import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
