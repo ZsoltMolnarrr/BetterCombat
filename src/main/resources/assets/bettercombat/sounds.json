@@ -1,90 +1,90 @@
 {
-  "axe-swing": {
+  "axe_swing": {
     "sounds": [
-      "bettercombat:axe-swing-01"
+      "bettercombat:axe_swing-01"
     ]
   },
-  "claymore-swing": {
+  "claymore_swing": {
     "sounds": [
-      "bettercombat:claymore-swing-01"
+      "bettercombat:claymore_swing-01"
     ]
   },
-  "claymore-stab": {
+  "claymore_stab": {
     "sounds": [
-      "bettercombat:claymore-stab-01"
+      "bettercombat:claymore_stab-01"
     ]
   },
-  "claymore-slam": {
+  "claymore_slam": {
     "sounds": [
       {
-        "name": "bettercombat:claymore-slam-01",
+        "name": "bettercombat:claymore_slam-01",
         "pitch": 0.87
       }
     ]
   },
-  "dagger-swing": {
+  "dagger_swing": {
     "sounds": [
-      "bettercombat:dagger-swing-01"
+      "bettercombat:dagger_swing-01"
     ]
   },
-  "double-axe-swing": {
+  "double_axe_swing": {
     "sounds": [
-      "bettercombat:double-axe-swing-01"
+      "bettercombat:double_axe_swing-01"
     ]
   },
-  "fist-swing": {
+  "fist_swing": {
     "sounds": [
-      "bettercombat:fist-swing-01"
+      "bettercombat:fist_swing-01"
     ]
   },
-  "glaive-swing": {
+  "glaive_swing": {
     "sounds": [
-      "bettercombat:glaive-swing-01"
+      "bettercombat:glaive_swing-01"
     ]
   },
-  "hammer-swing": {
+  "hammer_swing": {
     "sounds": [
-      "bettercombat:hammer-swing-01"
+      "bettercombat:hammer_swing-01"
     ]
   },
-  "mace-swing": {
+  "mace_swing": {
     "sounds": [
-      "bettercombat:mace-swing-01"
+      "bettercombat:mace_swing-01"
     ]
   },
-  "pickaxe-swing": {
+  "pickaxe_swing": {
     "sounds": [
-      "bettercombat:pickaxe-swing-01"
+      "bettercombat:pickaxe_swing-01"
     ]
   },
-  "spear-swing": {
+  "spear_swing": {
     "sounds": [
-      "bettercombat:spear-swing-01"
+      "bettercombat:spear_swing-01"
     ]
   },
-  "staff-slam": {
+  "staff_slam": {
     "sounds": [
-      "bettercombat:staff-slam-01"
+      "bettercombat:staff_slam-01"
     ]
   },
-  "staff-slash": {
+  "staff_slash": {
     "sounds": [
-      "bettercombat:staff-slash-01"
+      "bettercombat:staff_slash-01"
     ]
   },
-  "staff-spin": {
+  "staff_spin": {
     "sounds": [
-      "bettercombat:staff-spin-01"
+      "bettercombat:staff_spin-01"
     ]
   },
-  "staff-stab": {
+  "staff_stab": {
     "sounds": [
-      "bettercombat:staff-stab-01"
+      "bettercombat:staff_stab-01"
     ]
   },
-  "sword-swing": {
+  "sword_swing": {
     "sounds": [
-      "bettercombat:sword-swing-01"
+      "bettercombat:sword_swing-01"
     ]
   }
 }

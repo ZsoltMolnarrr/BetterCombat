@@ -9,7 +9,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:1h_slash_horizontal",
         "swing_sound": {
-          "id": "bettercombat:sword-swing"
+          "id": "bettercombat:sword_swing"
         }
       },
       {
@@ -19,7 +19,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:1h_slash_horizontal_backhand",
         "swing_sound": {
-          "id": "bettercombat:sword-swing"
+          "id": "bettercombat:sword_swing"
         }
       },
       {
@@ -29,7 +29,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:1h_stab",
         "swing_sound": {
-          "id": "bettercombat:sword-swing"
+          "id": "bettercombat:sword_swing"
         }
       }
     ]

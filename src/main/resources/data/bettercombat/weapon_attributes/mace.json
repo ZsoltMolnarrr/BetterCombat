@@ -9,7 +9,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:mace-swing"
+          "id": "bettercombat:mace_swing"
         }
       },
       {
@@ -19,7 +19,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:mace-swing"
+          "id": "bettercombat:mace_swing"
         }
       },
       {
@@ -29,7 +29,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:mace-swing"
+          "id": "bettercombat:mace_swing"
         }
       }
     ]

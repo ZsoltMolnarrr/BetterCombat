@@ -11,7 +11,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:2h_sword_slash",
         "swing_sound": {
-          "id": "bettercombat:claymore-swing"
+          "id": "bettercombat:claymore_swing"
         }
       },
       {
@@ -21,7 +21,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:2h_sword_stab",
         "swing_sound": {
-          "id": "bettercombat:claymore-stab"
+          "id": "bettercombat:claymore_stab"
         }
       },
       {
@@ -31,7 +31,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:2h_sword_slam",
         "swing_sound": {
-          "id": "bettercombat:claymore-slam",
+          "id": "bettercombat:claymore_slam",
           "randomness": 0
         }
       }

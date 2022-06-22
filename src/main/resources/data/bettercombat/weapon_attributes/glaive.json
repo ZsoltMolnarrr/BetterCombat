@@ -11,7 +11,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:glaive-swing"
+          "id": "bettercombat:glaive_swing"
         }
       },
       {
@@ -21,7 +21,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:glaive-swing"
+          "id": "bettercombat:glaive_swing"
         }
       },
       {
@@ -31,7 +31,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:glaive-swing"
+          "id": "bettercombat:glaive_swing"
         }
       }
     ]

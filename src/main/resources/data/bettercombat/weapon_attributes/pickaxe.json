@@ -9,7 +9,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:pickaxe-swing"
+          "id": "bettercombat:pickaxe_swing"
         }
       }
     ]

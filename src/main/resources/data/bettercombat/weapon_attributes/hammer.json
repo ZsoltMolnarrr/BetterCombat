@@ -11,7 +11,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:hammer-swing"
+          "id": "bettercombat:hammer_swing"
         }
       }
     ]

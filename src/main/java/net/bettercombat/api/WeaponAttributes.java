@@ -122,6 +122,11 @@ public final class WeaponAttributes {
          */
         private Sound impact_sound = null;
 
+        /**
+         * This empty initializer is needed for GSON, to support parsing over default values
+         */
+        public Attack() { }
+
         public Attack(
                 HitBoxShape hitbox,
                 double damage_multiplier,
@@ -233,6 +238,12 @@ public final class WeaponAttributes {
          * Has default value, optional to specify.
          */
         private float pitch = 1;
+
+
+        /**
+         * This empty initializer is needed for GSON, to support parsing over default values
+         */
+        public Sound() { }
 
         public Sound(String id) {
             this.id = id;

@@ -11,7 +11,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:double-axe-swing"
+          "id": "bettercombat:double_axe_swing"
         }
       },
       {
@@ -21,7 +21,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:placeholder",
         "swing_sound": {
-          "id": "bettercombat:double-axe-swing",
+          "id": "bettercombat:double_axe_swing",
           "pitch": 0.9
         }
       }
