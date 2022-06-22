@@ -168,9 +168,11 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
             setComboCount(0);
         }
         // Switching main-hand weapon
-        if(player.getMainHandStack() == null
-                || (lastAttacedWithItemStack != null && !lastAttacedWithItemStack.getItem().equals(player.getMainHandStack().getItem()) ) ) {
-            setComboCount(0);
+        if (!PlayerAttackHelper.shouldAttackWithOffHand(player, getComboCount())) {
+            if(player.getMainHandStack() == null
+                    || (lastAttacedWithItemStack != null && !lastAttacedWithItemStack.getItem().equals(player.getMainHandStack().getItem()) ) ) {
+                setComboCount(0);
+            }
         }
     }
 
@@ -229,7 +231,9 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         client.player.resetLastAttackedTicks();
         ((MinecraftClientAccessor) client).setAttackCooldown(10); // This is actually the mining cooldown
         setComboCount(getComboCount() + 1);
-        lastAttacedWithItemStack = hand.itemStack();
+        if (!hand.isOffHand()) {
+            lastAttacedWithItemStack = hand.itemStack();
+        }
     }
 
     private AttackHand getCurrentHand() {
