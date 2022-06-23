@@ -141,7 +141,7 @@ Let's say you want to create a custom attack animation with the following name: 
 
 Create keyframe animations using our Blender model, that includes an export script creating animation files.
 
-Full guide can be found [here](https://kosmx.gitbook.io/emotecraft/tutorial/custom-emotes).
+Check out the [Animation guide](animations/Animations.md) for details.
 ![Blender example](.github/images/blender-example.png)
 
 ### Adding animation
