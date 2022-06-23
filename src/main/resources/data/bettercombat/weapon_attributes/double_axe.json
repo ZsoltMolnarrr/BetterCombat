@@ -1,7 +1,7 @@
 {
   "attributes": {
     "attack_range": 3,
-    "pose": "bettercombat:double_axe_pose",
+    "pose": "bettercombat:pose_two_handed_heavy",
     "two_handed": true,
     "attacks": [
       {
