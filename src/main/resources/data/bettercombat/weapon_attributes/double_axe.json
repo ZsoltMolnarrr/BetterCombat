@@ -9,7 +9,7 @@
         "damage_multiplier": 1,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:2h_axe_slash",
+        "animation": "bettercombat:two_handed_slash_horizontal",
         "swing_sound": {
           "id": "bettercombat:double_axe_swing"
         }
@@ -19,7 +19,7 @@
         "damage_multiplier": 1,
         "angle": 360,
         "upswing": 0.5,
-        "animation": "bettercombat:2h_axe_slash",
+        "animation": "bettercombat:two_handed_slam",
         "swing_sound": {
           "id": "bettercombat:double_axe_swing",
           "pitch": 0.9

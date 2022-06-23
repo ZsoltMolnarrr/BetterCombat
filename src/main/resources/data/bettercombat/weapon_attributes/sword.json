@@ -7,7 +7,7 @@
         "damage_multiplier": 1,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "bettercombat:1h_slash_horizontal",
+        "animation": "bettercombat:one_handed_slash_horizontal",
         "swing_sound": {
           "id": "bettercombat:sword_swing"
         }
@@ -17,7 +17,7 @@
         "damage_multiplier": 1,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "bettercombat:1h_slash_horizontal_backhand",
+        "animation": "bettercombat:one_handed_slash_horizontal_backhand",
         "swing_sound": {
           "id": "bettercombat:sword_swing"
         }
@@ -27,7 +27,7 @@
         "damage_multiplier": 1,
         "angle": 0,
         "upswing": 0.5,
-        "animation": "bettercombat:1h_stab",
+        "animation": "bettercombat:one_handed_stab",
         "swing_sound": {
           "id": "bettercombat:sword_swing"
         }

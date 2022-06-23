@@ -141,7 +141,7 @@ Let's say you want to create a custom attack animation with the following name: 
 
 Create keyframe animations using our Blender model, that includes an export script creating animation files.
 
-Check out the [Animation guide](animations/Animations.md) for details.
+Check out the [Animation guide](animations/README.md) for details.
 ![Blender example](.github/images/blender-example.png)
 
 ### Adding animation

@@ -9,7 +9,7 @@
         "damage_multiplier": 0.5,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "bettercombat:2h_sword_slash",
+        "animation": "bettercombat:two_handed_slash_horizontal",
         "swing_sound": {
           "id": "bettercombat:claymore_swing"
         }
@@ -29,7 +29,7 @@
         "damage_multiplier": 1.5,
         "angle": 150,
         "upswing": 0.5,
-        "animation": "bettercombat:2h_sword_slam",
+        "animation": "bettercombat:two_handed_slam",
         "swing_sound": {
           "id": "bettercombat:claymore_slam",
           "randomness": 0
