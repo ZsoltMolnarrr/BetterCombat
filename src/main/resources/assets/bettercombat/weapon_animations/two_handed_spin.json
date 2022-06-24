@@ -1,7 +1,7 @@
 {
     "name": "two_handed_spin",
     "author": "Daedelus",
-    "description": "Two handed slash attack",
+    "description": "Two handed spin attack",
     "emote":{
         "isLoop": "false",
         "returnTick": 2,

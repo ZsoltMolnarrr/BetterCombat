@@ -5,27 +5,27 @@
     "two_handed": true,
     "attacks": [
       {
-        "hitbox": "HORIZONTAL_PLANE",
+        "hitbox": "VERTICAL_PLANE",
         "damage_multiplier": 0.8,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_stab",
-        "swing_sound": {
-          "id": "bettercombat:glaive_swing"
-        }
-      },
-      {
-        "hitbox": "HORIZONTAL_PLANE",
-        "damage_multiplier": 0.8,
-        "angle": 180,
-        "upswing": 0.5,
-        "animation": "bettercombat:two_handed_stab",
+        "animation": "bettercombat:two_handed_slash_vertical_right",
         "swing_sound": {
           "id": "bettercombat:glaive_swing"
         }
       },
       {
         "hitbox": "VERTICAL_PLANE",
+        "damage_multiplier": 0.8,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_vertical_left",
+        "swing_sound": {
+          "id": "bettercombat:glaive_swing"
+        }
+      },
+      {
+        "hitbox": "HORIZONTAL_PLANE",
         "damage_multiplier": 1.4,
         "angle": 180,
         "upswing": 0.5,

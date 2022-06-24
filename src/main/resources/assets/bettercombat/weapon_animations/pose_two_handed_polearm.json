@@ -1,7 +1,7 @@
 {
     "name": "pose_two_handed_polearm",
     "author": "Daedelus",
-    "description": "Two-handed sword pose",
+    "description": "Two-handed polearm pose",
     "emote":{
         "isLoop": "true",
         "returnTick": 1,
