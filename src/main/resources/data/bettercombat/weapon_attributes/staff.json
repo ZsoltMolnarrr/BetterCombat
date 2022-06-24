@@ -1,7 +1,6 @@
 {
   "attributes": {
     "attack_range": 3.5,
-    "pose": "bettercombat:2h_polearm_pose",
     "two_handed": true,
     "attacks": [
       {
@@ -9,7 +8,7 @@
         "damage_multiplier": 0.8,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:placeholder",
+        "animation": "bettercombat:two_handed_slash_horizontal",
         "swing_sound": {
           "id": "bettercombat:staff_slash"
         }
@@ -19,7 +18,7 @@
         "damage_multiplier": 1,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:placeholder",
+        "animation": "bettercombat:two_handed_slash_horizontal",
         "swing_sound": {
           "id": "bettercombat:staff_slash"
         }
@@ -29,7 +28,7 @@
         "damage_multiplier": 1.2,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:placeholder",
+        "animation": "bettercombat:two_handed_spin",
         "swing_sound": {
           "id": "bettercombat:staff_slam"
         }
@@ -39,11 +38,32 @@
         "damage_multiplier": 1.4,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:placeholder",
+        "animation": "bettercombat:two_handed_slam",
+        "swing_sound": {
+          "id": "bettercombat:staff_stab"
+        }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_stab",
+        "swing_sound": {
+          "id": "bettercombat:staff_stab"
+        }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1,
+        "angle": 180,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_stab",
         "swing_sound": {
           "id": "bettercombat:staff_stab"
         }
       }
+
     ]
   }
 }
