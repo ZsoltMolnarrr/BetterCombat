@@ -6,16 +6,16 @@
         "hitbox": "HORIZONTAL_PLANE",
         "angle": 90,
         "upswing": 0.5,
-        "animation": "bettercombat:placeholder",
+        "animation": "bettercombat:one_handed_slash_horizontal_right",
         "swing_sound": {
-          "id": "bettercombat:one_handed_slash_horizontal"
+          "id": "bettercombat:axe_swing"
         }
       },
       {
         "hitbox": "HORIZONTAL_PLANE",
         "angle": 90,
         "upswing": 0.5,
-        "animation": "bettercombat:one_handed_slash_horizontal_backhand",
+        "animation": "bettercombat:one_handed_slash_horizontal_left",
         "swing_sound": {
           "id": "bettercombat:axe_swing"
         }

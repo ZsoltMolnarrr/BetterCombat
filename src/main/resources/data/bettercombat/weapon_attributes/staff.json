@@ -8,7 +8,7 @@
         "damage_multiplier": 0.8,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_slash_horizontal",
+        "animation": "bettercombat:two_handed_slash_horizontal_right",
         "swing_sound": {
           "id": "bettercombat:staff_slash"
         }
@@ -18,7 +18,7 @@
         "damage_multiplier": 1,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_slash_horizontal",
+        "animation": "bettercombat:two_handed_slash_horizontal_right",
         "swing_sound": {
           "id": "bettercombat:staff_slash"
         }
@@ -48,7 +48,7 @@
         "damage_multiplier": 1,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_stab",
+        "animation": "bettercombat:two_handed_stab_left",
         "swing_sound": {
           "id": "bettercombat:staff_stab"
         }
@@ -58,7 +58,7 @@
         "damage_multiplier": 1,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_stab",
+        "animation": "bettercombat:two_handed_stab_left",
         "swing_sound": {
           "id": "bettercombat:staff_stab"
         }

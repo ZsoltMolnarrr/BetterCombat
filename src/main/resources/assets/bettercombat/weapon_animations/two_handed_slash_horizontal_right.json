@@ -1,7 +1,7 @@
 {
-    "name": "two_handed_slash_horizontal",
+    "name": "two_handed_slash_horizontal_right",
     "author": "Daedelus",
-    "description": "Two handed slash attack",
+    "description": "Two handed slash attack right to left",
     "emote":{
         "isLoop": "false",
         "returnTick": 2,
