@@ -832,7 +832,15 @@
                 "easing": "EASEINQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "x":-1.0477393865585327
+                    "x":0.5087337493896484
+                }
+            },
+            {
+                "tick":9,
+                "easing": "EASEINOUTQUAD",
+                "turn": 0,
+                "rightItem":{
+                    "x":1.0390946865081787
                 }
             },
             {
@@ -840,7 +848,15 @@
                 "easing": "EASEINQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "z":-0.6269928216934204
+                    "z":-0.08704018592834473
+                }
+            },
+            {
+                "tick":9,
+                "easing": "EASEINOUTQUAD",
+                "turn": 0,
+                "rightItem":{
+                    "z":-0.039112191647291183
                 }
             },
             {
@@ -848,7 +864,15 @@
                 "easing": "EASEINQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "y":-2.0429208278656006
+                    "y":-2.189578056335449
+                }
+            },
+            {
+                "tick":9,
+                "easing": "EASEINOUTQUAD",
+                "turn": 0,
+                "rightItem":{
+                    "y":-2.210712194442749
                 }
             },
             {
@@ -856,7 +880,15 @@
                 "easing": "EASEINQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "pitch":-1.2866507768630981
+                    "pitch":-1.2223907709121704
+                }
+            },
+            {
+                "tick":9,
+                "easing": "EASEINOUTQUAD",
+                "turn": 0,
+                "rightItem":{
+                    "pitch":-1.2202832698822021
                 }
             },
             {
@@ -864,7 +896,15 @@
                 "easing": "EASEINQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "yaw":0.053667932748794556
+                    "yaw":-0.1259833723306656
+                }
+            },
+            {
+                "tick":9,
+                "easing": "EASEINOUTQUAD",
+                "turn": 0,
+                "rightItem":{
+                    "yaw":-0.055136214941740036
                 }
             },
             {
@@ -872,7 +912,15 @@
                 "easing": "EASEINQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "roll":-1.5558449029922485
+                    "roll":1.6704667806625366
+                }
+            },
+            {
+                "tick":9,
+                "easing": "EASEINOUTQUAD",
+                "turn": 0,
+                "rightItem":{
+                    "roll":1.589026689529419
                 }
             }
         ]
