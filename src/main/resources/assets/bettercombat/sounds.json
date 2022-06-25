@@ -47,6 +47,12 @@
       "bettercombat:hammer_swing-01"
     ]
   },
+  "katana_slash": {
+    "sounds": [
+      "bettercombat:katana_slash-01",
+      "bettercombat:katana_slash-02"
+    ]
+  },
   "mace_swing": {
     "sounds": [
       "bettercombat:mace_swing-01"
@@ -55,6 +61,11 @@
   "pickaxe_swing": {
     "sounds": [
       "bettercombat:pickaxe_swing-01"
+    ]
+  },
+  "scythe_slash": {
+    "sounds": [
+      "bettercombat:scythe_slash-01"
     ]
   },
   "spear_swing": {
