@@ -5,15 +5,7 @@
       {
         "hitbox": "FORWARD_BOX",
         "upswing": 0.5,
-        "animation": "bettercombat:placeholder",
-        "swing_sound": {
-          "id": "bettercombat:fist_swing"
-        }
-      },
-      {
-        "hitbox": "FORWARD_BOX",
-        "upswing": 0.5,
-        "animation": "bettercombat:placeholder",
+        "animation": "bettercombat:one_handed_punch",
         "swing_sound": {
           "id": "bettercombat:fist_swing"
         }

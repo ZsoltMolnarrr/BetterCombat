@@ -18,7 +18,7 @@
         "damage_multiplier": 1,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_slash_horizontal_right",
+        "animation": "bettercombat:two_handed_slash_horizontal_left",
         "swing_sound": {
           "id": "bettercombat:staff_slash"
         }
@@ -58,7 +58,7 @@
         "damage_multiplier": 1,
         "angle": 180,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_stab_left",
+        "animation": "bettercombat:two_handed_stab_right",
         "swing_sound": {
           "id": "bettercombat:staff_stab"
         }
