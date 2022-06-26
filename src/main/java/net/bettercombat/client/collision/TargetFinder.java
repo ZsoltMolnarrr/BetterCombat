@@ -1,7 +1,6 @@
 package net.bettercombat.client.collision;
 
 import net.bettercombat.BetterCombat;
-import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.WeaponAttributes.Attack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -25,11 +24,20 @@ public class TargetFinder {
     public static TargetResult findAttackTargetResult(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
         Vec3d origin = getInitialTracingPoint(player);
         List<Entity> entities = getInitialTargets(player, cursorTarget, attackRange);
-        var obb = new OrientedBoundingBoxFilter(player, origin, attack.hitbox(), attackRange);
-        entities = obb.filter(entities);
-        var radial = new RadialFilter(origin, obb.obb.axisZ, attackRange, attack.angle());
-        entities = radial.filter(entities);
-        return new TargetResult(entities, obb.obb);
+
+        boolean isSpinAttack = attack.angle() > 180;
+        Vec3d size = WeaponHitBoxes.createHitbox(attack.hitbox(), attackRange, isSpinAttack);
+        var obb = new OrientedBoundingBox(origin, size, player.getPitch(), player.getYaw());
+        if (!isSpinAttack) {
+            obb = obb.offsetAlongAxisZ(size.z / 2F);
+        }
+        obb.updateVertex();
+
+        var collisionFilter = new CollisionFilter(obb);
+        entities = collisionFilter.filter(entities);
+        var radialFilter = new RadialFilter(origin, obb.axisZ, attackRange, attack.angle());
+        entities = radialFilter.filter(entities);
+        return new TargetResult(entities, obb);
     }
 
     public static List<Entity> findAttackTargets(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
@@ -63,18 +71,11 @@ public class TargetFinder {
         List<Entity> filter(List<Entity> entities);
     }
 
-    public static class OrientedBoundingBoxFilter implements Filter {
-        final private PlayerEntity player;
-        final private double attackRange;
-        public OrientedBoundingBox obb;
+    public static class CollisionFilter implements Filter {
+        private OrientedBoundingBox obb;
 
-        public OrientedBoundingBoxFilter(PlayerEntity player, Vec3d origin, WeaponAttributes.HitBoxShape direction, double attackRange) {
-            this.player = player;
-            this.attackRange = attackRange;
-            Vec3d size = WeaponHitBoxes.createHitbox(direction, attackRange);
-            obb = new OrientedBoundingBox(origin, size, player.getPitch(), player.getYaw())
-                    .offsetAlongAxisZ(size.z / 2F)
-                    .updateVertex();
+        public CollisionFilter(OrientedBoundingBox obb) {
+            this.obb = obb;
         }
 
         @Override
@@ -95,7 +96,7 @@ public class TargetFinder {
             this.origin = origin;
             this.orientation = orientation;
             this.attackRange = attackRange;
-            this.attackAngle = MathHelper.clamp(attackAngle, 0, 180);
+            this.attackAngle = MathHelper.clamp(attackAngle, 0, 360);
         }
 
         @Override
