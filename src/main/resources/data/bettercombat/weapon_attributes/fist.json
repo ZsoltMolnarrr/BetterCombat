@@ -7,7 +7,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:one_handed_punch",
         "swing_sound": {
-          "id": "bettercombat:fist_swing"
+          "id": "bettercombat:fist_punch"
         }
       }
     ]

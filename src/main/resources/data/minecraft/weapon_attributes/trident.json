@@ -1,3 +1,6 @@
 {
-  "parent": "bettercombat:spear"
+  "parent": "bettercombat:spear",
+  "attributes" : {
+    "pose": ""
+  }
 }

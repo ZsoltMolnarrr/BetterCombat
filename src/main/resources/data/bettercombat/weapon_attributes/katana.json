@@ -19,7 +19,7 @@
         "damage_multiplier": 1,
         "angle": 120,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_slash_vertical_right",
+        "animation": "bettercombat:two_handed_slash_vertical_left",
         "swing_sound": {
           "id": "bettercombat:katana_slash"
         }
@@ -29,7 +29,7 @@
         "damage_multiplier": 1,
         "angle": 120,
         "upswing": 0.5,
-        "animation": "bettercombat:two_handed_slash_vertical_left",
+        "animation": "bettercombat:two_handed_slash_vertical_right",
         "swing_sound": {
           "id": "bettercombat:katana_slash"
         }
@@ -44,7 +44,6 @@
           "id": "bettercombat:katana_slash"
         }
       }
-
     ]
   }
 }

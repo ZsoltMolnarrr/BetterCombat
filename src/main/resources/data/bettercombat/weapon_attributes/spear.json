@@ -1,7 +1,7 @@
 {
   "attributes": {
     "attack_range": 3.5,
-    "pose": "bettercombat:two_handed_polearm",
+    "pose": "bettercombat:pose_two_handed_polearm",
     "two_handed": true,
     "attacks": [
       {
@@ -11,7 +11,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_stab_right",
         "swing_sound": {
-          "id": "bettercombat:spear_swing"
+          "id": "bettercombat:spear_stab"
         }
       }
     ]

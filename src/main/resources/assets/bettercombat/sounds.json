@@ -1,7 +1,7 @@
 {
-  "axe_swing": {
+  "axe_slash": {
     "sounds": [
-      "bettercombat:axe_swing-01"
+      "bettercombat:axe_slash-01"
     ]
   },
   "claymore_swing": {
@@ -22,9 +22,9 @@
       }
     ]
   },
-  "dagger_swing": {
+  "dagger_slash": {
     "sounds": [
-      "bettercombat:dagger_swing-01"
+      "bettercombat:dagger_slash-01"
     ]
   },
   "double_axe_swing": {
@@ -32,9 +32,9 @@
       "bettercombat:double_axe_swing-01"
     ]
   },
-  "fist_swing": {
+  "fist_punch": {
     "sounds": [
-      "bettercombat:fist_swing-01"
+      "bettercombat:fist_punch-01"
     ]
   },
   "glaive_swing": {
@@ -53,9 +53,14 @@
       "bettercombat:katana_slash-02"
     ]
   },
-  "mace_swing": {
+  "mace_slam": {
     "sounds": [
-      "bettercombat:mace_swing-01"
+      "bettercombat:mace_slam-01"
+    ]
+  },
+  "mace_slash": {
+    "sounds": [
+      "bettercombat:mace_slash-01"
     ]
   },
   "pickaxe_swing": {
@@ -68,9 +73,9 @@
       "bettercombat:scythe_slash-01"
     ]
   },
-  "spear_swing": {
+  "spear_stab": {
     "sounds": [
-      "bettercombat:spear_swing-01"
+      "bettercombat:spear_stab-01"
     ]
   },
   "staff_slam": {
@@ -93,9 +98,9 @@
       "bettercombat:staff_stab-01"
     ]
   },
-  "sword_swing": {
+  "sword_slash": {
     "sounds": [
-      "bettercombat:sword_swing-01"
+      "bettercombat:sword_slash-01"
     ]
   }
 }

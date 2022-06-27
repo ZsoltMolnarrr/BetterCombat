@@ -9,7 +9,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:one_handed_slash_horizontal_right",
         "swing_sound": {
-          "id": "bettercombat:mace_swing"
+          "id": "bettercombat:mace_slash"
         }
       },
       {
@@ -19,7 +19,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:one_handed_slash_horizontal_left",
         "swing_sound": {
-          "id": "bettercombat:mace_swing"
+          "id": "bettercombat:mace_slash"
         }
       },
       {
@@ -29,7 +29,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:one_handed_slam",
         "swing_sound": {
-          "id": "bettercombat:mace_swing"
+          "id": "bettercombat:mace_slam"
         }
       }
     ]
