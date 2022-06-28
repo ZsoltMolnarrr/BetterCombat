@@ -30,7 +30,7 @@ Primary features:
 - [X] Accurate hitbox calculation (based on [OBB](https://www.sciencedirect.com/topics/computer-science/oriented-bounding-box)+[SAT](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem))
 - [X] Hitting multiple enemies with a single strike
 - [X] Weapon attributes are synchronized (server sends to client)
-- [ ] Bundled resources: weapon animations, weapon sounds, weapon attribute presets
+- [x] Bundled resources: weapon animations, weapon sounds, weapon attribute presets
 
 Auxiliary features:
 - [X] Two-handed weapons ignore offhand slot
