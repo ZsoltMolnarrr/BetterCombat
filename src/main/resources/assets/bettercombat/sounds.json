@@ -37,14 +37,19 @@
       "bettercombat:fist_punch-01"
     ]
   },
-  "glaive_swing": {
+  "glaive_slash_quick": {
     "sounds": [
-      "bettercombat:glaive_swing-01"
+      "bettercombat:glaive_slash-01"
     ]
   },
-  "hammer_swing": {
+  "glaive_slash_slow": {
     "sounds": [
-      "bettercombat:hammer_swing-01"
+      "bettercombat:glaive_slash-02"
+    ]
+  },
+  "hammer_slam": {
+    "sounds": [
+      "bettercombat:hammer_slam-01"
     ]
   },
   "katana_slash": {

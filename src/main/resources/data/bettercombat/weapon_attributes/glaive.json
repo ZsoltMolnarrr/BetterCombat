@@ -11,7 +11,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slash_vertical_right",
         "swing_sound": {
-          "id": "bettercombat:glaive_swing"
+          "id": "bettercombat:glaive_slash_quick"
         }
       },
       {
@@ -21,7 +21,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slash_vertical_left",
         "swing_sound": {
-          "id": "bettercombat:glaive_swing"
+          "id": "bettercombat:glaive_slash_quick"
         }
       },
       {
@@ -31,7 +31,7 @@
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slash_horizontal_right",
         "swing_sound": {
-          "id": "bettercombat:glaive_swing"
+          "id": "bettercombat:glaive_slash_slow"
         }
       }
     ]
