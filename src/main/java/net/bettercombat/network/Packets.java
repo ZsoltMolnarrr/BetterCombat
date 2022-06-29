@@ -37,19 +37,20 @@ public class Packets {
         }
     }
 
-    public record AttackAnimation(int playerId, boolean isOffHand, String animationName) {
+    public record AttackAnimation(int playerId, boolean isOffHand, String animationName, float length) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "attack_animation");
         public static String StopSymbol = "!STOP!";
 
         public static PacketByteBuf writeStop(int playerId) {
-            return writePlay(playerId, false, StopSymbol);
+            return writePlay(playerId, false, StopSymbol, 0);
         }
 
-        public static PacketByteBuf writePlay(int playerId, boolean isOffHand, String animationName) {
+        public static PacketByteBuf writePlay(int playerId, boolean isOffHand, String animationName, float length) {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeInt(playerId);
             buffer.writeBoolean(isOffHand);
             buffer.writeString(animationName);
+            buffer.writeFloat(length);
             return buffer;
         }
 
@@ -57,7 +58,8 @@ public class Packets {
             int playerId = buffer.readInt();
             boolean isOffHand = buffer.readBoolean();
             String animationName = buffer.readString();
-            return new AttackAnimation(playerId, isOffHand, animationName);
+            float length = buffer.readFloat();
+            return new AttackAnimation(playerId, isOffHand, animationName, length);
         }
     }
 

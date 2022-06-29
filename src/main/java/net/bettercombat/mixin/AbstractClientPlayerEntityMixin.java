@@ -76,7 +76,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     @Override
-    public void playAttackAnimation(String name, boolean isOffHand) {
+    public void playAttackAnimation(String name, boolean isOffHand, float length) {
         try {
             EmoteData animation = AnimationRegistry.emotes.get(name).mutableCopy().build();
             updateAnimationByCurrentActivity(animation);

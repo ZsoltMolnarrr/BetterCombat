@@ -111,11 +111,6 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     private int upswingTicks = 0;
     private int lastAttacked = 1000;
 
-    private int getUpswingLength(PlayerEntity player, double upswingRate) {
-        double attackCooldownTicks = player.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
-        return (int)(Math.round(attackCooldownTicks * upswingRate));
-    }
-
     private void startUpswing(WeaponAttributes attributes) {
         var hand = getCurrentHand();
         if (hand == null) { return; }
@@ -128,14 +123,15 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         }
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
-        this.upswingTicks = getUpswingLength(player, upswingRate);
+        float attackCooldownTicks = PlayerAttackHelper.getScaledAttackCooldown(player);
+        this.upswingTicks = (int)(Math.round(attackCooldownTicks * upswingRate));
 //        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
-        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, isOffHand);
+        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, isOffHand, attackCooldownTicks);
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
-                Packets.AttackAnimation.writePlay(player.getId(), isOffHand, animationName));
+                Packets.AttackAnimation.writePlay(player.getId(), isOffHand, animationName, attackCooldownTicks));
     }
 
     private void feintIfNeeded() {

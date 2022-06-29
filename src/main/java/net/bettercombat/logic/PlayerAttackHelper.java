@@ -69,4 +69,9 @@ public class PlayerAttackHelper {
             player.getAttributes().addTemporaryModifiers(add.getAttributeModifiers(MAINHAND));
         }
     }
+
+    public static float getScaledAttackCooldown(PlayerEntity player) {
+        // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownTicks`
+        return player.getAttackCooldownProgressPerTick() / getDualWieldingAttackSpeedMultiplier(player);
+    }
 }

@@ -9,10 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Hand;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -104,7 +101,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
             target = "Lnet/minecraft/entity/player/PlayerEntity;getAttackCooldownProgressPerTick()F"))
     public float getAttackCooldownProgressPerTick_Redirect(PlayerEntity instance) {
         // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownTicks`
-        return instance.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(instance);
+        return PlayerAttackHelper.getScaledAttackCooldown(instance);
     }
 
     @Redirect(method = "attack", at = @At(value = "INVOKE",
