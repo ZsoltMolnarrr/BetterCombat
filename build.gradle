@@ -30,13 +30,11 @@ repositories {
 }
 
 dependencies {
-    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-    modImplementation("com.terraformersmc:modmenu:3.2.1")
     modImplementation("com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}")
 
     modImplementation("io.github.kosmx:bendy-lib:2.0.4")
