@@ -528,7 +528,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "torso":{
-                    "y":0.0
+                    "y":-0.030154306441545486
                 }
             },
             {
