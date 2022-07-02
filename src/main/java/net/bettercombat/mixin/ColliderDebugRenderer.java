@@ -54,7 +54,7 @@ public class ColliderDebugRenderer {
         var target = TargetFinder.findAttackTargetResult(
                 player,
                 cursorTarget,
-                attributes.currentAttack(comboCount),
+                hand.attack(),
                 attributes.attackRange());
         boolean collides = target.entities.size() > 0;
         Vec3d cameraOffset = camera.getPos().negate();

@@ -63,6 +63,13 @@ public final class WeaponAttributes {
      */
     public static final class Attack {
         /**
+         * Conditions those need to be fulfilled for the attack to be performed,
+         * otherwise the attack is skipped.
+         * For no conditions use `null` or empty array.
+         */
+        private Condition[] conditions;
+
+        /**
          * Determines the shape of the attack hitbox.
          * (This shape is scaled by the `attack_range` property from the embedding object.)
          * For accepted values check out `HitBoxShape` (in this file).
@@ -128,6 +135,7 @@ public final class WeaponAttributes {
         public Attack() { }
 
         public Attack(
+                Condition[] conditions,
                 HitBoxShape hitbox,
                 double damage_multiplier,
                 double angle,
@@ -136,6 +144,7 @@ public final class WeaponAttributes {
                 Sound swing_sound,
                 Sound impact_sound
         ) {
+            this.conditions = conditions;
             this.hitbox = hitbox;
             this.damage_multiplier = damage_multiplier;
             this.angle = angle;
@@ -143,6 +152,11 @@ public final class WeaponAttributes {
             this.animation = animation;
             this.swing_sound = swing_sound;
             this.impact_sound = impact_sound;
+        }
+
+        @Nullable
+        public Condition[] conditions() {
+            return conditions;
         }
 
         public HitBoxShape hitbox() {
@@ -209,6 +223,25 @@ public final class WeaponAttributes {
         FORWARD_BOX,
         VERTICAL_PLANE,
         HORIZONTAL_PLANE
+    }
+
+    public enum Condition {
+        /**
+         * Fulfilled if the player is dual wielding any weapons
+         */
+        DUAL_WIELDING_ANY,
+        /**
+         * Fulfilled if the player is dual wielding the same item in main-hand and off-hand
+         */
+        DUAL_WIELDING_SAME,
+        /**
+         * Fulfilled for attacks performed with main-hand only
+         */
+        MAIN_HAND_ONLY,
+        /**
+         * Fulfilled for attacks performed with off-hand only
+         */
+        OFF_HAND_ONLY
     }
 
     /**
@@ -302,11 +335,6 @@ public final class WeaponAttributes {
     }
 
     // Helpers
-
-    public Attack currentAttack(int comboCount) {
-        int index = comboCount % this.attacks().length;
-        return this.attacks()[index];
-    }
 
     public double attackRange() {
         return attack_range;

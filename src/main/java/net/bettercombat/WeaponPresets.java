@@ -10,6 +10,7 @@ public class WeaponPresets {
             false,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             150,
@@ -19,6 +20,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             150,
@@ -36,6 +38,7 @@ public class WeaponPresets {
             false,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             150,
@@ -45,6 +48,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             150,
@@ -62,6 +66,7 @@ public class WeaponPresets {
             true,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             180,
@@ -71,6 +76,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             360,
@@ -88,6 +94,7 @@ public class WeaponPresets {
             false,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.FORWARD_BOX,
                             1,
                             0,
@@ -97,6 +104,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.FORWARD_BOX,
                             1,
                             0,
@@ -114,6 +122,7 @@ public class WeaponPresets {
             true,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             0.8,
                             180,
@@ -123,6 +132,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             0.8,
                             180,
@@ -132,6 +142,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.VERTICAL_PLANE,
                             1.4,
                             180,
@@ -149,6 +160,7 @@ public class WeaponPresets {
             true,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.FORWARD_BOX,
                             1,
                             0,
@@ -166,6 +178,7 @@ public class WeaponPresets {
             false,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             0.8,
                             150,
@@ -175,6 +188,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             150,
@@ -184,6 +198,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.VERTICAL_PLANE,
                             1.2,
                             180,
@@ -201,6 +216,7 @@ public class WeaponPresets {
             false,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.VERTICAL_PLANE,
                             1,
                             180,
@@ -218,6 +234,7 @@ public class WeaponPresets {
             true,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.FORWARD_BOX,
                             1,
                             0,
@@ -235,6 +252,7 @@ public class WeaponPresets {
             true,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             0.8,
                             180,
@@ -244,6 +262,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             180,
@@ -253,6 +272,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.VERTICAL_PLANE,
                             1.2,
                             180,
@@ -262,6 +282,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.FORWARD_BOX,
                             1.4,
                             180,
@@ -279,6 +300,7 @@ public class WeaponPresets {
             false,
             new WeaponAttributes.Attack[] {
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             150,
@@ -288,6 +310,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.HORIZONTAL_PLANE,
                             1,
                             150,
@@ -297,6 +320,7 @@ public class WeaponPresets {
                             null
                     ),
                     new WeaponAttributes.Attack(
+                            null,
                             WeaponAttributes.HitBoxShape.FORWARD_BOX,
                             1,
                             0,

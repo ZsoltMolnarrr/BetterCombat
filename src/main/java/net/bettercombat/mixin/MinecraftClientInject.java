@@ -193,12 +193,13 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         if ((BetterCombatClient.config.isHighlightAttackIndicatorEnabled || BetterCombatClient.config.isHighlightCrosshairEnabled)
                 && !ranTargetCheckCurrentTick) {
             MinecraftClient client = thisClient();
+            var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
             WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
             if (attributes != null) {
                 List<Entity> targets = TargetFinder.findAttackTargets(
                     player,
                     getCursorTarget(),
-                    attributes.currentAttack(getComboCount()),
+                    hand.attack(),
                     attributes.attackRange());
                 updateTargetsInRage(targets);
             }

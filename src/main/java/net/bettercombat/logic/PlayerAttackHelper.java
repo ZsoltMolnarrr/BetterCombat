@@ -5,6 +5,8 @@ import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
+import java.util.Arrays;
+
 import static net.minecraft.entity.EquipmentSlot.MAINHAND;
 
 public class PlayerAttackHelper {
@@ -39,15 +41,53 @@ public class PlayerAttackHelper {
                     : player.getMainHandStack();
             var attributes = WeaponRegistry.getAttributes(itemStack);
             int handSpecificComboCount = ( (isOffHand && comboCount > 0) ? (comboCount - 1) : (comboCount) ) / 2;
-            return new AttackHand(attributes.currentAttack(handSpecificComboCount), isOffHand, attributes, itemStack);
+            var attack = selectAttack(handSpecificComboCount, attributes, player, isOffHand);
+            return new AttackHand(attack, isOffHand, attributes, itemStack);
         } else {
             var itemStack = player.getMainHandStack();
             WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
             if (attributes != null) {
-                return new AttackHand(attributes.currentAttack(comboCount), false, attributes, itemStack);
+                var attack = selectAttack(comboCount, attributes, player, false);
+                return new AttackHand(attack, false, attributes, itemStack);
             }
         }
         return null;
+    }
+
+    private static WeaponAttributes.Attack selectAttack(int comboCount, WeaponAttributes attributes, PlayerEntity player, boolean isOffHandAttack) {
+        var attacks = attributes.attacks();
+        attacks = Arrays.stream(attacks)
+                .filter(attack ->
+                        attack.conditions() == null
+                        || attack.conditions().length == 0
+                        || evaluateConditions(attack.conditions(), player, isOffHandAttack)
+                )
+                .toArray(WeaponAttributes.Attack[]::new);
+        int index = comboCount % attacks.length;
+        return attacks[index];
+    }
+
+    private static boolean evaluateConditions(WeaponAttributes.Condition[] conditions, PlayerEntity player, boolean isOffHandAttack) {
+        return Arrays.stream(conditions).allMatch(condition -> evaluateCondition(condition, player, isOffHandAttack));
+    }
+
+    private static boolean evaluateCondition(WeaponAttributes.Condition condition, PlayerEntity player, boolean isOffHandAttack) {
+        switch (condition) {
+            case DUAL_WIELDING_ANY -> {
+                return isDualWielding(player);
+            }
+            case DUAL_WIELDING_SAME -> {
+                return isDualWielding(player) &&
+                        (player.getMainHandStack().getItem() == player.getOffHandStack().getItem()); // TODO: Eq
+            }
+            case MAIN_HAND_ONLY -> {
+                return !isOffHandAttack;
+            }
+            case OFF_HAND_ONLY -> {
+                return isOffHandAttack;
+            }
+        }
+        return true;
     }
 
     public static void setAttributesForOffHandAttack(PlayerEntity player, boolean useOffHand) {
