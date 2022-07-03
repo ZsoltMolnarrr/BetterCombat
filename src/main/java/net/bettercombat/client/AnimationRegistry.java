@@ -13,21 +13,21 @@ import java.util.Map;
 
 public class AnimationRegistry {
     static final Logger LOGGER = LogUtils.getLogger();
-    public static Map<String, KeyframeAnimation> emotes = new HashMap<>(); // TODO - Rename
+    public static Map<String, KeyframeAnimation> animations = new HashMap<>();
 
     public static void load(ResourceManager resourceManager) {
         var dataFolder = "weapon_animations";
         for (Identifier identifier : resourceManager.findResources(dataFolder, fileName -> fileName.endsWith(".json"))) {
             try {
                 var resource = resourceManager.getResource(identifier);
-                List<KeyframeAnimation> animations = AnimationSerializing.deserializeAnimation(resource.getInputStream());
-                KeyframeAnimation animation = animations.get(0);
+                List<KeyframeAnimation> readAnimations = AnimationSerializing.deserializeAnimation(resource.getInputStream());
+                KeyframeAnimation animation = readAnimations.get(0);
 
                 var id = identifier
                         .toString()
                         .replace(dataFolder + "/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
-                AnimationRegistry.emotes.put(id, animation);
+                AnimationRegistry.animations.put(id, animation);
             } catch (Exception e) {
                 LOGGER.error("Failed to load animation " + identifier.toString());
                 e.printStackTrace();

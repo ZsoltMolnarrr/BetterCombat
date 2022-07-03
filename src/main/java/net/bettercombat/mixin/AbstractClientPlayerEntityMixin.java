@@ -24,8 +24,8 @@ import javax.annotation.Nullable;
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
 
-    private AnimationContainer posePlayer = new AnimationContainer(null); // TODO - Rename `Player`
-    private AnimationContainer attackPlayer = new AnimationContainer(null);
+    private AnimationContainer poseContainer = new AnimationContainer(null);
+    private AnimationContainer attackContainer = new AnimationContainer(null);
     private KeyframeAnimation lastPose;
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
@@ -36,10 +36,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
         ((IAnimatedPlayer) this)
                 .getAnimationStack()
-                .addAnimLayer(1, posePlayer);
+                .addAnimLayer(1, poseContainer);
         ((IAnimatedPlayer) this)
                 .getAnimationStack()
-                .addAnimLayer(2000, attackPlayer);
+                .addAnimLayer(2000, attackContainer);
     }
 
     @Override
@@ -53,7 +53,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         }
         var attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
         if (attributes != null && attributes.pose() != null) {
-            newPose = AnimationRegistry.emotes.get(attributes.pose());
+            newPose = AnimationRegistry.animations.get(attributes.pose());
         }
         setPose(newPose);
     }
@@ -64,11 +64,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         }
 
         if (pose == null) {
-            this.posePlayer.setAnim(null);
+            this.poseContainer.setAnim(null);
         } else {
-            var copy = pose.mutableCopy().build();
-//            updateAnimationByCurrentActivity(copy);
-            this.posePlayer.setAnim(new KeyframeAnimationPlayer(copy, 0));
+            var copy = pose.mutableCopy();
+            updateAnimationByCurrentActivity(copy);
+            this.poseContainer.setAnim(new KeyframeAnimationPlayer(copy.build(), 0));
         }
 
         lastPose = pose;
@@ -77,61 +77,63 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Override
     public void playAttackAnimation(String name, boolean isOffHand, float length) {
         try {
-            KeyframeAnimation animation = AnimationRegistry.emotes.get(name).mutableCopy().build();
-//            updateAnimationByCurrentActivity(animation);
-            attackPlayer.setAnim(new KeyframeAnimationPlayer(animation, 0));
+            KeyframeAnimation animation = AnimationRegistry.animations.get(name).mutableCopy().build();
+            var copy = animation.mutableCopy();
+            updateAnimationByCurrentActivity(copy);
+            copy.head.pitch.setEnabled(false);
+            attackContainer.setAnim(new KeyframeAnimationPlayer(copy.build(), 0));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-//    private void updateAnimationByCurrentActivity(EmoteData animation) {
-//        var pose = getPose();
-//        switch (pose) {
-//            case STANDING -> {
-//            }
-//            case FALL_FLYING -> {
-//            }
-//            case SLEEPING -> {
-//            }
-//            case SWIMMING -> {
-//                configurBodyPart(animation.bodyParts.get("rightLeg"), false, false);
-//                configurBodyPart(animation.bodyParts.get("leftLeg"), false, false);
-//            }
-//            case SPIN_ATTACK -> {
-//            }
-//            case CROUCHING -> {
-//                configurBodyPart(animation.bodyParts.get("head"), true, false);
-//                configurBodyPart(animation.bodyParts.get("rightArm"), true, false);
-//                configurBodyPart(animation.bodyParts.get("leftArm"), true, false);
-//                configurBodyPart(animation.bodyParts.get("rightLeg"), false, false);
-//                configurBodyPart(animation.bodyParts.get("leftLeg"), false, false);
-//            }
-//            case LONG_JUMPING -> {
-//            }
-//            case DYING -> {
-//            }
-//        }
-//        if (isMounting()) {
-//            configurBodyPart(animation.bodyParts.get("rightLeg"), false, false);
-//            configurBodyPart(animation.bodyParts.get("leftLeg"), false, false);
-//        }
-//    }
+    private void updateAnimationByCurrentActivity(KeyframeAnimation.AnimationBuilder animation) {
+        var pose = getPose();
+        switch (pose) {
+            case STANDING -> {
+            }
+            case FALL_FLYING -> {
+            }
+            case SLEEPING -> {
+            }
+            case SWIMMING -> {
+                configurBodyPart(animation.rightLeg, false, false);
+                configurBodyPart(animation.leftLeg, false, false);
+            }
+            case SPIN_ATTACK -> {
+            }
+            case CROUCHING -> {
+                configurBodyPart(animation.head, true, false);
+                configurBodyPart(animation.rightArm, true, false);
+                configurBodyPart(animation.leftArm, true, false);
+                configurBodyPart(animation.rightLeg, false, false);
+                configurBodyPart(animation.leftLeg, false, false);
+            }
+            case LONG_JUMPING -> {
+            }
+            case DYING -> {
+            }
+        }
+        if (isMounting()) {
+            configurBodyPart(animation.rightLeg, false, false);
+            configurBodyPart(animation.leftLeg, false, false);
+        }
+    }
 
-//    private static void configurBodyPart(EmoteData.StateCollection bodyPart, boolean isRotationEnabled, boolean isOffsetEnabled) {
-//        bodyPart.pitch.isEnabled = isRotationEnabled;
-//        bodyPart.roll.isEnabled = isRotationEnabled;
-//        bodyPart.yaw.isEnabled = isRotationEnabled;
-//        bodyPart.x.isEnabled = isOffsetEnabled;
-//        bodyPart.y.isEnabled = isOffsetEnabled;
-//        bodyPart.z.isEnabled = isOffsetEnabled;
-//    }
+    private static void configurBodyPart(KeyframeAnimation.StateCollection bodyPart, boolean isRotationEnabled, boolean isOffsetEnabled) {
+        bodyPart.pitch.setEnabled(isRotationEnabled);
+        bodyPart.roll.setEnabled(isRotationEnabled);
+        bodyPart.yaw.setEnabled(isRotationEnabled);
+        bodyPart.x.setEnabled(isOffsetEnabled);
+        bodyPart.y.setEnabled(isOffsetEnabled);
+        bodyPart.z.setEnabled(isOffsetEnabled);
+    }
 
     @Override
     public void stopAttackAnimation() {
-        IAnimation currentAnimation = attackPlayer.getAnim();
+        IAnimation currentAnimation = attackContainer.getAnim();
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
-             ((KeyframeAnimationPlayer)currentAnimation).stop(); // TODO - Missing from API ?
+             ((KeyframeAnimationPlayer)currentAnimation).stop();
         }
     }
 
