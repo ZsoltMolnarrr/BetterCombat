@@ -44,8 +44,7 @@ dependencies {
 
     //modImplementation("io.github.kosmx:bendy-lib:2.0.4")
     //modImplementation(files("emotecraft-for-MC1.18.2-2.1.3-SNAPSHOT-73dfa0c-fabric.jar"))
-    modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:0.0.1-test")
-
+    modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:0.0.2-test")
 }
 
 processResources {

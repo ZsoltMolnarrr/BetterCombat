@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AnimationRegistry { // TODO - Call at client init
+public class AnimationRegistry {
     public static Map<String, KeyframeAnimation> emotes = new HashMap<>(); // TODO - Rename
 
     public static void load(ResourceManager resourceManager) {
@@ -18,8 +18,7 @@ public class AnimationRegistry { // TODO - Call at client init
             try {
                 var resource = resourceManager.getResource(identifier);
                 List<KeyframeAnimation> animations = AnimationSerializing.deserializeAnimation(resource.getInputStream());
-                KeyframeAnimation animation = emotes.get(0);
-                animation.isBuiltin = true;
+                KeyframeAnimation animation = animations.get(0);
                 // animation.bodyParts.get("head").pitch.isEnabled = false;
 
                 var id = identifier

@@ -5,7 +5,6 @@ import dev.kosmx.playerAnim.api.layered.AnimationContainer;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.core.impl.AnimationPlayer;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.client.AnimationRegistry;
@@ -131,8 +130,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Override
     public void stopAttackAnimation() {
         IAnimation currentAnimation = attackPlayer.getAnim();
-        if (currentAnimation != null && currentAnimation instanceof AnimationPlayer) {
-            // ((AnimationPlayer)currentAnimation).stop(); // TODO - Missing from API ?
+        if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
+             ((KeyframeAnimationPlayer)currentAnimation).stop(); // TODO - Missing from API ?
         }
     }
 

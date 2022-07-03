@@ -35,6 +35,7 @@ public class BetterCombatClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientNetwork.initializeHandlers();
+//        AnimationRegistry.load(MinecraftClient.getInstance().getResourceManager());
         ClientLifecycleEvents.CLIENT_STARTED.register((client) -> {
             AnimationRegistry.load(MinecraftClient.getInstance().getResourceManager());
         });
