@@ -13,8 +13,13 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
 
+//    maven {
+//        url 'https://maven.kosmx.dev/'
+//    }
+
     maven {
-        url 'https://maven.kosmx.dev/'
+        name = "KosmX's maven"
+        url = "https://maven.kosmx.dev/"
     }
 
     // CompleteConfig https://gitlab.com/Lortseam/completeconfig
@@ -37,8 +42,10 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     modImplementation("com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}")
 
-    modImplementation("io.github.kosmx:bendy-lib:2.0.4")
-    modImplementation(files("emotecraft-for-MC1.18.2-2.1.3-SNAPSHOT-73dfa0c-fabric.jar"))
+    //modImplementation("io.github.kosmx:bendy-lib:2.0.4")
+    //modImplementation(files("emotecraft-for-MC1.18.2-2.1.3-SNAPSHOT-73dfa0c-fabric.jar"))
+    modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:0.0.1-test")
+
 }
 
 processResources {
