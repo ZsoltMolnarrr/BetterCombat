@@ -2,10 +2,10 @@
 
 <div align="center">
 
-  <a href="">![Java 17](https://img.shields.io/badge/Java%2017-ee9258?logo=java&logoColor=ffffff&labelColor=606060&style=flat-square)</a>
+  <a href="">![Java 17](https://img.shields.io/badge/Java%2017-ee9258?logo=coffeescript&logoColor=ffffff&labelColor=606060&style=flat-square)</a>
   <a href="">![Environment: Client & Server](https://img.shields.io/badge/environment-Client%20&%20Server-1976d2?style=flat-square)</a>
   <a href="">[![Mod loader: Fabric]][fabric]</a>
-  <a href="">[![Discord](https://img.shields.io/discord/973561601519149057.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/UTbHdnwK)</a>
+  <a href="">[![Discord](https://img.shields.io/discord/973561601519149057.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/KN9b3pjFTM)</a>
 
 </div>
 
@@ -43,6 +43,20 @@ Future plans:
 - Weapon trail animation while hitting
 
 # 🔨 Integrate your mod
+
+## Prerequisite
+
+Make sure to remove or disable all logic from your mod that is semantically conflicting with this mod:
+- Player animation modifications
+- Attack range modifications
+- Attack timing or cooldown logic modifications
+- Custom attack sound playback
+- Attack/mining key handler modifications (of MinecraftClient)
+- Dual wielding logic
+
+Download the latest release of the mod, and install it in your project run directory (`./run/mods`).
+
+## Basics
 
 Weapon attributes describe the behaviour of a weapon including: range, combos (list of attacks), animations and sounds, etc...
 
@@ -87,7 +101,7 @@ You can make and reference your own presets the same way.
 
 ## Custom attributes
 
-If you want custom behaviour for your weapon, you can create them from scratch.
+If you want unique behaviour for your weapon, you can create attributes from scratch.
 
 The content of your weapon attributes JSON file is parsed into an [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) object. 
 
