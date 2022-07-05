@@ -6,6 +6,7 @@ plugins {
 
 version = project.mod_version
 group = project.maven_group
+ENV = System.getenv()
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -87,7 +88,7 @@ publish() {
 }
 
 curseforge {
-    apiKey = ENV.CURSEFORGE_API_KEY
+    apiKey = ENV["CURSEFORGE_API_KEY"]
     println apiKey
     project {
         id = '639842'
