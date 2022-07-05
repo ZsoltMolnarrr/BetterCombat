@@ -82,21 +82,13 @@ jar {
     }
 }
 
-publish {
-    println "Hello publish ${release_type}"
-    curseforge
-    modrinth
-}
-
 task publishMod {
-    println "Hello publish-mod ${release_type}"
     dependsOn(build)
     finalizedBy(tasks.curseforge)
     finalizedBy(tasks.modrinth)
 }
 
 curseforge {
-    println "Hello curseforge ${release_type}"
     apiKey = System.getenv("CURSEFORGE_API_KEY")
     project {
         id = '639842'
@@ -121,7 +113,6 @@ curseforge {
 }
 
 modrinth {
-    println "Hello modrinth ${release_type}"
     token = System.getenv("MODRINTH_API_KEY")
     projectId = "better-combat" // This can be the project ID or the slug. Either will work!
     versionNumber = "${project.mod_version}" // You don't need to set this manually. Will fail if Modrinth has this version already
