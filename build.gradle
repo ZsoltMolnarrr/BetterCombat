@@ -6,7 +6,6 @@ plugins {
 
 version = project.mod_version
 group = project.maven_group
-ENV = System.getenv()
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -88,7 +87,7 @@ publish() {
 }
 
 curseforge {
-    apiKey = ENV["CURSEFORGE_API_KEY"]
+    apiKey = System.getenv("CURSEFORGE_API_KEY")
     println apiKey
     project {
         id = '639842'
@@ -102,7 +101,7 @@ curseforge {
         }
 
         afterEvaluate {
-            mainArtifact(remapJar.output) {
+            mainArtifact(remapJar) {
                 displayName = "BetterCombat version: $project.version"
             }
             uploadTask.dependsOn(remapJar)
