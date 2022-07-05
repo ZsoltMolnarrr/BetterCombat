@@ -1,6 +1,7 @@
 plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
 version = project.mod_version
@@ -77,6 +78,37 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+publish() {
+    println 'My Publish stuff'
+    curseforge
+}
+
+curseforge {
+    apiKey = ENV.CURSEFORGE_API_KEY
+    println apiKey
+    project {
+        id = '639842'
+        changelog = ''
+        releaseType = 'alpha'
+        addGameVersion "${project.minecraft_version}"
+
+        relations {
+            requiredDependency 'fabric-api'
+            requiredDependency 'completeconfig'
+        }
+
+        afterEvaluate {
+            mainArtifact(remapJar.output) {
+                displayName = "BetterCombat version: $project.version"
+            }
+            uploadTask.dependsOn(remapJar)
+        }
+    }
+    options {
+        forgeGradleIntegration = false
     }
 }
 
