@@ -100,15 +100,14 @@ curseforge {
             requiredDependency 'completeconfig'
         }
 
+        mainArtifact(remapJar)
         afterEvaluate {
-            mainArtifact(remapJar) {
-                displayName = "BetterCombat version: $project.version"
-            }
             uploadTask.dependsOn(remapJar)
         }
-    }
-    options {
-        forgeGradleIntegration = false
+
+        options {
+            forgeGradleIntegration = false
+        }
     }
 }
 
