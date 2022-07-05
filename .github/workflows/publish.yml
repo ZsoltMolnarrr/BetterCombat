@@ -11,10 +11,12 @@ on:
   workflow_dispatch:
     inputs:
       release_type:
-        description: 'Release type'     
-        options: ['alpha', 'beta', 'release']
-        default: 'beta'
-
+        type: choice
+        description: Release type
+        options: 
+        - alpha
+        - beta
+        - release
 
 permissions:
   contents: read
@@ -34,6 +36,6 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
-        arguments: publish
+        arguments: publish -Prelease_type="${{ inputs.release_type }}"
       env:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
