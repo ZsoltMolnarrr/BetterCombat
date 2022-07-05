@@ -12,7 +12,7 @@ on:
     inputs:
       release_type:
         description: 'Release type'     
-        required: true
+        options: ['alpha', 'beta', 'release']
         default: 'beta'
 
 
