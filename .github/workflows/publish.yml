@@ -39,3 +39,4 @@ jobs:
         arguments: publish -Prelease_type=${{ inputs.release_type }}
       env:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+        MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
