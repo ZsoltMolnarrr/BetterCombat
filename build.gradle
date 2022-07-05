@@ -81,18 +81,18 @@ jar {
     }
 }
 
-publish() {
-    println 'My Publish stuff'
-    curseforge
+
+
+publish {
+    println "Hello publish ${release_type}"
 }
 
 curseforge {
     apiKey = System.getenv("CURSEFORGE_API_KEY")
-    println apiKey
     project {
         id = '639842'
         changelog = ''
-        releaseType = 'alpha'
+        releaseType = release_type
         addGameVersion "${project.minecraft_version}"
 
         relations {
