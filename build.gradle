@@ -88,6 +88,13 @@ publish {
     modrinth
 }
 
+task publishMod {
+    println "Hello publish-mod ${release_type}"
+    dependsOn(build)
+    finalizedBy(tasks.curseforge)
+    finalizedBy(tasks.modrinth)
+}
+
 curseforge {
     println "Hello curseforge ${release_type}"
     apiKey = System.getenv("CURSEFORGE_API_KEY")
