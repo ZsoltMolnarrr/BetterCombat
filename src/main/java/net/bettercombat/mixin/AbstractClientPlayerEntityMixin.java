@@ -12,6 +12,7 @@ import net.bettercombat.client.PlayerAttackAnimatable;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -68,6 +69,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         } else {
             var copy = pose.mutableCopy();
             updateAnimationByCurrentActivity(copy);
+            var mirror = shouldMirrorByMainArm();
             this.poseContainer.setAnim(new KeyframeAnimationPlayer(copy.build(), 0));
         }
 
@@ -82,6 +84,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             updateAnimationByCurrentActivity(copy);
             copy.head.pitch.setEnabled(false);
             var speed = ((float)animation.endTick) / length;
+            var mirror = isOffHand;
+            if(shouldMirrorByMainArm()) {
+                mirror = !mirror;
+            }
             attackContainer.setAnim(new KeyframeAnimationPlayer(copy.build(), 0));
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,5 +146,9 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     private boolean isMounting() {
         return this.getVehicle() != null;
+    }
+
+    private boolean shouldMirrorByMainArm() {
+        return this.getMainArm() == Arm.LEFT;
     }
 }
