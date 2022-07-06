@@ -77,10 +77,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Override
     public void playAttackAnimation(String name, boolean isOffHand, float length) {
         try {
-            KeyframeAnimation animation = AnimationRegistry.animations.get(name).mutableCopy().build();
+            KeyframeAnimation animation = AnimationRegistry.animations.get(name);
             var copy = animation.mutableCopy();
             updateAnimationByCurrentActivity(copy);
             copy.head.pitch.setEnabled(false);
+            var speed = ((float)animation.endTick) / length;
             attackContainer.setAnim(new KeyframeAnimationPlayer(copy.build(), 0));
         } catch (Exception e) {
             e.printStackTrace();
