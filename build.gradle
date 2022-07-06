@@ -82,50 +82,51 @@ jar {
     }
 }
 
-task publishMod {
-    dependsOn(build)
-    finalizedBy(tasks.curseforge)
-    finalizedBy(tasks.modrinth)
-}
+if(project.hasProperty('release_type')) {
+    tasks.register("publishMod") {
+        dependsOn(build)
+        finalizedBy(tasks.curseforge)
+        finalizedBy(tasks.modrinth)
+    }
 
-curseforge {
-    apiKey = System.getenv("CURSEFORGE_API_KEY")
-    project {
-        id = '639842'
-        changelog = ''
-        releaseType = release_type
-        addGameVersion "${project.minecraft_version}"
+    curseforge {
+        apiKey = System.getenv("CURSEFORGE_API_KEY")
+        project {
+            id = '639842'
+            changelog = ''
+            releaseType = release_type
+            addGameVersion "${project.minecraft_version}"
 
-        relations {
-            requiredDependency 'fabric-api'
-            requiredDependency 'completeconfig'
-        }
+            relations {
+                requiredDependency 'fabric-api'
+                requiredDependency 'completeconfig'
+            }
 
-        mainArtifact(remapJar)
-        afterEvaluate {
-            uploadTask.dependsOn(remapJar)
-        }
-
-        options {
-            forgeGradleIntegration = false
+            mainArtifact(remapJar)
+            afterEvaluate {
+                uploadTask.dependsOn(remapJar)
+            }
+            options {
+                forgeGradleIntegration = false
+            }
         }
     }
-}
 
-modrinth {
-    token = System.getenv("MODRINTH_API_KEY")
-    projectId = "better-combat" // This can be the project ID or the slug. Either will work!
-    versionNumber = "${project.mod_version}" // You don't need to set this manually. Will fail if Modrinth has this version already
-    versionType = release_type // This is the default -- can also be `beta` or `alpha`
-    uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
-    gameVersions = ["${project.minecraft_version}"] // Must be an array, even with only one version
-    loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
-    dependencies { // A special DSL for creating dependencies
-        // scope.type
-        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
-        // The type can either be `project` or `version`
-        required.project "fabric-api"
-        required.project "completeconfig"
+    modrinth {
+        token = System.getenv("MODRINTH_API_KEY")
+        projectId = "better-combat" // This can be the project ID or the slug. Either will work!
+        versionNumber = "${project.mod_version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+        versionType = release_type // This is the default -- can also be `beta` or `alpha`
+        uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+        gameVersions = ["${project.minecraft_version}"] // Must be an array, even with only one version
+        loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
+        dependencies { // A special DSL for creating dependencies
+            // scope.type
+            // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+            // The type can either be `project` or `version`
+            required.project "fabric-api"
+            required.project "completeconfig"
+        }
     }
 }
 
