@@ -96,6 +96,7 @@ if(project.hasProperty('release_type')) {
             changelog = ''
             releaseType = release_type
             addGameVersion "${project.minecraft_version}"
+            addGameVersion "Fabric"
 
             relations {
                 requiredDependency 'fabric-api'
@@ -129,7 +130,6 @@ if(project.hasProperty('release_type')) {
         }
     }
 }
-
 // configure the maven publication
 publishing {
     publications {
