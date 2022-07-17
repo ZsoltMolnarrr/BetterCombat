@@ -15,7 +15,11 @@
     "MinecraftClientAccessor",
     "MinecraftClientInject",
     "AbstractClientPlayerEntityMixin",
-    "InGameHudInject"
+    "InGameHudInject",
+    "WorldRendererMixin",
+    "PlayerEntityRendererMixin",
+    "HeldItemRendererMixin",
+    "LivingEntityRendererMixin"
   ],
   "server": [
   ],
