@@ -2,6 +2,8 @@ package net.bettercombat.mixin;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.PlayerAttackAnimatable;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
@@ -21,9 +23,10 @@ public class LivingEntityRendererMixin {
         if (entity instanceof PlayerAttackAnimatable) {
             currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
         }
+        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
 
         //When in first person make the animation play facing forward, instead of slowly adjusting to player rotations
-        if (currentAnimation.isPresent() && currentAnimation.get().isActive()) {
+        if (currentAnimation.isPresent() && currentAnimation.get().isActive() && entity == MinecraftClient.getInstance().player && !camera.isThirdPerson()) {
             args.set(3, MathHelper.lerpAngleDegrees(args.get(4), entity.prevHeadYaw, entity.headYaw));
         }
     }
