@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
@@ -150,5 +151,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     private boolean shouldMirrorByMainArm() {
         return this.getMainArm() == Arm.LEFT;
+    }
+
+    @Override
+    public Optional<IAnimation> getCurrentAnimation() {
+        return Optional.ofNullable(attackContainer.getAnim());
     }
 }
