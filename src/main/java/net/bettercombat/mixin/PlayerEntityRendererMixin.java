@@ -3,6 +3,7 @@ package net.bettercombat.mixin;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.client.animation.IExtendedAnimation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.Camera;
@@ -37,8 +38,15 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
         Optional<IAnimation> currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
-        if (currentAnimation.isPresent() && currentAnimation.get()
-                .isActive() && entity == MinecraftClient.getInstance().player && !camera.isThirdPerson()) {
+        var isActive = false;
+        if (currentAnimation.isPresent()) {
+            isActive = currentAnimation.get().isActive();
+            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
+                isActive = extendedAnimation.isActiveInFirstPerson();
+            }
+        }
+        if (currentAnimation.isPresent() && isActive
+                && entity == MinecraftClient.getInstance().player && !camera.isThirdPerson()) {
             this.model.head.visible = false;
             this.model.body.visible = false;
             this.model.leftLeg.visible = false;

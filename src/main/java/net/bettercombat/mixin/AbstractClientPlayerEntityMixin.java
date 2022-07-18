@@ -6,6 +6,7 @@ import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import net.bettercombat.client.animation.CustomAnimationPlayer;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.PlayerAttackAnimatable;
@@ -89,7 +90,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             if(shouldMirrorByMainArm()) {
                 mirror = !mirror;
             }
-            attackContainer.setAnim(new KeyframeAnimationPlayer(copy.build(), 0));
+            attackContainer.setAnim(new CustomAnimationPlayer(copy.build(), 0));
         } catch (Exception e) {
             e.printStackTrace();
         }

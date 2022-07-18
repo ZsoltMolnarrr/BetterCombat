@@ -2,6 +2,7 @@ package net.bettercombat.mixin;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.client.animation.IExtendedAnimation;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
@@ -20,8 +21,15 @@ public class HeldItemRendererMixin {
     private void dontRenderItem(float tickDelta, MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers,
                                 ClientPlayerEntity player, int light, CallbackInfo ci) {
         Optional<IAnimation> currentAnimation = ((PlayerAttackAnimatable) player).getCurrentAnimation();
-        if (currentAnimation.isPresent() && currentAnimation.get().isActive() ) {
-            ci.cancel();
+        if (currentAnimation.isPresent()) {
+            var isActive = currentAnimation.get().isActive();
+            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
+                isActive = extendedAnimation.isActiveInFirstPerson();
+            }
+
+            if (isActive) {
+                ci.cancel();
+            }
         }
     }
 }

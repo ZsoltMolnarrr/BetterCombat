@@ -2,6 +2,7 @@ package net.bettercombat.mixin;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.client.animation.IExtendedAnimation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -40,8 +41,14 @@ public abstract class WorldRendererMixin {
             currentAnimation = Optional.empty();
         }
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-        if (entity == camera.getFocusedEntity() && !camera.isThirdPerson() && (currentAnimation.isEmpty() || !currentAnimation.get()
-                .isActive())) {
+        var isActive = false;
+        if (currentAnimation.isPresent()) {
+            isActive = currentAnimation.get().isActive();
+            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
+                isActive = extendedAnimation.isActiveInFirstPerson();
+            }
+        }
+        if (entity == camera.getFocusedEntity() && !camera.isThirdPerson() && (currentAnimation.isEmpty() || !isActive)) {
             return;
         }
         renderEntity(entity, cameraX, cameraY, cameraZ, tickDelta, matrices, vertexConsumers);
