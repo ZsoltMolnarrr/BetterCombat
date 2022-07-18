@@ -119,3 +119,4 @@ run/
 
 *.blend1
 example/src/main/resources/data/mcdw/
+example/src/main/resources/data/gate*
