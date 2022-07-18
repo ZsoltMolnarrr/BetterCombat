@@ -16,6 +16,8 @@ public class ClientConfig implements ConfigGroup {
     @ConfigEntry
     public boolean isHighlightAttackIndicatorEnabled = false;
     @ConfigEntry
+    public boolean isShowingArmsInFirstPerson = false;
+    @ConfigEntry
     public TextColor hudHighlightColor = TextColor.fromRgb(0xFF0000);
 
 //    public Listener listener;

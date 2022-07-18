@@ -12,5 +12,7 @@
   "config.bettercombat.clientConfig.hudHighlightColor" : "Highlight color",
   "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "Color applied to HUD elements if needed.",
   "config.bettercombat.clientConfig.feintKey" : "Feint",
-  "config.bettercombat.clientConfig.feintKey.tooltip" : "Cancel attack during upswing phase"
+  "config.bettercombat.clientConfig.feintKey.tooltip" : "Cancel attack during upswing phase",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson": "Show arms in first person",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson.tooltip": "Render arms for attack animations played in first person view"
 }

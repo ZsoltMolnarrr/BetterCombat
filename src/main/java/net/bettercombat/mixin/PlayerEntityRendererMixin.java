@@ -1,6 +1,7 @@
 package net.bettercombat.mixin;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
+import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -33,6 +34,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                                         float f, float g, MatrixStack matrixStack,
                                         VertexConsumerProvider vertexConsumerProvider,
                                         int i, CallbackInfo ci) {
+        var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
         Optional<IAnimation> currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
         if (currentAnimation.isPresent() && currentAnimation.get()
@@ -41,11 +43,15 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             this.model.body.visible = false;
             this.model.leftLeg.visible = false;
             this.model.rightLeg.visible = false;
+            this.model.rightArm.visible = showArms;
+            this.model.leftArm.visible = showArms;
         } else {
             this.model.head.visible = true;
             this.model.body.visible = true;
             this.model.leftLeg.visible = true;
             this.model.rightLeg.visible = true;
+            this.model.rightArm.visible = true;
+            this.model.leftArm.visible = true;
         }
     }
 }
