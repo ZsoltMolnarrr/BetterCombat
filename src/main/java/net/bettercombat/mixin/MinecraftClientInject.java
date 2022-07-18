@@ -195,14 +195,15 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
             MinecraftClient client = thisClient();
             var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
             WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
+            List<Entity> targets = List.of();
             if (attributes != null) {
-                List<Entity> targets = TargetFinder.findAttackTargets(
+                targets = TargetFinder.findAttackTargets(
                     player,
                     getCursorTarget(),
                     hand.attack(),
                     attributes.attackRange());
-                updateTargetsInRage(targets);
             }
+            updateTargetsInRage(targets);
         }
     }
 
