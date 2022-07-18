@@ -23,7 +23,7 @@ public class ClientNetwork {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(Packets.WeaponRegistrySync.ID, (client, handler, buf, responseSender) -> {
-            WeaponRegistry.loadEncodedRegistry(buf);
+            WeaponRegistry.decodeRegistry(buf);
         });
 
         ClientPlayNetworking.registerGlobalReceiver(Packets.ConfigSync.ID, (client, handler, buf, responseSender) -> {

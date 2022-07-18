@@ -98,25 +98,43 @@ public class WeaponRegistry {
             }
         });
 
-        updateEncodedRegistry();
+        encodeRegistry();
     }
 
     // NETWORK SYNC
 
     private static PacketByteBuf encodedRegistrations = PacketByteBufs.create();
 
-    public static void updateEncodedRegistry() {
+    public static void encodeRegistry() {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
         var json = gson.toJson(registrations);
-        LOGGER.info("Updated Weapon Attribute registry: " + json);
-        buffer.writeString(json);
-        LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes() + " bytes");
+        LOGGER.info("Weapon Attribute registry loaded: " + json);
+
+        List<String> chunks = new ArrayList<>();
+        var chunkSize = 10000;
+        for (int i = 0; i < json.length(); i += chunkSize) {
+            chunks.add(json.substring(i, Math.min(json.length(), i + chunkSize)));
+        }
+
+        buffer.writeInt(chunks.size());
+        for (var chunk: chunks) {
+            buffer.writeString(chunk);
+        }
+
+        LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes()
+                + " bytes (in " + chunks.size() + " string chunks with the size of "  + chunkSize + ")");
         encodedRegistrations = buffer;
     }
 
-    public static void loadEncodedRegistry(PacketByteBuf buffer) {
-        String json = buffer.readString();
+    public static void decodeRegistry(PacketByteBuf buffer) {
+        var chunkCount = buffer.readInt();
+        String json = "";
+        for (int i = 0; i < chunkCount; ++i) {
+            json = json.concat(buffer.readString());
+        }
+        LOGGER.info("Decoded Weapon Attribute registry in " + chunkCount + " string chunks");
+        LOGGER.info("Weapon Attribute registry received: " + json);
         var gson = new Gson();
         Type mapType = new TypeToken<Map<String, WeaponAttributes>>() {}.getType();
         Map<String, WeaponAttributes> readRegistrations = gson.fromJson(json, mapType);
