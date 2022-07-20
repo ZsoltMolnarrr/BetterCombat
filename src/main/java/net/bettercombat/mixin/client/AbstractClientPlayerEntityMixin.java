@@ -9,6 +9,7 @@ import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.client.animation.CustomAnimationPlayer;
+import net.bettercombat.client.animation.PoseData;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.PlayerAttackAnimatable;
@@ -29,14 +30,14 @@ import java.util.Optional;
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
 
-    private MirrorModifier poseMirrorModifier = new MirrorModifier();
-    private ModifierLayer poseContainer = new ModifierLayer(null);
+    private final MirrorModifier poseMirrorModifier = new MirrorModifier();
+    private final ModifierLayer poseContainer = new ModifierLayer(null);
 
-    private SpeedModifier attackSpeedModifier = new SpeedModifier();
-    private MirrorModifier attackMirrorModifier = new MirrorModifier();
-    private ModifierLayer attackContainer = new ModifierLayer(null);
-            // new AnimationContainer(null);
-    private KeyframeAnimation lastPose;
+    private final SpeedModifier attackSpeedModifier = new SpeedModifier();
+    private final MirrorModifier attackMirrorModifier = new MirrorModifier();
+    private final ModifierLayer attackContainer = new ModifierLayer(null);
+
+    private PoseData lastPose;
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
@@ -44,12 +45,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
-        ((IAnimatedPlayer) this)
-                .getAnimationStack()
-                .addAnimLayer(1, poseContainer);
-        ((IAnimatedPlayer) this)
-                .getAnimationStack()
-                .addAnimLayer(2000, attackContainer);
+        var stack = ((IAnimatedPlayer) this).getAnimationStack();
+        stack.addAnimLayer(1, poseContainer);
+        stack.addAnimLayer(2000, attackContainer);
+
         poseMirrorModifier.setEnabled(false);
         poseContainer.addModifier(poseMirrorModifier, 0);
 
@@ -75,7 +74,9 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     private void setPose(@Nullable KeyframeAnimation pose) {
-        if (pose == lastPose) {
+        var mirror = shouldMirrorByMainArm();
+        var newPoseData = PoseData.from(pose, mirror);
+        if (lastPose != null && newPoseData.equals(lastPose)) {
             return;
         }
 
@@ -84,12 +85,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         } else {
             var copy = pose.mutableCopy();
             updateAnimationByCurrentActivity(copy);
-            var mirror = shouldMirrorByMainArm();
             poseMirrorModifier.setEnabled(mirror);
             poseContainer.setAnimation(new KeyframeAnimationPlayer(copy.build(), 0));
         }
 
-        lastPose = pose;
+        lastPose = newPoseData;
     }
 
     @Override
