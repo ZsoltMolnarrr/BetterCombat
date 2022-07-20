@@ -1,4 +1,4 @@
-package net.bettercombat.mixin;
+package net.bettercombat.mixin.client.firstpersonrender;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.BetterCombatClient;
@@ -37,22 +37,30 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                                         int i, CallbackInfo ci) {
         var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-        Optional<IAnimation> currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
-        var isActive = false;
-        if (currentAnimation.isPresent()) {
-            isActive = currentAnimation.get().isActive();
-            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
-                isActive = extendedAnimation.isActiveInFirstPerson();
-            }
-        }
-        if (currentAnimation.isPresent() && isActive
-                && entity == MinecraftClient.getInstance().player && !camera.isThirdPerson()) {
+//        Optional<IAnimation> currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
+//        var isActive = false;
+//        if (currentAnimation.isPresent()) {
+//            isActive = currentAnimation.get().isActive();
+//            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
+//                isActive = extendedAnimation.isActiveInFirstPerson();
+//            }
+//        }
+        // if (currentAnimation.isPresent() && isActive && entity == MinecraftClient.getInstance().player && !camera.isThirdPerson()) {
+        if (entity == MinecraftClient.getInstance().player && !camera.isThirdPerson()) {
             this.model.head.visible = false;
             this.model.body.visible = false;
             this.model.leftLeg.visible = false;
             this.model.rightLeg.visible = false;
             this.model.rightArm.visible = showArms;
             this.model.leftArm.visible = showArms;
+
+            this.model.leftSleeve.visible = false;
+            this.model.rightSleeve.visible = false;
+            this.model.leftPants.visible = false;
+            this.model.rightPants.visible = false;
+            this.model.jacket.visible = false;
+//            this.model.cloak.visible = false; // private
+//            this.model.ear.visible = false;  // private
         } else {
             this.model.head.visible = true;
             this.model.body.visible = true;
@@ -60,6 +68,13 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             this.model.rightLeg.visible = true;
             this.model.rightArm.visible = true;
             this.model.leftArm.visible = true;
+
+            this.model.hat.visible = true;
+            this.model.leftSleeve.visible = true;
+            this.model.rightSleeve.visible = true;
+            this.model.leftPants.visible = true;
+            this.model.rightPants.visible = true;
+            this.model.jacket.visible = true;
         }
     }
 }

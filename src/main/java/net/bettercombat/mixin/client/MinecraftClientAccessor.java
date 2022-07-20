@@ -1,4 +1,4 @@
-package net.bettercombat.mixin;
+package net.bettercombat.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;

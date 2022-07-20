@@ -1,7 +1,6 @@
-package net.bettercombat.mixin;
+package net.bettercombat.mixin.client;
 
 import com.mojang.authlib.GameProfile;
-import dev.kosmx.playerAnim.api.layered.AnimationContainer;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;

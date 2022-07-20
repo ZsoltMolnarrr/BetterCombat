@@ -11,16 +11,16 @@
     "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
-    "ColliderDebugRenderer",
-    "MinecraftClientAccessor",
-    "MinecraftClientInject",
-    "AbstractClientPlayerEntityMixin",
-    "InGameHudInject",
-    "WorldRendererMixin",
-    "PlayerEntityRendererMixin",
-    "HeldItemRendererMixin",
-    "LivingEntityRendererMixin",
-    "ArmorFeatureRendererMixin"
+    "client.ColliderDebugRenderer",
+    "client.MinecraftClientAccessor",
+    "client.MinecraftClientInject",
+    "client.AbstractClientPlayerEntityMixin",
+    "client.InGameHudInject",
+    "client.firstpersonrender.WorldRendererMixin",
+    "client.firstpersonrender.PlayerEntityRendererMixin",
+    "client.firstpersonrender.HeldItemRendererMixin",
+    "client.firstpersonrender.LivingEntityRendererMixin",
+    "client.firstpersonrender.ArmorFeatureRendererMixin"
   ],
   "server": [
   ],

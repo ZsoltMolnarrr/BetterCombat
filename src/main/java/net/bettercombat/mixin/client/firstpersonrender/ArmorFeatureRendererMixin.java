@@ -1,9 +1,5 @@
-package net.bettercombat.mixin;
+package net.bettercombat.mixin.client.firstpersonrender;
 
-import dev.kosmx.playerAnim.api.layered.IAnimation;
-import net.bettercombat.client.BetterCombatClient;
-import net.bettercombat.client.PlayerAttackAnimatable;
-import net.bettercombat.client.animation.IExtendedAnimation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -14,8 +10,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Optional;
 
 @Mixin(ArmorFeatureRenderer.class)
 public class ArmorFeatureRendererMixin {
