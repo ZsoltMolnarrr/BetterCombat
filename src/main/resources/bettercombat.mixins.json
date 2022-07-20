@@ -19,7 +19,8 @@
     "WorldRendererMixin",
     "PlayerEntityRendererMixin",
     "HeldItemRendererMixin",
-    "LivingEntityRendererMixin"
+    "LivingEntityRendererMixin",
+    "ArmorFeatureRendererMixin"
   ],
   "server": [
   ],
