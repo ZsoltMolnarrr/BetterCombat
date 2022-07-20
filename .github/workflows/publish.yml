@@ -40,3 +40,4 @@ jobs:
       env:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
         MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
+        GH_API_KEY: ${{ secrets.GH_API_KEY }}
