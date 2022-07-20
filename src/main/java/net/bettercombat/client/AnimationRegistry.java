@@ -16,7 +16,7 @@ public class AnimationRegistry {
     public static Map<String, KeyframeAnimation> animations = new HashMap<>();
 
     public static void load(ResourceManager resourceManager) {
-        var dataFolder = "weapon_animations";
+        var dataFolder = "attack_animations";
         for (Identifier identifier : resourceManager.findResources(dataFolder, fileName -> fileName.endsWith(".json"))) {
             try {
                 var resource = resourceManager.getResource(identifier);

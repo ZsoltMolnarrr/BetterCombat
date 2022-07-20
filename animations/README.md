@@ -53,7 +53,7 @@ Make sure to adjust the following properties:
 
 - `emoteDescription` - What is this animation
 - `author` - Your name
-- `outputDirectory` - Relative path to `weapon_animations` resources folder of your mod
+- `outputDirectory` - Relative path to `attack_animations` resources folder of your mod
 - `endFrame` - The last frame of your animation
 - `stopFrame` - `endFrame` + 50% of your animation length
 
