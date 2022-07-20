@@ -1,10 +1,7 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
-import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.BetterCombatClient;
-import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
-import net.bettercombat.client.animation.IExtendedAnimation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.Camera;
@@ -37,24 +34,10 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                                         VertexConsumerProvider vertexConsumerProvider,
                                         int i, CallbackInfo ci) {
         var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
-        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-        Optional<IAnimation> currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
-        var isActive = false;
-        if (currentAnimation.isPresent()) {
-            isActive = currentAnimation.get().isActive();
-//            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
-//                isActive = extendedAnimation.isActiveInFirstPerson();
-//            }
-        }
-
-        if (entity == MinecraftClient.getInstance().player  && !camera.isThirdPerson()) {
-            if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel || FirstPersonRenderHelper.isRenderingThirdPersonPlayerModel) {
-                setPartsVisible(false);
-            }
-            if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
-                this.model.rightArm.visible = showArms;
-                this.model.leftArm.visible = showArms;
-            }
+        if (entity == MinecraftClient.getInstance().player && FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+            setPartsVisible(false);
+            this.model.rightArm.visible = showArms;
+            this.model.leftArm.visible = showArms;
         } else {
             setPartsVisible(true);
         }

@@ -18,12 +18,8 @@ public class ArmorFeatureRendererMixin {
     private <T extends LivingEntity> void dontRenderArmor(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider,
                                                           int i, T entity, float f, float g, float h, float j, float k,
                                                           float l, CallbackInfo ci) {
-        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-        if (entity == MinecraftClient.getInstance().player) {
-            if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel
-                    || (!camera.isThirdPerson() && FirstPersonRenderHelper.isRenderingThirdPersonPlayerModel)) {
-                ci.cancel();
-            }
+        if (entity == MinecraftClient.getInstance().player && FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+            ci.cancel();
         }
     }
 }

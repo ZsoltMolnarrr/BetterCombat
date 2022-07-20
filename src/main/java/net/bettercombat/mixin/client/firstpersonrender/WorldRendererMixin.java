@@ -56,9 +56,7 @@ public abstract class WorldRendererMixin {
                 FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel = false;
             }
         } else {
-            FirstPersonRenderHelper.isRenderingThirdPersonPlayerModel = true;
             renderEntity(entity, cameraX, cameraY, cameraZ, tickDelta, matrices, vertexConsumers);
-            FirstPersonRenderHelper.isRenderingThirdPersonPlayerModel = false;
         }
     }
 }
