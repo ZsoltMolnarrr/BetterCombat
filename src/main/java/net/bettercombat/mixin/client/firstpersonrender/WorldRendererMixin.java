@@ -2,6 +2,7 @@ package net.bettercombat.mixin.client.firstpersonrender;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.client.animation.IExtendedAnimation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
@@ -48,9 +49,16 @@ public abstract class WorldRendererMixin {
                 isActive = extendedAnimation.isActiveInFirstPerson();
             }
         }
-        if (entity == camera.getFocusedEntity() && !camera.isThirdPerson() && (currentAnimation.isEmpty() || !isActive)) {
-            return;
+        if (entity == camera.getFocusedEntity() && !camera.isThirdPerson()) {
+            if(isActive) {
+                FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel = true;
+                renderEntity(entity, cameraX, cameraY, cameraZ, tickDelta, matrices, vertexConsumers);
+                FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel = false;
+            }
+        } else {
+            FirstPersonRenderHelper.isRenderingThirdPersonPlayerModel = true;
+            renderEntity(entity, cameraX, cameraY, cameraZ, tickDelta, matrices, vertexConsumers);
+            FirstPersonRenderHelper.isRenderingThirdPersonPlayerModel = false;
         }
-        renderEntity(entity, cameraX, cameraY, cameraZ, tickDelta, matrices, vertexConsumers);
     }
 }

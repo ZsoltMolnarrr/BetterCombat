@@ -1,5 +1,6 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
+import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -18,8 +19,11 @@ public class ArmorFeatureRendererMixin {
                                                           int i, T entity, float f, float g, float h, float j, float k,
                                                           float l, CallbackInfo ci) {
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-        if (entity == MinecraftClient.getInstance().player && !camera.isThirdPerson()) {
-            ci.cancel();
+        if (entity == MinecraftClient.getInstance().player) {
+            if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel
+                    || (!camera.isThirdPerson() && FirstPersonRenderHelper.isRenderingThirdPersonPlayerModel)) {
+                ci.cancel();
+            }
         }
     }
 }
