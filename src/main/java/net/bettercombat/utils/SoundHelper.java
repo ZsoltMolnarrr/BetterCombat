@@ -31,6 +31,7 @@ public class SoundHelper {
                     sound.volume(),
                     pitch);
         } catch (Exception e) {
+            System.out.println("Failed to play sound: " + sound.id());
             e.printStackTrace();
         }
     }

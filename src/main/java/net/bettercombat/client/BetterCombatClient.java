@@ -17,11 +17,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.Map;
 
@@ -37,7 +38,9 @@ public class BetterCombatClient implements ClientModInitializer {
         ClientNetwork.initializeHandlers();
 //        AnimationRegistry.load(MinecraftClient.getInstance().getResourceManager());
         ClientLifecycleEvents.CLIENT_STARTED.register((client) -> {
-            AnimationRegistry.load(MinecraftClient.getInstance().getResourceManager());
+            var resourceManager = MinecraftClient.getInstance().getResourceManager();
+            AnimationRegistry.load(resourceManager);
+            registerSounds(resourceManager);
         });
         settings.load();
         ConfigRegistry.setMainConfig(settings);
@@ -45,7 +48,6 @@ public class BetterCombatClient implements ClientModInitializer {
             ConfigScreenBuilder.setMain(BetterCombat.MODID, new ClothConfigScreenBuilder());
         }
         registerKeyBindings();
-        registerSounds();
     }
 
     private void registerKeyBindings() {
@@ -57,12 +59,11 @@ public class BetterCombatClient implements ClientModInitializer {
         KeyBindingHelper.registerKeyBinding(feintKeyBinding);
     }
 
-    private void registerSounds() {
-        var url = BetterCombatClient.class.getResource("/assets/" + BetterCombat.MODID + "/sounds.json");
-        var filePath = url.getPath();
-
+    private void registerSounds(ResourceManager resourceManager) {
         try {
-            JsonReader reader = new JsonReader(new FileReader(filePath));
+            var resource = resourceManager.getResource(new Identifier(BetterCombat.MODID, "sounds.json"));
+            JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
+            reader.setLenient(true);
             var gson = new Gson();
             Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
             Map<String, Object> sounds = gson.fromJson(reader, mapType);
@@ -71,6 +72,7 @@ public class BetterCombatClient implements ClientModInitializer {
                 var soundEvent = new SoundEvent(soundId);
                 Registry.register(Registry.SOUND_EVENT, soundId, soundEvent);
             });
+            reader.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
