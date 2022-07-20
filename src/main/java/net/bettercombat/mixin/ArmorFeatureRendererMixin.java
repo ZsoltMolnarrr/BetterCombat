@@ -24,20 +24,7 @@ public class ArmorFeatureRendererMixin {
                                                           int i, T entity, float f, float g, float h, float j, float k,
                                                           float l, CallbackInfo ci) {
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-        Optional<IAnimation> currentAnimation = Optional.empty();
-        if(entity instanceof PlayerAttackAnimatable) {
-            currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
-        }
-
-        var isActive = false;
-        if (currentAnimation.isPresent()) {
-            isActive = currentAnimation.get().isActive();
-            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
-                isActive = extendedAnimation.isActiveInFirstPerson();
-            }
-        }
-        if (currentAnimation.isPresent() && isActive
-                && entity == MinecraftClient.getInstance().player && !camera.isThirdPerson()) {
+        if (entity == MinecraftClient.getInstance().player && !camera.isThirdPerson()) {
             ci.cancel();
         }
     }
