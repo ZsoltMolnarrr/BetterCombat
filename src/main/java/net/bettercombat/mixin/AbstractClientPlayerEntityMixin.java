@@ -4,6 +4,9 @@ import com.mojang.authlib.GameProfile;
 import dev.kosmx.playerAnim.api.layered.AnimationContainer;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
+import dev.kosmx.playerAnim.api.layered.ModifierLayer;
+import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
+import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.client.animation.CustomAnimationPlayer;
@@ -27,8 +30,13 @@ import java.util.Optional;
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
 
-    private AnimationContainer poseContainer = new AnimationContainer(null);
-    private AnimationContainer attackContainer = new AnimationContainer(null);
+    private MirrorModifier poseMirrorModifier = new MirrorModifier();
+    private ModifierLayer poseContainer = new ModifierLayer(null);
+
+    private SpeedModifier attackSpeedModifier = new SpeedModifier();
+    private MirrorModifier attackMirrorModifier = new MirrorModifier();
+    private ModifierLayer attackContainer = new ModifierLayer(null);
+            // new AnimationContainer(null);
     private KeyframeAnimation lastPose;
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
@@ -43,6 +51,12 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         ((IAnimatedPlayer) this)
                 .getAnimationStack()
                 .addAnimLayer(2000, attackContainer);
+        poseMirrorModifier.setEnabled(false);
+        poseContainer.addModifier(poseMirrorModifier, 0);
+
+        attackMirrorModifier.setEnabled(false);
+        attackContainer.addModifier(attackSpeedModifier, 0);
+        attackContainer.addModifier(attackMirrorModifier, 0);
     }
 
     @Override
@@ -51,7 +65,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var player = (PlayerEntity)instance;
         KeyframeAnimation newPose = null;
         if (player.handSwinging) {
-            setPose(newPose);
+            setPose(newPose); // null
             return;
         }
         var attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
@@ -67,12 +81,13 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         }
 
         if (pose == null) {
-            this.poseContainer.setAnim(null);
+            this.poseContainer.setAnimation(null);
         } else {
             var copy = pose.mutableCopy();
             updateAnimationByCurrentActivity(copy);
             var mirror = shouldMirrorByMainArm();
-            this.poseContainer.setAnim(new KeyframeAnimationPlayer(copy.build(), 0));
+            poseMirrorModifier.setEnabled(mirror);
+            poseContainer.setAnimation(new KeyframeAnimationPlayer(copy.build(), 0));
         }
 
         lastPose = pose;
@@ -90,7 +105,9 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             if(shouldMirrorByMainArm()) {
                 mirror = !mirror;
             }
-            attackContainer.setAnim(new CustomAnimationPlayer(copy.build(), 0));
+            attackSpeedModifier.speed = speed;
+            attackMirrorModifier.setEnabled(mirror);
+            attackContainer.setAnimation(new CustomAnimationPlayer(copy.build(), 0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,7 +157,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public void stopAttackAnimation() {
-        IAnimation currentAnimation = attackContainer.getAnim();
+        IAnimation currentAnimation = attackContainer.getAnimation();
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
              ((KeyframeAnimationPlayer)currentAnimation).stop();
         }
@@ -156,6 +173,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public Optional<IAnimation> getCurrentAnimation() {
-        return Optional.ofNullable(attackContainer.getAnim());
+        return Optional.ofNullable(attackContainer.getAnimation());
     }
 }
