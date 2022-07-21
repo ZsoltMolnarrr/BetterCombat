@@ -73,6 +73,11 @@ Weapon attributes can describe:
   - Animation
   - Sounds
 
+Each mod should provide their own resources files for compatibility for the following reasons:
+- A single source of configuration files is difficult to maintain
+- Every mod developer should decide how their weapon is meant to behave
+- Some mods may to disable semantically conflicting features
+
 Let's see an example where we add attributes to a custom sword named "Claymore" from your mod:
 - mod id is `my-mod-id`
 - item id of the Claymore is `my-mod-id:claymore`
