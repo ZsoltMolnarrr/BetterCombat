@@ -4,7 +4,6 @@ import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -15,8 +14,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Optional;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity,
@@ -36,7 +33,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         if (!FirstPersonRenderHelper.isFeatureEnabled) {
             return;
         }
-        
+
         var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
         if (entity == MinecraftClient.getInstance().player && FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
             setPartsVisible(false);

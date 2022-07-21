@@ -2,18 +2,25 @@ package net.bettercombat.mixin.client.firstpersonrender;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.client.animation.IExtendedAnimation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
+import net.minecraft.client.render.entity.feature.PlayerHeldItemFeatureRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Mixin(LivingEntityRenderer.class)
 public class LivingEntityRendererMixin {
@@ -39,6 +46,21 @@ public class LivingEntityRendererMixin {
             if (isActive) {
                 args.set(3, MathHelper.lerpAngleDegrees(args.get(4), entity.prevHeadYaw, entity.headYaw));
             }
+        }
+    }
+
+    @Shadow List<Object> features;
+
+    @Redirect(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
+            at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/LivingEntityRenderer;features:Ljava/util/List;", opcode = Opcodes.GETFIELD))
+    private List<Object> asd(LivingEntityRenderer renderer) {
+        if (FirstPersonRenderHelper.isFeatureEnabled && FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+            return features.stream()
+                    .filter( item -> {
+                        return item instanceof PlayerHeldItemFeatureRenderer;
+                    }).collect(Collectors.toList());
+        } else {
+            return features;
         }
     }
 }

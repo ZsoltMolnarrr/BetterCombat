@@ -19,8 +19,7 @@
     "client.firstpersonrender.WorldRendererMixin",
     "client.firstpersonrender.PlayerEntityRendererMixin",
     "client.firstpersonrender.HeldItemRendererMixin",
-    "client.firstpersonrender.LivingEntityRendererMixin",
-    "client.firstpersonrender.ArmorFeatureRendererMixin"
+    "client.firstpersonrender.LivingEntityRendererMixin"
   ],
   "server": [
   ],
