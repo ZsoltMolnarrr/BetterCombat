@@ -4,27 +4,20 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudInject {
-    @Redirect(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
-    public void pre_renderCrosshair(InGameHud instance, MatrixStack matrixStack, int x, int y, int u, int v, int width, int height) {
-        if (u == 0 && v == 0) {
-            if (BetterCombatClient.config.isHighlightCrosshairEnabled) {
-                setShaderForHighlighting();
-            }
-        } else {
-            if (BetterCombatClient.config.isHighlightAttackIndicatorEnabled) {
-                setShaderForHighlighting();
-            }
+    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
+    public void pre_renderCrosshair(MatrixStack matrices, CallbackInfo ci) {
+        if (BetterCombatClient.config.isHighlightCrosshairEnabled) {
+            setShaderForHighlighting();
         }
-        DrawableHelper.drawTexture(matrixStack, x, y, instance.getZOffset(), u, v, width, height, 256, 256);
     }
 
     private void setShaderForHighlighting() {
