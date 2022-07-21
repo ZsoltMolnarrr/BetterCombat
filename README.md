@@ -78,21 +78,21 @@ Each mod should provide their own resources files for compatibility for the foll
 - Every mod developer should decide how their weapon is meant to behave
 - Some mods may to disable semantically conflicting features
 
-Let's see an example where we add attributes to a custom sword named "Claymore" from your mod:
+Let's see an example where we add attributes to a custom sword named "Big Sword" from your mod:
 - mod id is `my-mod-id`
-- item id of the Claymore is `my-mod-id:claymore`
+- id of the item is `my-mod-id:big_sword`
 
-To assign weapon attributes to the Claymore, create a new json file at the following location:
+To assign weapon attributes to the Big Sword, create a new json file at the following location:
 
-```resources/data/my-mod-id/weapon_attributes/claymore.json```
+```resources/data/my-mod-id/weapon_attributes/big_sword.json```
 
 The content of this json file should be the following:
 
 ## Using a preset
 
-Presets are a collection of weapon attributes bundled with this mod, covering the most common use cases.
+Presets are out of the box collection of weapon attributes bundled with this mod, covering the common weapon types.
 
-Example for using the `bettercombat:claymore` for our Claymore:
+A fitting preset for a big two handed sword is the `claymore` from Better Combat, its identifier is: `bettercombat:claymore`. To use this preset add the following content to your JSON file:
 
 ```
 {
