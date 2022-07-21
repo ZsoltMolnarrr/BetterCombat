@@ -48,6 +48,7 @@ public class BetterCombatClient implements ClientModInitializer {
             ConfigScreenBuilder.setMain(BetterCombat.MODID, new ClothConfigScreenBuilder());
         }
         registerKeyBindings();
+        WeaponAttributeTooltip.initialize();
     }
 
     private void registerKeyBindings() {
