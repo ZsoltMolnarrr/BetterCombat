@@ -29,7 +29,8 @@ public class LivingEntityRendererMixin {
         //When in first person make the animation play facing forward, instead of slowly adjusting to player rotations
         if (currentAnimation.isPresent()
                 && entity == MinecraftClient.getInstance().player
-                && !camera.isThirdPerson()) {
+//                && !camera.isThirdPerson()    // Fix issue #11 - To be removed when a better solution is found
+        ) {
             var isActive = currentAnimation.get().isActive();
             if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
                 isActive = extendedAnimation.isActiveInFirstPerson();
