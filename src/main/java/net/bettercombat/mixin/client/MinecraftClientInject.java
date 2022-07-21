@@ -206,7 +206,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         if (player == null) {
             return;
         }
-        if ((BetterCombatClient.config.isHighlightAttackIndicatorEnabled || BetterCombatClient.config.isHighlightCrosshairEnabled)
+        if ((BetterCombatClient.config.isHighlightCrosshairEnabled)
                 && !ranTargetCheckCurrentTick) {
             MinecraftClient client = thisClient();
             var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());

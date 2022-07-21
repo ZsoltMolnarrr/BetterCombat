@@ -9,8 +9,6 @@
   "config.bettercombat.clientConfig.isSwingThruGrassEnabled.tooltip" : "Attack instead of mining zero hardness blocks with weapons",
   "config.bettercombat.clientConfig.isHighlightCrosshairEnabled" : "Highlight crosshair",
   "config.bettercombat.clientConfig.isHighlightCrosshairEnabled.tooltip" : "Highlights the crosshair if enemies are close enough to strike.\nWARNING! Enabling this might reduce frame rate significantly.",
-  "config.bettercombat.clientConfig.isHighlightAttackIndicatorEnabled" : "Highlight attack indicator",
-  "config.bettercombat.clientConfig.isHighlightAttackIndicatorEnabled.tooltip" : "Highlights the attack indicator if enemies are close enough to strike.\nWARNING! Enabling this might reduce frame rate significantly.",
   "config.bettercombat.clientConfig.hudHighlightColor" : "Highlight color",
   "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "Color applied to HUD elements if needed.",
   "config.bettercombat.clientConfig.feintKey" : "Feint",

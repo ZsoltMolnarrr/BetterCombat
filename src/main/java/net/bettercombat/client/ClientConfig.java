@@ -14,8 +14,6 @@ public class ClientConfig implements ConfigGroup {
     @ConfigEntry
     public boolean isHighlightCrosshairEnabled = false;
     @ConfigEntry
-    public boolean isHighlightAttackIndicatorEnabled = false;
-    @ConfigEntry
     public TextColor hudHighlightColor = TextColor.fromRgb(0xFF0000);
     @ConfigEntry
     public boolean isShowingArmsInFirstPerson = false;
