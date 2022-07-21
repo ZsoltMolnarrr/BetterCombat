@@ -58,7 +58,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     }
 
     // Hold to attack
-    @Inject(method = "handleBlockBreaking",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
     private void pre_handleBlockBreaking(boolean bl, CallbackInfo ci) {
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
@@ -81,6 +81,17 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
             }
         }
     }
+
+    @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
+    private void pre_doItemUse(CallbackInfo ci) {
+        var hand = getCurrentHand();
+        if (hand == null) { return; }
+        double upswingRate = hand.upswingRate();
+        if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
+            ci.cancel();
+        }
+    }
+
 
     private boolean isTargetingMineableBlock() {
         if (!BetterCombatClient.config.isMiningWithWeaponsEnabled) {
@@ -111,6 +122,8 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     private int lastAttacked = 1000;
 
     private void startUpswing(WeaponAttributes attributes) {
+        // Guard conditions
+
         var hand = getCurrentHand();
         if (hand == null) { return; }
         double upswingRate = hand.upswingRate();
@@ -120,6 +133,9 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
 //            System.out.println("Waiting for cooldown: " + currentCD + "/" + attackCooldownTicks);
             return;
         }
+
+        // Starting upswing
+        player.stopUsingItem();
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
         float attackCooldownTicks = PlayerAttackHelper.getScaledAttackCooldown(player);
@@ -184,6 +200,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         attackFromUpswingIfNeeded();
         resetComboIfNeeded();
     }
+
     @Inject(method = "tick",at = @At("TAIL"))
     private void post_Tick(CallbackInfo ci) {
         if (player == null) {
