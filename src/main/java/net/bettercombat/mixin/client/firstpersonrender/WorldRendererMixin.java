@@ -28,6 +28,9 @@ public abstract class WorldRendererMixin {
             "/Camera;" +
             "isThirdPerson()Z"))
     private boolean renderInFirstPerson(Camera instance) {
+        if (!FirstPersonRenderHelper.isFeatureEnabled) {
+            return instance.isThirdPerson();
+        }
         return true;
     }
 
@@ -35,6 +38,11 @@ public abstract class WorldRendererMixin {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderEntity(Lnet/minecraft/entity/Entity;DDDFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V"))
     private void dontRenderEntity(WorldRenderer instance, Entity entity, double cameraX, double cameraY, double cameraZ,
                                   float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
+        if (!FirstPersonRenderHelper.isFeatureEnabled) {
+            renderEntity(entity, cameraX, cameraY, cameraZ, tickDelta, matrices, vertexConsumers);
+            return;
+        }
+
         Optional<IAnimation> currentAnimation;
         if (entity instanceof PlayerAttackAnimatable) {
             currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();

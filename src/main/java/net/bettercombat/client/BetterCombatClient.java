@@ -8,6 +8,7 @@ import me.lortseam.completeconfig.data.ConfigRegistry;
 import me.lortseam.completeconfig.gui.ConfigScreenBuilder;
 import me.lortseam.completeconfig.gui.cloth.ClothConfigScreenBuilder;
 import net.bettercombat.BetterCombat;
+import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,6 +50,10 @@ public class BetterCombatClient implements ClientModInitializer {
         }
         registerKeyBindings();
         WeaponAttributeTooltip.initialize();
+
+        if (FabricLoader.getInstance().isModLoaded("firstperson")) {
+            FirstPersonRenderHelper.isFeatureEnabled = false;
+        }
     }
 
     private void registerKeyBindings() {
