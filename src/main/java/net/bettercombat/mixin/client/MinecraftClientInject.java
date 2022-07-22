@@ -135,6 +135,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         }
 
         // Starting upswing
+        player.setBodyYaw(player.getHeadYaw()); // Restore auto body rotation upon swing - Fix issue #11
         player.stopUsingItem();
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
