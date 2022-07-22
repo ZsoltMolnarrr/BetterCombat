@@ -1,23 +1,21 @@
 package net.bettercombat.mixin;
 
-import net.bettercombat.logic.WeaponRegistry;
+import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
-import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.minecraft.entity.EquipmentSlot.MAINHAND;
 import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(PlayerEntity.class)
@@ -32,13 +30,14 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
 
     // FEATURE: Disable sweeping for our weapons
 
-    @Redirect(method = "attack(Lnet/minecraft/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
-    public Item replaceSword(ItemStack instance) {
-        if (WeaponRegistry.getAttributes(instance) != null) {
-            return Items.AIR;
-        } else {
-            return instance.getItem();
+    @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 3)
+    private boolean disableSweeping(boolean value) {
+        var player = ((PlayerEntity) ((Object)this) );
+        var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
+        if (currentHand != null) {
+            return false;
         }
+        return value;
     }
 
 //    @Redirect(method = "attack(Lnet/minecraft/entity/Entity;)V",
