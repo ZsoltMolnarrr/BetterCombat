@@ -4,22 +4,23 @@
   "package": "net.bettercombat.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "PlayerEntityAccessor",
-    "PlayerEntityInject",
     "LivingEntityAccessor",
     "LivingEntityInject",
+    "PlayerEntityAccessor",
+    "PlayerEntityInject",
     "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
+    "client.AbstractClientPlayerEntityMixin",
     "client.ColliderDebugRenderer",
+    "client.InGameHudInject",
     "client.MinecraftClientAccessor",
     "client.MinecraftClientInject",
-    "client.AbstractClientPlayerEntityMixin",
-    "client.InGameHudInject",
-    "client.firstpersonrender.WorldRendererMixin",
-    "client.firstpersonrender.PlayerEntityRendererMixin",
+    "client.firstpersonrender.EntityRenderDispatcherMixin",
     "client.firstpersonrender.HeldItemRendererMixin",
-    "client.firstpersonrender.LivingEntityRendererMixin"
+    "client.firstpersonrender.LivingEntityRendererMixin",
+    "client.firstpersonrender.PlayerEntityRendererMixin",
+    "client.firstpersonrender.WorldRendererMixin"
   ],
   "server": [
   ],
