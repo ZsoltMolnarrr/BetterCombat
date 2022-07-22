@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.minecraft.entity.EquipmentSlot.MAINHAND;
+import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityInject implements PlayerAttackProperties {
@@ -65,19 +66,22 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
 
     @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
     public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
-        if (slot == EquipmentSlot.OFFHAND) {
-            var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
-            var attributes = WeaponRegistry.getAttributes(mainHandStack);
-            if (attributes != null && attributes.isTwoHanded()) {
-                cir.setReturnValue(ItemStack.EMPTY);
-                cir.cancel();
-                return;
-            }
+        var mainHandHasTwoHanded = false;
+        var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
+        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
+        if (mainHandAttributes != null && mainHandAttributes.isTwoHanded()) {
+            mainHandHasTwoHanded = true;
         }
-        if (slot == MAINHAND) {
-            var offHandStack = ((PlayerEntityAccessor)this).getInventory().offHand.get(0);
-            var attributes = WeaponRegistry.getAttributes(offHandStack);
-            if(attributes != null && attributes.isTwoHanded()) {
+
+        var offHandHasTwoHanded = false;
+        var offHandStack = ((PlayerEntityAccessor)this).getInventory().offHand.get(0);
+        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
+        if(offHandAttributes != null && offHandAttributes.isTwoHanded()) {
+            offHandHasTwoHanded = true;
+        }
+
+        if (slot == OFFHAND) {
+            if (mainHandHasTwoHanded || offHandHasTwoHanded) {
                 cir.setReturnValue(ItemStack.EMPTY);
                 cir.cancel();
                 return;

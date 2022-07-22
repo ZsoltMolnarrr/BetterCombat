@@ -1,5 +1,6 @@
 {
   "attribute.name.generic.attack_range" : "Attack Range",
+  "item.modifiers.two_handed": "Two-Handed",
 
   "config.bettercombat.clientConfig.isHoldToAttackEnabled" : "Hold to attack",
   "config.bettercombat.clientConfig.isHoldToAttackEnabled.tooltip" : "Automatically attack while holding the attack button",
