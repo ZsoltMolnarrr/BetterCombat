@@ -103,7 +103,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
         }
     }
 
-    // FEATURE: Dual wielded attacking
+    // FEATURE: Dual wielding
 
     private Multimap<EntityAttribute, EntityAttributeModifier> dualWieldingAttributeMap;
 
@@ -124,13 +124,11 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
                                 multiplier,
                                 EntityAttributeModifier.Operation.MULTIPLY_BASE));
                 player.getAttributes().addTemporaryModifiers(dualWieldingAttributeMap);
-                System.out.println("Adding dual wielding speed boost");
             } else {
                 // Just stopped dual wielding
                 // Removing speed boost modifier
                 if (dualWieldingAttributeMap != null) { // Safety first... Who knows...
                     player.getAttributes().removeModifiers(dualWieldingAttributeMap);
-                    System.out.println("Removing dual wielding speed boost");
                     dualWieldingAttributeMap = null;
                 }
             }
