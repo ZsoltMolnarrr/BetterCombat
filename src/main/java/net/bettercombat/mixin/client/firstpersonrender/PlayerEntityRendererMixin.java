@@ -38,7 +38,9 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         if (entity == MinecraftClient.getInstance().player && FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
             setPartsVisible(false);
             this.model.rightArm.visible = showArms;
+            this.model.rightSleeve.visible = showArms;
             this.model.leftArm.visible = showArms;
+            this.model.leftSleeve.visible = showArms;
         } else {
             setPartsVisible(true);
         }
