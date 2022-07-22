@@ -1,10 +1,16 @@
 package net.bettercombat.mixin;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -20,12 +26,21 @@ import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityInject implements PlayerAttackProperties {
+    private int comboCount = 0;
+    public int getComboCount() {
+        return comboCount;
+    }
+    public void setComboCount(int comboCount) {
+        this.comboCount = comboCount;
+    }
+
     @Inject(method = "tick", at = @At("TAIL"))
     public void post_Tick(CallbackInfo ci) {
         var instance = (Object)this;
         if (((PlayerEntity)instance).world.isClient()) {
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
         }
+        updateDualWieldingSpeedBoost();
     }
 
     // FEATURE: Disable sweeping for our weapons
@@ -90,26 +105,45 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
 
     // FEATURE: Dual wielded attacking
 
-    int comboCount = 0;
+    private Multimap<EntityAttribute, EntityAttributeModifier> dualWieldingAttributeMap;
 
-    public int getComboCount() {
-        return comboCount;
-    }
-
-    public void setComboCount(int comboCount) {
-        this.comboCount = comboCount;
-    }
-
-    @Redirect(method = "getAttackCooldownProgress", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;getAttackCooldownProgressPerTick()F"))
-    public float getAttackCooldownProgressPerTick_Redirect(PlayerEntity instance) {
-        // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownTicks`
-        return PlayerAttackHelper.getScaledAttackCooldown(instance);
+    private void updateDualWieldingSpeedBoost() {
+        var player = ((PlayerEntity) ((Object)this));
+        var newState = PlayerAttackHelper.isDualWielding(player);
+        var currentState = dualWieldingAttributeMap != null;
+        if (newState != currentState) {
+            if(newState) {
+                // Just started dual wielding
+                // Adding speed boost modifier
+                this.dualWieldingAttributeMap = HashMultimap.create();
+                double multiplier = BetterCombat.config.dual_wielding_attack_speed_multiplier - 1;
+                dualWieldingAttributeMap.put(
+                        EntityAttributes.GENERIC_ATTACK_SPEED,
+                        new EntityAttributeModifier(
+                                "Dual wielding attack speed boost",
+                                multiplier,
+                                EntityAttributeModifier.Operation.MULTIPLY_BASE));
+                player.getAttributes().addTemporaryModifiers(dualWieldingAttributeMap);
+                System.out.println("Adding dual wielding speed boost");
+            } else {
+                // Just stopped dual wielding
+                // Removing speed boost modifier
+                if (dualWieldingAttributeMap != null) { // Safety first... Who knows...
+                    player.getAttributes().removeModifiers(dualWieldingAttributeMap);
+                    System.out.println("Removing dual wielding speed boost");
+                    dualWieldingAttributeMap = null;
+                }
+            }
+        }
     }
 
     @Redirect(method = "attack", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;"))
     public ItemStack getMainHandStack_Redirect(PlayerEntity instance) {
+        // DUAL WIELDING LOGIC
+        // Here we return the off-hand stack as fake main-hand, purpose:
+        // - Getting enchants
+        // - Getting itemstack to be damaged
         if (comboCount < 0) {
             // Vanilla behaviour
             return instance.getMainHandStack();
@@ -127,28 +161,11 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
     }
 
     @Redirect(method = "attack", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"))
-    public ItemStack getStackInHand_Redirect(PlayerEntity instance, Hand handArg) {
-        if (comboCount < 0) {
-            // Vanilla behaviour
-            return instance.getStackInHand(handArg);
-        }
-        // `handArg` argument is always `MAIN`, we can ignore it
-        var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
-        if (hand == null) {
-            var isOffHand = PlayerAttackHelper.shouldAttackWithOffHand(instance, comboCount);
-            if (isOffHand) {
-                return ItemStack.EMPTY;
-            } else {
-                return instance.getStackInHand(handArg);
-            }
-        }
-        return hand.itemStack();
-    }
-
-    @Redirect(method = "attack", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;setStackInHand(Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V"))
     public void setStackInHand_Redirect(PlayerEntity instance, Hand handArg, ItemStack itemStack) {
+        // DUAL WIELDING LOGIC
+        // In case item got destroyed due to durability loss
+        // We empty the correct hand
         if (comboCount < 0) {
             // Vanilla behaviour
             instance.setStackInHand(handArg, itemStack);
