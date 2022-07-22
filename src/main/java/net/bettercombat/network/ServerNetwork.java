@@ -26,7 +26,7 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -127,7 +127,7 @@ public class ServerNetwork {
                     } else {
                         if (player.squaredDistanceTo(entity) < range * BetterCombat.config.target_search_range_multiplier) {
                             if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity || entity instanceof PersistentProjectileEntity || entity == player) {
-                                handler.disconnect(new TranslatableText("multiplayer.disconnect.invalid_entity_attacked"));
+                                handler.disconnect(Text.translatable("multiplayer.disconnect.invalid_entity_attacked"));
                                 LOGGER.warn("Player {} tried to attack an invalid entity", (Object)player.getName().getString());
                                 return;
                             }

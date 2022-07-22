@@ -23,6 +23,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -67,17 +68,22 @@ public class BetterCombatClient implements ClientModInitializer {
     private void registerSounds(ResourceManager resourceManager) {
         try {
             var resource = resourceManager.getResource(new Identifier(BetterCombat.MODID, "sounds.json"));
-            JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
-            reader.setLenient(true);
-            var gson = new Gson();
-            Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
-            Map<String, Object> sounds = gson.fromJson(reader, mapType);
-            sounds.forEach((key, value) -> {
-                var soundId = new Identifier(BetterCombat.MODID, key);
-                var soundEvent = new SoundEvent(soundId);
-                Registry.register(Registry.SOUND_EVENT, soundId, soundEvent);
-            });
-            reader.close();
+            if (resource.isPresent()) {
+                try (InputStream inputStream = resource.get().getInputStream()) {
+                    JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
+                    reader.setLenient(true);
+                    var gson = new Gson();
+                    Type mapType = new TypeToken<Map<String, Object>>() {
+                    }.getType();
+                    Map<String, Object> sounds = gson.fromJson(reader, mapType);
+                    sounds.forEach((key, value) -> {
+                        var soundId = new Identifier(BetterCombat.MODID, key);
+                        var soundEvent = new SoundEvent(soundId);
+                        Registry.register(Registry.SOUND_EVENT, soundId, soundEvent);
+                    });
+                    reader.close();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

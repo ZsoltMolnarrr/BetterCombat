@@ -31,6 +31,10 @@ repositories {
     maven {
         url "https://maven.shedaniel.me/"
     }
+    maven {
+        url "https://maven.siphalor.de/"
+    }
+
 }
 
 dependencies {
@@ -39,6 +43,7 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+    modApi("de.siphalor:coat-1.19:1.0.0-beta.18+mc22w17a")
     modImplementation("com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}")
 
     modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:0.0.5")

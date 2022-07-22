@@ -48,10 +48,9 @@ public class WeaponRegistry {
         Type fileFormat = new TypeToken<AttributesContainer>() {}.getType();
         Map<Identifier, AttributesContainer> containers = new HashMap();
         // Reading all attribute files
-        for (Identifier identifier : resourceManager.findResources("weapon_attributes", fileName -> fileName.endsWith(".json"))) {
+        resourceManager.findResources("weapon_attributes", fileName -> fileName.getPath().endsWith(".json")).forEach((identifier, resource) -> {
             try {
                 // System.out.println("Checking resource: " + identifier);
-                var resource = resourceManager.getResource(identifier);
                 JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
                 AttributesContainer container = gson.fromJson(reader, fileFormat);
                 var id = identifier
@@ -62,7 +61,7 @@ public class WeaponRegistry {
                 System.err.println("Failed to parse: " + identifier);
                 e.printStackTrace();
             }
-        }
+        });
 
         // Resolving parents
         containers.forEach( (key, value) -> {

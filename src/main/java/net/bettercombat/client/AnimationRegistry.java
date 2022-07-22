@@ -17,9 +17,8 @@ public class AnimationRegistry {
 
     public static void load(ResourceManager resourceManager) {
         var dataFolder = "attack_animations";
-        for (Identifier identifier : resourceManager.findResources(dataFolder, fileName -> fileName.endsWith(".json"))) {
+        resourceManager.findResources(dataFolder, fileName -> fileName.getPath().endsWith(".json")).forEach((identifier, resource) -> {
             try {
-                var resource = resourceManager.getResource(identifier);
                 List<KeyframeAnimation> readAnimations = AnimationSerializing.deserializeAnimation(resource.getInputStream());
                 KeyframeAnimation animation = readAnimations.get(0);
 
@@ -32,6 +31,6 @@ public class AnimationRegistry {
                 LOGGER.error("Failed to load animation " + identifier.toString());
                 e.printStackTrace();
             }
-        }
+        });
     }
 }
