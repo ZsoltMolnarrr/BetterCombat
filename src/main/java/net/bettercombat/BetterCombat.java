@@ -3,6 +3,7 @@ package net.bettercombat;
 import me.lortseam.completeconfig.data.Config;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.ServerNetwork;
+import net.bettercombat.utils.SoundHelper;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
@@ -19,5 +20,6 @@ public class BetterCombat implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
             WeaponRegistry.loadAttributes(minecraftServer.getResourceManager());
         });
+        SoundHelper.registerSounds();
     }
 }

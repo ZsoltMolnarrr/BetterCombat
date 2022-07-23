@@ -12,9 +12,9 @@ public class ServerConfig implements ConfigGroup {
             "Large sized entities may be colliding with weapon hitbox, but center of entities can have bigger distance than `attack_range`")
     public float target_search_range_multiplier = 2F;
     @ConfigEntry(comment = "Total multiplier, (examples: +30% = 1.3, -30% = 0.7)")
-    public float dual_wielding_attack_speed_multiplier = 1.5F;
+    public float dual_wielding_attack_speed_multiplier = 1.2F;
     @ConfigEntry(comment = "Total multiplier, (examples: +30% = 1.3, -30% = 0.7)")
-    public float dual_wielding_main_hand_damage_multiplier = 0.8F;
+    public float dual_wielding_main_hand_damage_multiplier = 1F;
     @ConfigEntry(comment = "Total multiplier, (examples: +30% = 1.3, -30% = 0.7)")
-    public float dual_wielding_off_hand_damage_multiplier = 0.8F;
+    public float dual_wielding_off_hand_damage_multiplier = 1F;
 }
