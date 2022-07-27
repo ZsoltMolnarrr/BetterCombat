@@ -3,7 +3,6 @@ package net.bettercombat.client.collision;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes.Attack;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -53,7 +52,7 @@ public class TargetFinder {
         Box box = player.getBoundingBox().expand(attackRange * BetterCombat.config.target_search_range_multiplier + 1.0);
         List<Entity> entities = player
                 .world
-                .getNonSpectatingEntities(LivingEntity.class, box)
+                .getOtherEntities(player, box, entity ->  !entity.isSpectator() && entity.collides())
                 .stream()
                 .filter(entity -> entity != player
                         && entity != cursorTarget

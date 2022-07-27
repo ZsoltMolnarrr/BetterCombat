@@ -110,7 +110,9 @@ public class ServerNetwork {
                 }
 
                 for (int entityId: request.entityIds()) {
-                    Entity entity = world.getEntityById(entityId);
+                    // getEntityById(entityId);
+                    Entity entity = world.getDragonPart(entityId); // Get LivingEntity or DragonPart
+
                     if (entity == null
                             || (!BetterCombat.config.allow_attacking_mount && entity.equals(player.getVehicle()))
                             || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
