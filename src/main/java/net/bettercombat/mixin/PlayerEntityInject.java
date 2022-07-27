@@ -22,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.UUID;
+
 import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(PlayerEntity.class)
@@ -106,6 +108,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
     // FEATURE: Dual wielding
 
     private Multimap<EntityAttribute, EntityAttributeModifier> dualWieldingAttributeMap;
+    private static UUID dualWieldingSpeedModifierId = UUID.fromString("6b364332-0dc4-11ed-861d-0242ac120002");
 
     private void updateDualWieldingSpeedBoost() {
         var player = ((PlayerEntity) ((Object)this));
@@ -120,6 +123,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
                 dualWieldingAttributeMap.put(
                         EntityAttributes.GENERIC_ATTACK_SPEED,
                         new EntityAttributeModifier(
+                                dualWieldingSpeedModifierId,
                                 "Dual wielding attack speed boost",
                                 multiplier,
                                 EntityAttributeModifier.Operation.MULTIPLY_BASE));

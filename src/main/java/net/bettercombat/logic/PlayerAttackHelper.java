@@ -10,10 +10,6 @@ import java.util.Arrays;
 import static net.minecraft.entity.EquipmentSlot.MAINHAND;
 
 public class PlayerAttackHelper {
-    public static float getDualWieldingAttackSpeedMultiplier(PlayerEntity player) {
-        return isDualWielding(player) ? BetterCombat.config.dual_wielding_attack_speed_multiplier : 1F;
-    }
-
     public static float getDualWieldingAttackDamageMultiplier(PlayerEntity player, AttackHand hand) {
         return isDualWielding(player)
                 ? (hand.isOffHand()
@@ -108,10 +104,5 @@ public class PlayerAttackHelper {
         if (add != null) {
             player.getAttributes().addTemporaryModifiers(add.getAttributeModifiers(MAINHAND));
         }
-    }
-
-    public static float getScaledAttackCooldown(PlayerEntity player) {
-        // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownTicks`
-        return player.getAttackCooldownProgressPerTick() / getDualWieldingAttackSpeedMultiplier(player);
     }
 }

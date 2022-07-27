@@ -139,7 +139,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         player.stopUsingItem();
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
-        float attackCooldownTicks = PlayerAttackHelper.getScaledAttackCooldown(player);
+        float attackCooldownTicks = player.getAttackCooldownProgressPerTick(); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
         this.upswingTicks = (int)(Math.round(attackCooldownTicks * upswingRate));
 //        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
