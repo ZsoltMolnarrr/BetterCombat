@@ -1,0 +1,21 @@
+{
+  "attribute.name.generic.attack_range": "Дальность атаки",
+  "item.modifiers.two_handed": "Двуручное",
+  
+  "config.bettercombat.clientConfig.isHoldToAttackEnabled": "Удерживать для атаки",
+  "config.bettercombat.clientConfig.isHoldToAttackEnabled.tooltip": "Автоматически атаковать при удерживании кнопки атаки",
+  "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled": "Копание оружием",
+  "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled.tooltip": "Позволяет копать оружием",
+  "config.bettercombat.clientConfig.isSwingThruGrassEnabled": "Атака сквозь траву",
+  "config.bettercombat.clientConfig.isSwingThruGrassEnabled.tooltip": "Позволяет атаковать оружием сквозь нетвёрдые блоки",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled": "Подсвечивание прицела",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled.tooltip": "Подсвечивает прицел, если враг достаточно близок для атаки.\nВНИМАНИЕ! Включение данной опции может существенно понизить производительность.",
+  "config.bettercombat.clientConfig.hudHighlightColor": "Цвет подсвечивания",
+  "config.bettercombat.clientConfig.hudHighlightColor.tooltip": "При необходимости к элементам пользовательского интерфейса \nприменяется цвет.",
+  "config.bettercombat.clientConfig.feintKey": "Финт",
+  "config.bettercombat.clientConfig.feintKey.tooltip": "Отменяет атаку во время подъёма",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson": "Видимость рук в режиме от первого лица",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson.tooltip": "Отображать руки во время анимации атаки в режиме \nот первого лица",
+  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled": "Дальность атаки (значение)",
+  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled.tooltip": "Отображать значение дальности атаки в подсказке об оружии"
+}
