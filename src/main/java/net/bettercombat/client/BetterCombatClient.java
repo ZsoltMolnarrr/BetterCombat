@@ -20,35 +20,43 @@ import net.minecraft.client.util.InputUtil;
 public class BetterCombatClient implements ClientModInitializer {
     private static String[] configCategory = {"client"};
     public static ClientConfig config = new ClientConfig();
-    private static Config settings = new Config(BetterCombat.MODID, configCategory, config);
+    public static Config configManager = new Config(BetterCombat.MODID, configCategory, config);
     public static KeyBinding feintKeyBinding;
+    public static KeyBinding toggleMineKeyBinding;
 
     @Override
     public void onInitializeClient() {
+        configManager.load();
+        ConfigRegistry.setMainConfig(configManager);
+
         ClientNetwork.initializeHandlers();
+        WeaponAttributeTooltip.initialize();
         ClientLifecycleEvents.CLIENT_STARTED.register((client) -> {
             var resourceManager = MinecraftClient.getInstance().getResourceManager();
             AnimationRegistry.load(resourceManager);
         });
-        settings.load();
-        ConfigRegistry.setMainConfig(settings);
-        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-            ConfigScreenBuilder.setMain(BetterCombat.MODID, new ClothConfigScreenBuilder());
-        }
         registerKeyBindings();
-        WeaponAttributeTooltip.initialize();
 
         if (FabricLoader.getInstance().isModLoaded("firstperson")) {
             FirstPersonRenderHelper.isFeatureEnabled = false;
+        }
+        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
+            ConfigScreenBuilder.setMain(BetterCombat.MODID, new ClothConfigScreenBuilder());
         }
     }
 
     private void registerKeyBindings() {
         feintKeyBinding = new KeyBinding(
-                "config.bettercombat.clientConfig.feintKey",
+                "keybinds.bettercombat.feint",
                 InputUtil.Type.KEYSYM,
                 InputUtil.GLFW_KEY_R,
                 "Better Combat");
         KeyBindingHelper.registerKeyBinding(feintKeyBinding);
+        toggleMineKeyBinding = new KeyBinding(
+                "keybinds.bettercombat.toggle_mine_with_weapons",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                "Better Combat");
+        KeyBindingHelper.registerKeyBinding(toggleMineKeyBinding);
     }
 }

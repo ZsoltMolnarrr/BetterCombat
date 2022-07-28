@@ -1,5 +1,6 @@
 package net.bettercombat.mixin.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.logic.AttackHand;
@@ -11,9 +12,14 @@ import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.RunArgs;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -21,6 +27,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,11 +43,52 @@ import static net.minecraft.util.hit.HitResult.Type.BLOCK;
 public abstract class MinecraftClientInject implements MinecraftClientExtension {
     @Shadow public ClientWorld world;
     @Shadow @Nullable public ClientPlayerEntity player;
+    @Shadow @Final public TextRenderer textRenderer;
+
     private MinecraftClient thisClient() {
         return (MinecraftClient)((Object)this);
     }
     private boolean isHoldingAttackInput = false;
     private boolean hasTargetsInRange = false;
+    private String textToRender = null;
+    private int textFade = 0;
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void postInit(RunArgs args, CallbackInfo ci) {
+        setupTextRenderer();
+    }
+
+    private void setupTextRenderer() {
+        HudRenderCallback.EVENT.register((matrices, f) -> {
+            if (textToRender != null && !textToRender.isEmpty()) {
+                var client = MinecraftClient.getInstance();
+                var textRenderer = client.inGameHud.getTextRenderer();
+                var scaledWidth = client.getWindow().getScaledWidth();
+                var scaledHeight = client.getWindow().getScaledHeight();
+
+                int i = textRenderer.getWidth(textToRender);
+                int j = (scaledWidth - i) / 2;
+                int k = scaledHeight - 59 - 14;
+                int l = 0;
+                if (!client.interactionManager.hasStatusBars()) {
+                    k += 14;
+                }
+                if ((l = (int)((float)this.textFade * 256.0f / 10.0f)) > 255) {
+                    l = 255;
+                }
+                if (l > 0) {
+                    RenderSystem.enableBlend();
+                    RenderSystem.defaultBlendFunc();
+                    InGameHud.fill(matrices, j - 2, k - 2, j + i + 2, k + textRenderer.fontHeight + 2, client.options.getTextBackgroundColor(0));
+                    textRenderer.drawWithShadow(matrices, textToRender, (float)j, (float)k, 0xFFFFFF + (l << 24));
+                    RenderSystem.disableBlend();
+                }
+            }
+            if (textFade <= 0) {
+                textToRender = null;
+            }
+        });
+    }
 
     // Press to attack
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
@@ -221,6 +269,18 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
                     attributes.attackRange());
             }
             updateTargetsInRage(targets);
+        }
+
+        if (BetterCombatClient.toggleMineKeyBinding.wasPressed()) {
+            BetterCombatClient.config.isMiningWithWeaponsEnabled = !BetterCombatClient.config.isMiningWithWeaponsEnabled;
+            BetterCombatClient.configManager.save();
+            textToRender = I18n.translate("config.bettercombat.clientConfig.isMiningWithWeaponsEnabled")
+                    + ": "
+                    + I18n.translate(BetterCombatClient.config.isMiningWithWeaponsEnabled ? "gui.yes" : "gui.no");
+            textFade = 40;
+        }
+        if (textFade > 0) {
+            textFade -= 1;
         }
     }
 

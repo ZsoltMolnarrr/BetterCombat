@@ -1,6 +1,8 @@
 {
   "attribute.name.generic.attack_range" : "Attack Range",
   "item.modifiers.two_handed": "Two-Handed",
+  "keybinds.bettercombat.feint" : "Feint",
+  "keybinds.bettercombat.toggle_mine_with_weapons" : "Toggle Mine with weapons",
 
   "config.bettercombat.clientConfig.isHoldToAttackEnabled" : "Hold to attack",
   "config.bettercombat.clientConfig.isHoldToAttackEnabled.tooltip" : "Automatically attack while holding the attack button",
@@ -12,8 +14,6 @@
   "config.bettercombat.clientConfig.isHighlightCrosshairEnabled.tooltip" : "Highlights the crosshair if enemies are close enough to strike.\nWARNING! Enabling this might reduce frame rate significantly.",
   "config.bettercombat.clientConfig.hudHighlightColor" : "Highlight color",
   "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "Color applied to HUD elements if needed.",
-  "config.bettercombat.clientConfig.feintKey" : "Feint",
-  "config.bettercombat.clientConfig.feintKey.tooltip" : "Cancel attack during upswing phase",
   "config.bettercombat.clientConfig.isShowingArmsInFirstPerson": "Show arms in first person",
   "config.bettercombat.clientConfig.isShowingArmsInFirstPerson.tooltip": "Render arms for attack animations played in first person view",
   "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled": "Item tooltip: attack range",
