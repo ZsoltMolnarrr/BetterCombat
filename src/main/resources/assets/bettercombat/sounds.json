@@ -54,8 +54,7 @@
   },
   "katana_slash": {
     "sounds": [
-      "bettercombat:katana_slash-01",
-      "bettercombat:katana_slash-02"
+      "bettercombat:katana_slash-01"
     ]
   },
   "mace_slam": {
