@@ -160,7 +160,7 @@ You can create and use your own presets:
 
 ## Custom animations
 
-Let's say you want to create a custom attack animation with the following name: `my_claymore_slash`
+Let's say you want to create a custom attack animation with the following name: `big_sword_slash`
 
 ### Creating animation
 
@@ -173,7 +173,7 @@ Check out the [Animation guide](animations/README.md) for details.
 
 Add the created animation to the following location
 
-```resources/assets/my-mod-id/weapon_animations/my_claymore_slash.json```
+```resources/assets/my-mod-id/attack_animations/big_sword_slash.json```
 
 ### Using the animation
 
@@ -188,8 +188,8 @@ Make sure to specify a fitting `upswing` value next to your animation (to make i
     // ...
     "attacks": [
       {
-        "animation": "my-mod-id:my_claymore_slash",
-        "upswing": 0.4
+        "animation": "my-mod-id:big_sword_slash",
+        "upswing": 0.5
       },
       // ...
     ]
