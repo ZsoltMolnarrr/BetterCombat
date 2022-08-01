@@ -1,0 +1,21 @@
+{
+  "attribute.name.generic.attack_range" : "攻击范围",
+  "item.modifiers.two_handed": "双手武器",
+  "keybinds.bettercombat.feint" : "卖个破绽",
+  "keybinds.bettercombat.toggle_mine_with_weapons" : "切换使用武器进行采矿的能力",
+
+  "config.bettercombat.clientConfig.isHoldToAttackEnabled" : "按住按钮进行攻击",
+  "config.bettercombat.clientConfig.isHoldToAttackEnabled.tooltip" : "按住攻击键自动攻击",
+  "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled" : "进行采矿武器",
+  "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled.tooltip" : "允许使用武器开采方块",
+  "config.bettercombat.clientConfig.isSwingThruGrassEnabled" : "在草丛中挥舞武器",
+  "config.bettercombat.clientConfig.isSwingThruGrassEnabled.tooltip" : "攻击而不是用武器挖掘零硬度块",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled" : "凸显十字线",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled.tooltip" : "如果敌人足够近可以攻击，凸显示十字线。\n警告！ 启用此功能可能会显着降低帧速率。",
+  "config.bettercombat.clientConfig.hudHighlightColor" : "凸显颜色",
+  "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "应用于 HUD 元素的颜色（如果需要）",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson": "以第一人称视角显示手臂",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson.tooltip": "为在第一人称视图中播放的攻击动画渲染手臂",
+  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled": "项目工具提示: 攻击范围",
+  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled.tooltip": "在武器工具提示上显示攻击范围属性"
+}
