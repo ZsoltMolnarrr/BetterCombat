@@ -1,0 +1,21 @@
+{
+  "attribute.name.generic.attack_range" : "Reichweite",
+  "item.modifiers.two_handed": "Zweihändige",
+  "keybinds.bettercombat.feint" : "Finte",
+  "keybinds.bettercombat.toggle_mine_with_weapons" : "Schalten Sie den Bergbau mit Waffen um",
+
+  "config.bettercombat.clientConfig.isHoldToAttackEnabled" : "Halten um anzugreifen",
+  "config.bettercombat.clientConfig.isHoldToAttackEnabled.tooltip" : "Greife automatisch an, während du die Angriffstaste gedrückt hältst",
+  "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled" : "Bergbau mit Waffen",
+  "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled.tooltip" : "Bergbau mit Waffen zulassen",
+  "config.bettercombat.clientConfig.isSwingThruGrassEnabled" : "Angriff durch Gras",
+  "config.bettercombat.clientConfig.isSwingThruGrassEnabled.tooltip" : "Ermöglicht Waffen durch nicht feste Blöcke anzugreifen",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled" : "Fadenkreuz hervorheben",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled.tooltip" : "Hebt das Fadenkreuz hervor, das ein Feind nahe genug ist, um anzugreifen.\nWARNUNG: Die Aktivierung dieser Option kann die Leistung erheblich verlangsamen.",
+  "config.bettercombat.clientConfig.hudHighlightColor" : "Hervorhebungsfarbe",
+  "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "Farbe wird nach Bedarf auf UI-Elemente angewendet",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson": "Handsichtbarkeit im First-Person-Modus",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson.tooltip": "Rendern Sie Hände für Angriffsanimationen, die in der First-Person-Modus gespielt werden",
+  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled": "Gegenstands-Tooltip: Reichweite",
+  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled.tooltip": "Zeigt den Wert der Reichweite im Tooltip der Waffe"
+}
