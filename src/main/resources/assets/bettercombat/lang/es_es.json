@@ -1,0 +1,21 @@
+{
+  "attribute.name.generic.attack_range" : "Alcance de golpe",
+  "item.modifiers.two_handed": "de dos manos",
+  "keybinds.bettercombat.feint" : "amagar",
+  "keybinds.bettercombat.toggle_mine_with_weapons" : "Alternar minando con armas",
+
+  "config.bettercombat.clientConfig.isHoldToAttackEnabled" : "Mantener para atacar",
+  "config.bettercombat.clientConfig.isHoldToAttackEnabled.tooltip" : "Ataca automáticamente mientras mantienes presionado el botón de ataque",
+  "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled" : "Minar con armas",
+  "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled.tooltip" : "Permite minar con armas",
+  "config.bettercombat.clientConfig.isSwingThruGrassEnabled" : "Ataque de hierba",
+  "config.bettercombat.clientConfig.isSwingThruGrassEnabled.tooltip" : "Permite que las armas ataquen a través de bloques no sólidos",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled" : "Resaltar retícula",
+  "config.bettercombat.clientConfig.isHighlightCrosshairEnabled.tooltip" : "Resalta la retícula un enemigo está lo suficientemente cerca para atacar.\nADVERTENCIA: Habilitar esta opción puede ralentizar significativamente el rendimiento.",
+  "config.bettercombat.clientConfig.hudHighlightColor" : "Color de resaltado",
+  "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "El color se aplica a los elementos de la interfaz de usuario según sea necesario",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson": "Visibilidad de manos en modo de primera persona",
+  "config.bettercombat.clientConfig.isShowingArmsInFirstPerson.tooltip": "Renderizar armas para animaciones de ataque reproducidas en vista en primera persona",
+  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled": "Tooltip del ítem: Alcance de golpe",
+  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled.tooltip": "Mostrar el valor del rango de ataque en la información sobre herramientas del arma"
+}
