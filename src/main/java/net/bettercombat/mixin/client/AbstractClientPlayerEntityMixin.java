@@ -7,7 +7,9 @@ import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import net.bettercombat.client.animation.ContextModifier;
 import net.bettercombat.client.animation.CustomAnimationPlayer;
 import net.bettercombat.client.animation.PoseData;
 import net.bettercombat.logic.WeaponRegistry;
@@ -25,6 +27,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
@@ -53,6 +57,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         poseContainer.addModifier(poseMirrorModifier, 0);
 
         attackMirrorModifier.setEnabled(false);
+        attackContainer.addModifier(createContextModifier(), 0);
         attackContainer.addModifier(attackSpeedModifier, 0);
         attackContainer.addModifier(attackMirrorModifier, 0);
     }
@@ -110,6 +115,53 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private ContextModifier createContextModifier() {
+        var player = (PlayerEntity)this;
+        return new ContextModifier(() -> {
+            var parts = new ArrayList<ContextModifier.PartModifier>();
+
+            System.out.println("Player pitch: " + player.getPitch());
+
+            //var pitch = (-1) * player.getPitch();
+            var pitch = player.getPitch() / 2F;
+            pitch = (float) Math.toRadians(pitch);
+
+            var body = new ContextModifier.PartModifier(
+                    "body",
+                    new Vec3f((-1F) * pitch, 0, 0),
+                    Vec3f.ZERO);
+
+            var rightArm = new ContextModifier.PartModifier(
+                    "rightArm",
+                    new Vec3f(pitch, 0, 0),
+                    Vec3f.ZERO);
+
+            var leftArm = new ContextModifier.PartModifier(
+                    "leftArm",
+                    new Vec3f(pitch, 0, 0),
+                    Vec3f.ZERO);
+
+            var rightLeg = new ContextModifier.PartModifier(
+                    "rightLeg",
+                    new Vec3f((-1F) * pitch, 0, 0),
+                    Vec3f.ZERO);
+
+            var leftLeg = new ContextModifier.PartModifier(
+                    "leftLeg",
+                    new Vec3f((-1F) * pitch, 0, 0),
+                    Vec3f.ZERO);
+
+
+            return List.of(
+                    body,
+                    rightArm,
+                    leftArm,
+                    rightLeg,
+                    leftLeg
+            );
+        });
     }
 
     private void updateAnimationByCurrentActivity(KeyframeAnimation.AnimationBuilder animation) {
