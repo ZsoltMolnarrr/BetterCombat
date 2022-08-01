@@ -8,7 +8,7 @@
   "config.bettercombat.clientConfig.isHoldToAttackEnabled.tooltip" : "Ataca automáticamente mientras mantienes presionado el botón de ataque",
   "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled" : "Minar con armas",
   "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled.tooltip" : "Permite minar con armas",
-  "config.bettercombat.clientConfig.isSwingThruGrassEnabled" : "Ataque de hierba",
+  "config.bettercombat.clientConfig.isSwingThruGrassEnabled" : "Ataque por hierba",
   "config.bettercombat.clientConfig.isSwingThruGrassEnabled.tooltip" : "Permite que las armas ataquen a través de bloques no sólidos",
   "config.bettercombat.clientConfig.isHighlightCrosshairEnabled" : "Resaltar retícula",
   "config.bettercombat.clientConfig.isHighlightCrosshairEnabled.tooltip" : "Resalta la retícula un enemigo está lo suficientemente cerca para atacar.\nADVERTENCIA: Habilitar esta opción puede ralentizar significativamente el rendimiento.",
