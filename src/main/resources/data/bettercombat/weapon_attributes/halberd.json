@@ -1,0 +1,29 @@
+{
+  "attributes": {
+    "attack_range": 3.5,
+    "pose": "bettercombat:pose_two_handed_polearm",
+    "two_handed": true,
+    "attacks": [
+      {
+        "hitbox": "VERTICAL_PLANE",
+        "damage_multiplier": 0.8,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_vertical_left",
+        "swing_sound": {
+          "id": "bettercombat:glaive_slash_slow"
+        }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1.2,
+        "angle": 0,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_stab_right",
+        "swing_sound": {
+          "id": "bettercombat:spear_stab"
+        }
+      }
+    ]
+  }
+}
