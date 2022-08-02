@@ -5,20 +5,21 @@ import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 
-import java.util.List;
-import java.util.function.Supplier;
+import java.util.Optional;
+import java.util.function.Function;
 
-public final class ContextModifier extends AbstractModifier {
+public final class AdjustmentModifier extends AbstractModifier {
     public record PartModifier(
-            String partName,
             Vec3f rotation,
             Vec3f offset
     ) {};
 
     public boolean enabled = true;
-    private Supplier<List<PartModifier>> source;
 
-    public ContextModifier(Supplier<List<PartModifier>> source) {
+
+    private Function<String, Optional<PartModifier>> source;
+
+    public AdjustmentModifier(Function<String, Optional<PartModifier>> source) {
         this.source = source;
     }
 
@@ -53,9 +54,8 @@ public final class ContextModifier extends AbstractModifier {
             return super.get3DTransform(modelName, type, tickDelta, value0);
         }
 
-        var partModifier = source.get().stream()
-                .filter(part -> part.partName.equals(modelName))
-                .findFirst();
+        var partModifier = source.apply(modelName);
+
         var modifiedVector = value0;
         var fade = getFadeIn(tickDelta) * getFadeOut(tickDelta);
         if (partModifier.isPresent()) {
@@ -70,9 +70,7 @@ public final class ContextModifier extends AbstractModifier {
     private Vec3f transformVector(Vec3f vector, TransformType type, PartModifier partModifier, float fade) {
         switch (type) {
             case POSITION -> {
-                var modifiedVector = vector;
-                modifiedVector = modifiedVector.add(partModifier.offset);
-                return modifiedVector;
+                return vector.add(partModifier.offset);
             }
             case ROTATION -> {
                  return vector.add(partModifier.rotation.scale(fade));

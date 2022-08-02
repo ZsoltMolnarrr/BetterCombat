@@ -9,7 +9,7 @@ import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
-import net.bettercombat.client.animation.ContextModifier;
+import net.bettercombat.client.animation.AdjustmentModifier;
 import net.bettercombat.client.animation.CustomAnimationPlayer;
 import net.bettercombat.client.animation.PoseData;
 import net.bettercombat.logic.WeaponRegistry;
@@ -17,6 +17,7 @@ import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
@@ -27,8 +28,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
@@ -57,7 +56,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         poseContainer.addModifier(poseMirrorModifier, 0);
 
         attackMirrorModifier.setEnabled(false);
-        attackContainer.addModifier(createContextModifier(), 0);
+        attackContainer.addModifier(createAdjustmentModifier(), 0);
         attackContainer.addModifier(attackSpeedModifier, 0);
         attackContainer.addModifier(attackMirrorModifier, 0);
     }
@@ -117,49 +116,42 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         }
     }
 
-    private ContextModifier createContextModifier() {
+    private AdjustmentModifier createAdjustmentModifier() {
         var player = (PlayerEntity)this;
-        return new ContextModifier(() -> {
-            var parts = new ArrayList<ContextModifier.PartModifier>();
+        return new AdjustmentModifier((partName) -> {
+            // System.out.println("Player pitch: " + player.getPitch());
 
-            System.out.println("Player pitch: " + player.getPitch());
-
-            //var pitch = (-1) * player.getPitch();
             var pitch = player.getPitch() / 2F;
             pitch = (float) Math.toRadians(pitch);
 
-            var body = new ContextModifier.PartModifier(
-                    "body",
-                    new Vec3f((-1F) * pitch, 0, 0),
-                    Vec3f.ZERO);
+            float rotationX = 0;
+            float rotationY = 0;
+            float rotationZ = 0;
+            float offsetX = 0;
+            float offsetY = 0;
+            float offsetZ = 0;
 
-            var rightArm = new ContextModifier.PartModifier(
-                    "rightArm",
-                    new Vec3f(pitch, 0, 0),
-                    Vec3f.ZERO);
+            switch (partName) {
+                case "body" -> {
+                    rotationX = (-1F) * pitch;
+                }
+                case "rightArm", "leftArm" -> {
+                    rotationX = pitch;
+                    if (player.getPose() == EntityPose.CROUCHING) {
+                        offsetY -= 1;
+                    }
+                }
+                case "rightLeg", "leftLeg" -> {
+                    rotationX = (-1F) * pitch;
+                }
+                default -> {
+                    return Optional.empty();
+                }
+            }
 
-            var leftArm = new ContextModifier.PartModifier(
-                    "leftArm",
-                    new Vec3f(pitch, 0, 0),
-                    Vec3f.ZERO);
-
-            var rightLeg = new ContextModifier.PartModifier(
-                    "rightLeg",
-                    new Vec3f((-1F) * pitch, 0, 0),
-                    Vec3f.ZERO);
-
-            var leftLeg = new ContextModifier.PartModifier(
-                    "leftLeg",
-                    new Vec3f((-1F) * pitch, 0, 0),
-                    Vec3f.ZERO);
-
-
-            return List.of(
-                    body,
-                    rightArm,
-                    leftArm,
-                    rightLeg,
-                    leftLeg
+            return Optional.of(new AdjustmentModifier.PartModifier(
+                    new Vec3f(rotationX, rotationY, rotationZ),
+                    new Vec3f(offsetX, offsetY, offsetZ))
             );
         });
     }
@@ -180,11 +172,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             case SPIN_ATTACK -> {
             }
             case CROUCHING -> {
-                configurBodyPart(animation.head, true, false);
-                configurBodyPart(animation.rightArm, true, false);
-                configurBodyPart(animation.leftArm, true, false);
-                configurBodyPart(animation.rightLeg, false, false);
-                configurBodyPart(animation.leftLeg, false, false);
+//                configurBodyPart(animation.head, true, false);
+//                configurBodyPart(animation.rightArm, true, false);
+//                configurBodyPart(animation.leftArm, true, false);
+//                configurBodyPart(animation.rightLeg, false, false);
+//                configurBodyPart(animation.leftLeg, false, false);
             }
             case LONG_JUMPING -> {
             }
