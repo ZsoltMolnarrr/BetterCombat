@@ -15,6 +15,7 @@ import net.bettercombat.client.animation.PoseData;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityPose;
@@ -69,6 +70,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         if (player.handSwinging) {
             setPose(newPose); // null
             return;
+        }
+        if (getCurrentAnimation().isPresent() && getCurrentAnimation().get().isActive()) {
+            // Restore auto body rotation upon swing - Fix issue #11
+            ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw(), 0);
         }
         var attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
         if (attributes != null && attributes.pose() != null) {
@@ -137,9 +142,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 }
                 case "rightArm", "leftArm" -> {
                     rotationX = pitch;
-                    if (player.getPose() == EntityPose.CROUCHING) {
-                        offsetY -= 1;
-                    }
                 }
                 case "rightLeg", "leftLeg" -> {
                     rotationX = (-1F) * pitch;

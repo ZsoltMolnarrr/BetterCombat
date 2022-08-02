@@ -10,6 +10,7 @@ import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
+import net.bettercombat.mixin.LivingEntityAccessor;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -23,6 +24,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -183,8 +185,8 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         }
 
         // Starting upswing
-        player.setBodyYaw(player.getHeadYaw()); // Restore auto body rotation upon swing - Fix issue #11
         player.stopUsingItem();
+
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
         float attackCooldownTicks = player.getAttackCooldownProgressPerTick(); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
