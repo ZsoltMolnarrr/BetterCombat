@@ -1,12 +1,3 @@
 {
-  "parent": "bettercombat:spear",
-  "attributes" : {
-    "attack_range": 3,
-    "pose": "",
-    "attacks": [
-      {
-        "animation": "bettercombat:one_handed_stab"
-      }
-    ]
-  }
+  "parent": "bettercombat:trident"
 }
