@@ -72,6 +72,16 @@
       "bettercombat:pickaxe_swing-01"
     ]
   },
+  "rapier_slash": {
+    "sounds": [
+      "bettercombat:rapier_slash-01"
+    ]
+  },
+  "rapier_stab": {
+    "sounds": [
+      "bettercombat:rapier_stab-01"
+    ]
+  },
   "scythe_slash": {
     "sounds": [
       "bettercombat:scythe_slash-01"

@@ -54,6 +54,8 @@ public class SoundHelper {
             "mace_slam",
             "mace_slash",
             "pickaxe_swing",
+            "rapier_slash",
+            "rapier_stab",
             "scythe_slash",
             "spear_stab",
             "staff_slam",

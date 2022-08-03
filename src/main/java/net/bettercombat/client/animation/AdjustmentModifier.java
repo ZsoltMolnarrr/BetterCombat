@@ -16,7 +16,6 @@ public final class AdjustmentModifier extends AbstractModifier {
 
     public boolean enabled = true;
 
-
     private Function<String, Optional<PartModifier>> source;
 
     public AdjustmentModifier(Function<String, Optional<PartModifier>> source) {
