@@ -1,4 +1,4 @@
-package net.bettercombat;
+package net.bettercombat.config;
 
 import me.lortseam.completeconfig.api.ConfigEntry;
 import me.lortseam.completeconfig.api.ConfigGroup;
@@ -17,4 +17,8 @@ public class ServerConfig implements ConfigGroup {
     public float dual_wielding_main_hand_damage_multiplier = 1F;
     @ConfigEntry(comment = "Total multiplier, (examples: +30% = 1.3, -30% = 0.7)")
     public float dual_wielding_off_hand_damage_multiplier = 1F;
+    @ConfigEntry(comment = "Try to guess and apply a preset for items without weapon attributes data file")
+    public boolean fallback_compatibility_enabled = true;
+    @ConfigEntry(comment = "Allow printing the content of weapon attributes registry")
+    public boolean weapon_registry_logging = false;
 }

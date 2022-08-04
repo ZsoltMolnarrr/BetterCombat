@@ -101,7 +101,9 @@ A fitting preset for a big two handed sword is the `claymore` from Better Combat
 }
 ```
 
-You can check out all available presets [here](https://github.com/ZsoltMolnarrr/BetterCombat/tree/main/src/main/resources/data/bettercombat/weapon_attributes).
+You can check out all available presets [here](src/main/resources/data/bettercombat/weapon_attributes).
+
+You can check out how presets are used to add compatibility for Vanilla weapons [here](/src/main/resources/data/minecraft/weapon_attributes).
 
 You can make and reference your own presets the same way.
 

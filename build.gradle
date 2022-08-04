@@ -41,6 +41,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     modImplementation("com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}")
 
+    modApi include("com.github.ZsoltMolnarrr:TinyConfig:1.0.1")
     modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:0.0.5")
     // modImplementation files("player-animation-lib-0.0.4.jar")
 }

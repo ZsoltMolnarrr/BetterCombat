@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.mojang.logging.LogUtils;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttributesContainer;
 import net.bettercombat.api.WeaponAttributes;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -22,6 +23,7 @@ import java.util.*;
 public class WeaponRegistry {
     static final Logger LOGGER = LogUtils.getLogger();
     static Map<Identifier, WeaponAttributes> registrations = new HashMap();
+    static Map<Identifier, AttributesContainer> containers = new HashMap();
 
     public static void register(Identifier itemId, WeaponAttributes attributes) {
         registrations.put(itemId, attributes);
@@ -44,6 +46,18 @@ public class WeaponRegistry {
     // LOADING
 
     public static void loadAttributes(ResourceManager resourceManager) {
+        loadContainers(resourceManager);
+
+        // Resolving parents
+        containers.forEach( (itemId, container) -> {
+            if (!Registry.ITEM.containsId(itemId)) {
+                return;
+            }
+            resolveAndRegisterAttributes(itemId, container);
+        });
+    }
+
+    private static void loadContainers(ResourceManager resourceManager) {
         var gson = new Gson();
         Type fileFormat = new TypeToken<AttributesContainer>() {}.getType();
         Map<Identifier, AttributesContainer> containers = new HashMap();
@@ -63,42 +77,37 @@ public class WeaponRegistry {
                 e.printStackTrace();
             }
         }
+        WeaponRegistry.containers = containers;
+    }
 
-        // Resolving parents
-        containers.forEach( (key, value) -> {
-            if (!Registry.ITEM.containsId(key)) {
-                return;
-            }
-            try {
-                ArrayList<WeaponAttributes> resolutionChain = new ArrayList();
-                AttributesContainer current = value;
-                while (current != null) {
-                    resolutionChain.add(0, current.attributes());
-                    if (current.parent() != null) {
-                        current = containers.get(new Identifier(current.parent()));
-                    } else {
-                        current = null;
-                    }
+    public static void resolveAndRegisterAttributes(Identifier itemId, AttributesContainer container) {
+        try {
+            ArrayList<WeaponAttributes> resolutionChain = new ArrayList();
+            AttributesContainer current = container;
+            while (current != null) {
+                resolutionChain.add(0, current.attributes());
+                if (current.parent() != null) {
+                    current = containers.get(new Identifier(current.parent()));
+                } else {
+                    current = null;
                 }
-
-                var empty = new WeaponAttributes(0, null, false, null);
-                var resolvedAttributes = resolutionChain
-                    .stream()
-                    .reduce(empty, (a, b) -> {
-                        if (b == null) { // I'm not sure why null can enter as `b`
-                            return a;
-                        }
-                        return WeaponAttributesHelper.override(a, b);
-                    });
-
-                WeaponAttributesHelper.validate(resolvedAttributes);
-                register(key, resolvedAttributes);
-            } catch (Exception e) {
-                LOGGER.error("Failed to resolve weapon attributes for: " + key + ". Reason: " + e.getMessage());
             }
-        });
 
-        encodeRegistry();
+            var empty = new WeaponAttributes(0, null, false, null);
+            var resolvedAttributes = resolutionChain
+                .stream()
+                .reduce(empty, (a, b) -> {
+                    if (b == null) { // I'm not sure why null can enter as `b`
+                        return a;
+                    }
+                    return WeaponAttributesHelper.override(a, b);
+                });
+
+            WeaponAttributesHelper.validate(resolvedAttributes);
+            register(itemId, resolvedAttributes);
+        } catch (Exception e) {
+            LOGGER.error("Failed to resolve weapon attributes for: " + itemId + ". Reason: " + e.getMessage());
+        }
     }
 
     // NETWORK SYNC
@@ -109,7 +118,9 @@ public class WeaponRegistry {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
         var json = gson.toJson(registrations);
-        LOGGER.info("Weapon Attribute registry loaded: " + json);
+        if (BetterCombat.config.weapon_registry_logging) {
+            LOGGER.info("Weapon Attribute registry loaded: " + json);
+        }
 
         List<String> chunks = new ArrayList<>();
         var chunkSize = 10000;
@@ -134,7 +145,9 @@ public class WeaponRegistry {
             json = json.concat(buffer.readString());
         }
         LOGGER.info("Decoded Weapon Attribute registry in " + chunkCount + " string chunks");
-        LOGGER.info("Weapon Attribute registry received: " + json);
+        if (BetterCombat.config.weapon_registry_logging) {
+            LOGGER.info("Weapon Attribute registry received: " + json);
+        }
         var gson = new Gson();
         Type mapType = new TypeToken<Map<String, WeaponAttributes>>() {}.getType();
         Map<String, WeaponAttributes> readRegistrations = gson.fromJson(json, mapType);
