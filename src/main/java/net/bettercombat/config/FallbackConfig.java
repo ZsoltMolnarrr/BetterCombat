@@ -40,6 +40,9 @@ public class FallbackConfig {
                         "spear|lance",
                         "bettercombat:spear"),
                 new CompatibilitySpecifier(
+                        "anchor",
+                        "bettercombat:anchor"),
+                new CompatibilitySpecifier(
                         "battlestaff|battle_staff",
                         "bettercombat:staff"),
                 new CompatibilitySpecifier(
