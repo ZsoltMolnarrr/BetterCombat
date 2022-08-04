@@ -1,4 +1,9 @@
 {
+  "anchor_slam": {
+    "sounds": [
+      "bettercombat:anchor_slam-01"
+    ]
+  },
   "axe_slash": {
     "sounds": [
       "bettercombat:axe_slash-01"
@@ -110,6 +115,11 @@
   "staff_stab": {
     "sounds": [
       "bettercombat:staff_stab-01"
+    ]
+  },
+  "sickle_slash": {
+    "sounds": [
+      "bettercombat:sickle_slash-01"
     ]
   },
   "sword_slash": {

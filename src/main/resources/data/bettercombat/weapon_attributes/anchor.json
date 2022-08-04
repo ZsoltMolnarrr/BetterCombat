@@ -11,7 +11,7 @@
         "upswing": 0.6,
         "animation": "bettercombat:two_handed_slam_heavy",
         "swing_sound": {
-          "id": "bettercombat:hammer_slam"
+          "id": "bettercombat:anchor_slam"
         }
       }
     ]

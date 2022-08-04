@@ -40,6 +40,7 @@ public class SoundHelper {
 
     public static void registerSounds() {
         List<String> soundKeys = List.of(
+            "anchor_slam",
             "axe_slash",
             "claymore_swing",
             "claymore_stab",
@@ -62,6 +63,7 @@ public class SoundHelper {
             "staff_slash",
             "staff_spin",
             "staff_stab",
+            "sickle_slash",
             "sword_slash"
         );
         for (var soundKey: soundKeys) {
