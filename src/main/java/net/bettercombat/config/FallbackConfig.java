@@ -64,6 +64,9 @@ public class FallbackConfig {
                         "dagger|knife",
                         "bettercombat:dagger"),
                 new CompatibilitySpecifier(
+                        "staff|wand|sceptre",
+                        "bettercombat:wand"),
+                new CompatibilitySpecifier(
                         "mace|hammer|flail",
                         "bettercombat:mace"),
                 new CompatibilitySpecifier(

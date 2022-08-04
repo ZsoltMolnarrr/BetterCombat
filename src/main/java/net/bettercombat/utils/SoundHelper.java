@@ -64,7 +64,8 @@ public class SoundHelper {
             "staff_spin",
             "staff_stab",
             "sickle_slash",
-            "sword_slash"
+            "sword_slash",
+            "wand_swing"
         );
         for (var soundKey: soundKeys) {
             var soundId = new Identifier(BetterCombat.MODID, soundKey);

@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "attack_range": 2.5,
+    "attacks": [
+      {
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1,
+        "upswing": 0.5,
+        "animation": "bettercombat:one_handed_stab",
+        "swing_sound": {
+          "id": "bettercombat:wand_swing"
+        }
+      }
+    ]
+  }
+}

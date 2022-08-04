@@ -126,5 +126,10 @@
     "sounds": [
       "bettercombat:sword_slash-01"
     ]
+  },
+  "wand_swing": {
+    "sounds": [
+      "bettercombat:wand_swing-01"
+    ]
   }
 }
