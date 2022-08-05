@@ -9,8 +9,10 @@ import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.AdjustmentModifier;
 import net.bettercombat.client.animation.CustomAnimationPlayer;
+import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.client.animation.PoseData;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.client.AnimationRegistry;
@@ -125,10 +127,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var player = (PlayerEntity)this;
         return new AdjustmentModifier((partName) -> {
             // System.out.println("Player pitch: " + player.getPitch());
-
-            var pitch = player.getPitch() / 2F;
-            pitch = (float) Math.toRadians(pitch);
-
             float rotationX = 0;
             float rotationY = 0;
             float rotationZ = 0;
@@ -136,19 +134,35 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            switch (partName) {
-                case "body" -> {
-                    rotationX = (-1F) * pitch;
+            if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+                var pitch = player.getPitch();
+                pitch = (float) Math.toRadians(pitch);
+                switch (partName) {
+                    case "rightArm", "leftArm" -> {
+                        rotationX = pitch;
+                    }
+                    default -> {
+                        return Optional.empty();
+                    }
                 }
-                case "rightArm", "leftArm" -> {
-                    rotationX = pitch;
+            } else {
+                var pitch = player.getPitch() / 2F;
+                pitch = (float) Math.toRadians(pitch);
+                switch (partName) {
+                    case "body" -> {
+                        rotationX = (-1F) * pitch;
+                    }
+                    case "rightArm", "leftArm" -> {
+                        rotationX = pitch;
+                    }
+                    case "rightLeg", "leftLeg" -> {
+                        rotationX = (-1F) * pitch;
+                    }
+                    default -> {
+                        return Optional.empty();
+                    }
                 }
-                case "rightLeg", "leftLeg" -> {
-                    rotationX = (-1F) * pitch;
-                }
-                default -> {
-                    return Optional.empty();
-                }
+
             }
 
             return Optional.of(new AdjustmentModifier.PartModifier(
