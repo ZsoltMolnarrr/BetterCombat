@@ -71,15 +71,15 @@ public class Packets {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "config_sync");
 
         public static PacketByteBuf write(ServerConfig config) {
-//            var writer = new StringWriter();
-//            config.serialize(() -> new BufferedWriter(writer));
+            var writer = new StringWriter();
+            config.serialize(() -> new BufferedWriter(writer));
             var buffer = PacketByteBufs.create();
-//            buffer.writeString(writer.toString());
+            buffer.writeString(writer.toString());
             return buffer;
         }
 
         public static void readInPlace(PacketByteBuf buffer, ServerConfig config) {
-//            config.deserialize(() -> new BufferedReader(new StringReader(buffer.readString())));
+            config.deserialize(() -> new BufferedReader(new StringReader(buffer.readString())));
         }
     }
 }

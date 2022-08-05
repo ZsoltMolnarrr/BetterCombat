@@ -1,5 +1,7 @@
 package net.bettercombat.client;
 
+import me.lortseam.completeconfig.gui.ConfigScreenBuilder;
+import me.lortseam.completeconfig.gui.cloth.ClothConfigScreenBuilder;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.fabricmc.api.ClientModInitializer;
@@ -14,16 +16,13 @@ import net.minecraft.client.util.InputUtil;
 
 @Environment(EnvType.CLIENT)
 public class BetterCombatClient implements ClientModInitializer {
-    private static String[] configCategory = {"client"};
     public static ClientConfig config = new ClientConfig();
-//    public static Config configManager = new Config(BetterCombat.MODID, configCategory, config);
     public static KeyBinding feintKeyBinding;
     public static KeyBinding toggleMineKeyBinding;
 
     @Override
     public void onInitializeClient() {
-//        configManager.load();
-//        ConfigRegistry.setMainConfig(configManager);
+        config.load();
 
         ClientNetwork.initializeHandlers();
         WeaponAttributeTooltip.initialize();
@@ -36,9 +35,9 @@ public class BetterCombatClient implements ClientModInitializer {
         if (FabricLoader.getInstance().isModLoaded("firstperson")) {
             FirstPersonRenderHelper.isFeatureEnabled = false;
         }
-//        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-//            ConfigScreenBuilder.setMain(BetterCombat.MODID, new ClothConfigScreenBuilder());
-//        }
+        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
+            ConfigScreenBuilder.setMain(BetterCombat.MODID, new ClothConfigScreenBuilder());
+        }
     }
 
     private void registerKeyBindings() {
