@@ -17,9 +17,10 @@ public class AnimationRegistry {
 
     public static void load(ResourceManager resourceManager) {
         var dataFolder = "attack_animations";
-        for (Identifier identifier : resourceManager.findResources(dataFolder, fileName -> fileName.endsWith(".json"))) {
+        for (var entry : resourceManager.findResources(dataFolder, fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
+            var identifier = entry.getKey();
+            var resource = entry.getValue();
             try {
-                var resource = resourceManager.getResource(identifier);
                 List<KeyframeAnimation> readAnimations = AnimationSerializing.deserializeAnimation(resource.getInputStream());
                 KeyframeAnimation animation = readAnimations.get(0);
 

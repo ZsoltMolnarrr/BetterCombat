@@ -17,6 +17,7 @@ import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -40,12 +41,12 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     private PoseData lastPose;
 
-    public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
-        super(world, pos, yaw, profile);
+    public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @org.jetbrains.annotations.Nullable PlayerPublicKey publicKey) {
+        super(world, pos, yaw, gameProfile, publicKey);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
+    private void postInit(ClientWorld world, GameProfile profile, PlayerPublicKey publicKey, CallbackInfo ci) {
         var stack = ((IAnimatedPlayer) this).getAnimationStack();
         stack.addAnimLayer(1, poseContainer);
         stack.addAnimLayer(2000, containerA.base);

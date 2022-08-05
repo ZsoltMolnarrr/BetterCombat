@@ -27,7 +27,7 @@ public class ClientNetwork {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(Packets.ConfigSync.ID, (client, handler, buf, responseSender) -> {
-            Packets.ConfigSync.readInPlace(buf, BetterCombat.configWrapper);
+            Packets.ConfigSync.readInPlace(buf, BetterCombat.config);
         });
     }
 }

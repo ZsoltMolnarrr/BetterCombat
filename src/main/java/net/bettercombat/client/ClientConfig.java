@@ -1,25 +1,23 @@
 package net.bettercombat.client;
 
-import me.lortseam.completeconfig.api.ConfigEntry;
-import me.lortseam.completeconfig.api.ConfigGroup;
 import net.minecraft.text.TextColor;
 
-public class ClientConfig implements ConfigGroup {
-    @ConfigEntry
+public class ClientConfig {
+//    @ConfigEntry
     public boolean isHoldToAttackEnabled = true;
-    @ConfigEntry
+//    @ConfigEntry
     public boolean isMiningWithWeaponsEnabled = true;
-    @ConfigEntry
+//    @ConfigEntry
     public boolean isSwingThruGrassEnabled = true;
-    @ConfigEntry
+//    @ConfigEntry
     public boolean isHighlightCrosshairEnabled = false;
-    @ConfigEntry
+//    @ConfigEntry
     public TextColor hudHighlightColor = TextColor.fromRgb(0xFF0000);
-    @ConfigEntry
+//    @ConfigEntry
     public boolean isShowingArmsInFirstPerson = false;
-    @ConfigEntry
+//    @ConfigEntry
     public boolean isSmoothAnimationTransitionEnabled = true;
-    @ConfigEntry
+//    @ConfigEntry
     public boolean isTooltipAttackRangeEnabled = true;
 
 //    public Listener listener;

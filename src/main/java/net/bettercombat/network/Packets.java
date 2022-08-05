@@ -1,7 +1,7 @@
 package net.bettercombat.network;
 
-import me.lortseam.completeconfig.data.Config;
 import net.bettercombat.BetterCombat;
+import net.bettercombat.config.ServerConfig;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -70,16 +70,16 @@ public class Packets {
     public static class ConfigSync {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "config_sync");
 
-        public static PacketByteBuf write(Config config) {
-            var writer = new StringWriter();
-            config.serialize(() -> new BufferedWriter(writer));
+        public static PacketByteBuf write(ServerConfig config) {
+//            var writer = new StringWriter();
+//            config.serialize(() -> new BufferedWriter(writer));
             var buffer = PacketByteBufs.create();
-            buffer.writeString(writer.toString());
+//            buffer.writeString(writer.toString());
             return buffer;
         }
 
-        public static void readInPlace(PacketByteBuf buffer, Config config) {
-            config.deserialize(() -> new BufferedReader(new StringReader(buffer.readString())));
+        public static void readInPlace(PacketByteBuf buffer, ServerConfig config) {
+//            config.deserialize(() -> new BufferedReader(new StringReader(buffer.readString())));
         }
     }
 }
