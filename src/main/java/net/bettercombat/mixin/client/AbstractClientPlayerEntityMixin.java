@@ -5,22 +5,17 @@ import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
-import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.client.BetterCombatClient;
-import net.bettercombat.client.animation.AdjustmentModifier;
-import net.bettercombat.client.animation.CustomAnimationPlayer;
-import net.bettercombat.client.animation.FirstPersonRenderHelper;
-import net.bettercombat.client.animation.PoseData;
+import net.bettercombat.client.animation.*;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
@@ -39,9 +34,9 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private final MirrorModifier poseMirrorModifier = new MirrorModifier();
     private final ModifierLayer poseContainer = new ModifierLayer(null);
 
-    private final SpeedModifier attackSpeedModifier = new SpeedModifier();
-    private final MirrorModifier attackMirrorModifier = new MirrorModifier();
-    private final ModifierLayer attackContainer = new ModifierLayer(null);
+    private final AttackAnimationSubStack containerA = new AttackAnimationSubStack(createAdjustmentModifier());
+    private final AttackAnimationSubStack containerB = new AttackAnimationSubStack(createAdjustmentModifier());
+    private int playbackCount = 0;
 
     private PoseData lastPose;
 
@@ -53,15 +48,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
         var stack = ((IAnimatedPlayer) this).getAnimationStack();
         stack.addAnimLayer(1, poseContainer);
-        stack.addAnimLayer(2000, attackContainer);
+        stack.addAnimLayer(2000, containerA.base);
+        stack.addAnimLayer(2001, containerB.base);
 
         poseMirrorModifier.setEnabled(false);
         poseContainer.addModifier(poseMirrorModifier, 0);
-
-        attackMirrorModifier.setEnabled(false);
-        attackContainer.addModifier(createAdjustmentModifier(), 0);
-        attackContainer.addModifier(attackSpeedModifier, 0);
-        attackContainer.addModifier(attackMirrorModifier, 0);
     }
 
     @Override
@@ -103,6 +94,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         lastPose = newPoseData;
     }
 
+    private AttackAnimationSubStack getCurrentPlaybackSubStack() {
+        return (playbackCount % 2 == 0) ? containerA : containerB;
+    }
+
     @Override
     public void playAttackAnimation(String name, boolean isOffHand, float length) {
         try {
@@ -115,9 +110,15 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             if(shouldMirrorByMainArm()) {
                 mirror = !mirror;
             }
-            attackSpeedModifier.speed = speed;
-            attackMirrorModifier.setEnabled(mirror);
-            attackContainer.setAnimation(new CustomAnimationPlayer(copy.build(), 0));
+
+            if (BetterCombatClient.config.isSmoothAnimationTransitionEnabled) {
+                playbackCount += 1;
+            }
+            var container = getCurrentPlaybackSubStack();
+
+            container.speed.speed = speed;
+            container.mirror.setEnabled(mirror);
+            container.base.setAnimation(new CustomAnimationPlayer(copy.build(), 0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -162,7 +163,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                         return Optional.empty();
                     }
                 }
-
             }
 
             return Optional.of(new AdjustmentModifier.PartModifier(
@@ -216,7 +216,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public void stopAttackAnimation() {
-        IAnimation currentAnimation = attackContainer.getAnimation();
+        IAnimation currentAnimation = getCurrentPlaybackSubStack().base.getAnimation();
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
              ((KeyframeAnimationPlayer)currentAnimation).stop();
         }
@@ -232,6 +232,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public Optional<IAnimation> getCurrentAnimation() {
-        return Optional.ofNullable(attackContainer.getAnimation());
+        return Optional.ofNullable(getCurrentPlaybackSubStack().base.getAnimation());
     }
 }

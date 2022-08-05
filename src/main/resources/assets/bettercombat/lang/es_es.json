@@ -16,6 +16,8 @@
   "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "El color se aplica a los elementos de la interfaz de usuario según sea necesario",
   "config.bettercombat.clientConfig.isShowingArmsInFirstPerson": "Visibilidad de manos en modo de primera persona",
   "config.bettercombat.clientConfig.isShowingArmsInFirstPerson.tooltip": "Renderizar armas para animaciones de ataque reproducidas en vista en primera persona",
+  "config.bettercombat.clientConfig.isSmoothAnimationTransitionEnabled": "Alisar transiciones animación",
+  "config.bettercombat.clientConfig.isSmoothAnimationTransitionEnabled.tooltip": "Las transiciones de animación de ataque se alisan a expensas de la fidelidad de la animación",
   "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled": "Tooltip del ítem: Alcance de golpe",
   "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled.tooltip": "Mostrar el valor del rango de ataque en la información sobre herramientas del arma"
 }

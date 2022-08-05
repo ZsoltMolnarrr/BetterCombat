@@ -16,6 +16,8 @@
   "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "应用于 HUD 元素的颜色（如果需要）",
   "config.bettercombat.clientConfig.isShowingArmsInFirstPerson": "以第一人称视角显示手臂",
   "config.bettercombat.clientConfig.isShowingArmsInFirstPerson.tooltip": "为在第一人称视图中播放的攻击动画渲染手臂",
+  "config.bettercombat.clientConfig.isSmoothAnimationTransitionEnabled": "平整动画过渡",
+  "config.bettercombat.clientConfig.isSmoothAnimationTransitionEnabled.tooltip": "以牺牲动画保真度为代价来平滑攻击动画过渡",
   "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled": "项目工具提示: 攻击范围",
   "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled.tooltip": "在武器工具提示上显示攻击范围属性"
 }

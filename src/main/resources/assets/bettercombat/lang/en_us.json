@@ -16,6 +16,8 @@
   "config.bettercombat.clientConfig.hudHighlightColor.tooltip" : "Color applied to HUD elements if needed.",
   "config.bettercombat.clientConfig.isShowingArmsInFirstPerson": "Show arms in first person",
   "config.bettercombat.clientConfig.isShowingArmsInFirstPerson.tooltip": "Render arms for attack animations played in first person view",
+  "config.bettercombat.clientConfig.isSmoothAnimationTransitionEnabled": "Smooth animation transitions",
+  "config.bettercombat.clientConfig.isSmoothAnimationTransitionEnabled.tooltip": "Attack animations smoothly transition at the cost of accuracy",
   "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled": "Item tooltip: attack range",
   "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled.tooltip": "Show attack range attribute on weapon tooltips"
 }

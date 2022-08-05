@@ -18,6 +18,8 @@ public class ClientConfig implements ConfigGroup {
     @ConfigEntry
     public boolean isShowingArmsInFirstPerson = false;
     @ConfigEntry
+    public boolean isSmoothAnimationTransitionEnabled = true;
+    @ConfigEntry
     public boolean isTooltipAttackRangeEnabled = true;
 
 //    public Listener listener;
