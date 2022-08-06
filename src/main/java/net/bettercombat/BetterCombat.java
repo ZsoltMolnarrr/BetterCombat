@@ -1,5 +1,9 @@
 package net.bettercombat;
 
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
+import net.bettercombat.config.BetterCombatConfig;
 import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.logic.WeaponAttributesFallback;
@@ -12,6 +16,7 @@ import net.tinyconfig.ConfigManager;
 
 public class BetterCombat implements ModInitializer {
     public static final String MODID = "bettercombat";
+//    public static BetterCombatConfig clothConfig;
     public static ServerConfig config = new ServerConfig();
     public static ConfigManager<FallbackConfig> fallbackConfig = new ConfigManager<FallbackConfig>
             ("fallback_compatibility", FallbackConfig.createDefault())
@@ -22,6 +27,9 @@ public class BetterCombat implements ModInitializer {
 
     @Override
     public void onInitialize() {
+//        clothConfig = AutoConfig.getConfigHolder(BetterCombatConfig.class).getConfig();
+        // AutoConfig.getConfigHolder(BetterCombatConfig.class).save();
+
         config.load();
         fallbackConfig.refresh();
         ServerNetwork.initializeHandlers();

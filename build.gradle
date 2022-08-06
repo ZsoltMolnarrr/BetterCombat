@@ -43,8 +43,12 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
-    modImplementation("com.gitlab.Lortseam.completeconfig:gui-cloth:${project.completeconfig_version}")
+//    modImplementation("com.gitlab.Lortseam.completeconfig:gui-cloth:${project.completeconfig_version}")
     modImplementation("com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}")
+
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
 
     modApi include("com.github.ZsoltMolnarrr:TinyConfig:1.0.2")
     modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:0.0.5")

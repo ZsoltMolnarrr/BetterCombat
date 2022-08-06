@@ -20,6 +20,9 @@
     ],
     "main": [
       "net.bettercombat.BetterCombat"
+    ],
+    "modmenu": [
+      "net.bettercombat.client.ModMenuIntegration"
     ]
   },
   "mixins": [

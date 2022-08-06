@@ -34,7 +34,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             return;
         }
 
-        var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
+        var showArms = BetterCombatClient.config().isShowingArmsInFirstPerson;
         if (entity == MinecraftClient.getInstance().player && FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
             setPartsVisible(false);
             this.model.rightArm.visible = showArms;

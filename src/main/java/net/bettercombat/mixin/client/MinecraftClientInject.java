@@ -1,16 +1,16 @@
 package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.api.WeaponAttributes;
-import net.bettercombat.logic.AttackHand;
-import net.bettercombat.logic.PlayerAttackHelper;
-import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
-import net.bettercombat.mixin.LivingEntityAccessor;
+import net.bettercombat.config.BetterCombatConfig;
+import net.bettercombat.logic.AttackHand;
+import net.bettercombat.logic.PlayerAttackHelper;
+import net.bettercombat.logic.PlayerAttackProperties;
+import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -24,7 +24,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -122,7 +121,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
                 }
             }
 
-            if (BetterCombatClient.config.isHoldToAttackEnabled && isPressed) {
+            if (BetterCombatClient.config().isHoldToAttackEnabled && isPressed) {
                 isHoldingAttackInput = true;
                 startUpswing(attributes);
                 ci.cancel();
@@ -144,7 +143,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
 
 
     private boolean isTargetingMineableBlock() {
-        if (!BetterCombatClient.config.isMiningWithWeaponsEnabled) {
+        if (!BetterCombatClient.config().isMiningWithWeaponsEnabled) {
             return false;
         }
         MinecraftClient client = thisClient();
@@ -153,7 +152,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
             BlockHitResult blockHitResult = (BlockHitResult) crosshairTarget;
             BlockPos pos = blockHitResult.getBlockPos();
             BlockState clicked = world.getBlockState(pos);
-            if (BetterCombatClient.config.isSwingThruGrassEnabled) {
+            if (BetterCombatClient.config().isSwingThruGrassEnabled) {
                 if (!clicked.getCollisionShape(world, pos).isEmpty() || clicked.getHardness(world, pos) != 0.0F) {
                     return true;
                 }
@@ -257,7 +256,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         if (player == null) {
             return;
         }
-        if ((BetterCombatClient.config.isHighlightCrosshairEnabled)
+        if ((BetterCombatClient.config().isHighlightCrosshairEnabled)
                 && !ranTargetCheckCurrentTick) {
             MinecraftClient client = thisClient();
             var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
@@ -274,11 +273,11 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         }
 
         if (BetterCombatClient.toggleMineKeyBinding.wasPressed()) {
-            BetterCombatClient.config.isMiningWithWeaponsEnabled = !BetterCombatClient.config.isMiningWithWeaponsEnabled;
-            BetterCombatClient.config.save();
+            BetterCombatClient.config().isMiningWithWeaponsEnabled = !BetterCombatClient.config().isMiningWithWeaponsEnabled;
+            // BetterCombatClient.config().save();
             textToRender = I18n.translate("config.bettercombat.isMiningWithWeaponsEnabled")
                     + ": "
-                    + I18n.translate(BetterCombatClient.config.isMiningWithWeaponsEnabled ? "gui.yes" : "gui.no");
+                    + I18n.translate(BetterCombatClient.config().isMiningWithWeaponsEnabled ? "gui.yes" : "gui.no");
             textFade = 40;
         }
         if (textFade > 0) {

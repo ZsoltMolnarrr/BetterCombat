@@ -8,11 +8,11 @@ import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.BetterCombatClient;
+import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
 import net.bettercombat.logic.WeaponRegistry;
-import net.bettercombat.client.AnimationRegistry;
-import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -112,7 +112,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 mirror = !mirror;
             }
 
-            if (BetterCombatClient.config.isSmoothAnimationTransitionEnabled) {
+            if (BetterCombatClient.config().isSmoothAnimationTransitionEnabled) {
                 playbackCount += 1;
             }
             var container = getCurrentPlaybackSubStack();
