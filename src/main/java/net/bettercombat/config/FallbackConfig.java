@@ -70,7 +70,7 @@ public class FallbackConfig {
                         "mace|hammer|flail",
                         "bettercombat:mace"),
                 new CompatibilitySpecifier(
-                        "axe",
+                        "^(?:(?!pick).)*axe",
                         "bettercombat:axe"),
                 new CompatibilitySpecifier(
                         "sword|blade|cutlass|scimitar",
