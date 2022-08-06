@@ -177,7 +177,9 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         var hand = getCurrentHand();
         if (hand == null) { return; }
         double upswingRate = hand.upswingRate();
-        if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
+        if (upswingTicks > 0
+                || player.isUsingItem()
+                || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
 //            double attackCooldownTicks = player.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
 //            var currentCD = Math.round(attackCooldownTicks * player.getAttackCooldownProgress(0));
 //            System.out.println("Waiting for cooldown: " + currentCD + "/" + attackCooldownTicks);
