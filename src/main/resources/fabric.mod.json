@@ -29,7 +29,7 @@
     "bettercombat.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.9",
+    "fabricloader": ">=0.14.0",
     "fabric": "*",
     "minecraft": "1.19.X",
     "cloth-config": ">=7.0.65",
