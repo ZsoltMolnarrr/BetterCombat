@@ -42,7 +42,7 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-//    modApi("de.siphalor:coat-1.19:1.0.0-beta.18+mc22w17a")
+
     modImplementation("com.gitlab.Lortseam.completeconfig:gui-cloth:${project.completeconfig_version}")
     modImplementation("com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}")
 
