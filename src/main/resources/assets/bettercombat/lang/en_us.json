@@ -4,6 +4,7 @@
   "keybinds.bettercombat.feint" : "Feint",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Toggle Mine with weapons",
 
+  "text.autoconfig.bettercombat.title" : "Better Combat",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Hold to attack",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Automatically attack while holding the attack button",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "Mine with weapons",

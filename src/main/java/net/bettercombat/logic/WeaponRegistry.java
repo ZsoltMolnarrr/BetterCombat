@@ -18,7 +18,10 @@ import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WeaponRegistry {
     static final Logger LOGGER = LogUtils.getLogger();

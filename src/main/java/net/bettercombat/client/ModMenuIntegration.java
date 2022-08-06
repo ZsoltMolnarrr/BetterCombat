@@ -3,7 +3,7 @@ package net.bettercombat.client;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.bettercombat.config.BetterCombatConfig;
+import net.bettercombat.config.ClientConfigWrapper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -11,6 +11,6 @@ import net.fabricmc.api.Environment;
 public class ModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> AutoConfig.getConfigScreen(BetterCombatConfig.class, parent).get();
+        return parent -> AutoConfig.getConfigScreen(ClientConfigWrapper.class, parent).get();
     }
 }

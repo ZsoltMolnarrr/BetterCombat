@@ -1,5 +1,6 @@
 package net.bettercombat.network;
 
+import com.google.gson.Gson;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.config.ServerConfig;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -7,10 +8,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.List;
 
 public class Packets {
@@ -71,15 +68,18 @@ public class Packets {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "config_sync");
 
         public static PacketByteBuf write(ServerConfig config) {
-            var writer = new StringWriter();
-            config.serialize(() -> new BufferedWriter(writer));
+            var gson = new Gson();
+            var json = gson.toJson(config);
             var buffer = PacketByteBufs.create();
-            buffer.writeString(writer.toString());
+            buffer.writeString(json);
             return buffer;
         }
 
-        public static void readInPlace(PacketByteBuf buffer, ServerConfig config) {
-            config.deserialize(() -> new BufferedReader(new StringReader(buffer.readString())));
+        public static ServerConfig read(PacketByteBuf buffer) {
+            var gson = new Gson();
+            var json = buffer.readString();
+            var config = gson.fromJson(json, ServerConfig.class);
+            return config;
         }
     }
 }

@@ -27,7 +27,10 @@ public class ClientNetwork {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(Packets.ConfigSync.ID, (client, handler, buf, responseSender) -> {
-            Packets.ConfigSync.readInPlace(buf, BetterCombat.config);
+            var config = Packets.ConfigSync.read(buf);
+            // var gson = new Gson();
+            // System.out.println("Received server config: " + gson.toJson(config));
+            BetterCombat.config = config;
         });
     }
 }

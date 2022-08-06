@@ -112,7 +112,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 mirror = !mirror;
             }
 
-            if (BetterCombatClient.config().isSmoothAnimationTransitionEnabled) {
+            if (BetterCombatClient.config.isSmoothAnimationTransitionEnabled) {
                 playbackCount += 1;
             }
             var container = getCurrentPlaybackSubStack();

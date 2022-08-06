@@ -15,14 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class InGameHudInject {
     @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
     public void pre_renderCrosshair(MatrixStack matrices, CallbackInfo ci) {
-        if (BetterCombatClient.config().isHighlightCrosshairEnabled) {
+        if (BetterCombatClient.config.isHighlightCrosshairEnabled) {
             setShaderForHighlighting();
         }
     }
 
     private void setShaderForHighlighting() {
         if(((MinecraftClientExtension)MinecraftClient.getInstance()).hasTargetsInRange()) {
-            var color = BetterCombatClient.config().hudHighlightColor;
+            var color = BetterCombatClient.config.hudHighlightColor;
             float red = ((float) ((color >> 16) & 0xFF)) / 255F;
             float green = ((float) ((color >> 8) & 0xFF)) / 255F;
             float blue = ((float) (color & 0xFF)) / 255F;

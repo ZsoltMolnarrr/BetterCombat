@@ -1,14 +1,11 @@
 package net.bettercombat.client;
 
-import me.lortseam.completeconfig.gui.ConfigScreenBuilder;
-import me.lortseam.completeconfig.gui.cloth.ClothConfigScreenBuilder;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
-import net.bettercombat.BetterCombat;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
-import net.bettercombat.config.BetterCombatConfig;
 import net.bettercombat.config.ClientConfig;
+import net.bettercombat.config.ClientConfigWrapper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,19 +18,15 @@ import net.minecraft.client.util.InputUtil;
 
 @Environment(EnvType.CLIENT)
 public class BetterCombatClient implements ClientModInitializer {
-//    @ConfigEntry.Category("client")
-//    public static ClientConfig config = new ClientConfig();
-    public static ClientConfig config() {
-        return AutoConfig.getConfigHolder(BetterCombatConfig.class).getConfig().client;
-    }
+    public static ClientConfig config;
     public static KeyBinding feintKeyBinding;
     public static KeyBinding toggleMineKeyBinding;
 
     @Override
     public void onInitializeClient() {
-//        config.load();
-        AutoConfig.register(BetterCombatConfig.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
-
+        AutoConfig.register(ClientConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
+        // Intuitive way to load a config :)
+        config = AutoConfig.getConfigHolder(ClientConfigWrapper.class).getConfig().client;
 
         ClientNetwork.initializeHandlers();
         WeaponAttributeTooltip.initialize();
@@ -46,9 +39,6 @@ public class BetterCombatClient implements ClientModInitializer {
         if (FabricLoader.getInstance().isModLoaded("firstperson")) {
             FirstPersonRenderHelper.isFeatureEnabled = false;
         }
-//        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-//            ConfigScreenBuilder.setMain(BetterCombat.MODID, new ClothConfigScreenBuilder());
-//        }
     }
 
     private void registerKeyBindings() {

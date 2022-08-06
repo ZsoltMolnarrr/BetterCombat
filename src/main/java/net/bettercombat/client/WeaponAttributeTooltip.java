@@ -1,6 +1,5 @@
 package net.bettercombat.client;
 
-import net.bettercombat.config.BetterCombatConfig;
 import net.bettercombat.logic.WeaponRegistry;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -45,7 +44,7 @@ public class WeaponAttributeTooltip {
                     }
                 }
 
-                if (BetterCombatClient.config().isTooltipAttackRangeEnabled) {
+                if (BetterCombatClient.config.isTooltipAttackRangeEnabled) {
                     var operationId = EntityAttributeModifier.Operation.ADDITION.getId();
                     var rangeTranslationKey = "attribute.name.generic.attack_range";
                     var rangeValue = attributes.attackRange();
