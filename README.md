@@ -111,18 +111,21 @@ You can make and reference your own presets the same way.
 
 If you want unique behaviour for your weapon, you can create attributes from scratch.
 
-The content of your weapon attributes JSON file is parsed into an [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) object. 
-
-(Check out the inline java documentation of [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) for details.)
+The content of your weapon attributes JSON file is parsed into an [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) object. (Check out the inline java documentation of [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) for details.)
 
 When no parent is specified, the value for `"attributes"` key must be a full json object that can be parsed into [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
+
 ```
 {
   "attributes": { ... }
 }
 ```
 
-Check out the inline java documentation of [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) for details.
+Check out the existing [weapon presets](src/main/resources/data/bettercombat/weapon_attributes) to see practical examples of building from scratch.
+
+Check out the available [attack animations](src/main/resources/assets/bettercombat/attack_animations), bundled with Better Combat. 
+
+If you need more details, the java documentation of [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) covers all the specifics.
 
 ---
 
