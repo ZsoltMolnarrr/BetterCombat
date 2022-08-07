@@ -3,7 +3,6 @@ package net.bettercombat.logic;
 import net.bettercombat.BetterCombat;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;

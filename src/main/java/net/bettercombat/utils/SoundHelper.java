@@ -2,12 +2,15 @@ package net.bettercombat.utils;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.network.Packets;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Random;
@@ -15,23 +18,36 @@ import java.util.Random;
 public class SoundHelper {
     private static Random rng = new Random();
 
-    public static void playSound(World world, Entity entity, WeaponAttributes.Sound sound) {
+    public static void playSound(ServerWorld world, Entity entity, WeaponAttributes.Sound sound) {
         if (sound == null) {
             return;
         }
         try {
-            var soundEvent = Registry.SOUND_EVENT.get(new Identifier(sound.id()));
             float pitch = (sound.randomness() > 0)
                     ?  rng.nextFloat(sound.pitch() - sound.randomness(), sound.pitch() + sound.randomness())
                     : sound.pitch();
-            world.playSound(null,
+            var packet = new Packets.AttackSound(
                     entity.getX(),
                     entity.getY(),
                     entity.getZ(),
-                    soundEvent,
-                    SoundCategory.PLAYERS,
+                    sound.id(),
                     sound.volume(),
-                    pitch);
+                    pitch)
+                    .write();
+
+            var soundEvent = Registry.SOUND_EVENT.get(new Identifier(sound.id()));
+            var distance = soundEvent.getDistanceToTravel(sound.volume());
+            var origin = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
+            PlayerLookup.around(world, origin, distance).forEach(serverPlayer -> {
+                var channel = Packets.AttackSound.ID;
+                try {
+                    if (ServerPlayNetworking.canSend(serverPlayer, channel)) {
+                        ServerPlayNetworking.send(serverPlayer, channel, packet);
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            });
         } catch (Exception e) {
             System.out.println("Failed to play sound: " + sound.id());
             e.printStackTrace();
