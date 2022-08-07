@@ -60,6 +60,30 @@ public class Packets {
         }
     }
 
+    public record AttackSound(double x, double y, double z, String soundId, float volume, float pitch) {
+        public static Identifier ID = new Identifier(BetterCombat.MODID, "attack_sound");
+        public PacketByteBuf write() {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeDouble(x);
+            buffer.writeDouble(y);
+            buffer.writeDouble(z);
+            buffer.writeString(soundId);
+            buffer.writeFloat(volume);
+            buffer.writeFloat(pitch);
+            return buffer;
+        }
+
+        public static AttackSound read(PacketByteBuf buffer) {
+            var x = buffer.readDouble();
+            var y = buffer.readDouble();
+            var z = buffer.readDouble();
+            var soundId = buffer.readString();
+            var volume = buffer.readFloat();
+            var pitch = buffer.readFloat();
+            return new AttackSound(x, y, z, soundId, volume, pitch);
+        }
+    }
+
     public static class WeaponRegistrySync {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "weapon_registry");
     }
