@@ -51,6 +51,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         return (MinecraftClient)((Object)this);
     }
     private boolean isHoldingAttackInput = false;
+    private boolean isHarvesting = false;
     private boolean hasTargetsInRange = false;
     private String textToRender = null;
     private int textFade = 0;
@@ -98,7 +99,8 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null) {
-            if (isTargetingMineableBlock()) {
+            if (isTargetingMineableBlock() || isHarvesting) {
+                isHarvesting = true;
                 return;
             }
             startUpswing(attributes);
@@ -115,7 +117,8 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         if (attributes != null) {
             boolean isPressed = client.options.attackKey.isPressed();
             if(isPressed && !isHoldingAttackInput) {
-                if (isTargetingMineableBlock()) {
+                if (isTargetingMineableBlock() || isHarvesting) {
+                    isHarvesting = true;
                     return;
                 } else {
                     ci.cancel();
@@ -127,6 +130,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
                 startUpswing(attributes);
                 ci.cancel();
             } else {
+                isHarvesting = false;
                 isHoldingAttackInput = false;
             }
         }
