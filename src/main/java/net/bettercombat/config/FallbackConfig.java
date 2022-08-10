@@ -1,6 +1,7 @@
 package net.bettercombat.config;
 
 public class FallbackConfig {
+    public int schema_version;
     public String blacklist_item_id_regex;
     public CompatibilitySpecifier[] fallback_compatibility;
 
@@ -18,6 +19,7 @@ public class FallbackConfig {
 
     public static FallbackConfig createDefault() {
         var object = new FallbackConfig();
+        object.schema_version = 1;
         object.blacklist_item_id_regex = "pickaxe";
         object.fallback_compatibility = new CompatibilitySpecifier[] {
                 new CompatibilitySpecifier(
@@ -79,5 +81,10 @@ public class FallbackConfig {
                         "bettercombat:sword")
         };
         return object;
+    }
+
+    public static FallbackConfig migrate(FallbackConfig oldConfig, FallbackConfig newConfig) {
+        newConfig.fallback_compatibility = oldConfig.fallback_compatibility;
+        return newConfig;
     }
 }
