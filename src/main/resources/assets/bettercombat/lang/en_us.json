@@ -1,9 +1,4 @@
 {
-  "attribute.name.generic.attack_range" : "Attack Range",
-  "item.modifiers.two_handed": "Two-Handed",
-  "keybinds.bettercombat.feint" : "Feint",
-  "keybinds.bettercombat.toggle_mine_with_weapons" : "Toggle Mine with weapons",
-
   "config.bettercombat.clientConfig.isHoldToAttackEnabled" : "Hold to attack",
   "config.bettercombat.clientConfig.isHoldToAttackEnabled.tooltip" : "Automatically attack while holding the attack button",
   "config.bettercombat.clientConfig.isMiningWithWeaponsEnabled" : "Mine with weapons",
@@ -19,5 +14,7 @@
   "config.bettercombat.clientConfig.isSmoothAnimationTransitionEnabled": "Smooth animation transitions",
   "config.bettercombat.clientConfig.isSmoothAnimationTransitionEnabled.tooltip": "Attack animations smoothly transition at the cost of accuracy",
   "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled": "Item tooltip: attack range",
-  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled.tooltip": "Show attack range attribute on weapon tooltips"
+  "config.bettercombat.clientConfig.isTooltipAttackRangeEnabled.tooltip": "Show attack range attribute on weapon tooltips",
+  "config.bettercombat.clientConfig.isWeaponSwingSoundEnabled" : "Weapon swing sounds",
+  "config.bettercombat.clientConfig.isWeaponSwingSoundEnabled.tooltip" : "Enable the playback of weapon swing sounds"
 }

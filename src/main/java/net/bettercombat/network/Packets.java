@@ -63,7 +63,7 @@ public class Packets {
         }
     }
 
-    public record AttackSound(double x, double y, double z, String soundId, float volume, float pitch) {
+    public record AttackSound(double x, double y, double z, String soundId, float volume, float pitch, long seed) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "attack_sound");
         public PacketByteBuf write() {
             PacketByteBuf buffer = PacketByteBufs.create();
@@ -73,6 +73,7 @@ public class Packets {
             buffer.writeString(soundId);
             buffer.writeFloat(volume);
             buffer.writeFloat(pitch);
+            buffer.writeLong(seed);
             return buffer;
         }
 
@@ -83,7 +84,8 @@ public class Packets {
             var soundId = buffer.readString();
             var volume = buffer.readFloat();
             var pitch = buffer.readFloat();
-            return new AttackSound(x, y, z, soundId, volume, pitch);
+            var seed = buffer.readLong();
+            return new AttackSound(x, y, z, soundId, volume, pitch, seed);
         }
     }
 

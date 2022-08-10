@@ -32,11 +32,12 @@ public class SoundHelper {
                     entity.getZ(),
                     sound.id(),
                     sound.volume(),
-                    pitch)
+                    pitch,
+                    rng.nextLong())
                     .write();
 
             var soundEvent = Registry.SOUND_EVENT.get(new Identifier(sound.id()));
-            var distance = soundEvent.getDistanceToTravel(sound.volume());
+            var distance = sound.volume() > 1.0f ? (double)(16.0f * sound.volume()) : 16.0;
             var origin = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
             PlayerLookup.around(world, origin, distance).forEach(serverPlayer -> {
                 var channel = Packets.AttackSound.ID;

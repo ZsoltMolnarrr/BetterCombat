@@ -21,6 +21,8 @@ public class ClientConfig implements ConfigGroup {
     public boolean isSmoothAnimationTransitionEnabled = true;
     @ConfigEntry
     public boolean isTooltipAttackRangeEnabled = true;
+    @ConfigEntry
+    public boolean isWeaponSwingSoundEnabled = true;
 
 //    public Listener listener;
 //    public interface Listener {
