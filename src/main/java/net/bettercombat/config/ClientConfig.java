@@ -23,4 +23,7 @@ public class ClientConfig implements ConfigData {
     public boolean isSmoothAnimationTransitionEnabled = true;
     @ConfigEntry.Gui.Tooltip
     public boolean isTooltipAttackRangeEnabled = true;
+
+    @ConfigEntry.Gui.Tooltip
+    public boolean isWeaponSwingSoundEnabled = true;
 }

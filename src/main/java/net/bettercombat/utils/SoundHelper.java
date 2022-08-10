@@ -32,7 +32,8 @@ public class SoundHelper {
                     entity.getZ(),
                     sound.id(),
                     sound.volume(),
-                    pitch)
+                    pitch,
+                    rng.nextLong())
                     .write();
 
             var soundEvent = Registry.SOUND_EVENT.get(new Identifier(sound.id()));

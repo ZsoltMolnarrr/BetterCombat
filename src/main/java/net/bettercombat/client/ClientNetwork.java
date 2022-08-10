@@ -29,17 +29,21 @@ public class ClientNetwork {
             final var packet = Packets.AttackSound.read(buf);
             client.execute(() -> {
                 try {
+                    if (!BetterCombatClient.config.isWeaponSwingSoundEnabled) {
+                        return;
+                    }
+
                     var soundEvent = Registry.SOUND_EVENT.get(new Identifier(packet.soundId()));
-                    System.out.println("Client trying to play sound: " + packet);
                     client.world.playSound(
-                            null,
+                            client.player,
                             packet.x(),
                             packet.y(),
                             packet.z(),
                             soundEvent,
                             SoundCategory.PLAYERS,
                             packet.volume(),
-                            packet.pitch());
+                            packet.pitch(),
+                            packet.seed());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

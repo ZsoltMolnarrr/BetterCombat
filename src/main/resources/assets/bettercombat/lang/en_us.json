@@ -20,5 +20,7 @@
   "text.autoconfig.bettercombat.option.client.isSmoothAnimationTransitionEnabled": "Smooth animation transitions",
   "text.autoconfig.bettercombat.option.client.isSmoothAnimationTransitionEnabled.@Tooltip": "Attack animations smoothly transition at the cost of accuracy",
   "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled": "Item tooltip: attack range",
-  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled.@Tooltip": "Show attack range attribute on weapon tooltips"
+  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled.@Tooltip": "Show attack range attribute on weapon tooltips",
+  "text.autoconfig.bettercombat.option.client.isWeaponSwingSoundEnabled" : "Weapon swing sounds",
+  "text.autoconfig.bettercombat.option.client.isWeaponSwingSoundEnabled.@Tooltip" : "Enable the playback of weapon swing sounds"
 }
