@@ -17,8 +17,9 @@ public class BetterCombat implements ModInitializer {
     private static String[] configCategory = {"server"};
     public static ServerConfig config = new ServerConfig();
     public static Config configWrapper = new Config(BetterCombat.MODID, configCategory, config);
+    private static FallbackConfig fallbackDefault = FallbackConfig.createDefault();
     public static ConfigManager<FallbackConfig> fallbackConfig = new ConfigManager<FallbackConfig>
-            ("fallback_compatibility", FallbackConfig.createDefault())
+            ("fallback_compatibility", fallbackDefault)
             .builder()
             .setDirectory(MODID)
             .sanitize(true)
@@ -27,7 +28,7 @@ public class BetterCombat implements ModInitializer {
     @Override
     public void onInitialize() {
         configWrapper.load();
-        fallbackConfig.refresh();
+        loadFallbackConfig();
         ServerNetwork.initializeHandlers();
         ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
             WeaponRegistry.loadAttributes(minecraftServer.getResourceManager());
@@ -37,5 +38,13 @@ public class BetterCombat implements ModInitializer {
             WeaponRegistry.encodeRegistry();
         });
         SoundHelper.registerSounds();
+    }
+
+    private void loadFallbackConfig() {
+        fallbackConfig.refresh();
+        if (fallbackConfig.currentConfig.schema_version < fallbackDefault.schema_version) {
+            fallbackConfig.currentConfig = FallbackConfig.migrate(fallbackConfig.currentConfig, FallbackConfig.createDefault());
+            fallbackConfig.save();
+        }
     }
 }
