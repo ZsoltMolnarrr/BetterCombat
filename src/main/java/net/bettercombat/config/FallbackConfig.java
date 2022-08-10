@@ -1,6 +1,7 @@
 package net.bettercombat.config;
 
 public class FallbackConfig {
+    public String blacklist_item_id_regex;
     public CompatibilitySpecifier[] fallback_compatibility;
 
     public static class CompatibilitySpecifier {
@@ -17,6 +18,7 @@ public class FallbackConfig {
 
     public static FallbackConfig createDefault() {
         var object = new FallbackConfig();
+        object.blacklist_item_id_regex = "pickaxe";
         object.fallback_compatibility = new CompatibilitySpecifier[] {
                 new CompatibilitySpecifier(
                         "claymore|great_sword|greatsword",
@@ -70,7 +72,7 @@ public class FallbackConfig {
                         "mace|hammer|flail",
                         "bettercombat:mace"),
                 new CompatibilitySpecifier(
-                        "^(?:(?!pick).)*axe",
+                        "axe",
                         "bettercombat:axe"),
                 new CompatibilitySpecifier(
                         "sword|blade|cutlass|scimitar",

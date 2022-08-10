@@ -16,7 +16,8 @@ public class WeaponAttributesFallback {
         var config = BetterCombat.fallbackConfig.currentConfig;
         for(var itemId: Registry.ITEM.getIds()) {
             var item = Registry.ITEM.get(itemId);
-            if (!hasAttributeModifier(item, EntityAttributes.GENERIC_ATTACK_DAMAGE)) {
+            if (!hasAttributeModifier(item, EntityAttributes.GENERIC_ATTACK_DAMAGE)
+                    || matches(itemId.toString(), config.blacklist_item_id_regex)) {
                 // Skipping items without attack damage attribute
                 continue;
             }
