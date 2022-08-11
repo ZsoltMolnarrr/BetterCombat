@@ -246,9 +246,14 @@ public final class WeaponAttributes {
          */
         DUAL_WIELDING_ANY,
         /**
-         * Fulfilled if the player is dual wielding the same item in main-hand and off-hand
+         * Fulfilled if the player is dual wielding items with matching ids
          */
         DUAL_WIELDING_SAME,
+        /**
+         * Fulfilled if the player is dual wielding items with matching categories
+         * (Category of an item is specified at `WeaponAttributes.category`)
+         */
+        DUAL_WIELDING_SAME_CATEGORY,
         /**
          * Fulfilled for attacks performed with main-hand only
          */

@@ -68,13 +68,30 @@ public class PlayerAttackHelper {
     }
 
     private static boolean evaluateCondition(WeaponAttributes.Condition condition, PlayerEntity player, boolean isOffHandAttack) {
+        if (condition == null) {
+            return false;
+        }
         switch (condition) {
             case DUAL_WIELDING_ANY -> {
                 return isDualWielding(player);
             }
             case DUAL_WIELDING_SAME -> {
                 return isDualWielding(player) &&
-                        (player.getMainHandStack().getItem() == player.getOffHandStack().getItem()); // TODO: Eq
+                        (player.getMainHandStack().getItem() == player.getOffHandStack().getItem());
+            }
+            case DUAL_WIELDING_SAME_CATEGORY -> {
+                if (!isDualWielding(player)) {
+                    return false;
+                }
+                var mainHandAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+                var offHandAttributes = WeaponRegistry.getAttributes(player.getOffHandStack());
+                if (mainHandAttributes.category() == null
+                        || mainHandAttributes.category().isEmpty()
+                        || offHandAttributes.category() == null
+                        || offHandAttributes.category().isEmpty()) {
+                    return false;
+                }
+                return mainHandAttributes.category().equals(offHandAttributes.category());
             }
             case MAIN_HAND_ONLY -> {
                 return !isOffHandAttack;

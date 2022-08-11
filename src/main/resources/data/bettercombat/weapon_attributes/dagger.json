@@ -25,7 +25,7 @@
         }
       },
       {
-        "conditions": ["DUAL_WIELDING_SAME", "MAIN_HAND_ONLY"],
+        "conditions": ["DUAL_WIELDING_SAME_CATEGORY", "MAIN_HAND_ONLY"],
         "hitbox": "FORWARD_BOX",
         "damage_multiplier": 1.4,
         "angle": 150,
