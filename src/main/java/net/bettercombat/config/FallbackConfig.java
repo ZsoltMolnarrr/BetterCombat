@@ -65,6 +65,9 @@ public class FallbackConfig {
                         "sickle",
                         "bettercombat:sickle"),
                 new CompatibilitySpecifier(
+                        "soul_knife",
+                        "bettercombat:soul_knife"),
+                new CompatibilitySpecifier(
                         "dagger|knife",
                         "bettercombat:dagger"),
                 new CompatibilitySpecifier(
