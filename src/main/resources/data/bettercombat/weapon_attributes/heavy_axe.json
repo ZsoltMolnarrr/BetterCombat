@@ -1,0 +1,6 @@
+{
+  "parent": "bettercombat:double_axe",
+  "attributes" : {
+    "pose": "bettercombat:pose_two_handed_heavy"
+  }
+}
