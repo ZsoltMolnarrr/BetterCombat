@@ -2,6 +2,7 @@
   "attributes": {
     "attack_range": 3,
     "two_handed": true,
+    "category": "staff",
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",

@@ -3,6 +3,7 @@
     "attack_range": 2.75,
     "two_handed": true,
     "pose": "bettercombat:pose_two_handed_sword",
+    "category": "claymore",
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",

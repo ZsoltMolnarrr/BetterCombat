@@ -3,6 +3,7 @@
     "attack_range": 3.5,
     "pose": "bettercombat:pose_two_handed_scythe",
     "two_handed": true,
+    "category": "scythe",
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",

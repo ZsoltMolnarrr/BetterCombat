@@ -3,6 +3,7 @@
     "attack_range": 2.5,
     "two_handed": true,
     "pose": "bettercombat:pose_two_handed_sword",
+    "category": "soul_knife",
     "attacks": [
       {
         "hitbox": "FORWARD_BOX",

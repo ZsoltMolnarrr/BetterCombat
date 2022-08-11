@@ -33,6 +33,19 @@ public final class WeaponAttributes {
     private final boolean two_handed;
 
     /**
+     * Specifies the category (aka family) type of the weapon.
+     * This can be any value. Prefer using lowercase values.
+     *
+     * Example values:
+     *    "cutlass"
+     *    "sickle"
+     *
+     * Used for conditional combos.
+     */
+    @Nullable
+    private final String category;
+
+    /**
      * Specifies the sequence of attacks following each other, when the user is attacking continuously.
      * (When last attack of the sequence is reached, it restarts)
      * With a sequence of different attacks, you can create combos.
@@ -51,10 +64,12 @@ public final class WeaponAttributes {
             double attack_range,
             @Nullable String pose,
             boolean isTwoHanded,
+            String category,
             Attack[] attacks) {
         this.attack_range = attack_range;
         this.pose = pose;
         this.two_handed = isTwoHanded;
+        this.category = category;
         this.attacks = attacks;
     }
 
@@ -343,6 +358,11 @@ public final class WeaponAttributes {
     @Nullable
     public String pose() {
         return pose;
+    }
+
+    @Nullable
+    public String category() {
+        return category;
     }
 
     public boolean isTwoHanded() {
