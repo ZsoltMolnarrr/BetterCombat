@@ -10,6 +10,7 @@ public class WeaponAttributesHelper {
         var attackRange = b.attackRange() > 0 ? b.attackRange() : a.attackRange();
         var pose = b.pose() != null ? b.pose() : a.pose();
         var isTwoHanded = b.isTwoHanded();
+        var category = b.category() != null ? b.category() : a.category();
         var attacks = a.attacks();
         if (b.attacks() != null && b.attacks().length > 0) {
             var overrideAttacks = new ArrayList<WeaponAttributes.Attack>();
@@ -31,7 +32,7 @@ public class WeaponAttributesHelper {
             }
             attacks = overrideAttacks.toArray(new WeaponAttributes.Attack[0]);
         }
-        return new WeaponAttributes(attackRange, pose, isTwoHanded, attacks);
+        return new WeaponAttributes(attackRange, pose, isTwoHanded, category, attacks);
     }
 
     public static void validate(WeaponAttributes attributes) throws Exception {

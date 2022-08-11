@@ -3,6 +3,7 @@
   "attributes" : {
     "attack_range": 2.75,
     "pose": "",
+    "category": "trident",
     "attacks": [
       {
         "animation": "bettercombat:one_handed_stab"

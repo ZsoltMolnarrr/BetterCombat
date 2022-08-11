@@ -2,6 +2,7 @@
   "attributes": {
     "attack_range": 2.75,
     "two_handed": true,
+    "category": "anchor",
     "attacks": [
       {
         "hitbox": "FORWARD_BOX",

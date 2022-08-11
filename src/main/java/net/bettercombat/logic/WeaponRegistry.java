@@ -97,7 +97,7 @@ public class WeaponRegistry {
                 }
             }
 
-            var empty = new WeaponAttributes(0, null, false, null);
+            var empty = new WeaponAttributes(0, null, false, null,null);
             var resolvedAttributes = resolutionChain
                 .stream()
                 .reduce(empty, (a, b) -> {

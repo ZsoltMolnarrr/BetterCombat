@@ -2,6 +2,7 @@
   "attributes": {
     "attack_range": 2.5,
     "two_handed": true,
+    "category": "double_axe",
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
@@ -21,7 +22,7 @@
         "animation": "bettercombat:two_handed_spin",
         "swing_sound": {
           "id": "bettercombat:double_axe_swing",
-          "pitch": 0.9
+          "pitch": 1.1
         }
       }
     ]

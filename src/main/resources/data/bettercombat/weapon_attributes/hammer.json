@@ -3,6 +3,7 @@
     "attack_range": 2.5,
     "pose": "bettercombat:pose_two_handed_heavy",
     "two_handed": true,
+    "category": "hammer",
     "attacks": [
       {
         "hitbox": "FORWARD_BOX",
