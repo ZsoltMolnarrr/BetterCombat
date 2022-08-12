@@ -2,6 +2,7 @@
   "parent": "bettercombat:double_axe",
   "attributes" : {
     "pose": "bettercombat:pose_two_handed_heavy",
-    "category": "heavy_axe"
+    "category": "heavy_axe",
+    "two_handed": true
   }
 }
