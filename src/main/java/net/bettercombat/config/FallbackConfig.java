@@ -48,7 +48,10 @@ public class FallbackConfig {
                         "bettercombat:anchor"),
                 new CompatibilitySpecifier(
                         "battlestaff|battle_staff",
-                        "bettercombat:staff"),
+                        "bettercombat:battlestaff"),
+                new CompatibilitySpecifier(
+                        "claw",
+                        "bettercombat:claw"),
                 new CompatibilitySpecifier(
                         "fist|gauntlet",
                         "bettercombat:fist"),

@@ -1,0 +1,25 @@
+{
+  "attributes": {
+    "attack_range": 2.1,
+    "category": "claw",
+    "attacks": [
+      {
+        "hitbox": "FORWARD_BOX",
+        "upswing": 0.5,
+        "animation": "bettercombat:one_handed_punch",
+        "swing_sound": {
+          "id": "bettercombat:fist_punch"
+        }
+      },
+      {
+        "hitbox": "HORIZONTAL_PLANE",
+        "angle": 120,
+        "upswing": 0.5,
+        "animation": "bettercombat:one_handed_slash_horizontal_right",
+        "swing_sound": {
+          "id": "bettercombat:sword_slash"
+        }
+      }
+    ]
+  }
+}
