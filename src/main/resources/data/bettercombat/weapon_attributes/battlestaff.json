@@ -1,9 +1,8 @@
 {
   "attributes": {
-    "comment": "DEPRECATED STOP USING THIS",
     "attack_range": 3,
     "two_handed": true,
-    "category": "staff",
+    "category": "battlestaff",
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
