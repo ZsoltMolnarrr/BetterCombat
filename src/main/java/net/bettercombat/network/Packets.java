@@ -12,17 +12,25 @@ import java.util.List;
 
 public class Packets {
     public record C2S_AttackRequest(int comboCount, boolean isSneaking, int[] entityIds) {
-        public static Identifier ID = new Identifier(BetterCombat.MODID, "c2s_request_attack");
-        public static boolean UseVanillaPacket = true;
-        public static PacketByteBuf write(int comboCount, boolean isSneaking, List<Entity> entities) {
-            PacketByteBuf buffer = PacketByteBufs.create();
+        public C2S_AttackRequest(int comboCount, boolean isSneaking, List<Entity> entities) {
+            this(comboCount, isSneaking, convertEntityList(entities));
+        }
+
+        private static int[] convertEntityList(List<Entity> entities) {
             int[] ids = new int[entities.size()];
             for(int i = 0; i < entities.size(); i++) {
                 ids[i] = entities.get(i).getId();
             }
+            return ids;
+        }
+
+        public static Identifier ID = new Identifier(BetterCombat.MODID, "c2s_request_attack");
+        public static boolean UseVanillaPacket = true;
+        public PacketByteBuf write() {
+            PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeInt(comboCount);
             buffer.writeBoolean(isSneaking);
-            buffer.writeIntArray(ids);
+            buffer.writeIntArray(entityIds);
             return buffer;
         }
 
@@ -37,12 +45,9 @@ public class Packets {
     public record AttackAnimation(int playerId, boolean isOffHand, String animationName, float length) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "attack_animation");
         public static String StopSymbol = "!STOP!";
+        public static AttackAnimation stop(int playerId) { return new AttackAnimation(playerId, false, StopSymbol, 0); }
 
-        public static PacketByteBuf writeStop(int playerId) {
-            return writePlay(playerId, false, StopSymbol, 0);
-        }
-
-        public static PacketByteBuf writePlay(int playerId, boolean isOffHand, String animationName, float length) {
+        public PacketByteBuf write() {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeInt(playerId);
             buffer.writeBoolean(isOffHand);

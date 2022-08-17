@@ -203,7 +203,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, isOffHand, attackCooldownTicks);
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
-                Packets.AttackAnimation.writePlay(player.getId(), isOffHand, animationName, attackCooldownTicks));
+                new Packets.AttackAnimation(player.getId(), isOffHand, animationName, attackCooldownTicks).write());
     }
 
     private void feintIfNeeded() {
@@ -212,7 +212,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
             ((PlayerAttackAnimatable) player).stopAttackAnimation();
             ClientPlayNetworking.send(
                     Packets.AttackAnimation.ID,
-                    Packets.AttackAnimation.writeStop(player.getId()));
+                    Packets.AttackAnimation.stop(player.getId()).write());
             upswingTicks = 0;
             upswingStack = null;
         }
@@ -310,7 +310,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         updateTargetsInRage(targets);
         ClientPlayNetworking.send(
                 Packets.C2S_AttackRequest.ID,
-                Packets.C2S_AttackRequest.write(getComboCount(), player.isSneaking(), targets));
+                new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), targets).write());
         client.player.resetLastAttackedTicks();
         ((MinecraftClientAccessor) client).setAttackCooldown(10); // This is actually the mining cooldown
         setComboCount(getComboCount() + 1);
