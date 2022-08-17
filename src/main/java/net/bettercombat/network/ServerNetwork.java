@@ -70,6 +70,13 @@ public class ServerNetwork {
             }
             final var request = Packets.C2S_AttackRequest.read(buf);
             final var hand = PlayerAttackHelper.getCurrentAttack(player, request.comboCount());
+            if (hand == null) {
+                LOGGER.error("Server handling Packets.C2S_AttackRequest - No current attack hand!");
+                LOGGER.error("Combo count: " + request.comboCount() + " is dual wielding: " + PlayerAttackHelper.isDualWielding(player));
+                LOGGER.error("Main-hand stack: " + player.getMainHandStack());
+                LOGGER.error("Off-hand stack: " + player.getOffHandStack());
+                return;
+            }
             final var attack = hand.attack();
             final var attributes = hand.attributes();
             final boolean useVanillaPacket = Packets.C2S_AttackRequest.UseVanillaPacket;
@@ -78,7 +85,7 @@ public class ServerNetwork {
                 Multimap<EntityAttribute, EntityAttributeModifier> comboAttributes = null;
                 Multimap<EntityAttribute, EntityAttributeModifier> dualWieldingAttributes = null;
                 double range = 18.0;
-                if (hand != null && attributes != null && attack != null) {
+                if (attributes != null && attack != null) {
                     range = attributes.attackRange();
 
                     comboAttributes = HashMultimap.create();
