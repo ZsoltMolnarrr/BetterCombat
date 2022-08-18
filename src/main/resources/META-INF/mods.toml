@@ -56,3 +56,9 @@ Easy, spectacular and fun melee combat system we know from Minecraft Dungeons.
     versionRange="[1.19,)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.bettercombat]]
+    modId="playeranimator"
+    mandatory=true
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"

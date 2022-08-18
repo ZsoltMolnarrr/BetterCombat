@@ -37,5 +37,6 @@ public class PacketWrapper {
     public static void handle(PacketWrapper msg, Supplier<NetworkEvent.Context> contextSupplier) {
         if (msg.isClientBound) ClientPlayNetworking.handle(msg);
         else ServerPlayNetworking.handle(msg, contextSupplier.get().getSender());
+        contextSupplier.get().setPacketHandled(true);
     }
 }

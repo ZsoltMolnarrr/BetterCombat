@@ -32,35 +32,11 @@ import java.util.stream.Collectors;
 
 // TODO: pls fix me elegantly :)
 // the modify args in render -> setupTransforms causes java.lang.NoClassDefFoundError: org/spongepowered/asm/synthetic/args/Args$1
+// maybe a forge patch problem? i really have no idea
 // so im just injecting to replace the body of setupTransforms entirly instead
 // this feels like an ugly solution.
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
-//    @ModifyArgs(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/LivingEntityRenderer;setupTransforms(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/client/util/math/MatrixStack;FFF)V"))
-//    private void modifyArg(Args args) {
-//        LivingEntity entity = args.get(0);
-//        Optional<IAnimation> currentAnimation = Optional.empty();
-//        if (entity instanceof PlayerAttackAnimatable) {
-//            currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
-//        }
-//        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-//
-//        //When in first person make the animation play facing forward, instead of slowly adjusting to player rotations
-//        if (currentAnimation.isPresent()
-//                && entity == MinecraftClient.getInstance().player
-//                && !camera.isThirdPerson()
-//        ) {
-//            var isActive = currentAnimation.get().isActive();
-//            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
-//                isActive = extendedAnimation.isActiveInFirstPerson();
-//            }
-//
-//            if (isActive) {
-//                args.set(3, MathHelper.lerpAngleDegrees(args.get(4), entity.prevHeadYaw, entity.headYaw));
-//            }
-//        }
-//    }
-
     @Shadow protected abstract float getLyingAngle(LivingEntity entity);
 
     @Shadow protected abstract boolean isShaking(LivingEntity entity);
@@ -87,7 +63,8 @@ public abstract class LivingEntityRendererMixin {
                 bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, entity.prevHeadYaw, entity.headYaw);
             }
         }
-        ////
+
+        //////////////////////////////////////////////////////////////////////////////////////////////
 
         if (this.isShaking(entity)) {
             bodyYaw += (float)(Math.cos((double)((LivingEntity)entity).age * 3.25) * Math.PI * (double)0.4f);
@@ -106,7 +83,7 @@ public abstract class LivingEntityRendererMixin {
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(((float)((LivingEntity)entity).age + tickDelta) * -75.0f));
         } else if (((Entity)entity).isInPose(EntityPose.SLEEPING)) {
             Direction direction = ((LivingEntity)entity).getSleepingDirection();
-            float f1 = direction != null ? getYaw(direction) : bodyYaw; // LivingEntityRenderer.getYaw
+            float f1 = direction != null ? getYaw(direction) : bodyYaw;
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f1));
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(this.getLyingAngle(entity)));
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(270.0f));

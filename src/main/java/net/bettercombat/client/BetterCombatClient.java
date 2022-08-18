@@ -4,6 +4,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.bettercombat.BetterCombat;
+import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.config.ClientConfig;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.helper.events.ClientLifecycleEvents;
@@ -13,6 +14,7 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.fml.ModList;
 
 public class BetterCombatClient {
     public static ClientConfig config;
@@ -32,9 +34,9 @@ public class BetterCombatClient {
         });
         registerKeyBindings();
 
-//        if (FabricLoader.getInstance().isModLoaded("firstperson")) {
-//            FirstPersonRenderHelper.isFeatureEnabled = false;
-//        }
+        if (ModList.get().isLoaded("firstperson")) {
+            FirstPersonRenderHelper.isFeatureEnabled = false;
+        }
 
         ModelPredicateProviderRegistry.registerGeneric(new Identifier(BetterCombat.MODID, "loaded"), (stack, world, entity, seed) -> {
             return 1.0F;
