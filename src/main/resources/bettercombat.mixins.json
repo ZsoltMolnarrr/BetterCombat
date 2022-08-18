@@ -8,7 +8,8 @@
     "LivingEntityInject",
     "PlayerEntityAccessor",
     "PlayerEntityInject",
-    "ServerPlayNetworkHandlerMixin"
+    "ServerPlayNetworkHandlerMixin",
+    "forge.ObjectHolderMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
