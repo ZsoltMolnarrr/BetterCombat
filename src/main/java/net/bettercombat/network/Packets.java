@@ -3,7 +3,7 @@ package net.bettercombat.network;
 import com.google.gson.Gson;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.config.ServerConfig;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.bettercombat.helper.network.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;

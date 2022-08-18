@@ -2,9 +2,9 @@ package net.bettercombat.utils;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.helper.network.PlayerLookup;
+import net.bettercombat.helper.network.ServerPlayNetworking;
 import net.bettercombat.network.Packets;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;

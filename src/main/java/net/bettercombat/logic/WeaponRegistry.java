@@ -7,7 +7,7 @@ import com.mojang.logging.LogUtils;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttributesContainer;
 import net.bettercombat.api.WeaponAttributes;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.bettercombat.helper.network.PacketByteBufs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
