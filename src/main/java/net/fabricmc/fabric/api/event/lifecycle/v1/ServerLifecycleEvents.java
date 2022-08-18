@@ -1,4 +1,4 @@
-package net.bettercombat.helper.events;
+package net.fabricmc.fabric.api.event.lifecycle.v1;
 
 import net.minecraft.server.MinecraftServer;
 

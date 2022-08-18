@@ -1,4 +1,4 @@
-package net.bettercombat.helper.events;
+package net.fabricmc.fabric.api.client.keybinding.v1;
 
 import net.minecraft.client.option.KeyBinding;
 

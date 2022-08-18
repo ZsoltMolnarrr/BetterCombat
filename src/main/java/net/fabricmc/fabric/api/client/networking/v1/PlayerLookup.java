@@ -1,4 +1,4 @@
-package net.bettercombat.helper.network;
+package net.fabricmc.fabric.api.client.networking.v1;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;

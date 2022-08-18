@@ -2,9 +2,9 @@ package net.bettercombat.helper.events.forge;
 
 
 import net.bettercombat.BetterCombat;
-import net.bettercombat.helper.events.ServerLifecycleEvents;
-import net.bettercombat.helper.events.ServerPlayConnectionEvents;
-import net.bettercombat.helper.network.ServerPlayNetworking;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;

@@ -7,14 +7,14 @@ import net.bettercombat.BetterCombat;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.config.ClientConfig;
 import net.bettercombat.config.ClientConfigWrapper;
-import net.bettercombat.helper.events.ClientLifecycleEvents;
-import net.bettercombat.helper.events.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.fml.ModList;
 
 public class BetterCombatClient {
     public static ClientConfig config;
@@ -34,7 +34,7 @@ public class BetterCombatClient {
         });
         registerKeyBindings();
 
-        if (ModList.get().isLoaded("firstperson")) {
+        if (FabricLoader.getInstance().isModLoaded("firstperson")) {
             FirstPersonRenderHelper.isFeatureEnabled = false;
         }
 

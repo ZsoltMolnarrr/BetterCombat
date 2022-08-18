@@ -1,16 +1,11 @@
 package net.bettercombat.helper.network.forge;
 
 import io.netty.buffer.ByteBuf;
-import net.bettercombat.BetterCombat;
-import net.bettercombat.helper.network.ClientPlayNetworking;
-import net.bettercombat.helper.network.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.function.Supplier;
 

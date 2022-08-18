@@ -1,4 +1,4 @@
-package net.bettercombat.helper.network;
+package net.fabricmc.fabric.api.client.networking.v1;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.PacketByteBuf;

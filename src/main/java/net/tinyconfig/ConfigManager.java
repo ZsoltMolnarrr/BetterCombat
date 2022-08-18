@@ -1,4 +1,4 @@
-package net.bettercombat.helper;
+package net.tinyconfig;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

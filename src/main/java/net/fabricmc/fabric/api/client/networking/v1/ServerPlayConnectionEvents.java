@@ -1,4 +1,4 @@
-package net.bettercombat.helper.events;
+package net.fabricmc.fabric.api.client.networking.v1;
 
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;

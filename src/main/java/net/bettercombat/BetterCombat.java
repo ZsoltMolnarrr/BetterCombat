@@ -6,14 +6,15 @@ import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.config.ServerConfigWrapper;
-import net.bettercombat.helper.ConfigManager;
-import net.bettercombat.helper.events.ServerLifecycleEvents;
+import net.fabricmc.api.ModInitializer;
+import net.tinyconfig.ConfigManager;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.bettercombat.logic.WeaponAttributesFallback;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.ServerNetwork;
 import net.bettercombat.utils.SoundHelper;
 
-public class BetterCombat {
+public class BetterCombat implements ModInitializer {
     public static final String MODID = "bettercombat";
     public static ServerConfig config;
     private static FallbackConfig fallbackDefault = FallbackConfig.createDefault();
@@ -24,6 +25,7 @@ public class BetterCombat {
             .sanitize(true)
             .build();
 
+    @Override
     public void onInitialize() {
         AutoConfig.register(ServerConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
         // Intuitive way to load a config :)

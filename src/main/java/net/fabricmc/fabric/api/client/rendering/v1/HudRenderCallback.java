@@ -1,4 +1,4 @@
-package net.bettercombat.helper.events;
+package net.fabricmc.fabric.api.client.rendering.v1;
 
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.util.math.MatrixStack;

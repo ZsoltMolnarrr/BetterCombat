@@ -1,6 +1,6 @@
 package net.bettercombat.client;
 
-import net.bettercombat.helper.events.ItemTooltipCallback;
+import net.fabricmc.ItemTooltipCallback;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.text.Text;

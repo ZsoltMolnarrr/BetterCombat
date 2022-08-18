@@ -1,4 +1,4 @@
-package net.bettercombat.helper.events;
+package net.fabricmc;
 
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
