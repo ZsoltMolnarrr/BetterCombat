@@ -2,6 +2,7 @@ package net.bettercombat.utils;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.helper.BetterCombatForge;
 import net.bettercombat.helper.network.PlayerLookup;
 import net.bettercombat.helper.network.ServerPlayNetworking;
 import net.bettercombat.network.Packets;
@@ -85,9 +86,7 @@ public class SoundHelper {
             "wand_swing"
         );
         for (var soundKey: soundKeys) {
-            var soundId = new Identifier(BetterCombat.MODID, soundKey);
-            var soundEvent = new SoundEvent(soundId);
-            Registry.register(Registry.SOUND_EVENT, soundId, soundEvent);
+            BetterCombatForge.SOUNDS.register(soundKey, () -> new SoundEvent(new Identifier(BetterCombat.MODID, soundKey)));
         }
     }
 }
