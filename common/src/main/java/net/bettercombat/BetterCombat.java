@@ -6,13 +6,13 @@ import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.config.ServerConfigWrapper;
-import net.fabricmc.api.ModInitializer;
-import net.tinyconfig.ConfigManager;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.bettercombat.logic.WeaponAttributesFallback;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.ServerNetwork;
 import net.bettercombat.utils.SoundHelper;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.tinyconfig.ConfigManager;
 
 public class BetterCombat implements ModInitializer {
     public static final String MODID = "bettercombat";

@@ -26,5 +26,6 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "bettercombat-common-refmap.json"
 }

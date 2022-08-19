@@ -3,6 +3,7 @@ package net.bettercombat.client.collision;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes.Attack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -55,11 +56,17 @@ public class TargetFinder {
                 .world
                 .getOtherEntities(player, box, entity ->  !entity.isSpectator() && entity.canHit())
                 .stream()
-                .filter(entity -> entity != player
-                        && entity != cursorTarget
-                        && entity.isAttackable()
-                        && (BetterCombat.config.allow_attacking_mount || !entity.equals(player.getVehicle()))
-                )
+                .filter(entity -> {
+                    var result = entity != player
+                            && entity != cursorTarget
+                            && entity.isAttackable()
+                            && (BetterCombat.config.allow_attacking_mount || !entity.equals(player.getVehicle()));
+                    if (entity instanceof Tameable tameable) {
+                        result = result &&
+                                (tameable.getOwnerUuid() != null && !tameable.getOwnerUuid().equals(player.getUuid()));
+                    }
+                    return result;
+                })
                 .collect(Collectors.toList());
         if (cursorTarget != null && cursorTarget.isAttackable()) {
             entities.add(cursorTarget);
