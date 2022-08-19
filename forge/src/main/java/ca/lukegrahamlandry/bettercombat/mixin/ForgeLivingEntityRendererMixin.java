@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 // maybe a forge patch problem? i really have no idea
 // so im just injecting to replace the body of setupTransforms entirly instead
 // this feels like an ugly solution.
+// also i think my version makes it jitter horribly at the start of each anim in first person
 @Mixin(LivingEntityRenderer.class)
 public abstract class ForgeLivingEntityRendererMixin {
     @Shadow protected abstract float getLyingAngle(LivingEntity entity);

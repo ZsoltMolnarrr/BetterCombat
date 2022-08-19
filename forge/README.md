@@ -8,7 +8,7 @@ Changes From Original Fabric Version
 
 Any parts of the fabric api that are used must be reimplemented in this package. 
 The api classes must have exactly the same names, methods and package structure.
-Then their functionality is reimplimented using forge events or mixins. 
+Then their functionality is reimplemented using forge events or mixins. 
 
 The signature of methods and fields must match the fabric api exactly to avoid NoSuchFieldError/NoSuchMethodError. 
 For example, it is not enough for `ServerPlayConnectionEvents#register` to accept a `TriConsumer<ServerPlayNetworkHandler, PacketSender, MinecraftServer>`, 
