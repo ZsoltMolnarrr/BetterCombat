@@ -4,13 +4,8 @@ plugins {
 }
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-
     forge {
         mixinConfig "bettercombat.mixins.json", "bettercombatforge.mixins.json"
-
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
     }
 }
 
@@ -28,39 +23,15 @@ configurations {
 }
 
 repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
-
-    maven {
-        name = "KosmX's maven"
-        url = "https://maven.kosmx.dev/"
-    }
-
-    // CompleteConfig https://gitlab.com/Lortseam/completeconfig
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        url "https://maven.terraformersmc.com/"
-    }
-    maven {
-        url "https://maven.shedaniel.me/"
-    }
-    maven {
-        url "https://cursemaven.com"
-    }
+    maven { url "https://maven.shedaniel.me/"}
+    maven { url "https://cursemaven.com"}
 }
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
-
 
     modImplementation ("curse.maven:player-animation-lib-forge-658587:3939308")
     api("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
@@ -74,23 +45,8 @@ processResources {
 }
 
 shadowJar {
-    exclude "fabric.mod.json"
-    exclude "architectury-common.accessWidener"
-    exclude "architectury.common.json"
-
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
-
-    // Replace classes with forge's version
-    exclude "dev/architectury/core/block/ArchitecturyLiquidBlock.class"
-    exclude "dev/architectury/core/fluid/ArchitecturyFlowingFluid.class"
-    exclude 'dev/architectury/core/fluid/ArchitecturyFlowingFluid$Source.class'
-    exclude 'dev/architectury/core/fluid/ArchitecturyFlowingFluid$Flowing.class'
-    exclude 'dev/architectury/core/item/ArchitecturyBucketItem.class'
-    exclude 'dev/architectury/core/item/ArchitecturyMobBucketItem.class'
-    relocate "dev.architectury.core.block.forge.imitator", "dev.architectury.core.block"
-    relocate "dev.architectury.core.fluid.forge.imitator", "dev.architectury.core.fluid"
-    relocate "dev.architectury.core.item.forge.imitator", "dev.architectury.core.item"
 
     exclude "net/bettercombat/client/ModMenuIntegration.java"
 }
@@ -110,18 +66,6 @@ task renameJarForPublication(type: Zip, dependsOn: remapJar) {
 }
 
 assemble.dependsOn renameJarForPublication
-
-sourcesJar {
-    afterEvaluate {
-        [":common"].forEach {
-            def depSources = project(it).sourcesJar
-            dependsOn depSources
-            from(depSources.archiveFile.map { zipTree(it) }) {
-                exclude "bettercombat.accessWidener"
-            }
-        }
-    }
-}
 
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {

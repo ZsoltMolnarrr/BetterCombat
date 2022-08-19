@@ -3,10 +3,6 @@ plugins {
     id "me.shedaniel.unified-publishing"
 }
 
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-}
-
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -21,24 +17,13 @@ configurations {
 }
 
 repositories {
-    maven {
-        name = "KosmX's maven"
-        url = "https://maven.kosmx.dev/"
-    }
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        url "https://maven.terraformersmc.com/"
-    }
-    maven {
-        url "https://maven.shedaniel.me/"
-    }
+    maven { url = "https://maven.kosmx.dev/" }
+    maven { url 'https://jitpack.io' }
+    maven { url "https://maven.shedaniel.me"}
+    maven { url "https://maven.terraformersmc.com"}
 }
 
 dependencies {
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
     modCompileOnly("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive false }
@@ -62,15 +47,11 @@ processResources {
 }
 
 shadowJar {
-    exclude "architectury-common.accessWidener"
-    exclude "architectury.common.json"
-
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
 }
 
 remapJar {
-    injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier null
