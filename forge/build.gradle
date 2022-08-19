@@ -25,6 +25,10 @@ configurations {
 repositories {
     maven { url "https://maven.shedaniel.me/"}
     maven { url "https://cursemaven.com"}
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -35,6 +39,8 @@ dependencies {
 
     modImplementation ("curse.maven:player-animation-lib-forge-658587:3939308")
     api("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
+
+    modImplementation include("ca.lukegrahamlandry.forgedfabric:forgedfabric:0.0.1"){ transitive false }
 }
 
 processResources {
@@ -48,7 +54,8 @@ shadowJar {
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
 
-    exclude "net/bettercombat/client/ModMenuIntegration.java"
+    exclude "net/bettercombat/client/ModMenuIntegration.class"
+    exclude "ca/lukegrahamlandry/forgedfabric/FabricOnForgeMod.class"
 }
 
 remapJar {
