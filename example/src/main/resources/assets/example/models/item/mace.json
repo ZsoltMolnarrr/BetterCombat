@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/wooden_sword",
-  "textures": {
-    "layer0": "example:item/mace"
-  }
-}

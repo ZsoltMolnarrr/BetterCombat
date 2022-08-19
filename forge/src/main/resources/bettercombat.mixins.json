@@ -1,0 +1,29 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.bettercombat.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "LivingEntityAccessor",
+    "LivingEntityInject",
+    "PlayerEntityAccessor",
+    "PlayerEntityInject",
+    "ServerPlayNetworkHandlerMixin"
+  ],
+  "client": [
+    "client.AbstractClientPlayerEntityMixin",
+    "client.ColliderDebugRenderer",
+    "client.InGameHudInject",
+    "client.MinecraftClientAccessor",
+    "client.MinecraftClientInject",
+    "client.firstpersonrender.EntityRenderDispatcherMixin",
+    "client.firstpersonrender.HeldItemRendererMixin",
+    "client.firstpersonrender.PlayerEntityRendererMixin",
+    "client.firstpersonrender.WorldRendererMixin"
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
