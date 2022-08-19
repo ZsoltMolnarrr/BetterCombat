@@ -37,6 +37,8 @@ repositories {
 }
 
 dependencies {
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
     modCompileOnly("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive false }

@@ -7,8 +7,7 @@ loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
     forge {
-        mixinConfig "bettercombat.mixins.json"
-        mixinConfig "bettercombatforge.mixins.json"
+        mixinConfig "bettercombat.mixins.json", "bettercombatforge.mixins.json"
 
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
@@ -57,6 +56,7 @@ repositories {
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
@@ -91,6 +91,8 @@ shadowJar {
     relocate "dev.architectury.core.block.forge.imitator", "dev.architectury.core.block"
     relocate "dev.architectury.core.fluid.forge.imitator", "dev.architectury.core.fluid"
     relocate "dev.architectury.core.item.forge.imitator", "dev.architectury.core.item"
+
+    exclude "net/bettercombat/client/ModMenuIntegration.java"
 }
 
 remapJar {
