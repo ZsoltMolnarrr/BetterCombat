@@ -1,19 +1,20 @@
-package net.fabricmc.fabric.api.client.rendering.v1;
+package net.fabricmc.fabric.api.client.item.v1;
 
 import ca.lukegrahamlandry.bettercombat.events.ClientHelper;
 import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.util.BiConsumer;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public interface HudRenderCallback {
-    Event<HudRenderCallback> EVENT = new ClientHelper.HudRenderEvent();
+public interface ItemTooltipCallback {
+    Event<ItemTooltipCallback> EVENT = new ClientHelper.TooltipEvent();
 
-    void onHudRender(MatrixStack matrixStack, float tickDelta);
+    void getTooltip(ItemStack stack, TooltipContext context, List<Text> lines);
+
 }

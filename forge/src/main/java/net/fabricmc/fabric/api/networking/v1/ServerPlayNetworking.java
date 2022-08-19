@@ -16,15 +16,16 @@ import java.util.Map;
 public class ServerPlayNetworking {
     public static Map<Identifier, PlayChannelHandler> HANDLERS = new HashMap<>();
 
-    public static void registerGlobalReceiver(Identifier id, PlayChannelHandler handler){
+    public static boolean registerGlobalReceiver(Identifier id, PlayChannelHandler handler){
         HANDLERS.put(id, handler);
+        return true;
     }
 
-    public static boolean canSend(PlayerEntity serverPlayer, Identifier id) {
+    public static boolean canSend(ServerPlayerEntity serverPlayer, Identifier id) {
         return serverPlayer != null;
     }
 
-    public static void send(PlayerEntity serverPlayer, Identifier id, PacketByteBuf forwardBuffer) {
+    public static void send(ServerPlayerEntity serverPlayer, Identifier id, PacketByteBuf forwardBuffer) {
         NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) serverPlayer), new PacketWrapper(true, id, forwardBuffer));
     }
 
@@ -33,6 +34,7 @@ public class ServerPlayNetworking {
     }
 
     public interface PlayChannelHandler {
-        void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, Object responseSender);
+        void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender);
+
     }
 }

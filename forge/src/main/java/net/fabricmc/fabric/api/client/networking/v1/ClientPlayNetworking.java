@@ -2,6 +2,7 @@ package net.fabricmc.fabric.api.client.networking.v1;
 
 import ca.lukegrahamlandry.bettercombat.network.NetworkHandler;
 import ca.lukegrahamlandry.bettercombat.network.PacketWrapper;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -13,8 +14,9 @@ import java.util.Map;
 public class ClientPlayNetworking {
     public static Map<Identifier, PlayChannelHandler> HANDLERS = new HashMap<>();
 
-    public static void registerGlobalReceiver(Identifier id, PlayChannelHandler handler){
+    public static boolean registerGlobalReceiver(Identifier id, PlayChannelHandler handler){
         HANDLERS.put(id, handler);
+        return true;
     }
 
     public static void send(Identifier id, PacketByteBuf forwardBuffer) {
@@ -26,6 +28,6 @@ public class ClientPlayNetworking {
     }
 
     public interface PlayChannelHandler {
-        void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, Object responseSender);
+        void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender);
     }
 }

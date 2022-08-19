@@ -1,14 +1,12 @@
 package net.fabricmc.loader.api;
 
+import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.minecraftforge.fml.ModList;
 
-public class FabricLoader {
-    private static final FabricLoader I = new FabricLoader();
-    public static FabricLoader getInstance(){
-        return I;
+public interface FabricLoader {
+    static FabricLoader getInstance(){
+        return FabricLoaderImpl.I;
     }
 
-    public boolean isModLoaded(String modid){
-        return ModList.get().isLoaded(modid);
-    }
+    boolean isModLoaded(String modid);
 }

@@ -59,43 +59,14 @@ allprojects {
         header = rootProject.file("HEADER")
 
         ext {
-            name = "architectury"
-            year = "2020, 2021, 2022"
+            name = "bettercombat"
+            year = "2022"
         }
 
         include "**/*.java"
         exclude "**/NbtType.java"
 
         ignoreFailures = true
-    }
-
-    ext {
-        releaseChangelog = {
-            def dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm")
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
-            def branch
-            if (System.env.BRANCH_NAME) {
-                branch = System.env.BRANCH_NAME
-                branch = branch.substring(branch.lastIndexOf("/") + 1)
-            } else {
-                branch = "git rev-parse --abbrev-ref HEAD".execute().in.text.trim()
-            }
-            if (branch == "HEAD") {
-                branch = "git rev-parse --short HEAD".execute().in.text.trim()
-            }
-            def time = dateFormat.format(new Date())
-            def changes = new StringBuilder()
-            changes << "## Architectury v$project.version for $project.supported_version\nUpdated at **$time**.\n[Click here for changelog](https://www.github.com/architectury/architectury/commits/$branch)"
-            def proc = "git log --max-count=200 --pretty=format:%s".execute()
-            proc.in.eachLine { line ->
-                def processedLine = line.toString()
-                if (!processedLine.contains("New translations") && !processedLine.contains("Merge") && !processedLine.contains("branch")) {
-                    changes << "\n- ${processedLine.capitalize()}"
-                }
-            }
-            proc.waitFor()
-            return changes.toString()
-        }
     }
 
     java {

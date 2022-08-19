@@ -5,6 +5,7 @@ import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -85,6 +86,10 @@ public class SoundHelper {
             "sword_slash",
             "wand_swing"
         );
+
+        if (FabricLoader.getInstance().isModLoaded("forge")) return;
+        // forge locks the registries so this would crash
+
         for (var soundKey: soundKeys) {
             var soundId = new Identifier(BetterCombat.MODID, soundKey);
             var soundEvent = new SoundEvent(soundId);

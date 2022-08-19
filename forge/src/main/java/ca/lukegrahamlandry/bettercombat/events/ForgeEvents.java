@@ -16,15 +16,15 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
         if (!event.getEntity().world.isClient())
-            ServerPlayConnectionEvents.onPlayerJoined.forEach((action) -> action.accept(
+            ServerPlayConnectionEvents.onPlayerJoined.forEach((action) -> action.onPlayReady(
                 ((ServerPlayerEntity)event.getEntity()).networkHandler,
-                (id, data) -> ServerPlayNetworking.send(event.getEntity(), id, data),
+                (id, data) -> ServerPlayNetworking.send((ServerPlayerEntity) event.getEntity(), id, data),
                 event.getEntity().getServer()
         ));
     }
 
     @SubscribeEvent
     public static void onSererStart(ServerStartedEvent event){
-        ServerLifecycleEvents.onServerStarted.forEach((action) -> action.accept(event.getServer()));
+        ServerLifecycleEvents.onServerStarted.forEach((action) -> action.onServerStarted(event.getServer()));
     }
 }

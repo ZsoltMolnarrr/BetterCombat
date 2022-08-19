@@ -8,7 +8,8 @@ import java.util.List;
 public class KeyBindingHelper {
     public static List<KeyBinding> keys = new ArrayList<>();
 
-    public static void registerKeyBinding(KeyBinding key) {
+    public static KeyBinding registerKeyBinding(KeyBinding key) {
         keys.add(key);
+        return key;
     }
 }

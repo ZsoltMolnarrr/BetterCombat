@@ -7,7 +7,7 @@ loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
     forge {
-        // mixinConfig "bettercombat.mixins.json"
+        mixinConfig "bettercombat.mixins.json"
         mixinConfig "bettercombatforge.mixins.json"
 
         convertAccessWideners = true
