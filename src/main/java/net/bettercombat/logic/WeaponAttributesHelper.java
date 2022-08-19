@@ -9,7 +9,7 @@ public class WeaponAttributesHelper {
     public static WeaponAttributes override(WeaponAttributes a, WeaponAttributes b) {
         var attackRange = b.attackRange() > 0 ? b.attackRange() : a.attackRange();
         var pose = b.pose() != null ? b.pose() : a.pose();
-        var isTwoHanded = b.isTwoHanded();
+        var isTwoHanded = b.two_handed() != null ? b.two_handed() : a.two_handed();
         var category = b.category() != null ? b.category() : a.category();
         var attacks = a.attacks();
         if (b.attacks() != null && b.attacks().length > 0) {

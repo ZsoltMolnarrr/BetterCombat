@@ -30,7 +30,7 @@ public final class WeaponAttributes {
      * When the player's selected item is two-handed weapon, the off-hand slot is completely disabled.
      * When the player's selected item is one-handed weapon, another one-handed weapon can be placed into
      */
-    private final boolean two_handed;
+    private final Boolean two_handed;
 
     /**
      * Specifies the category (aka family) type of the weapon.
@@ -63,7 +63,7 @@ public final class WeaponAttributes {
     public WeaponAttributes(
             double attack_range,
             @Nullable String pose,
-            boolean isTwoHanded,
+            Boolean isTwoHanded,
             String category,
             Attack[] attacks) {
         this.attack_range = attack_range;
@@ -371,6 +371,10 @@ public final class WeaponAttributes {
     }
 
     public boolean isTwoHanded() {
+        return two_handed != null ? two_handed.booleanValue() : false;
+    }
+
+    public Boolean two_handed() {
         return two_handed;
     }
 

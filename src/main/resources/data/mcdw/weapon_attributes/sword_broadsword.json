@@ -1,0 +1,6 @@
+{
+  "parent": "bettercombat:claymore",
+  "attributes": {
+    "pose": "bettercombat:pose_two_handed_katana"
+  }
+}
