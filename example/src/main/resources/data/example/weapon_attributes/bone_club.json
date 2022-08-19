@@ -1,0 +1,9 @@
+{
+  "parent": "bettercombat:claymore",
+  "attributes": {
+    "attacks": [
+      {},
+      {}
+    ]
+  }
+}

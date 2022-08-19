@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "example",
+  "version": "${version}",
+  "name": "Example Weapons",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/example/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.example.client.ExampleClient"
+    ],
+    "main": [
+      "net.example.Example"
+    ]
+  },
+  "mixins": [
+    "example.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.5",
+    "fabric": "*",
+    "minecraft": "1.18.2"
+  }
+}
