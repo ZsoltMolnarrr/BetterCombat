@@ -8,6 +8,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,20 +31,20 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                                         float f, float g, MatrixStack matrixStack,
                                         VertexConsumerProvider vertexConsumerProvider,
                                         int i, CallbackInfo ci) {
-        if (!FirstPersonRenderHelper.isFeatureEnabled) {
+        if (!FirstPersonRenderHelper.isFeatureEnabled || !FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
             return;
         }
 
         var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
-        if (entity == MinecraftClient.getInstance().player && FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+        if (entity == MinecraftClient.getInstance().player) {
+            var player = MinecraftClient.getInstance().player;
             setPartsVisible(false);
             this.model.rightArm.visible = showArms;
-            this.model.rightSleeve.visible = showArms;
+            this.model.rightSleeve.visible = showArms && player.isPartVisible(PlayerModelPart.RIGHT_SLEEVE);
             this.model.leftArm.visible = showArms;
-            this.model.leftSleeve.visible = showArms;
-        } else {
-            setPartsVisible(true);
+            this.model.leftSleeve.visible = showArms && player.isPartVisible(PlayerModelPart.LEFT_SLEEVE);
         }
+        // No `else` case needed to show parts, since the default state should be correct already
     }
 
     private void setPartsVisible(boolean visible) {
