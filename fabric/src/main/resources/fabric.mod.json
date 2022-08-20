@@ -35,6 +35,9 @@
     "minecraft": "1.19.X",
     "cloth-config": ">=7.0.65"
   },
+  "breaks": {
+    "inventorio": "*"
+  },
   "custom": {
     "modmenu": {
       "links": {
