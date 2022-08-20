@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 @Mixin(LivingEntityRenderer.class)
 public class LivingEntityRendererMixin {
-
     @Shadow List<Object> features;
 
     @Redirect(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",

@@ -26,7 +26,8 @@
     ]
   },
   "mixins": [
-    "bettercombat.mixins.json"
+    "bettercombat.mixins.json",
+    "bettercombat-fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.0",
