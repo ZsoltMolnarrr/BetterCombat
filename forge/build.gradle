@@ -5,7 +5,7 @@ plugins {
 
 loom {
     forge {
-        mixinConfig "bettercombat.mixins.json", "bettercombatforge.mixins.json"
+        mixinConfig "bettercombat.mixins.json"
     }
 }
 
@@ -49,6 +49,8 @@ shadowJar {
     classifier "dev-shadow"
 
     exclude "net/bettercombat/client/ModMenuIntegration.java"
+
+    relocate 'net.fabricmc', 'net.bettercombat.fabricmc'
 }
 
 remapJar {
