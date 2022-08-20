@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "bettercombat",
+  "version": "${version}",
+  "name": "Better Combat",
+  "description": "Easy, spectacular and fun melee combat system we know from Minecraft Dungeons.",
+  "authors": [
+    "Daedelus"
+  ],
+  "contact": {
+    "issues": "https://github.com/ZsoltMolnarrr/BetterCombat/issues",
+    "homepage": "https://github.com/ZsoltMolnarrr/BetterCombat"
+  },
+  "license": "CC-BY-4.0 License",
+  "icon": "assets/bettercombat/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.bettercombat.client.BetterCombatClient"
+    ],
+    "main": [
+      "net.bettercombat.BetterCombat"
+    ],
+    "modmenu": [
+      "net.bettercombat.client.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "bettercombat.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "fabric": "*",
+    "minecraft": "1.19.X",
+    "cloth-config": ">=7.0.65"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/KN9b3pjFTM"
+      }
+    }
+  }
+}

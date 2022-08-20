@@ -1,0 +1,185 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "me.shedaniel.unified-publishing"
+    id 'com.matthewprenger.cursegradle'
+    id "com.modrinth.minotaur"
+    id "com.github.breadmoirai.github-release" version "2.4.1"
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+repositories {
+    maven { url = "https://maven.kosmx.dev/" }
+    maven { url 'https://jitpack.io' }
+    maven { url "https://maven.shedaniel.me"}
+    maven { url "https://maven.terraformersmc.com"}
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
+    modCompileOnly("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive false }
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    modApi include("com.github.ZsoltMolnarrr:TinyConfig:1.0.2")
+    modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:0.0.5")
+}
+
+processResources {
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+    inputs.property "version", project.version
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier null
+}
+
+task renameJarForPublication(type: Zip, dependsOn: remapJar) {
+    from remapJar.archiveFile.map { zipTree(it) }
+    extension "jar"
+    metadataCharset "UTF-8"
+    destinationDirectory = base.libsDirectory
+    classifier project.name
+}
+
+assemble.dependsOn renameJarForPublication
+
+jar {
+    classifier "dev"
+}
+
+sourcesJar {
+    afterEvaluate {
+        [":common"].forEach {
+            def depSources = project(it).sourcesJar
+            dependsOn depSources
+            from(depSources.archiveFile.map { zipTree(it) }) {
+                exclude "bettercombat.accessWidener"
+            }
+        }
+    }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+
+
+
+if(project.hasProperty('release_type')) {
+    tasks.register("publishMod") {
+        dependsOn(build)
+        finalizedBy(tasks.curseforge)
+        finalizedBy(tasks.modrinth)
+        finalizedBy(tasks.githubRelease)
+    }
+
+    curseforge {
+        apiKey = System.getenv("CURSEFORGE_API_KEY")
+        project {
+            id = '639842'
+            changelog = ''
+            releaseType = release_type
+            addGameVersion "1.19"
+            addGameVersion "1.19.1"
+            addGameVersion "1.19.2"
+            addGameVersion "Fabric"
+
+            relations {
+                requiredDependency 'fabric-api'
+                requiredDependency 'cloth-config'
+                requiredDependency 'modmenu'
+            }
+
+            mainArtifact(remapJar)
+            afterEvaluate {
+                uploadTask.dependsOn(remapJar)
+            }
+            options {
+                forgeGradleIntegration = false
+            }
+        }
+    }
+
+    modrinth {
+        token = System.getenv("MODRINTH_API_KEY")
+        projectId = "better-combat" // This can be the project ID or the slug. Either will work!
+        versionNumber = "${project.mod_version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+        versionType = release_type // This is the default -- can also be `beta` or `alpha`
+        uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+        gameVersions = ["1.19", "1.19.1", "1.19.2"] // Must be an array, even with only one version
+        loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
+        dependencies { // A special DSL for creating dependencies
+            // scope.type
+            // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+            // The type can either be `project` or `version`
+            required.project "fabric-api"
+            required.project "cloth-config"
+            required.project "modmenu"
+        }
+    }
+
+    githubRelease {
+        token System.getenv("GH_API_KEY") // This is your personal access token with Repo permissions
+        owner "ZsoltMolnarrr" // default is the last part of your group. Eg group: "com.github.breadmoirai" => owner: "breadmoirai"
+        repo "BetterCombat" // by default this is set to your project name
+        tagName "${rootProject.mod_version}" // by default this is set to "v${project.version}"
+        targetCommitish "1.19.X" // by default this is set to "main"
+        releaseName "Release" // Release title, by default this is the same as the tagName
+        generateReleaseNotes false // Generate release notes automatically, if true and body is present, body will be pre-pended, if name is not given, one will be generated by the tag
+        // body.set "" // by default this is empty
+        draft false // by default this is true
+        prerelease release_type != "release" // by default this is false
+        // releaseAssets jar.destinationDir.listFiles // this points to which files you want to upload as assets with your release, by default this is empty
+        allowUploadToExisting false // Setting this to true will allow this plugin to upload artifacts to a release if it found an existing one. If overwrite is set to true, this option is ignored.
+        overwrite false // by default false; if set to true, will delete an existing release with the same tag and name
+        // dryRun true // by default false; you can use this to see what actions would be taken without making a release
+        apiEndpoint "https://api.github.com" // should only change for github enterprise users
+        client // This is the okhttp client used for http requests
+    }
+}
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
+}
