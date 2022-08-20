@@ -54,7 +54,7 @@ shadowJar {
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
 
-    exclude "net/bettercombat/client/ModMenuIntegration.java"
+    exclude "net/bettercombat/client/ModMenuIntegration.class"
 }
 
 remapJar {
