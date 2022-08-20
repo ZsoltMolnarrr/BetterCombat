@@ -258,6 +258,10 @@ public final class WeaponAttributes {
 
     public enum Condition {
         /**
+         * Fulfilled if the player is not dual wielding weapons
+         */
+        NOT_DUAL_WIELDING,
+        /**
          * Fulfilled if the player is dual wielding any weapons
          */
         DUAL_WIELDING_ANY,

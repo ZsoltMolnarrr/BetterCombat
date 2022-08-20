@@ -69,9 +69,12 @@ public class PlayerAttackHelper {
 
     private static boolean evaluateCondition(WeaponAttributes.Condition condition, PlayerEntity player, boolean isOffHandAttack) {
         if (condition == null) {
-            return false;
+            return true;
         }
         switch (condition) {
+            case NOT_DUAL_WIELDING -> {
+                return !isDualWielding(player);
+            }
             case DUAL_WIELDING_ANY -> {
                 return isDualWielding(player);
             }
