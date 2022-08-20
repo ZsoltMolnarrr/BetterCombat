@@ -1,0 +1,24 @@
+repositories {
+    maven { url = "https://maven.kosmx.dev/" }
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.fabricmc.net/" }
+    maven { url 'https://jitpack.io' }
+    maven { url "https://maven.terraformersmc.com/"}
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
+    modCompileOnly("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive false }
+
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    modApi ("com.github.ZsoltMolnarrr:TinyConfig:1.0.2")
+    modImplementation ("dev.kosmx.player-anim:player-animation-lib-fabric:0.0.5")
+}
+
+architectury {
+    common(rootProject.platforms.split(","))
+}

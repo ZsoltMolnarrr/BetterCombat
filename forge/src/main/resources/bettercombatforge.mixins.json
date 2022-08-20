@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ca.lukegrahamlandry.bettercombat.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ObjectHolderMixin"
+  ],
+  "client": [
+    "ForgeLivingEntityRendererMixin"
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
