@@ -57,8 +57,7 @@ public class SoundHelper {
         }
     }
 
-    public static void registerSounds() {
-        List<String> soundKeys = List.of(
+    public static List<String> soundKeys = List.of(
             "anchor_slam",
             "axe_slash",
             "claymore_swing",
@@ -85,8 +84,9 @@ public class SoundHelper {
             "sickle_slash",
             "sword_slash",
             "wand_swing"
-        );
+    );
 
+    public static void registerSounds() {
         if (FabricLoader.getInstance().isModLoaded("forge")) return;
         // forge locks the registries so this would crash
 
