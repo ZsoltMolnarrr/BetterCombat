@@ -1,12 +1,10 @@
 package ca.lukegrahamlandry.bettercombat;
 
-import ca.lukegrahamlandry.forgedfabric.events.EventsRegistry;
-import ca.lukegrahamlandry.forgedfabric.network.NetworkHandler;
 import net.bettercombat.BetterCombat;
+import net.bettercombat.client.BetterCombatClient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -21,16 +19,10 @@ public class BetterCombatForge {
 
     public BetterCombatForge(){
         new BetterCombat().onInitialize();
-        NetworkHandler.registerMessages();
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> new BetterCombatClient().onInitializeClient());
 
         registerSounds();
         SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
-
-        EventsRegistry.registerForgeEvents(MinecraftForge.EVENT_BUS);
-        EventsRegistry.registerModEvents(FMLJavaModLoadingContext.get().getModEventBus());
-
-        EventsRegistry.registerClientForgeEvents(MinecraftForge.EVENT_BUS);
-        EventsRegistry.registerClientModEvents(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     private void registerSounds(){

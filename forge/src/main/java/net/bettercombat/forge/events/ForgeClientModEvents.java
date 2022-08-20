@@ -22,7 +22,5 @@ public class ForgeClientModEvents {
         ModelPredicateProviderRegistry.registerGeneric(new Identifier(BetterCombat.MODID, "loaded"), (stack, world, entity, seed) -> {
             return 1.0F;
         });
-
-        new BetterCombatClient().onInitializeClient();
     }
 }
