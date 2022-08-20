@@ -217,7 +217,12 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     public void stopAttackAnimation() {
         IAnimation currentAnimation = attackAnimation.base.getAnimation();
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
-             ((KeyframeAnimationPlayer)currentAnimation).stop();
+            if (BetterCombatClient.config.isSmoothAnimationTransitionEnabled) {
+                attackAnimation.base.replaceAnimationWithFade(
+                        AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
+            } else {
+                ((KeyframeAnimationPlayer)currentAnimation).stop();
+            }
         }
     }
 
