@@ -4,8 +4,10 @@ import com.mojang.authlib.GameProfile;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
+import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.client.AnimationRegistry;
@@ -35,8 +37,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private final MirrorModifier poseMirrorModifier = new MirrorModifier();
     private final ModifierLayer poseContainer = new ModifierLayer(null);
 
-    private final AttackAnimationSubStack containerA = new AttackAnimationSubStack(createAdjustmentModifier());
-    private final AttackAnimationSubStack containerB = new AttackAnimationSubStack(createAdjustmentModifier());
+    private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAdjustmentModifier());
     private int playbackCount = 0;
 
     private PoseData lastPose;
@@ -49,8 +50,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private void postInit(ClientWorld world, GameProfile profile, PlayerPublicKey publicKey, CallbackInfo ci) {
         var stack = ((IAnimatedPlayer) this).getAnimationStack();
         stack.addAnimLayer(1, poseContainer);
-        stack.addAnimLayer(2000, containerA.base);
-        stack.addAnimLayer(2001, containerB.base);
+        stack.addAnimLayer(2000, attackAnimation.base);
 
         poseMirrorModifier.setEnabled(false);
         poseContainer.addModifier(poseMirrorModifier, 0);
@@ -95,10 +95,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         lastPose = newPoseData;
     }
 
-    private AttackAnimationSubStack getCurrentPlaybackSubStack() {
-        return (playbackCount % 2 == 0) ? containerA : containerB;
-    }
-
     @Override
     public void playAttackAnimation(String name, boolean isOffHand, float length) {
         try {
@@ -112,14 +108,16 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 mirror = !mirror;
             }
 
+            var fadeIn = copy.beginTick;
+            attackAnimation.speed.speed = speed;
+            attackAnimation.mirror.setEnabled(mirror);
             if (BetterCombatClient.config.isSmoothAnimationTransitionEnabled) {
-                playbackCount += 1;
+                attackAnimation.base.replaceAnimationWithFade(
+                        AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
+                        new CustomAnimationPlayer(copy.build(), 0));
+            } else {
+                attackAnimation.base.setAnimation(new CustomAnimationPlayer(copy.build(), 0));
             }
-            var container = getCurrentPlaybackSubStack();
-
-            container.speed.speed = speed;
-            container.mirror.setEnabled(mirror);
-            container.base.setAnimation(new CustomAnimationPlayer(copy.build(), 0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -217,7 +215,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public void stopAttackAnimation() {
-        IAnimation currentAnimation = getCurrentPlaybackSubStack().base.getAnimation();
+        IAnimation currentAnimation = attackAnimation.base.getAnimation();
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
              ((KeyframeAnimationPlayer)currentAnimation).stop();
         }
@@ -233,6 +231,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public Optional<IAnimation> getCurrentAnimation() {
-        return Optional.ofNullable(getCurrentPlaybackSubStack().base.getAnimation());
+        return Optional.ofNullable(attackAnimation.base.getAnimation());
     }
 }
