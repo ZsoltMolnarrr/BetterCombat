@@ -3,6 +3,7 @@
   "attributes" : {
     "attack_range": 2.75,
     "pose": "",
+    "two_handed": false,
     "category": "trident",
     "attacks": [
       {
