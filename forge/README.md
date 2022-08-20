@@ -1,3 +1,4 @@
+Uses [LukeGrahamLandry/ForgedFabric](https://github.com/LukeGrahamLandry/ForgedFabric) to provide the fabric api used by the common source set.
 
 Changes From Original Fabric Version
 - all your code is moved into common/src/main/java/...
@@ -7,6 +8,5 @@ Changes From Original Fabric Version
 Problems 
 - the built jar won't work in production without `"refmap": "bettercombat-common-refmap.json"` in `bettercombat.mixins.json` but with that it won't run in the dev environment
 - `ForgeLivingEntityRendererMixin` makes the start of animations look wrong
-
-Uses [LukeGrahamLandry/ForgedFabric](https://github.com/LukeGrahamLandry/ForgedFabric) to provide the fabric api used by the common source set. 
+- Start Client -> Join World -> Exit World -> Join World = crash: screen says `IndeOutOfBoundException` (present in original forge version as well) but log only shows what seems like a problem handling the packet kicking you for crashing `Received class net.minecraft.network.protocol.game.ClientboundDisconnectPacket that couldn't be processed java.lang.ClassCastException: class net.minecraft.server.network.ServerGamePacketListenerImpl cannot be cast to class net.minecraft.network.protocol.game.ClientGamePacketListener `
 

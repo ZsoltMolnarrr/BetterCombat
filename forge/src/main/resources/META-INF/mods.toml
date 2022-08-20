@@ -62,3 +62,9 @@ mandatory=true
 versionRange="[0,)"
 ordering="AFTER"
 side="BOTH"
+[[dependencies.bettercombat]]
+modId="forgedfabric"
+mandatory=true
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"
