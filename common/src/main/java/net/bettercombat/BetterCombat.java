@@ -40,7 +40,11 @@ public class BetterCombat implements ModInitializer {
             }
             WeaponRegistry.encodeRegistry();
         });
-        SoundHelper.registerSounds();
+
+        if(Platform.Fabric) {
+            // forge locks the registries so this would crash
+            SoundHelper.registerSounds();
+        }
     }
 
     private void loadFallbackConfig() {

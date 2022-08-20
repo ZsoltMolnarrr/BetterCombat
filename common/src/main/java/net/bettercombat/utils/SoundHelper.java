@@ -87,9 +87,6 @@ public class SoundHelper {
     );
 
     public static void registerSounds() {
-        if (FabricLoader.getInstance().isModLoaded("forge")) return;
-        // forge locks the registries so this would crash
-
         for (var soundKey: soundKeys) {
             var soundId = new Identifier(BetterCombat.MODID, soundKey);
             var soundEvent = new SoundEvent(soundId);

@@ -22,7 +22,7 @@
       "net.bettercombat.BetterCombat"
     ],
     "modmenu": [
-      "net.bettercombat.client.ModMenuIntegration"
+      "net.bettercombat.fabric.client.ModMenuIntegration"
     ]
   },
   "mixins": [

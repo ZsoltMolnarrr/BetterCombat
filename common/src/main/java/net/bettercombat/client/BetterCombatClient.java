@@ -4,6 +4,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.bettercombat.BetterCombat;
+import net.bettercombat.Platform;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.config.ClientConfig;
 import net.bettercombat.config.ClientConfigWrapper;
@@ -39,14 +40,15 @@ public class BetterCombatClient implements ClientModInitializer {
         });
         registerKeyBindings();
 
-        if (FabricLoader.getInstance().isModLoaded("firstperson")) {
+        if (Platform.isModLoaded("firstperson")) {
             FirstPersonRenderHelper.isFeatureEnabled = false;
         }
 
-        if (!FabricLoader.getInstance().isModLoaded("forge")) // forge renames this method
+        if (Platform.Fabric) { // forge renames this method
             ModelPredicateProviderRegistry.register(new Identifier(BetterCombat.MODID, "loaded"), (stack, world, entity, seed) -> {
                 return 1.0F;
             });
+        }
     }
 
     private void registerKeyBindings() {
