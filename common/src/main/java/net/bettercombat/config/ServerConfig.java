@@ -10,6 +10,8 @@ public class ServerConfig implements ConfigData {
     public boolean allow_fast_attacks = true;
     @Comment("Allows client-side target search and server-side attack request execution against currently mounted entity of the player")
     public boolean allow_attacking_mount = false;
+    @Comment("Allows vanilla sweeping mechanic (and Sweeping Edge enchant) to work")
+    public boolean allow_sweeping = true;
     @Comment("Multiplier for `attack_range`, during target lookup on both sides. " +
             "Large sized entities may be colliding with weapon hitbox, but center of entities can have bigger distance than `attack_range`")
     public float target_search_range_multiplier = 2F;

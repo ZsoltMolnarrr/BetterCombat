@@ -15,10 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -49,9 +46,14 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
 
     @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 3)
     private boolean disableSweeping(boolean value) {
+        if (BetterCombat.config.allow_sweeping) {
+            return value;
+        }
+
         var player = ((PlayerEntity) ((Object)this) );
         var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
         if (currentHand != null) {
+            // Disable sweeping
             return false;
         }
         return value;
@@ -136,6 +138,20 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
                     dualWieldingAttributeMap = null;
                 }
             }
+        }
+    }
+
+    @ModifyArg(method = "attack", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/entity/player/PlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"),
+            index = 0)
+    public Hand getHand(Hand hand) {
+        var player = ((PlayerEntity) ((Object)this) );
+        var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
+        if (currentHand != null) {
+            return currentHand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
+        } else {
+            return Hand.MAIN_HAND;
         }
     }
 
