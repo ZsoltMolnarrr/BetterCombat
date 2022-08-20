@@ -1,4 +1,4 @@
-package ca.lukegrahamlandry.bettercombat.network;
+package net.bettercombat.forge.network;
 
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

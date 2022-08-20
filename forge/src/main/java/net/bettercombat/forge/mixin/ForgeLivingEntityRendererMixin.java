@@ -1,4 +1,4 @@
-package ca.lukegrahamlandry.bettercombat.mixin;
+package net.bettercombat.forge.mixin;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.PlayerAttackAnimatable;

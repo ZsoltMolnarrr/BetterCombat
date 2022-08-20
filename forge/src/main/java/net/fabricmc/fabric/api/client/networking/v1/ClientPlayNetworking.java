@@ -1,7 +1,7 @@
 package net.fabricmc.fabric.api.client.networking.v1;
 
-import ca.lukegrahamlandry.bettercombat.network.NetworkHandler;
-import ca.lukegrahamlandry.bettercombat.network.PacketWrapper;
+import net.bettercombat.forge.network.NetworkHandler;
+import net.bettercombat.forge.network.PacketWrapper;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

@@ -1,4 +1,4 @@
-package ca.lukegrahamlandry.bettercombat.mixin;
+package net.bettercombat.forge.mixin;
 
 import net.minecraftforge.registries.ObjectHolderRegistry;
 import org.spongepowered.asm.mixin.Mixin;

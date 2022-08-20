@@ -1,4 +1,4 @@
-package ca.lukegrahamlandry.bettercombat.network;
+package net.bettercombat.forge.network;
 
 import net.bettercombat.BetterCombat;
 import net.minecraft.util.Identifier;

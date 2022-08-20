@@ -1,6 +1,6 @@
-package ca.lukegrahamlandry.bettercombat;
+package net.bettercombat.forge;
 
-import ca.lukegrahamlandry.bettercombat.network.NetworkHandler;
+import net.bettercombat.forge.network.NetworkHandler;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.utils.SoundHelper;
 import net.minecraft.sound.SoundEvent;

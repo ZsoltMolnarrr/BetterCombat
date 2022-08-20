@@ -1,9 +1,7 @@
-package ca.lukegrahamlandry.bettercombat.events;
+package net.bettercombat.forge.events;
 
 
 import net.bettercombat.BetterCombat;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;

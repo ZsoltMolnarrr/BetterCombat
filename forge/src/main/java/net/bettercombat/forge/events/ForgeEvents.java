@@ -1,4 +1,4 @@
-package ca.lukegrahamlandry.bettercombat.events;
+package net.bettercombat.forge.events;
 
 
 import net.bettercombat.BetterCombat;
