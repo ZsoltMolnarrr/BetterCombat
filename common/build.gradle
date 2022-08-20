@@ -16,7 +16,7 @@ dependencies {
     }
 
     modApi ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
-    modImplementation ("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
+    modImplementation ("dev.kosmx.player-anim:player-animation-lib:${project.player_anim_version}")
 }
 
 architectury {

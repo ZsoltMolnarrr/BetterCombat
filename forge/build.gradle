@@ -23,8 +23,8 @@ configurations {
 }
 
 repositories {
-    maven { url "https://maven.shedaniel.me/"}
-    maven { url "https://cursemaven.com"}
+    maven { url 'https://maven.shedaniel.me/' }
+    maven { url 'https://maven.kosmx.dev/' }
 }
 
 dependencies {
@@ -33,7 +33,7 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
 
-    modImplementation ("curse.maven:player-animation-lib-forge-658587:3939308")
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${project.player_anim_version}")
     api("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
 }
 
