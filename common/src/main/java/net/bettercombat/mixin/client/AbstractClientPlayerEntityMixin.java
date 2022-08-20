@@ -14,6 +14,7 @@ import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
+import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -33,14 +34,9 @@ import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
-
-    private final MirrorModifier poseMirrorModifier = new MirrorModifier();
-    private final ModifierLayer poseContainer = new ModifierLayer(null);
-
+    private final PoseSubStack mainHandPose = new PoseSubStack(true);
+    private final PoseSubStack offHandPose = new PoseSubStack(false);
     private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAdjustmentModifier());
-    private int playbackCount = 0;
-
-    private PoseData lastPose;
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @org.jetbrains.annotations.Nullable PlayerPublicKey publicKey) {
         super(world, pos, yaw, gameProfile, publicKey);
@@ -49,50 +45,51 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Inject(method = "<init>", at = @At("TAIL"))
     private void postInit(ClientWorld world, GameProfile profile, PlayerPublicKey publicKey, CallbackInfo ci) {
         var stack = ((IAnimatedPlayer) this).getAnimationStack();
-        stack.addAnimLayer(1, poseContainer);
+        stack.addAnimLayer(1, offHandPose.base);
+        stack.addAnimLayer(2, mainHandPose.base);
         stack.addAnimLayer(2000, attackAnimation.base);
 
-        poseMirrorModifier.setEnabled(false);
-        poseContainer.addModifier(poseMirrorModifier, 0);
+        mainHandPose.configure = this::updateAnimationByCurrentActivity;
+        offHandPose.configure = this::updateAnimationByCurrentActivity;
     }
 
     @Override
     public void updateAnimationsOnTick() {
         var instance = (Object)this;
         var player = (PlayerEntity)instance;
-        KeyframeAnimation newPose = null;
-        if (player.handSwinging) {
-            setPose(newPose); // null
+        var isLeftHanded = isLeftHanded();
+
+        // No pose during mining or item usage
+
+        if (player.handSwinging || player.isUsingItem()) {
+            offHandPose.setPose(null, isLeftHanded);
+            mainHandPose.setPose(null, isLeftHanded);
             return;
         }
+
+        // Restore auto body rotation upon swing - Fix issue #11
+
         if (getCurrentAnimation().isPresent() && getCurrentAnimation().get().isActive()) {
-            // Restore auto body rotation upon swing - Fix issue #11
             ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw(), 0);
         }
-        var attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
-        if (attributes != null && attributes.pose() != null) {
-            newPose = AnimationRegistry.animations.get(attributes.pose());
-        }
-        setPose(newPose);
-    }
 
-    private void setPose(@Nullable KeyframeAnimation pose) {
-        var mirror = shouldMirrorByMainArm();
-        var newPoseData = PoseData.from(pose, mirror);
-        if (lastPose != null && newPoseData.equals(lastPose)) {
-            return;
-        }
+        // Pose
 
-        if (pose == null) {
-            this.poseContainer.setAnimation(null);
-        } else {
-            var copy = pose.mutableCopy();
-            updateAnimationByCurrentActivity(copy);
-            poseMirrorModifier.setEnabled(mirror);
-            poseContainer.setAnimation(new KeyframeAnimationPlayer(copy.build(), 0));
+        KeyframeAnimation newMainHandPose = null;
+        var mainHandAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+        if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
+            newMainHandPose = AnimationRegistry.animations.get(mainHandAttributes.pose());
         }
+        mainHandPose.setPose(newMainHandPose, isLeftHanded);
 
-        lastPose = newPoseData;
+        KeyframeAnimation newOffHandPose = null;
+        if (PlayerAttackHelper.isDualWielding(player)) {
+            var offHandAttributes = WeaponRegistry.getAttributes(player.getOffHandStack());
+            if (offHandAttributes != null && offHandAttributes.offHandPose() != null) {
+                newOffHandPose = AnimationRegistry.animations.get(offHandAttributes.offHandPose());
+            }
+        }
+        offHandPose.setPose(newOffHandPose, isLeftHanded);
     }
 
     @Override
@@ -104,7 +101,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             copy.head.pitch.setEnabled(false);
             var speed = ((float)animation.endTick) / length;
             var mirror = isOffHand;
-            if(shouldMirrorByMainArm()) {
+            if(isLeftHanded()) {
                 mirror = !mirror;
             }
 
@@ -230,7 +227,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         return this.getVehicle() != null;
     }
 
-    private boolean shouldMirrorByMainArm() {
+    public boolean isLeftHanded() {
         return this.getMainArm() == Arm.LEFT;
     }
 

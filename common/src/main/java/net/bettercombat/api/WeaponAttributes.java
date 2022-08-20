@@ -15,6 +15,7 @@ public final class WeaponAttributes {
 
     /**
      * The pose animation to play when idling.
+     * Applied when weapon is in the main hand.
      * Value must be an identifier, formula: "namespace:resource".
      * Suggested to be only used for two-handed weapons.
      *
@@ -24,6 +25,19 @@ public final class WeaponAttributes {
      */
     @Nullable
     private final String pose;
+
+    /**
+     * The pose animation to play when idling.
+     * Applied when weapon is in the off hand.
+     * Value must be an identifier, formula: "namespace:resource".
+     * Suggested to be only used for two-handed weapons.
+     *
+     * Example values:
+     *   "bettercombat:sword-pose"
+     *   "my-mod-id:my-sword-pose"
+     */
+    @Nullable
+    private final String off_hand_pose;
 
     /**
      * Determines whether the weapon counts as two-handed or one-handed weapon.
@@ -63,11 +77,13 @@ public final class WeaponAttributes {
     public WeaponAttributes(
             double attack_range,
             @Nullable String pose,
+            @Nullable String off_hand_pose,
             Boolean isTwoHanded,
             String category,
             Attack[] attacks) {
         this.attack_range = attack_range;
         this.pose = pose;
+        this.off_hand_pose = off_hand_pose;
         this.two_handed = isTwoHanded;
         this.category = category;
         this.attacks = attacks;
@@ -363,6 +379,11 @@ public final class WeaponAttributes {
     @Nullable
     public String pose() {
         return pose;
+    }
+
+    @Nullable
+    public String offHandPose() {
+        return off_hand_pose;
     }
 
     @Nullable

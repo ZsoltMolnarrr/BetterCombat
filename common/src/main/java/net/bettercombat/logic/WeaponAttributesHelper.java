@@ -9,6 +9,7 @@ public class WeaponAttributesHelper {
     public static WeaponAttributes override(WeaponAttributes a, WeaponAttributes b) {
         var attackRange = b.attackRange() > 0 ? b.attackRange() : a.attackRange();
         var pose = b.pose() != null ? b.pose() : a.pose();
+        var off_hand_pose = b.offHandPose() != null ? b.offHandPose() : a.offHandPose();
         var isTwoHanded = b.two_handed() != null ? b.two_handed() : a.two_handed();
         var category = b.category() != null ? b.category() : a.category();
         var attacks = a.attacks();
@@ -32,7 +33,7 @@ public class WeaponAttributesHelper {
             }
             attacks = overrideAttacks.toArray(new WeaponAttributes.Attack[0]);
         }
-        return new WeaponAttributes(attackRange, pose, isTwoHanded, category, attacks);
+        return new WeaponAttributes(attackRange, pose, off_hand_pose, isTwoHanded, category, attacks);
     }
 
     public static void validate(WeaponAttributes attributes) throws Exception {
