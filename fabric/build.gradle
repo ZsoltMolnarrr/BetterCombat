@@ -20,7 +20,7 @@ configurations {
 }
 
 repositories {
-    maven { url = "https://maven.kosmx.dev/" }
+    maven { url 'https://maven.kosmx.dev/' }
     maven { url 'https://jitpack.io' }
     maven { url "https://maven.shedaniel.me"}
     maven { url "https://maven.terraformersmc.com"}
@@ -38,8 +38,8 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modApi include("com.github.ZsoltMolnarrr:TinyConfig:1.0.2")
-    modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:0.0.5")
+    modApi include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
+    modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
 }
 
 processResources {
