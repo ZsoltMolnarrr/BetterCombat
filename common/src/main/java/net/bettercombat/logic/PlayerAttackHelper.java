@@ -59,6 +59,9 @@ public class PlayerAttackHelper {
                         || evaluateConditions(attack.conditions(), player, isOffHandAttack)
                 )
                 .toArray(WeaponAttributes.Attack[]::new);
+        if (comboCount < 0) {
+            comboCount = 0;
+        }
         int index = comboCount % attacks.length;
         return attacks[index];
     }

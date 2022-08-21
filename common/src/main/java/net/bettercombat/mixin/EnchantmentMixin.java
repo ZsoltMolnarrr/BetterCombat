@@ -24,9 +24,9 @@ public class EnchantmentMixin {
         if(entity instanceof PlayerEntity player) {
             var comboCount = ((PlayerAttackProperties) player).getComboCount();
             var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
-            // If striking with off hand
+            // If striking with off-hand
             if (currentHand != null && currentHand.isOffHand()) {
-                // Getting enchant from offhand stack
+                // Getting enchant from off-hand stack
                 var map = cir.getReturnValue();
                 if (map.get(EquipmentSlot.MAINHAND) != null) {
                     map.remove(EquipmentSlot.MAINHAND);
