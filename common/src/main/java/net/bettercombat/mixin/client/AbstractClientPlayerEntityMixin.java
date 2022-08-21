@@ -3,9 +3,7 @@ package net.bettercombat.mixin.client;
 import com.mojang.authlib.GameProfile;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
-import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
-import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
@@ -29,14 +27,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
-    private final PoseSubStack mainHandPose = new PoseSubStack(true);
-    private final PoseSubStack offHandPose = new PoseSubStack(false);
-    private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAdjustmentModifier());
+    private final PoseSubStack mainHandPose = new PoseSubStack(createPoseAdjustment(), true);
+    private final PoseSubStack offHandPose = new PoseSubStack(null, false);
+    private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAttackAdjustment());
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @org.jetbrains.annotations.Nullable PlayerPublicKey publicKey) {
         super(world, pos, yaw, gameProfile, publicKey);
@@ -98,6 +95,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             KeyframeAnimation animation = AnimationRegistry.animations.get(name);
             var copy = animation.mutableCopy();
             updateAnimationByCurrentActivity(copy);
+            copy.torso.fullyEnablePart(true);
             copy.head.pitch.setEnabled(false);
             var speed = ((float)animation.endTick) / length;
             var mirror = isOffHand;
@@ -120,7 +118,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         }
     }
 
-    private AdjustmentModifier createAdjustmentModifier() {
+    private AdjustmentModifier createAttackAdjustment() {
         var player = (PlayerEntity)this;
         return new AdjustmentModifier((partName) -> {
             // System.out.println("Player pitch: " + player.getPitch());
@@ -154,6 +152,36 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                     }
                     case "rightLeg", "leftLeg" -> {
                         rotationX = (-1F) * pitch;
+                    }
+                    default -> {
+                        return Optional.empty();
+                    }
+                }
+            }
+
+            return Optional.of(new AdjustmentModifier.PartModifier(
+                    new Vec3f(rotationX, rotationY, rotationZ),
+                    new Vec3f(offsetX, offsetY, offsetZ))
+            );
+        });
+    }
+
+    private AdjustmentModifier createPoseAdjustment() {
+        var player = (PlayerEntity)this;
+        return new AdjustmentModifier((partName) -> {
+            float rotationX = 0;
+            float rotationY = 0;
+            float rotationZ = 0;
+            float offsetX = 0;
+            float offsetY = 0;
+            float offsetZ = 0;
+
+            if (!FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+                switch (partName) {
+                    case "rightArm", "leftArm" -> {
+                        if (player.isSneaking()) {
+                            offsetY += 4;
+                        }
                     }
                     default -> {
                         return Optional.empty();

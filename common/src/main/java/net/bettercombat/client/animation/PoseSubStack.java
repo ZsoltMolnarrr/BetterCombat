@@ -2,6 +2,7 @@ package net.bettercombat.client.animation;
 
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
+import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 
@@ -16,9 +17,12 @@ public class PoseSubStack {
     private PoseData lastPose;
     public Consumer<KeyframeAnimation.AnimationBuilder> configure;
 
-    public PoseSubStack(boolean isMainHand) {
+    public PoseSubStack(AbstractModifier adjustmentModifier, boolean isMainHand) {
         this.isMainHand = isMainHand;
 
+        if (adjustmentModifier != null) {
+            base.addModifier(adjustmentModifier, 0);
+        }
         base.addModifier(mirror, 0);
     }
 
