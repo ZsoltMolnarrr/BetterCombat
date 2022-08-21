@@ -40,10 +40,6 @@ public class BetterCombatClient implements ClientModInitializer {
         });
         registerKeyBindings();
 
-        if (Platform.isModLoaded("firstperson")) {
-            FirstPersonRenderHelper.isFeatureEnabled = false;
-        }
-
         if (Platform.Fabric) { // forge renames this method
             ModelPredicateProviderRegistry.register(new Identifier(BetterCombat.MODID, "loaded"), (stack, world, entity, seed) -> {
                 return 1.0F;

@@ -31,7 +31,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                                         float f, float g, MatrixStack matrixStack,
                                         VertexConsumerProvider vertexConsumerProvider,
                                         int i, CallbackInfo ci) {
-        if (!FirstPersonRenderHelper.isFeatureEnabled || !FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+        if (!FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
             return;
         }
 
