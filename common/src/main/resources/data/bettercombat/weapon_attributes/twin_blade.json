@@ -16,7 +16,7 @@
         }
       },
       {
-        "hitbox": "VERTICAL_PLANE",
+        "hitbox": "HORIZONTAL_PLANE",
         "damage_multiplier": 1,
         "angle": 150,
         "upswing": 0.5,
