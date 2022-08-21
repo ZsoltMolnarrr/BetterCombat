@@ -4,6 +4,7 @@ import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.client.animation.IExtendedAnimation;
+import net.bettercombat.compatibility.CompatibilityFlags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -24,7 +25,7 @@ public abstract class WorldRendererMixin {
             "/Camera;" +
             "isThirdPerson()Z"))
     private boolean renderInFirstPerson(Camera instance) {
-        if (!FirstPersonRenderHelper.isFeatureEnabled) {
+        if (!CompatibilityFlags.firstPersonRender) {
             return instance.isThirdPerson();
         }
         return true;
@@ -33,7 +34,7 @@ public abstract class WorldRendererMixin {
     @Inject(method = "renderEntity", at = @At("HEAD"), cancellable = true)
     private void dontRenderEntity_Begin(Entity entity, double cameraX, double cameraY, double cameraZ,
                                          float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
-        if (!FirstPersonRenderHelper.isFeatureEnabled) {
+        if (!CompatibilityFlags.firstPersonRender) {
             // Do nothing -> Fallthrough (allow render)
             return;
         }

@@ -3,9 +3,12 @@ package net.bettercombat.client.collision;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.PlatformClient;
 import net.bettercombat.api.WeaponAttributes.Attack;
+import net.bettercombat.compatibility.CompatibilityFlags;
+import net.bettercombat.compatibility.PehkuiHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -27,7 +30,9 @@ public class TargetFinder {
         Vec3d origin = getInitialTracingPoint(player);
         List<Entity> entities = getInitialTargets(player, cursorTarget, attackRange);
 
-        attackRange = attackRange * PlatformClient.getEntityScale(player);
+        if (CompatibilityFlags.usePehkui) {
+            attackRange = attackRange * PehkuiHelper.getScale(player);
+        }
 
         boolean isSpinAttack = attack.angle() > 180;
         Vec3d size = WeaponHitBoxes.createHitbox(attack.hitbox(), attackRange, isSpinAttack);

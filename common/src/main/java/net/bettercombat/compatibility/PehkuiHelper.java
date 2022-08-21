@@ -1,6 +1,6 @@
-package net.bettercombat.fabric.client;
+package net.bettercombat.compatibility;
 
-import net.fabricmc.loader.api.FabricLoader;
+import net.bettercombat.Platform;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
@@ -9,7 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class PekhuiIntegration {
+public class PehkuiHelper {
+    public static Identifier scaleId = new Identifier("pehkui", "entity_reach");
     private static final Method GET_SCALE_DATA;
     private static final Method GET_SCALE;
     private static final Map<Identifier, Object> SCALE_TYPES;
@@ -20,7 +21,7 @@ public class PekhuiIntegration {
         Method getScaleMethod = null;
         Map<Identifier, Object> scaleTypes = null;
 
-        if (FabricLoader.getInstance().isModLoaded("pehkui"))
+        if (Platform.isModLoaded("pehkui"))
         {
             try
             {
@@ -46,7 +47,7 @@ public class PekhuiIntegration {
         SCALE_TYPES = scaleTypes;
     }
 
-    public static float getScale(Entity entity, Identifier scaleId)
+    public static float getScale(Entity entity)
     {
         return getScale(entity, scaleId, 1.0F);
     }

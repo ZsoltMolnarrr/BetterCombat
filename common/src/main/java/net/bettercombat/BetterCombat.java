@@ -3,6 +3,7 @@ package net.bettercombat;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
+import net.bettercombat.compatibility.CompatibilityFlags;
 import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.config.ServerConfigWrapper;
@@ -31,7 +32,7 @@ public class BetterCombat implements ModInitializer {
         // Intuitive way to load a config :)
         config = AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig().server;
         loadFallbackConfig();
-
+        CompatibilityFlags.initialize();
         ServerNetwork.initializeHandlers();
         ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
             WeaponRegistry.loadAttributes(minecraftServer.getResourceManager());
