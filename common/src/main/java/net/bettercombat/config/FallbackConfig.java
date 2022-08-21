@@ -86,6 +86,9 @@ public class FallbackConfig {
                         "coral_blade",
                         "bettercombat:coral_blade"),
                 new CompatibilitySpecifier(
+                        "twin_blade|twinblade",
+                        "bettercombat:twin_blade"),
+                new CompatibilitySpecifier(
                         "cutlass|scimitar|machete",
                         "bettercombat:cutlass"),
                 new CompatibilitySpecifier(
