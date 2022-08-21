@@ -42,7 +42,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
         updateDualWieldingSpeedBoost();
     }
 
-    // FEATURE: Disable sweeping for our weapons
+    // FEATURE: Disable sweeping for attributed weapons
 
     @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 3)
     private boolean disableSweeping(boolean value) {
