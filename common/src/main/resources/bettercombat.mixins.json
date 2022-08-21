@@ -13,6 +13,7 @@
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
+    "client.ClientPlayNetworkHandlerMixin",
     "client.ColliderDebugRenderer",
     "client.InGameHudInject",
     "client.MinecraftClientAccessor",

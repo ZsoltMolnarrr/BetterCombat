@@ -24,5 +24,7 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean isTooltipAttackRangeEnabled = true;
     @ConfigEntry.Gui.Tooltip
+    public boolean isSweepingParticleEnabled = true;
+    @ConfigEntry.Gui.Tooltip
     public boolean isWeaponSwingSoundEnabled = true;
 }
