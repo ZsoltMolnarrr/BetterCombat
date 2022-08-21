@@ -83,6 +83,9 @@ public class FallbackConfig {
                         "axe",
                         "bettercombat:axe"),
                 new CompatibilitySpecifier(
+                        "coral_blade",
+                        "bettercombat:coral_blade"),
+                new CompatibilitySpecifier(
                         "cutlass|scimitar|machete",
                         "bettercombat:cutlass"),
                 new CompatibilitySpecifier(
