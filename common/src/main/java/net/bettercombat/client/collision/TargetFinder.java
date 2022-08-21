@@ -1,6 +1,7 @@
 package net.bettercombat.client.collision;
 
 import net.bettercombat.BetterCombat;
+import net.bettercombat.PlatformClient;
 import net.bettercombat.api.WeaponAttributes.Attack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Tameable;
@@ -25,6 +26,8 @@ public class TargetFinder {
     public static TargetResult findAttackTargetResult(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
         Vec3d origin = getInitialTracingPoint(player);
         List<Entity> entities = getInitialTargets(player, cursorTarget, attackRange);
+
+        attackRange = attackRange * PlatformClient.getEntityScale(player);
 
         boolean isSpinAttack = attack.angle() > 180;
         Vec3d size = WeaponHitBoxes.createHitbox(attack.hitbox(), attackRange, isSpinAttack);
