@@ -48,8 +48,6 @@ shadowJar {
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
 
-    exclude "net/bettercombat/client/ModMenuIntegration.java"
-
     relocate 'net.fabricmc', 'net.bettercombat.fabricmc'
 }
 
