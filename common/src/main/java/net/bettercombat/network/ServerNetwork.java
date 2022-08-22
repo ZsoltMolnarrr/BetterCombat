@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.mojang.logging.LogUtils;
 import net.bettercombat.BetterCombat;
+import net.bettercombat.Platform;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
@@ -38,10 +39,22 @@ public class ServerNetwork {
 
     public static void initializeHandlers() {
         configSerialized = Packets.ConfigSync.write(BetterCombat.config);
-        ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
-            sender.sendPacket(Packets.WeaponRegistrySync.ID, WeaponRegistry.getEncodedRegistry());
-            sender.sendPacket(Packets.ConfigSync.ID, configSerialized);
-        });
+        if (Platform.Fabric) {
+            ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
+                sender.sendPacket(Packets.WeaponRegistrySync.ID, WeaponRegistry.getEncodedRegistry());
+                sender.sendPacket(Packets.ConfigSync.ID, configSerialized);
+            });
+        }
+        if (Platform.Forge) {
+            ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
+                sender.sendPacket(Packets.WeaponRegistrySync.ID,
+                        new PacketByteBuf(WeaponRegistry.getEncodedRegistry().copy())
+                );
+                sender.sendPacket(Packets.ConfigSync.ID,
+                        new PacketByteBuf(configSerialized.copy())
+                );
+            });
+        }
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (server, player, handler, buf, responseSender) -> {
             ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
