@@ -18,7 +18,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class BetterCombatForge {
     public static DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, BetterCombat.MODID);
 
-    public BetterCombatForge(){
+    public BetterCombatForge() {
         new BetterCombat().onInitialize();
         NetworkHandler.registerMessages();
 
@@ -32,7 +32,7 @@ public class BetterCombatForge {
         });
     }
 
-    private void registerSounds(){
+    private void registerSounds() {
         for (var soundKey: SoundHelper.soundKeys) {
             BetterCombatForge.SOUNDS.register(soundKey, () -> new SoundEvent(new Identifier(BetterCombat.MODID, soundKey)));
         }

@@ -5,7 +5,6 @@ import net.minecraft.server.MinecraftServer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ServerLifecycleEvents {
     public static List<ServerStarted> onServerStarted = new ArrayList<>();
@@ -20,5 +19,4 @@ public class ServerLifecycleEvents {
     public interface ServerStarted {
         void onServerStarted(MinecraftServer server);
     }
-
 }

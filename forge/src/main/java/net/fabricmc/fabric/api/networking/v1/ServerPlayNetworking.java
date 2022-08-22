@@ -34,6 +34,5 @@ public class ServerPlayNetworking {
 
     public interface PlayChannelHandler {
         void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender);
-
     }
 }
