@@ -3,8 +3,8 @@ package net.bettercombat.forge.events;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.client.BetterCombatClient;
+import net.bettercombat.client.BetterCombatKeybindings;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.util.Identifier;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ForgeClientModEvents {
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event){
-        KeyBindingHelper.keys.forEach(event::register);
+        BetterCombatKeybindings.all.forEach(event::register);
     }
 
     @SubscribeEvent

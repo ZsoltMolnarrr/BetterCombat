@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.BetterCombatClient;
+import net.bettercombat.client.BetterCombatKeybindings;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
@@ -208,7 +209,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
 
     private void feintIfNeeded() {
         if (upswingTicks > 0 &&
-                (BetterCombatClient.feintKeyBinding.isPressed() || player.getMainHandStack() != upswingStack)) {
+                (BetterCombatKeybindings.feintKeyBinding.isPressed() || player.getMainHandStack() != upswingStack)) {
             ((PlayerAttackAnimatable) player).stopAttackAnimation();
             ClientPlayNetworking.send(
                     Packets.AttackAnimation.ID,
@@ -279,7 +280,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
             updateTargetsInRage(targets);
         }
 
-        if (BetterCombatClient.toggleMineKeyBinding.wasPressed()) {
+        if (BetterCombatKeybindings.toggleMineKeyBinding.wasPressed()) {
             BetterCombatClient.config.isMiningWithWeaponsEnabled = !BetterCombatClient.config.isMiningWithWeaponsEnabled;
             AutoConfig.getConfigHolder(ClientConfigWrapper.class).save();
             textToRender = I18n.translate("text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled")
