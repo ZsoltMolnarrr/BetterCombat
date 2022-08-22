@@ -1,10 +1,14 @@
 package net.bettercombat.forge;
 
+import me.shedaniel.autoconfig.AutoConfig;
+import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.forge.network.NetworkHandler;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.utils.SoundHelper;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,6 +24,12 @@ public class BetterCombatForge {
 
         registerSounds();
         SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
+
+        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> {
+            return new ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> {
+                return AutoConfig.getConfigScreen(ClientConfigWrapper.class, screen).get();
+            });
+        });
     }
 
     private void registerSounds(){
