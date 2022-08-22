@@ -34,7 +34,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
 
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${project.player_anim_version}")
-    api("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
+    modApi("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
 }
 
 processResources {
