@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.data.gson.AnimationSerializing;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
@@ -16,10 +17,9 @@ public class AnimationRegistry {
 
     public static void load(ResourceManager resourceManager) {
         var dataFolder = "attack_animations";
-        for (var entry : resourceManager.findResources(dataFolder, fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
-            var identifier = entry.getKey();
-            var resource = entry.getValue();
+        for (Identifier identifier : resourceManager.findResources(dataFolder, fileName -> fileName.endsWith(".json"))) {
             try {
+                var resource = resourceManager.getResource(identifier);
                 List<KeyframeAnimation> readAnimations = AnimationSerializing.deserializeAnimation(resource.getInputStream());
                 KeyframeAnimation animation = readAnimations.get(0);
 

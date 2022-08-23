@@ -42,8 +42,7 @@ public class ClientNetwork {
                             soundEvent,
                             SoundCategory.PLAYERS,
                             packet.volume(),
-                            packet.pitch(),
-                            packet.seed());
+                            packet.pitch());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

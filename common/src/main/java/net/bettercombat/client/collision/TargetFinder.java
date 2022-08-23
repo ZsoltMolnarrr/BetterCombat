@@ -62,7 +62,7 @@ public class TargetFinder {
         Box box = player.getBoundingBox().expand(attackRange * BetterCombat.config.target_search_range_multiplier + 1.0);
         List<Entity> entities = player
                 .world
-                .getOtherEntities(player, box, entity ->  !entity.isSpectator() && entity.canHit())
+                .getOtherEntities(player, box, entity ->  !entity.isSpectator() && entity.collides())
                 .stream()
                 .filter(entity -> {
                     var result = entity != player

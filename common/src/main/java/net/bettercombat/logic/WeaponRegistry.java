@@ -65,11 +65,10 @@ public class WeaponRegistry {
         Type fileFormat = new TypeToken<AttributesContainer>() {}.getType();
         Map<Identifier, AttributesContainer> containers = new HashMap();
         // Reading all attribute files
-        for (var entry : resourceManager.findResources("weapon_attributes", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
-            var identifier = entry.getKey();
-            var resource = entry.getValue();
+        for (Identifier identifier : resourceManager.findResources("weapon_attributes", fileName -> fileName.endsWith(".json"))) {
             try {
                 // System.out.println("Checking resource: " + identifier);
+                var resource = resourceManager.getResource(identifier);
                 JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
                 AttributesContainer container = gson.fromJson(reader, fileFormat);
                 var id = identifier

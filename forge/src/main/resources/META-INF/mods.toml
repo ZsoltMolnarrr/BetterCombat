@@ -53,7 +53,7 @@ side="BOTH"
 [[dependencies.bettercombat]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.19,)"
+versionRange="[1.18,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.bettercombat]]
@@ -65,6 +65,6 @@ side="BOTH"
 [[dependencies.bettercombat]]
 modId="cloth_config"
 mandatory=true
-versionRange="[7.0.0,)"
+versionRange="[6.0.0,)"
 ordering="AFTER"
 side="BOTH"
