@@ -2,7 +2,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "me.shedaniel.unified-publishing"
     id "com.matthewprenger.cursegradle"
-    id "com.modrinth.minotaur" version "2.4.3"
+    id "com.modrinth.minotaur"
 }
 
 loom {
