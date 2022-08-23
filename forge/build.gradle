@@ -73,3 +73,53 @@ components.java {
     }
 }
 
+if(project.hasProperty('release_type')) {
+    tasks.register("publishMod") {
+        dependsOn(build)
+        finalizedBy(tasks.curseforge)
+        finalizedBy(tasks.modrinth)
+    }
+
+    curseforge {
+        apiKey = System.getenv("CURSEFORGE_API_KEY")
+        project {
+            id = '639842'
+            changelog = ''
+            releaseType = release_type
+            addGameVersion "1.19"
+            addGameVersion "1.19.1"
+            addGameVersion "1.19.2"
+            addGameVersion "Forge"
+
+            relations {
+                requiredDependency 'cloth-config'
+                requiredDependency 'playeranimator'
+            }
+
+            mainArtifact(remapJar)
+            afterEvaluate {
+                uploadTask.dependsOn(remapJar)
+            }
+            options {
+                forgeGradleIntegration = false
+            }
+        }
+    }
+
+    modrinth {
+        token = System.getenv("MODRINTH_API_KEY")
+        projectId = "better-combat" // This can be the project ID or the slug. Either will work!
+        versionNumber = "${project.mod_version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+        versionType = release_type // This is the default -- can also be `beta` or `alpha`
+        uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+        gameVersions = ["1.19", "1.19.1", "1.19.2"] // Must be an array, even with only one version
+        loaders = ["forge"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
+        dependencies { // A special DSL for creating dependencies
+            // scope.type
+            // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+            // The type can either be `project` or `version`
+            required.project "cloth-config"
+            required.project "playeranimator"
+        }
+    }
+}
