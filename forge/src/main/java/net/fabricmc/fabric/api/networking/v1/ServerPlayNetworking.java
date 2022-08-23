@@ -25,7 +25,7 @@ public class ServerPlayNetworking {
     }
 
     public static void send(ServerPlayerEntity serverPlayer, Identifier id, PacketByteBuf forwardBuffer) {
-        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) serverPlayer), new PacketWrapper(true, id, forwardBuffer));
+        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) serverPlayer), new PacketWrapper(true, id, new PacketByteBuf(forwardBuffer.copy())));
     }
 
     public static void handle(PacketWrapper msg, ServerPlayerEntity sender) {

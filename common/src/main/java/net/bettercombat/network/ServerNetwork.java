@@ -39,22 +39,10 @@ public class ServerNetwork {
 
     public static void initializeHandlers() {
         configSerialized = Packets.ConfigSync.write(BetterCombat.config);
-        if (Platform.Fabric) {
-            ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
-                sender.sendPacket(Packets.WeaponRegistrySync.ID, WeaponRegistry.getEncodedRegistry());
-                sender.sendPacket(Packets.ConfigSync.ID, configSerialized);
-            });
-        }
-        if (Platform.Forge) {
-            ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
-                sender.sendPacket(Packets.WeaponRegistrySync.ID,
-                        new PacketByteBuf(WeaponRegistry.getEncodedRegistry().copy())
-                );
-                sender.sendPacket(Packets.ConfigSync.ID,
-                        new PacketByteBuf(configSerialized.copy())
-                );
-            });
-        }
+        ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
+            sender.sendPacket(Packets.WeaponRegistrySync.ID, WeaponRegistry.getEncodedRegistry());
+            sender.sendPacket(Packets.ConfigSync.ID, configSerialized);
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (server, player, handler, buf, responseSender) -> {
             ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
