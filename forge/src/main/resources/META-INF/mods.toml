@@ -27,7 +27,7 @@ version="${version}" #mandatory
 # A display name for the mod
 displayName="Better Combat" #mandatory
 
-credits="Forge port by LukeGrahamLandry" #optional
+credits="KosmX, Gecko, LukeGrahamLandry" #optional
 
 # A text field displayed in the mod UI
 authors="Daedelus" #optional
