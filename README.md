@@ -97,9 +97,9 @@ A fitting preset for a big two handed sword is the `claymore` from Better Combat
 }
 ```
 
-You can check out all available presets [here](src/main/resources/data/bettercombat/weapon_attributes).
+You can check out all available presets [here](/common/src/main/resources/data/bettercombat/weapon_attributes).
 
-You can check out how presets are used to add compatibility for Vanilla weapons [here](/src/main/resources/data/minecraft/weapon_attributes).
+You can check out how presets are used to add compatibility for Vanilla weapons [here](/common/src/main/resources/data/minecraft/weapon_attributes).
 
 You can make and reference your own presets the same way.
 
@@ -117,11 +117,11 @@ When no parent is specified, the value for `"attributes"` key must be a full jso
 }
 ```
 
-Check out the existing [weapon presets](src/main/resources/data/bettercombat/weapon_attributes) to see practical examples of building from scratch.
+Check out the existing [weapon presets](common/src/main/resources/data/bettercombat/weapon_attributes) to see practical examples of building from scratch.
 
-Check out the available [attack animations](src/main/resources/assets/bettercombat/attack_animations), bundled with Better Combat. 
+Check out the available [attack animations](common/src/main/resources/assets/bettercombat/attack_animations), bundled with Better Combat. 
 
-If you need more details, the java documentation of [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) covers all the specifics.
+If you need more details, the java documentation of [WeaponAttributes](common/src/main/java/net/bettercombat/api/WeaponAttributes.java) covers all the specifics.
 
 ---
 
