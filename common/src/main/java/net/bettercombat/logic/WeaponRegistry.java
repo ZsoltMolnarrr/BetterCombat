@@ -10,6 +10,7 @@ import net.bettercombat.api.WeaponAttributes;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -26,21 +27,35 @@ import java.util.Map;
 public class WeaponRegistry {
     static final Logger LOGGER = LogUtils.getLogger();
     static Map<Identifier, WeaponAttributes> registrations = new HashMap();
+    static Map<String, WeaponAttributes> registrationsNBT = new HashMap();
     static Map<Identifier, AttributesContainer> containers = new HashMap();
 
     public static void register(Identifier itemId, WeaponAttributes attributes) {
         registrations.put(itemId, attributes);
+    }
+    public static void register(String nbtKey, WeaponAttributes attributes) {
+        registrationsNBT.put(nbtKey, attributes);
     }
 
     public static WeaponAttributes getAttributes(Identifier itemId) {
         return registrations.get(itemId);
     }
 
-    public static WeaponAttributes getAttributes(ItemStack itemStack) {
-        if (itemStack == null) {
-            return null;
+    public static WeaponAttributes getAttributes(String nbtKey) {
+        return registrationsNBT.get(nbtKey);
+    }
+
+    public static WeaponAttributes getAttributes(ItemStack stack) {
+        if(stack.hasNbt()) {
+            NbtCompound tag = stack.getNbt();
+            for (String key : tag.getKeys()) {
+                WeaponAttributes attributes = WeaponRegistry.getAttributes(key);
+                if(attributes!= null){
+                    return attributes;
+                }
+            }
         }
-        Item item = itemStack.getItem();
+        Item item = stack.getItem();
         Identifier id = Registry.ITEM.getId(item);
         WeaponAttributes attributes = WeaponRegistry.getAttributes(id);
         return attributes;
@@ -98,16 +113,17 @@ public class WeaponRegistry {
 
             var empty = new WeaponAttributes(0, null, null, false, null,null);
             var resolvedAttributes = resolutionChain
-                .stream()
-                .reduce(empty, (a, b) -> {
-                    if (b == null) { // I'm not sure why null can enter as `b`
-                        return a;
-                    }
-                    return WeaponAttributesHelper.override(a, b);
-                });
+                    .stream()
+                    .reduce(empty, (a, b) -> {
+                        if (b == null) { // I'm not sure why null can enter as `b`
+                            return a;
+                        }
+                        return WeaponAttributesHelper.override(a, b);
+                    });
 
             WeaponAttributesHelper.validate(resolvedAttributes);
             register(itemId, resolvedAttributes);
+            register(itemId.toString(), resolvedAttributes);
         } catch (Exception e) {
             LOGGER.error("Failed to resolve weapon attributes for: " + itemId + ". Reason: " + e.getMessage());
         }
@@ -155,10 +171,13 @@ public class WeaponRegistry {
         Type mapType = new TypeToken<Map<String, WeaponAttributes>>() {}.getType();
         Map<String, WeaponAttributes> readRegistrations = gson.fromJson(json, mapType);
         Map<Identifier, WeaponAttributes> newRegistrations = new HashMap();
+        Map<String, WeaponAttributes> newRegistrationsNBT = new HashMap();
         readRegistrations.forEach((key, value) -> {
             newRegistrations.put(new Identifier(key), value);
+            newRegistrationsNBT.put(key,value);
         });
         registrations = newRegistrations;
+        registrationsNBT = newRegistrationsNBT;
     }
 
     public static PacketByteBuf getEncodedRegistry() {
