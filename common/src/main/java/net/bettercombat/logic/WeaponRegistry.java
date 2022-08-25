@@ -174,7 +174,6 @@ public class WeaponRegistry {
         Map<String, WeaponAttributes> newRegistrationsNBT = new HashMap();
         readRegistrations.forEach((key, value) -> {
             newRegistrations.put(new Identifier(key), value);
-            newRegistrationsNBT.put(key,value);
             newRegistrationsNBT.put(key.substring(key.indexOf(":")+1),value);
         });
         registrations = newRegistrations;
