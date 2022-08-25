@@ -29,11 +29,13 @@ public class ClientNetwork {
             final var packet = Packets.AttackSound.read(buf);
             client.execute(() -> {
                 try {
-                    if (!BetterCombatClient.config.isWeaponSwingSoundEnabled) {
+                    if (BetterCombatClient.config.weaponSwingSoundVolume == 0) {
                         return;
                     }
 
                     var soundEvent = Registry.SOUND_EVENT.get(new Identifier(packet.soundId()));
+                    var configVolume = BetterCombatClient.config.weaponSwingSoundVolume;
+                    var volume = packet.volume() * ((float)Math.min(Math.max(configVolume, 0), 100) / 100F);
                     client.world.playSound(
                             client.player,
                             packet.x(),
@@ -41,7 +43,7 @@ public class ClientNetwork {
                             packet.z(),
                             soundEvent,
                             SoundCategory.PLAYERS,
-                            packet.volume(),
+                            volume,
                             packet.pitch(),
                             packet.seed());
                 } catch (Exception e) {

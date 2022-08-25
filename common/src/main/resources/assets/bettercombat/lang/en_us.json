@@ -21,8 +21,8 @@
   "text.autoconfig.bettercombat.option.client.isSmoothAnimationTransitionEnabled.@Tooltip": "Attack animations smoothly transition at the cost of accuracy",
   "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled": "Item tooltip: attack range",
   "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled.@Tooltip": "Show attack range attribute on weapon tooltips",
-  "text.autoconfig.bettercombat.option.client.isWeaponSwingSoundEnabled" : "Weapon swing sounds",
-  "text.autoconfig.bettercombat.option.client.isWeaponSwingSoundEnabled.@Tooltip" : "Enable the playback of weapon swing sounds",
+  "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume" : "Weapon swing sound volume %",
+  "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume.@Tooltip" : "Change volume of weapon swing sounds",
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled" : "Show sweeping",
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Enable showing sword sweeping particle effects"
 }
