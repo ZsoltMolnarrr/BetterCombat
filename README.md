@@ -33,12 +33,19 @@ Auxiliary features:
 - [X] Swing thru grass (Client configurable)
 - [X] Can disable mining with weapons (Client configurable)
 
+Compatibility features:
+- [X] Dedicated compatibility (Add weapon attribute data files for individual items, to specify their animations and behaviour) aka JSON API 
+- [X] Fallback compatibility (Tries to automatically assign the correct type of weapon attributes to weapons without attribute file. Highly configurable)
+
+
 Future plans:
 - Rolling
 - Additional weapon attributes (for example: movement penalty, pushback)
 - Weapon trail animation while hitting
 
 # 🔨 Integrate your mod
+
+The next steps describe how to add dedicated compatibility for any item.
 
 ## Prerequisite
 
@@ -202,11 +209,19 @@ Make sure to specify a fitting `upswing` value next to your animation (to make i
 
 ## Client
 
+### Fabric
+
 You can access the client side settings via the [Mod Menu](https://github.com/TerraformersMC/ModMenu).
+
+### Forge
+
+You can access the client side settings in Main Menu > Mods > Better Combat > Config.
 
 ## Server
 
-Server config can be found at: `config/bettercombat/server.conf`
+Fallback compatibility configuration can be found at: `/config/bettercombat/fallback_compatibility.json`
+
+Server config can be found at: `/config/bettercombat/server.conf`
 
 Automatically created with default values, upon loading any game world for the first time. 
 
