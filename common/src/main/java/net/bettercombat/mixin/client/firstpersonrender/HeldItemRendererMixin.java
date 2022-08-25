@@ -21,7 +21,7 @@ public class HeldItemRendererMixin {
             at = @At("HEAD"), cancellable = true)
     private void dontRenderItem(float tickDelta, MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers,
                                 ClientPlayerEntity player, int light, CallbackInfo ci) {
-        if (!CompatibilityFlags.firstPersonRender) {
+        if (!CompatibilityFlags.firstPersonRender()) {
             return;
         }
         Optional<IAnimation> currentAnimation = ((PlayerAttackAnimatable) player).getCurrentAnimation();

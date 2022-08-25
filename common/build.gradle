@@ -4,6 +4,13 @@ repositories {
     maven { url 'https://maven.fabricmc.net/' }
     maven { url 'https://jitpack.io' }
     maven { url 'https://maven.terraformersmc.com/' }
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
 }
 
 dependencies {
@@ -17,6 +24,7 @@ dependencies {
 
     modApi ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
     modImplementation ("dev.kosmx.player-anim:player-animation-lib:${project.player_anim_version}")
+    modCompileOnly "maven.modrinth:first-person-model:${project.fpm_version}"
 }
 
 architectury {
