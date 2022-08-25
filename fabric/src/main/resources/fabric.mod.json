@@ -39,7 +39,8 @@
     "cloth-config": ">=7.0.65"
   },
   "breaks": {
-    "inventorio": "*"
+    "inventorio": "*",
+    "figura": "*"
   },
   "custom": {
     "modmenu": {
