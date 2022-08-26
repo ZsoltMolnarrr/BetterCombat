@@ -33,12 +33,19 @@ Auxiliary features:
 - [X] Swing thru grass (Client configurable)
 - [X] Can disable mining with weapons (Client configurable)
 
+Compatibility features:
+- [X] Dedicated compatibility (Add weapon attribute data files for individual items, to specify their animations and behaviour) aka JSON API 
+- [X] Fallback compatibility (Tries to automatically assign the correct type of weapon attributes to weapons without attribute file. Highly configurable)
+
+
 Future plans:
 - Rolling
 - Additional weapon attributes (for example: movement penalty, pushback)
 - Weapon trail animation while hitting
 
 # 🔨 Integrate your mod
+
+The next steps describe how to add dedicated compatibility for any item.
 
 ## Prerequisite
 
@@ -97,9 +104,9 @@ A fitting preset for a big two handed sword is the `claymore` from Better Combat
 }
 ```
 
-You can check out all available presets [here](src/main/resources/data/bettercombat/weapon_attributes).
+You can check out all available presets [here](/common/src/main/resources/data/bettercombat/weapon_attributes).
 
-You can check out how presets are used to add compatibility for Vanilla weapons [here](/src/main/resources/data/minecraft/weapon_attributes).
+You can check out how presets are used to add compatibility for Vanilla weapons [here](/common/src/main/resources/data/minecraft/weapon_attributes).
 
 You can make and reference your own presets the same way.
 
@@ -117,11 +124,11 @@ When no parent is specified, the value for `"attributes"` key must be a full jso
 }
 ```
 
-Check out the existing [weapon presets](src/main/resources/data/bettercombat/weapon_attributes) to see practical examples of building from scratch.
+Check out the existing [weapon presets](common/src/main/resources/data/bettercombat/weapon_attributes) to see practical examples of building from scratch.
 
-Check out the available [attack animations](src/main/resources/assets/bettercombat/attack_animations), bundled with Better Combat. 
+Check out the available [attack animations](common/src/main/resources/assets/bettercombat/attack_animations), bundled with Better Combat. 
 
-If you need more details, the java documentation of [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) covers all the specifics.
+If you need more details, the java documentation of [WeaponAttributes](common/src/main/java/net/bettercombat/api/WeaponAttributes.java) covers all the specifics.
 
 ---
 
@@ -202,11 +209,19 @@ Make sure to specify a fitting `upswing` value next to your animation (to make i
 
 ## Client
 
+### Fabric
+
 You can access the client side settings via the [Mod Menu](https://github.com/TerraformersMC/ModMenu).
+
+### Forge
+
+You can access the client side settings in Main Menu > Mods > Better Combat > Config.
 
 ## Server
 
-Server config can be found at: `config/bettercombat/server.conf`
+Fallback compatibility configuration can be found at: `/config/bettercombat/fallback_compatibility.json`
+
+Server config can be found at: `/config/bettercombat/server.conf`
 
 Automatically created with default values, upon loading any game world for the first time. 
 

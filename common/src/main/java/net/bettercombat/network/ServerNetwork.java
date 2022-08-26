@@ -120,7 +120,12 @@ public class ServerNetwork {
 
                 for (int entityId: request.entityIds()) {
                     // getEntityById(entityId);
-                    Entity entity = world.getDragonPart(entityId); // Get LivingEntity or DragonPart
+                    boolean isBossPart = false;
+                    Entity entity = world.getEntityById(entityId);
+                    if (entity == null) {
+                        isBossPart = true;
+                        entity = world.getDragonPart(entityId); // Get LivingEntity or DragonPart
+                    }
 
                     if (entity == null
                             || (!BetterCombat.config.allow_attacking_mount && entity.equals(player.getVehicle()))
@@ -132,11 +137,13 @@ public class ServerNetwork {
                     }
                     ((LivingEntityAccessor) player).setLastAttackedTicks(lastAttackedTicks);
                     // System.out.println("Server - Attacking hand: " + (hand.isOffHand() ? "offhand" : "mainhand") + " CD: " + player.getAttackCooldownProgress(0));
-                    if (useVanillaPacket) {
+                    if (!isBossPart && useVanillaPacket) {
+                        // System.out.println("HIT - A entity: " + entity.getEntityName() + " id: " + entity.getId() + " class: " + entity.getClass());
                         PlayerInteractEntityC2SPacket vanillaAttackPacket = PlayerInteractEntityC2SPacket.attack(entity, request.isSneaking());
                         handler.onPlayerInteractEntity(vanillaAttackPacket);
                     } else {
-                        if (player.squaredDistanceTo(entity) < range * BetterCombat.config.target_search_range_multiplier) {
+                        // System.out.println("HIT - B entity: " + entity.getEntityName() + " id: " + entity.getId() + " class: " + entity.getClass());
+                        if (true || player.squaredDistanceTo(entity) < range * BetterCombat.config.target_search_range_multiplier) {
                             if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity || entity instanceof PersistentProjectileEntity || entity == player) {
                                 handler.disconnect(new TranslatableText("multiplayer.disconnect.invalid_entity_attacked"));
                                 LOGGER.warn("Player {} tried to attack an invalid entity", (Object)player.getName().getString());

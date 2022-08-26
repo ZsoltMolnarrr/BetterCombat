@@ -23,7 +23,7 @@ subprojects {
     apply plugin: "io.github.juuxel.loom-quiltflower"
 
     archivesBaseName = rootProject.archives_base_name + "-${project.name}"
-    version = rootProject.mod_version
+    version = rootProject.mod_version + "+1.18.2"
 
     loom {
         silentMojangMappingsLicense()

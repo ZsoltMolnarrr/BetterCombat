@@ -25,7 +25,7 @@ public abstract class WorldRendererMixin {
             "/Camera;" +
             "isThirdPerson()Z"))
     private boolean renderInFirstPerson(Camera instance) {
-        if (!CompatibilityFlags.firstPersonRender) {
+        if (!CompatibilityFlags.firstPersonRender() || MinecraftClient.getInstance().player.isSleeping()) {
             return instance.isThirdPerson();
         }
         return true;
@@ -34,7 +34,7 @@ public abstract class WorldRendererMixin {
     @Inject(method = "renderEntity", at = @At("HEAD"), cancellable = true)
     private void dontRenderEntity_Begin(Entity entity, double cameraX, double cameraY, double cameraZ,
                                          float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
-        if (!CompatibilityFlags.firstPersonRender) {
+        if (!CompatibilityFlags.firstPersonRender()) {
             // Do nothing -> Fallthrough (allow render)
             return;
         }

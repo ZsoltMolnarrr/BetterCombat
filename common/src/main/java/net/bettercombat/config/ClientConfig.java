@@ -26,5 +26,6 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean isSweepingParticleEnabled = true;
     @ConfigEntry.Gui.Tooltip
-    public boolean isWeaponSwingSoundEnabled = true;
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+    public int weaponSwingSoundVolume = 100;
 }
