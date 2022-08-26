@@ -18,6 +18,8 @@ license="CC-BY-4.0 License"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 
+logoFile = "logo.png"
+
 # The modid of the mod
 modId="bettercombat" #mandatory
 
