@@ -28,6 +28,7 @@ public class WeaponRegistry {
     static final Logger LOGGER = LogUtils.getLogger();
     static Map<Identifier, WeaponAttributes> registrations = new HashMap();
     static Map<String, WeaponAttributes> registrationsNBT = new HashMap();
+    static Map<String, AttributesContainer> containersNBT = new HashMap();
     static Map<Identifier, AttributesContainer> containers = new HashMap();
 
     public static void register(Identifier itemId, WeaponAttributes attributes) {
@@ -73,12 +74,22 @@ public class WeaponRegistry {
             }
             resolveAndRegisterAttributes(itemId, container);
         });
+        containersNBT.forEach( (nbtString, container) -> {
+            try{
+                resolveAndRegisterAttributes(nbtString, container);
+            }
+            catch (Exception e){
+                LOGGER.warn(e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 
     private static void loadContainers(ResourceManager resourceManager) {
         var gson = new Gson();
         Type fileFormat = new TypeToken<AttributesContainer>() {}.getType();
         Map<Identifier, AttributesContainer> containers = new HashMap();
+        Map<String, AttributesContainer> containersNBT = new HashMap();
         // Reading all attribute files
         for (Identifier identifier : resourceManager.findResources("weapon_attributes", fileName -> fileName.endsWith(".json"))) {
             try {
@@ -89,13 +100,30 @@ public class WeaponRegistry {
                 var id = identifier
                         .toString().replace("weapon_attributes/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
-                containers.put(new Identifier(id), container);
+                try{
+                    //if normal ids shouldnt be parsed throw that into the Catch block
+                    //containersNBT.put(id,container);
+                    String fileName = identifier.toString().substring(identifier.toString().lastIndexOf("weapon_attributes/"));
+                    fileName = fileName.replace("weapon_attributes/", "");
+                    fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+                    containersNBT.put(fileName,container);
+                }
+                catch (Exception e){
+                    System.err.println("Failed to parse: " + identifier);
+                    e.printStackTrace();
+                }
+                try{
+                    containers.put(new Identifier(id), container);
+                }
+                catch (Exception e){
+                }
             } catch (Exception e) {
                 System.err.println("Failed to parse: " + identifier);
                 e.printStackTrace();
             }
         }
         WeaponRegistry.containers = containers;
+        WeaponRegistry.containersNBT = containersNBT;
     }
 
     public static void resolveAndRegisterAttributes(Identifier itemId, AttributesContainer container) {
@@ -123,9 +151,38 @@ public class WeaponRegistry {
 
             WeaponAttributesHelper.validate(resolvedAttributes);
             register(itemId, resolvedAttributes);
-            register(itemId.toString(), resolvedAttributes);
         } catch (Exception e) {
             LOGGER.error("Failed to resolve weapon attributes for: " + itemId + ". Reason: " + e.getMessage());
+        }
+    }
+
+    public static void resolveAndRegisterAttributes(String NbtString, AttributesContainer container) {
+        try {
+            ArrayList<WeaponAttributes> resolutionChain = new ArrayList();
+            AttributesContainer current = container;
+            while (current != null) {
+                resolutionChain.add(0, current.attributes());
+                if (current.parent() != null) {
+                    current = containers.get(new Identifier(current.parent()));
+                } else {
+                    current = null;
+                }
+            }
+
+            var empty = new WeaponAttributes(0, null, null, false, null,null);
+            var resolvedAttributes = resolutionChain
+                    .stream()
+                    .reduce(empty, (a, b) -> {
+                        if (b == null) { // I'm not sure why null can enter as `b`
+                            return a;
+                        }
+                        return WeaponAttributesHelper.override(a, b);
+                    });
+
+            WeaponAttributesHelper.validate(resolvedAttributes);
+            register(NbtString, resolvedAttributes);
+        } catch (Exception e) {
+            LOGGER.error("Failed to resolve weapon attributes for: " + NbtString + ". Reason: " + e.getMessage());
         }
     }
 
@@ -136,7 +193,10 @@ public class WeaponRegistry {
     public static void encodeRegistry() {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
-        var json = gson.toJson(registrations);
+        Map<String, Map> fusedMaps = new HashMap();
+        fusedMaps.put("id",registrations);
+        fusedMaps.put("nbt",registrationsNBT);
+        var json = gson.toJson(fusedMaps);
         if (BetterCombat.config.weapon_registry_logging) {
             LOGGER.info("Weapon Attribute registry loaded: " + json);
         }
@@ -168,16 +228,15 @@ public class WeaponRegistry {
             LOGGER.info("Weapon Attribute registry received: " + json);
         }
         var gson = new Gson();
-        Type mapType = new TypeToken<Map<String, WeaponAttributes>>() {}.getType();
-        Map<String, WeaponAttributes> readRegistrations = gson.fromJson(json, mapType);
+        Type mapType = new TypeToken<Map<String, Map<String, WeaponAttributes>>>() {}.getType();
+        Map<String, Map> readRegistrations = gson.fromJson(json, mapType);
         Map<Identifier, WeaponAttributes> newRegistrations = new HashMap();
-        Map<String, WeaponAttributes> newRegistrationsNBT = new HashMap();
-        readRegistrations.forEach((key, value) -> {
+        Map<String, WeaponAttributes> idMap = readRegistrations.get("id");
+        idMap.forEach((key, value) -> {
             newRegistrations.put(new Identifier(key), value);
-            newRegistrationsNBT.put(key.substring(key.indexOf(":")+1),value);
         });
         registrations = newRegistrations;
-        registrationsNBT = newRegistrationsNBT;
+        registrationsNBT = readRegistrations.get("nbt");
     }
 
     public static PacketByteBuf getEncodedRegistry() {
