@@ -118,9 +118,13 @@ public class TargetFinder {
         public List<Entity> filter(List<Entity> entities) {
             return entities.stream()
                     .filter(entity -> {
+                        var maxAngleDif = (attackAngle / 2.0);
                         Vec3d distanceVector = CollisionHelper.distanceVector(origin, entity.getBoundingBox());
+                        Vec3d positionVector = entity.getPos().subtract(origin);
                         return distanceVector.length() <= attackRange
-                                && ((attackAngle == 0) || CollisionHelper.angleBetween(distanceVector, orientation) <= (attackAngle / 2.0));
+                                && ((attackAngle == 0)
+                                || CollisionHelper.angleBetween(positionVector, orientation) <= maxAngleDif
+                                || CollisionHelper.angleBetween(distanceVector, orientation) <= maxAngleDif);
                     })
                     .collect(Collectors.toList());
         }
