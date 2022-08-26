@@ -209,7 +209,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
 
     private void feintIfNeeded() {
         if (upswingTicks > 0 &&
-                (BetterCombatKeybindings.feintKeyBinding.isPressed() || player.getMainHandStack() != upswingStack)) {
+                (BetterCombatKeybindings.feintKeyBinding.isPressed() || !ItemStack.areEqual(player.getMainHandStack(), upswingStack))) {
             ((PlayerAttackAnimatable) player).stopAttackAnimation();
             ClientPlayNetworking.send(
                     Packets.AttackAnimation.ID,
