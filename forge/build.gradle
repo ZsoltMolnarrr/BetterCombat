@@ -111,7 +111,7 @@ if(project.hasProperty('release_type')) {
     modrinth {
         token = System.getenv("MODRINTH_API_KEY")
         projectId = "better-combat" // This can be the project ID or the slug. Either will work!
-        versionNumber = "${project.mod_version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+        versionNumber = "${project.version}" // You don't need to set this manually. Will fail if Modrinth has this version already
         versionType = release_type // This is the default -- can also be `beta` or `alpha`
         uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
         gameVersions = ["1.19", "1.19.1", "1.19.2"] // Must be an array, even with only one version
