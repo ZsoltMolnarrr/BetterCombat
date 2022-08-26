@@ -25,10 +25,10 @@ public class WeaponAttributesFallback {
                 // If - no registration & matches regex
                 if (WeaponRegistry.getAttributes(itemId) == null
                         && matches(itemId.toString(), fallbackOption.item_id_regex)) {
-                    var container = WeaponRegistry.containers.get(new Identifier(fallbackOption.weapon_attributes));
+                    var container = WeaponRegistry.containers.get(new CustomIdentifier(fallbackOption.weapon_attributes));
                     // If assignable attributes are known
                     if (container != null) {
-                        WeaponRegistry.resolveAndRegisterAttributes(itemId, container);
+                        WeaponRegistry.resolveAndRegisterAttributes(new CustomIdentifier(itemId.toString()), container);
                         break; // No more registration attempts for this item id
                     }
                 }
