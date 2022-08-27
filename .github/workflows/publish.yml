@@ -5,11 +5,17 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Publish Fabric
+name: Publish
 
 on:
   workflow_dispatch:
     inputs:
+      loader:
+        type: choice
+        description: Mod loader
+        options: 
+        - fabric
+        - forge
       release_type:
         type: choice
         description: Release type
@@ -36,7 +42,7 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
-        arguments: :fabric:publishMod -Prelease_type=${{ inputs.release_type }}
+        arguments: :${{ loader }}:publishMod -Prelease_type=${{ inputs.release_type }}
       env:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
         MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
