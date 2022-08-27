@@ -14,7 +14,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.lwjgl.system.CallbackI;
 import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
