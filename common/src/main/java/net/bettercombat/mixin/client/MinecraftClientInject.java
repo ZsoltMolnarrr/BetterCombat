@@ -211,7 +211,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
 
     private void feintIfNeeded() {
         if (upswingTicks > 0 &&
-                (BetterCombatKeybindings.feintKeyBinding.isPressed() || !ItemStack.areEqual(player.getMainHandStack(), upswingStack))) {
+                (BetterCombatKeybindings.feintKeyBinding.isPressed() || !areItemStackEqual(player.getMainHandStack(), upswingStack))) {
             ((PlayerAttackAnimatable) player).stopAttackAnimation();
             ClientPlayNetworking.send(
                     Packets.AttackAnimation.ID,
@@ -343,5 +343,15 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     @Override
     public boolean hasTargetsInRange() {
         return hasTargetsInRange;
+    }
+
+    private static boolean areItemStackEqual(ItemStack left, ItemStack right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        return ItemStack.areEqual(left, right);
     }
 }
