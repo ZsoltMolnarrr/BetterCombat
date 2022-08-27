@@ -14,6 +14,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.lwjgl.system.CallbackI;
 import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
@@ -40,6 +41,13 @@ public class WeaponRegistry {
         if (itemStack == null) {
             return null;
         }
+        if(itemStack.hasNbt()){
+            String tag = itemStack.getNbt().getString("bettercombatparent");
+            if(tag!=null && !tag.equals("")){
+                WeaponAttributes attributes = WeaponRegistry.getAttributes(new Identifier(tag));
+                return attributes;
+            }
+        }
         Item item = itemStack.getItem();
         Identifier id = Registry.ITEM.getId(item);
         WeaponAttributes attributes = WeaponRegistry.getAttributes(id);
@@ -54,7 +62,7 @@ public class WeaponRegistry {
         // Resolving parents
         containers.forEach( (itemId, container) -> {
             if (!Registry.ITEM.containsId(itemId)) {
-                return;
+                //return;
             }
             resolveAndRegisterAttributes(itemId, container);
         });
