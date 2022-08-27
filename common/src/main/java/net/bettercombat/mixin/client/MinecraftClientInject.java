@@ -175,6 +175,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     private ItemStack lastAttacedWithItemStack;
     private int upswingTicks = 0;
     private int lastAttacked = 1000;
+    private int comboReset = 0;
 
     private void startUpswing(WeaponAttributes attributes) {
         // Guard conditions
@@ -197,6 +198,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
         float attackCooldownTicks = player.getAttackCooldownProgressPerTick(); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
+        this.comboReset = Math.round(attackCooldownTicks * ComboResetRate);
         this.upswingTicks = (int)(Math.round(attackCooldownTicks * upswingRate));
 //        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
@@ -209,7 +211,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
 
     private void feintIfNeeded() {
         if (upswingTicks > 0 &&
-                (BetterCombatKeybindings.feintKeyBinding.isPressed() || !ItemStack.areEqual(player.getMainHandStack(), upswingStack))) {
+                (BetterCombatKeybindings.feintKeyBinding.isPressed() || !areItemStackEqual(player.getMainHandStack(), upswingStack))) {
             ((PlayerAttackAnimatable) player).stopAttackAnimation();
             ClientPlayNetworking.send(
                     Packets.AttackAnimation.ID,
@@ -230,8 +232,6 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     }
 
     private void resetComboIfNeeded() {
-        double attackCooldownTicks = player.getAttackCooldownProgressPerTick();
-        int comboReset = (int)Math.round(attackCooldownTicks * ComboResetRate);
         // Combo timeout
         if(lastAttacked > comboReset && getComboCount() > 0) {
             setComboCount(0);
@@ -343,5 +343,15 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     @Override
     public boolean hasTargetsInRange() {
         return hasTargetsInRange;
+    }
+
+    private static boolean areItemStackEqual(ItemStack left, ItemStack right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        return ItemStack.areEqual(left, right);
     }
 }
