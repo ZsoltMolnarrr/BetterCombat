@@ -7,6 +7,8 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 @Config(name = "client")
 public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
+    public boolean TESTING = true;
+    @ConfigEntry.Gui.Tooltip
     public boolean isHoldToAttackEnabled = true;
     @ConfigEntry.Gui.Tooltip
     public boolean isMiningWithWeaponsEnabled = true;

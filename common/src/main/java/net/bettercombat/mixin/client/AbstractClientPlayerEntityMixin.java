@@ -9,13 +9,13 @@ import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.client.AnimationRegistry;
-import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.encryption.PlayerPublicKey;
@@ -31,9 +31,11 @@ import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
-    private final PoseSubStack mainHandPose = new PoseSubStack(createPoseAdjustment(), true);
-    private final PoseSubStack offHandPose = new PoseSubStack(null, false);
     private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAttackAdjustment());
+    private final PoseSubStack mainHandBodyPose = new PoseSubStack(null, true, true);
+    private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
+    private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
+    private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @org.jetbrains.annotations.Nullable PlayerPublicKey publicKey) {
         super(world, pos, yaw, gameProfile, publicKey);
@@ -42,12 +44,16 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Inject(method = "<init>", at = @At("TAIL"))
     private void postInit(ClientWorld world, GameProfile profile, PlayerPublicKey publicKey, CallbackInfo ci) {
         var stack = ((IAnimatedPlayer) this).getAnimationStack();
-        stack.addAnimLayer(1, offHandPose.base);
-        stack.addAnimLayer(2, mainHandPose.base);
+        stack.addAnimLayer(1, offHandItemPose.base);
+        stack.addAnimLayer(2, offHandBodyPose.base);
+        stack.addAnimLayer(3, mainHandItemPose.base);
+        stack.addAnimLayer(4, mainHandBodyPose.base);
         stack.addAnimLayer(2000, attackAnimation.base);
 
-        mainHandPose.configure = this::updateAnimationByCurrentActivity;
-        offHandPose.configure = this::updateAnimationByCurrentActivity;
+        mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
+//        mainHandBodyPose.base.addModifier(new EnableModifier(this::isPoseBodyChannelEnabled), 1);
+        offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
+//        offHandBodyPose.base.addModifier(new EnableModifier(this::isPoseBodyChannelEnabled), 1);
     }
 
     @Override
@@ -59,8 +65,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         // No pose during mining or item usage
 
         if (player.handSwinging || player.isUsingItem()) {
-            offHandPose.setPose(null, isLeftHanded);
-            mainHandPose.setPose(null, isLeftHanded);
+            offHandBodyPose.setPose(null, isLeftHanded);
+            mainHandBodyPose.setPose(null, isLeftHanded);
             return;
         }
 
@@ -77,7 +83,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
             newMainHandPose = AnimationRegistry.animations.get(mainHandAttributes.pose());
         }
-        mainHandPose.setPose(newMainHandPose, isLeftHanded);
 
         KeyframeAnimation newOffHandPose = null;
         if (PlayerAttackHelper.isDualWielding(player)) {
@@ -86,7 +91,21 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 newOffHandPose = AnimationRegistry.animations.get(offHandAttributes.offHandPose());
             }
         }
-        offHandPose.setPose(newOffHandPose, isLeftHanded);
+
+
+        mainHandItemPose.setPose(newMainHandPose, isLeftHanded);
+        offHandItemPose.setPose(newOffHandPose, isLeftHanded);
+
+        if (!PlayerAttackHelper.isTwoHandedWielding(player)) {
+            if (player instanceof ClientPlayerEntity clientPlayer) {
+                if (((ClientPlayerEntityAccessor)clientPlayer).invokeIsWalking()) {
+                    newMainHandPose = null;
+                    newOffHandPose = null;
+                }
+            }
+        }
+        mainHandBodyPose.setPose(newMainHandPose, isLeftHanded);
+        offHandBodyPose.setPose(newOffHandPose, isLeftHanded);
     }
 
     @Override
@@ -202,8 +221,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             case SLEEPING -> {
             }
             case SWIMMING -> {
-                configurBodyPart(animation.rightLeg, false, false);
-                configurBodyPart(animation.leftLeg, false, false);
+                StateCollectionHelper.configure(animation.rightLeg, false, false);
+                StateCollectionHelper.configure(animation.leftLeg, false, false);
             }
             case SPIN_ATTACK -> {
             }
@@ -220,18 +239,20 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             }
         }
         if (isMounting()) {
-            configurBodyPart(animation.rightLeg, false, false);
-            configurBodyPart(animation.leftLeg, false, false);
+            StateCollectionHelper.configure(animation.rightLeg, false, false);
+            StateCollectionHelper.configure(animation.leftLeg, false, false);
         }
     }
 
-    private static void configurBodyPart(KeyframeAnimation.StateCollection bodyPart, boolean isRotationEnabled, boolean isOffsetEnabled) {
-        bodyPart.pitch.setEnabled(isRotationEnabled);
-        bodyPart.roll.setEnabled(isRotationEnabled);
-        bodyPart.yaw.setEnabled(isRotationEnabled);
-        bodyPart.x.setEnabled(isOffsetEnabled);
-        bodyPart.y.setEnabled(isOffsetEnabled);
-        bodyPart.z.setEnabled(isOffsetEnabled);
+    private boolean isPoseBodyChannelEnabled() {
+        var player = (PlayerEntity)this;
+        if (PlayerAttackHelper.isTwoHandedWielding(player)) {
+            return true;
+        }
+        if (player instanceof ClientPlayerEntity clientPlayer) {
+            return !((ClientPlayerEntityAccessor)clientPlayer).invokeIsWalking();
+        }
+        return true;
     }
 
     @Override

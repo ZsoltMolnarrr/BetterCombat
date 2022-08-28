@@ -1,6 +1,7 @@
 {
   "attributes": {
     "attack_range": 2.5,
+    "pose": "bettercombat:pose_one_handed_rogue",
     "category": "sword",
     "attacks": [
       {
