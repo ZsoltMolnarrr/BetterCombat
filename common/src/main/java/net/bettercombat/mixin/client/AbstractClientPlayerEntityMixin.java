@@ -32,7 +32,7 @@ import java.util.Optional;
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
     private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAttackAdjustment());
-    private final PoseSubStack mainHandBodyPose = new PoseSubStack(null, true, true);
+    private final PoseSubStack mainHandBodyPose = new PoseSubStack(createPoseAdjustment(), true, true);
     private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
     private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
     private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
@@ -98,7 +98,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         if (!PlayerAttackHelper.isTwoHandedWielding(player)) {
             if (player instanceof ClientPlayerEntity clientPlayer) {
-                if (((ClientPlayerEntityAccessor)clientPlayer).invokeIsWalking()) {
+                if (((ClientPlayerEntityAccessor)clientPlayer).invokeIsWalking()
+                        || clientPlayer.isSneaking()) {
                     newMainHandPose = null;
                     newOffHandPose = null;
                 }
@@ -194,7 +195,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             if (!FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
                 switch (partName) {
                     case "rightArm", "leftArm" -> {
-                        if (player.isSneaking()) {
+                        if (PlayerAttackHelper.isTwoHandedWielding(player) && player.isSneaking()) {
                             offsetY += 4;
                         }
                     }

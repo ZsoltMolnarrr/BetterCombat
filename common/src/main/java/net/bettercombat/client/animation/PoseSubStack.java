@@ -48,7 +48,6 @@ public class PoseSubStack {
                 this.configure.accept(copy);
             }
             if (isBodyChannel) {
-//                StateCollectionHelper.configure(copy.torso, false, true);
                 StateCollectionHelper.configure(copy.rightItem, false, false);
                 StateCollectionHelper.configure(copy.leftItem, false, false);
             } else {
