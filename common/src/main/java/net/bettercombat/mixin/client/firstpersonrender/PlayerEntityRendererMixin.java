@@ -39,10 +39,16 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         if (entity == MinecraftClient.getInstance().player) {
             var player = MinecraftClient.getInstance().player;
             setPartsVisible(false);
-            this.model.rightArm.visible = showArms;
-            this.model.rightSleeve.visible = showArms && player.isPartVisible(PlayerModelPart.RIGHT_SLEEVE);
-            this.model.leftArm.visible = showArms;
-            this.model.leftSleeve.visible = showArms && player.isPartVisible(PlayerModelPart.LEFT_SLEEVE);
+            var showRightArm = showArms;
+            var showLeftArm = showArms;
+            if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
+                showRightArm = showRightArm && !FirstPersonRenderHelper.isAttackingWithOffHand;
+                showLeftArm = showLeftArm && FirstPersonRenderHelper.isAttackingWithOffHand;
+            }
+            this.model.rightArm.visible = showRightArm;
+            this.model.rightSleeve.visible = showRightArm && player.isPartVisible(PlayerModelPart.RIGHT_SLEEVE);
+            this.model.leftArm.visible = showLeftArm;
+            this.model.leftSleeve.visible = showLeftArm && player.isPartVisible(PlayerModelPart.LEFT_SLEEVE);
         }
         // No `else` case needed to show parts, since the default state should be correct already
     }

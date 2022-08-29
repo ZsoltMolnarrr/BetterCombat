@@ -7,6 +7,7 @@ import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.BetterCombatKeybindings;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.logic.AttackHand;
@@ -203,6 +204,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
 //        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
+        FirstPersonRenderHelper.isAttackingWithOffHand = isOffHand;
         ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, isOffHand, attackCooldownTicks);
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,

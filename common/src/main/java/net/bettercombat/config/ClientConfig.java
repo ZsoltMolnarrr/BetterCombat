@@ -20,11 +20,13 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean isShowingArmsInFirstPerson = false;
     @ConfigEntry.Gui.Tooltip
+    public boolean isShowingOtherHandFirstPerson = true;
+    @ConfigEntry.Gui.Tooltip
+    public boolean isSweepingParticleEnabled = true;
+    @ConfigEntry.Gui.Tooltip
     public boolean isSmoothAnimationTransitionEnabled = true;
     @ConfigEntry.Gui.Tooltip
     public boolean isTooltipAttackRangeEnabled = true;
-    @ConfigEntry.Gui.Tooltip
-    public boolean isSweepingParticleEnabled = true;
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
     public int weaponSwingSoundVolume = 100;
