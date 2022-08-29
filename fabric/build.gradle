@@ -39,7 +39,7 @@ dependencies {
     }
 
     modApi include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
-    modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
 }
 
 processResources {
