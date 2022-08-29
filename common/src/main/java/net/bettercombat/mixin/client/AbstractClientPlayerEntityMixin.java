@@ -106,13 +106,9 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             var fadeIn = copy.beginTick;
             attackAnimation.speed.speed = speed;
             attackAnimation.mirror.setEnabled(mirror);
-            if (BetterCombatClient.config.isSmoothAnimationTransitionEnabled) {
-                attackAnimation.base.replaceAnimationWithFade(
-                        AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
-                        new CustomAnimationPlayer(copy.build(), 0));
-            } else {
-                attackAnimation.base.setAnimation(new CustomAnimationPlayer(copy.build(), 0));
-            }
+            attackAnimation.base.replaceAnimationWithFade(
+                    AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
+                    new CustomAnimationPlayer(copy.build(), 0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -242,12 +238,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     public void stopAttackAnimation() {
         IAnimation currentAnimation = attackAnimation.base.getAnimation();
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
-            if (BetterCombatClient.config.isSmoothAnimationTransitionEnabled) {
-                attackAnimation.base.replaceAnimationWithFade(
-                        AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
-            } else {
-                ((KeyframeAnimationPlayer)currentAnimation).stop();
-            }
+            attackAnimation.base.replaceAnimationWithFade(
+                    AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
         }
     }
 
