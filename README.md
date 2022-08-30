@@ -36,7 +36,10 @@ Add unique behaviour to your weapon, or just reuse a preset, using data files (a
 ## Compatibility features
 - [X] Dedicated compatibility (Add weapon attribute data files for individual items, to specify their animations and behaviour) aka JSON API 
 - [X] Fallback compatibility (Tries to automatically assign the correct type of weapon attributes to weapons without attribute file. Highly configurable)
-
+- [X] NBT compatibility (Weapon attributes can be read from ItemStack NBT). For example:
+```
+/give @p minecraft:wooden_sword{weapon_attributes:'{"parent":"bettercombat:claymore"}'} 1
+```
 
 ## Future plans:
 - [ ] Movement penalty while attacking
