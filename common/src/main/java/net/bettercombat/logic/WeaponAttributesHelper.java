@@ -1,8 +1,18 @@
 package net.bettercombat.logic;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import net.bettercombat.api.AttributesContainer;
 import net.bettercombat.api.WeaponAttributes;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.io.InvalidObjectException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class WeaponAttributesHelper {
@@ -71,5 +81,37 @@ public class WeaponAttributesHelper {
         if (attack.animation() == null || attack.animation().length() == 0) {
             throw new InvalidObjectException("Undefined `animation`");
         }
+    }
+
+    public static String nbtKey = "weapon_attributes";
+    public static WeaponAttributes readFromNBT(ItemStack itemStack) {
+        var nbt = itemStack.getNbt();
+        var string = itemStack.getNbt().getString(nbtKey);
+        if (string != null && !string.isEmpty()) {
+            Identifier itemId = Registry.ITEM.getId(itemStack.getItem());
+            try {
+                var json = new StringReader(string);
+                var container = decode(json);
+                var attributes = WeaponRegistry.resolveAttributes(itemId, container);
+                return attributes;
+            } catch (Exception e) {
+                System.err.println("Failed to resolve weapon attributes from ItemStack with item : " + itemId);
+                System.err.println(e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    private static Type attributesContainerFileFormat = new TypeToken<AttributesContainer>() {}.getType();
+    public static AttributesContainer decode(Reader reader) {
+        var gson = new Gson();
+        AttributesContainer container = gson.fromJson(reader, attributesContainerFileFormat);
+        return container;
+    }
+
+    public static AttributesContainer decode(JsonReader json) {
+        var gson = new Gson();
+        AttributesContainer container = gson.fromJson(json, attributesContainerFileFormat);
+        return container;
     }
 }

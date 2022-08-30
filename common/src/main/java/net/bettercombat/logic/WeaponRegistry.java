@@ -32,13 +32,19 @@ public class WeaponRegistry {
         registrations.put(itemId, attributes);
     }
 
-    public static WeaponAttributes getAttributes(Identifier itemId) {
+    static WeaponAttributes getAttributes(Identifier itemId) {
         return registrations.get(itemId);
     }
 
     public static WeaponAttributes getAttributes(ItemStack itemStack) {
         if (itemStack == null) {
             return null;
+        }
+        if (itemStack.hasNbt()) {
+            var attributes = WeaponAttributesHelper.readFromNBT(itemStack);
+            if (attributes != null) {
+                return attributes;
+            }
         }
         Item item = itemStack.getItem();
         Identifier id = Registry.ITEM.getId(item);
@@ -62,7 +68,6 @@ public class WeaponRegistry {
 
     private static void loadContainers(ResourceManager resourceManager) {
         var gson = new Gson();
-        Type fileFormat = new TypeToken<AttributesContainer>() {}.getType();
         Map<Identifier, AttributesContainer> containers = new HashMap();
         // Reading all attribute files
         for (var entry : resourceManager.findResources("weapon_attributes", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
@@ -71,7 +76,7 @@ public class WeaponRegistry {
             try {
                 // System.out.println("Checking resource: " + identifier);
                 JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
-                AttributesContainer container = gson.fromJson(reader, fileFormat);
+                AttributesContainer container = WeaponAttributesHelper.decode(reader);
                 var id = identifier
                         .toString().replace("weapon_attributes/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
@@ -84,7 +89,7 @@ public class WeaponRegistry {
         WeaponRegistry.containers = containers;
     }
 
-    public static void resolveAndRegisterAttributes(Identifier itemId, AttributesContainer container) {
+    public static WeaponAttributes resolveAttributes(Identifier itemId, AttributesContainer container) {
         try {
             ArrayList<WeaponAttributes> resolutionChain = new ArrayList();
             AttributesContainer current = container;
@@ -99,18 +104,27 @@ public class WeaponRegistry {
 
             var empty = new WeaponAttributes(0, null, null, false, null,null);
             var resolvedAttributes = resolutionChain
-                .stream()
-                .reduce(empty, (a, b) -> {
-                    if (b == null) { // I'm not sure why null can enter as `b`
-                        return a;
-                    }
-                    return WeaponAttributesHelper.override(a, b);
-                });
+                    .stream()
+                    .reduce(empty, (a, b) -> {
+                        if (b == null) { // I'm not sure why null can enter as `b`
+                            return a;
+                        }
+                        return WeaponAttributesHelper.override(a, b);
+                    });
 
             WeaponAttributesHelper.validate(resolvedAttributes);
-            register(itemId, resolvedAttributes);
+            return resolvedAttributes;
         } catch (Exception e) {
             LOGGER.error("Failed to resolve weapon attributes for: " + itemId + ". Reason: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void resolveAndRegisterAttributes(Identifier itemId, AttributesContainer container) {
+        var resolvedAttributes = resolveAttributes(itemId, container);
+        if (resolvedAttributes != null) {
+            register(itemId, resolvedAttributes);
         }
     }
 
