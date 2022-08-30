@@ -10,7 +10,7 @@
 
 Easy, spectacular and fun melee combat system we know from Minecraft Dungeons.
 
-Add unique behaviour to your weapon, or just reuse a preset, via the JSON API.
+Add unique behaviour to your weapon, or just reuse a preset, using data files (aka JSON API).
 
 # ⭐️ Features
 
@@ -268,6 +268,6 @@ Mods with one or more of these features are considered as a semantic incompatibi
 
 Before committing yourself to implementing any change for the project, it is strongly suggested to check with us on Discord. The project has a strong vision for what technical solutions are accepted, and what features belong to the scope of the project.
 
-Try to send pull requests with the following content:
+Avoid creating pull requests with the following content:
 - huge code changes
 - implementing feature that already exist in some form
