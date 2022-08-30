@@ -239,11 +239,11 @@ Steps:
 1. [Create a datapack](https://minecraft.fandom.com/wiki/Tutorials/Creating_a_data_pack)
 2. Add weapon attribute files based on our [integration guide](https://github.com/ZsoltMolnarrr/BetterCombat#-integrate-your-mod), the easiest way to [use existing presets](https://github.com/ZsoltMolnarrr/BetterCombat#using-a-preset) of Better Combat
 
-For example, adding compatibility for an item with id `banana_sword` from Banana mod, to make it act like a `claymore`, would look like the following.
+For example, adding compatibility for an item with id `fruits:banana_sword` from Fruits mod, to make it act like a `claymore`, would look like the following.
 
 File path:
 ```
-DataPackName/data/banana/weapon_attributes/banana_sword.json
+DataPackName/data/fruits/weapon_attributes/banana_sword.json
 ```
 
 Content:
