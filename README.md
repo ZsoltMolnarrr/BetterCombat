@@ -266,6 +266,7 @@ Mods with one or more of these features are considered as a semantic incompatibi
 - Attack range modifications
 - Attack timing or attack cooldown logic modifications
 - Attack/mining key handler modifications (of MinecraftClient)
+- Player model modification
 
 # ✍️ Contribution
 
@@ -273,4 +274,5 @@ Before committing yourself to implementing any change for the project, it is str
 
 Avoid creating pull requests with the following content:
 - huge code changes
-- implementing feature that already exist in some form
+- feature that is out of scope
+- feature that already exist in some form
