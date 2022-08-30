@@ -36,7 +36,8 @@
     "fabricloader": ">=0.14.0",
     "fabric": "*",
     "minecraft": "1.19.X",
-    "cloth-config": ">=7.0.65"
+    "cloth-config": ">=7.0.65",
+    "player-animator": ">=0.3.4"
   },
   "breaks": {
     "inventorio": "*",
