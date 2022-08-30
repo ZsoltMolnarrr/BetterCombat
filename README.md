@@ -39,9 +39,11 @@ Add unique behaviour to your weapon, or just reuse a preset, via the JSON API.
 
 
 ## Future plans:
-- Rolling
-- Additional weapon attributes (for example: movement penalty, pushback)
-- Weapon trail animation while hitting
+- [ ] Movement penalty while attacking
+- [ ] Rolling
+- [ ] Weapon trail animation while hitting
+- [ ] Parry (under consideration)
+- [ ] Additional weapon attributes (for example: pushback)
 
 # 🔧 Configuration
 
@@ -231,13 +233,13 @@ Make sure to specify a fitting `upswing` value next to your animation (to make i
 
 You can create datapacks to add dedicated compatibility for any weapon.
 
-⚠️ Caution! Some mods may have conflicting features, that causes the incorrect appearance or behaviour of weapons, even if compatibility is added. (Check [mod compatibility](https://github.com/ZsoltMolnarrr/BetterCombat#-mod-compatibility) section for details.)
+⚠️ Caution! Some mods may have conflicting features, that causes incorrect appearance or behaviour of weapons, even if compatibility is added. In this case mod developers need to resolve incompatibilities. (Check [mod compatibility](https://github.com/ZsoltMolnarrr/BetterCombat#-mod-compatibility) section for potential source of problems.)
 
 Steps:
-1. Create a datapack https://minecraft.fandom.com/wiki/Tutorials/Creating_a_data_pack
+1. [Create a datapack](https://minecraft.fandom.com/wiki/Tutorials/Creating_a_data_pack)
 2. Add weapon attribute files based on our [integration guide](https://github.com/ZsoltMolnarrr/BetterCombat#-integrate-your-mod), the easiest way to [use existing presets](https://github.com/ZsoltMolnarrr/BetterCombat#using-a-preset) of Better Combat
 
-For example, adding compatibility for an item with id `banana_sword` from Banana mod, to make it act like a `claymore` would look like the following.
+For example, adding compatibility for an item with id `banana_sword` from Banana mod, to make it act like a `claymore`, would look like the following.
 
 File path:
 ```
