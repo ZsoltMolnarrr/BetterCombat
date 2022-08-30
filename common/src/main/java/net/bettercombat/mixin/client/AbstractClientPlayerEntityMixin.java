@@ -51,9 +51,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         stack.addAnimLayer(2000, attackAnimation.base);
 
         mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
-//        mainHandBodyPose.base.addModifier(new EnableModifier(this::isPoseBodyChannelEnabled), 1);
         offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
-//        offHandBodyPose.base.addModifier(new EnableModifier(this::isPoseBodyChannelEnabled), 1);
     }
 
     @Override
@@ -195,7 +193,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             if (!FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
                 switch (partName) {
                     case "rightArm", "leftArm" -> {
-                        if (PlayerAttackHelper.isTwoHandedWielding(player) && player.isSneaking()) {
+                        if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isSneaking()) {
                             offsetY += 4;
                         }
                     }
@@ -243,17 +241,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             StateCollectionHelper.configure(animation.rightLeg, false, false);
             StateCollectionHelper.configure(animation.leftLeg, false, false);
         }
-    }
-
-    private boolean isPoseBodyChannelEnabled() {
-        var player = (PlayerEntity)this;
-        if (PlayerAttackHelper.isTwoHandedWielding(player)) {
-            return true;
-        }
-        if (player instanceof ClientPlayerEntity clientPlayer) {
-            return !((ClientPlayerEntityAccessor)clientPlayer).invokeIsWalking();
-        }
-        return true;
     }
 
     @Override

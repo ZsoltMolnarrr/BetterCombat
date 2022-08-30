@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 public class PoseSubStack {
     public final MirrorModifier mirror = new MirrorModifier();
     public final ModifierLayer base = new ModifierLayer(null);
+    public boolean lastAnimationUsesBodyChannel = false;
     private final boolean isMainHand;
     private final boolean isBodyChannel;
     private PoseData lastPose;
@@ -42,6 +43,7 @@ public class PoseSubStack {
         if (pose == null) {
             this.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
+            lastAnimationUsesBodyChannel = false;
         } else {
             var copy = pose.mutableCopy();
             if (this.configure != null) {
@@ -61,10 +63,10 @@ public class PoseSubStack {
             }
             var animation = copy.build();
             this.mirror.setEnabled(mirror);
-//            this.base.setAnimation(new KeyframeAnimationPlayer(animation, 0));
             this.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE),
                     new CustomAnimationPlayer(animation, 0));
+            lastAnimationUsesBodyChannel = copy.body.isEnabled();
         }
 
         lastPose = newPoseData;
