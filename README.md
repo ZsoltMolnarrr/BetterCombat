@@ -10,11 +10,11 @@
 
 Easy, spectacular and fun melee combat system we know from Minecraft Dungeons.
 
-Add unique behaviour to your weapon, or just reuse a preset, via the JSON API.
+Add unique behaviour to your weapon, or just reuse a preset, using data files (aka JSON API).
 
 # ⭐️ Features
 
-Primary features:
+## Primary features
 - [X] Weapons have combos (each attack in the combo can be different in many ways)
 - [X] Better weapon idle and attack animations
 - [X] Upswing weapon before hitting for natural look and feel
@@ -24,7 +24,7 @@ Primary features:
 - [x] Bundled resources: weapon animations, weapon sounds, weapon attribute presets
 - [x] Integrate any weapon from any mod by just creating data files
 
-Auxiliary features:
+## Auxiliary features
 - [X] Two-handed weapons ignore offhand slot
 - [X] Attacking with dual wielded weapons (Server configurable)
 - [X] Cancel attack during upswing (aka "feint") (Client configurable)
@@ -33,15 +33,42 @@ Auxiliary features:
 - [X] Swing thru grass (Client configurable)
 - [X] Can disable mining with weapons (Client configurable)
 
-Compatibility features:
+## Compatibility features
 - [X] Dedicated compatibility (Add weapon attribute data files for individual items, to specify their animations and behaviour) aka JSON API 
 - [X] Fallback compatibility (Tries to automatically assign the correct type of weapon attributes to weapons without attribute file. Highly configurable)
+- [X] NBT compatibility (Weapon attributes can be read from ItemStack NBT). For example:
+```
+/give @p minecraft:wooden_sword{weapon_attributes:'{"parent":"bettercombat:claymore"}'} 1
+```
 
+## Future plans:
+- [ ] Movement penalty while attacking
+- [ ] Rolling
+- [ ] Weapon trail animation while hitting
+- [ ] Parry (under consideration)
+- [ ] Additional weapon attributes (for example: pushback)
 
-Future plans:
-- Rolling
-- Additional weapon attributes (for example: movement penalty, pushback)
-- Weapon trail animation while hitting
+# 🔧 Configuration
+
+## Client
+
+### Fabric
+
+You can access the client side settings via the [Mod Menu](https://github.com/TerraformersMC/ModMenu).
+
+### Forge
+
+You can access the client side settings in Main Menu > Mods > Better Combat > Config.
+
+## Server
+
+Fallback compatibility configuration can be found at: `/config/bettercombat/fallback_compatibility.json`
+
+Use fallback compatibility configuration to add compatibility for any weapon on your server. All weapon attributes are synchronized with clients upon joining the server. 
+
+Server config can be found at: `/config/bettercombat/server.json5`
+
+Server configuration is synchronized with clients upon joining the server. 
 
 # 🔨 Integrate your mod
 
@@ -205,26 +232,45 @@ Make sure to specify a fitting `upswing` value next to your animation (to make i
 }
 ```
 
-# 🔧 Configuration
+# 📦 Using datapacks
 
-## Client
+You can create datapacks to add dedicated compatibility for any weapon.
 
-### Fabric
+⚠️ Caution! Some mods may have conflicting features, that causes incorrect appearance or behaviour of weapons, even if compatibility is added. In this case mod developers need to resolve incompatibilities. (Check [mod compatibility](https://github.com/ZsoltMolnarrr/BetterCombat#-mod-compatibility) section for potential source of problems.)
 
-You can access the client side settings via the [Mod Menu](https://github.com/TerraformersMC/ModMenu).
+Steps:
+1. [Create a datapack](https://minecraft.fandom.com/wiki/Tutorials/Creating_a_data_pack)
+2. Add weapon attribute files based on our [integration guide](https://github.com/ZsoltMolnarrr/BetterCombat#-integrate-your-mod), the easiest way to [use existing presets](https://github.com/ZsoltMolnarrr/BetterCombat#using-a-preset) of Better Combat
 
-### Forge
+For example, adding compatibility for an item with id `fruits:banana_sword` from Fruits mod, to make it act like a `claymore`, would look like the following.
 
-You can access the client side settings in Main Menu > Mods > Better Combat > Config.
+File path:
+```
+DataPackName/data/fruits/weapon_attributes/banana_sword.json
+```
 
-## Server
+Content:
+```
+{
+  "parent": "bettercombat:claymore"
+}
+```
 
-Fallback compatibility configuration can be found at: `/config/bettercombat/fallback_compatibility.json`
 
-Server config can be found at: `/config/bettercombat/server.conf`
-
-Automatically created with default values, upon loading any game world for the first time. 
-
-# ⛓ Compatibility
+# ⛓ Mod compatibility
 
 This mod has been created in the spirit of maximal compatibility. However since some core mechanics are overridden, mods trying to change the same thing will never be compatible.
+
+Mods with one or more of these features are considered as a semantic incompatibility
+- Dual wielding implementation
+- Attack range modifications
+- Attack timing or attack cooldown logic modifications
+- Attack/mining key handler modifications (of MinecraftClient)
+
+# ✍️ Contribution
+
+Before committing yourself to implementing any change for the project, it is strongly suggested to check with us on Discord. The project has a strong vision for what technical solutions are accepted, and what features belong to the scope of the project.
+
+Avoid creating pull requests with the following content:
+- huge code changes
+- implementing feature that already exist in some form

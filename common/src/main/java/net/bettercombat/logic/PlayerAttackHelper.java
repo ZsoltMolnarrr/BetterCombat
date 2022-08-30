@@ -29,6 +29,14 @@ public class PlayerAttackHelper {
                 && offAttributes != null && !offAttributes.isTwoHanded();
     }
 
+    public static boolean isTwoHandedWielding(PlayerEntity player) {
+        var mainAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+        if (mainAttributes != null) {
+            return mainAttributes.isTwoHanded();
+        }
+        return false;
+    }
+
     public static AttackHand getCurrentAttack(PlayerEntity player, int comboCount) {
         if (isDualWielding(player)) {
             boolean isOffHand = shouldAttackWithOffHand(player,comboCount);

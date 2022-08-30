@@ -1,9 +1,22 @@
-package net.bettercombat.logic;
+package net.bettercombat.api;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import net.bettercombat.api.AttributesContainer;
 import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.logic.WeaponRegistry;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.io.InvalidObjectException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WeaponAttributesHelper {
     public static WeaponAttributes override(WeaponAttributes a, WeaponAttributes b) {
@@ -71,5 +84,65 @@ public class WeaponAttributesHelper {
         if (attack.animation() == null || attack.animation().length() == 0) {
             throw new InvalidObjectException("Undefined `animation`");
         }
+    }
+
+    public static final String nbtTag = "weapon_attributes";
+    public static WeaponAttributes readFromNBT(ItemStack itemStack) {
+        var nbt = itemStack.getNbt();
+        var attributedItemStack = (AttributesOwner) ((Object)itemStack);
+        var string = nbt.getString(nbtTag);
+        if (string != null && !string.isEmpty()) {
+            var cachedAttributes = attributedItemStack.getWeaponAttributes();
+            if(cachedAttributes != null) {
+                // System.out.println("NBT Attributes - Cache");
+                return cachedAttributes;
+            }
+            Identifier itemId = Registry.ITEM.getId(itemStack.getItem());
+            try {
+                var json = new StringReader(string);
+                var container = decode(json);
+                var attributes = WeaponRegistry.resolveAttributes(itemId, container);
+                attributedItemStack.setWeaponAttributes(attributes);
+                // System.out.println("NBT Attributes - Resolved");
+                return attributes;
+            } catch (Exception e) {
+                System.err.println("Failed to resolve weapon attributes from ItemStack of item: " + itemId);
+                System.err.println(e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    public static void writeToNBT(ItemStack itemStack, AttributesContainer container) {
+        Identifier itemId = Registry.ITEM.getId(itemStack.getItem());
+        var attributedItemStack = (AttributesOwner) ((Object)itemStack);
+        var nbt = itemStack.getNbt();
+        try {
+            var json = encode(container);
+            nbt.putString(nbtTag, json);
+            attributedItemStack.setWeaponAttributes(null);
+        } catch (Exception e) {
+            System.err.println("Failed to write weapon attributes to ItemStack of item: " + itemId);
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private static Type attributesContainerFileFormat = new TypeToken<AttributesContainer>() {}.getType();
+
+    public static AttributesContainer decode(Reader reader) {
+        var gson = new Gson();
+        AttributesContainer container = gson.fromJson(reader, attributesContainerFileFormat);
+        return container;
+    }
+
+    public static AttributesContainer decode(JsonReader json) {
+        var gson = new Gson();
+        AttributesContainer container = gson.fromJson(json, attributesContainerFileFormat);
+        return container;
+    }
+
+    public static String encode(AttributesContainer container) {
+        var gson = new Gson();
+        return gson.toJson(container);
     }
 }

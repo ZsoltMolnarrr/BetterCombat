@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "EnchantmentMixin",
+    "ItemStackMixin",
     "LivingEntityAccessor",
     "LivingEntityInject",
     "PlayerEntityAccessor",
@@ -13,6 +14,7 @@
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
+    "client.ClientPlayerEntityAccessor",
     "client.ClientPlayNetworkHandlerMixin",
     "client.ColliderDebugRenderer",
     "client.InGameHudInject",

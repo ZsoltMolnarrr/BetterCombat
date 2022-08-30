@@ -9,13 +9,13 @@ import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.client.AnimationRegistry;
-import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Arm;
@@ -30,9 +30,11 @@ import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
-    private final PoseSubStack mainHandPose = new PoseSubStack(createPoseAdjustment(), true);
-    private final PoseSubStack offHandPose = new PoseSubStack(null, false);
     private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAttackAdjustment());
+    private final PoseSubStack mainHandBodyPose = new PoseSubStack(createPoseAdjustment(), true, true);
+    private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
+    private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
+    private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
         super(world, pos, yaw, gameProfile);
@@ -41,12 +43,14 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Inject(method = "<init>", at = @At("TAIL"))
     private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
         var stack = ((IAnimatedPlayer) this).getAnimationStack();
-        stack.addAnimLayer(1, offHandPose.base);
-        stack.addAnimLayer(2, mainHandPose.base);
+        stack.addAnimLayer(1, offHandItemPose.base);
+        stack.addAnimLayer(2, offHandBodyPose.base);
+        stack.addAnimLayer(3, mainHandItemPose.base);
+        stack.addAnimLayer(4, mainHandBodyPose.base);
         stack.addAnimLayer(2000, attackAnimation.base);
 
-        mainHandPose.configure = this::updateAnimationByCurrentActivity;
-        offHandPose.configure = this::updateAnimationByCurrentActivity;
+        mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
+        offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
     }
 
     @Override
@@ -58,8 +62,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         // No pose during mining or item usage
 
         if (player.handSwinging || player.isUsingItem()) {
-            offHandPose.setPose(null, isLeftHanded);
-            mainHandPose.setPose(null, isLeftHanded);
+            offHandBodyPose.setPose(null, isLeftHanded);
+            mainHandBodyPose.setPose(null, isLeftHanded);
             return;
         }
 
@@ -76,7 +80,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
             newMainHandPose = AnimationRegistry.animations.get(mainHandAttributes.pose());
         }
-        mainHandPose.setPose(newMainHandPose, isLeftHanded);
 
         KeyframeAnimation newOffHandPose = null;
         if (PlayerAttackHelper.isDualWielding(player)) {
@@ -85,7 +88,22 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 newOffHandPose = AnimationRegistry.animations.get(offHandAttributes.offHandPose());
             }
         }
-        offHandPose.setPose(newOffHandPose, isLeftHanded);
+
+
+        mainHandItemPose.setPose(newMainHandPose, isLeftHanded);
+        offHandItemPose.setPose(newOffHandPose, isLeftHanded);
+
+        if (!PlayerAttackHelper.isTwoHandedWielding(player)) {
+            if (player instanceof ClientPlayerEntity clientPlayer) {
+                if (((ClientPlayerEntityAccessor)clientPlayer).invokeIsWalking()
+                        || clientPlayer.isSneaking()) {
+                    newMainHandPose = null;
+                    newOffHandPose = null;
+                }
+            }
+        }
+        mainHandBodyPose.setPose(newMainHandPose, isLeftHanded);
+        offHandBodyPose.setPose(newOffHandPose, isLeftHanded);
     }
 
     @Override
@@ -105,13 +123,9 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             var fadeIn = copy.beginTick;
             attackAnimation.speed.speed = speed;
             attackAnimation.mirror.setEnabled(mirror);
-            if (BetterCombatClient.config.isSmoothAnimationTransitionEnabled) {
-                attackAnimation.base.replaceAnimationWithFade(
-                        AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
-                        new CustomAnimationPlayer(copy.build(), 0));
-            } else {
-                attackAnimation.base.setAnimation(new CustomAnimationPlayer(copy.build(), 0));
-            }
+            attackAnimation.base.replaceAnimationWithFade(
+                    AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
+                    new CustomAnimationPlayer(copy.build(), 0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,7 +192,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             if (!FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
                 switch (partName) {
                     case "rightArm", "leftArm" -> {
-                        if (player.isSneaking()) {
+                        if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isSneaking()) {
                             offsetY += 4;
                         }
                     }
@@ -205,8 +219,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             case SLEEPING -> {
             }
             case SWIMMING -> {
-                configurBodyPart(animation.rightLeg, false, false);
-                configurBodyPart(animation.leftLeg, false, false);
+                StateCollectionHelper.configure(animation.rightLeg, false, false);
+                StateCollectionHelper.configure(animation.leftLeg, false, false);
             }
             case SPIN_ATTACK -> {
             }
@@ -223,30 +237,17 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             }
         }
         if (isMounting()) {
-            configurBodyPart(animation.rightLeg, false, false);
-            configurBodyPart(animation.leftLeg, false, false);
+            StateCollectionHelper.configure(animation.rightLeg, false, false);
+            StateCollectionHelper.configure(animation.leftLeg, false, false);
         }
-    }
-
-    private static void configurBodyPart(KeyframeAnimation.StateCollection bodyPart, boolean isRotationEnabled, boolean isOffsetEnabled) {
-        bodyPart.pitch.setEnabled(isRotationEnabled);
-        bodyPart.roll.setEnabled(isRotationEnabled);
-        bodyPart.yaw.setEnabled(isRotationEnabled);
-        bodyPart.x.setEnabled(isOffsetEnabled);
-        bodyPart.y.setEnabled(isOffsetEnabled);
-        bodyPart.z.setEnabled(isOffsetEnabled);
     }
 
     @Override
     public void stopAttackAnimation() {
         IAnimation currentAnimation = attackAnimation.base.getAnimation();
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
-            if (BetterCombatClient.config.isSmoothAnimationTransitionEnabled) {
-                attackAnimation.base.replaceAnimationWithFade(
-                        AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
-            } else {
-                ((KeyframeAnimationPlayer)currentAnimation).stop();
-            }
+            attackAnimation.base.replaceAnimationWithFade(
+                    AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
         }
     }
 

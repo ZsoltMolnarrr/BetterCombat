@@ -39,7 +39,7 @@ dependencies {
     }
 
     modApi include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
-    modImplementation include("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
 }
 
 processResources {
@@ -115,6 +115,7 @@ if(project.hasProperty('release_type')) {
             relations {
                 requiredDependency 'fabric-api'
                 requiredDependency 'cloth-config'
+                requiredDependency 'playeranimator'
             }
 
             mainArtifact(remapJar)
@@ -141,6 +142,7 @@ if(project.hasProperty('release_type')) {
             // The type can either be `project` or `version`
             required.project "fabric-api"
             required.project "cloth-config"
+            required.project "playeranimator"
         }
     }
 
