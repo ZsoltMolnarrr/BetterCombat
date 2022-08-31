@@ -313,7 +313,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         updateTargetsInRage(targets);
         ClientPlayNetworking.send(
                 Packets.C2S_AttackRequest.ID,
-                new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), targets).write());
+                new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), player.getInventory().selectedSlot, targets).write());
         client.player.resetLastAttackedTicks();
         ((MinecraftClientAccessor) client).setAttackCooldown(10); // This is actually the mining cooldown
         setComboCount(getComboCount() + 1);
