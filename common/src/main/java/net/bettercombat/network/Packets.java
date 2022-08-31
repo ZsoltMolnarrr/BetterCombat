@@ -11,9 +11,9 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 public class Packets {
-    public record C2S_AttackRequest(int comboCount, boolean isSneaking, int[] entityIds) {
-        public C2S_AttackRequest(int comboCount, boolean isSneaking, List<Entity> entities) {
-            this(comboCount, isSneaking, convertEntityList(entities));
+    public record C2S_AttackRequest(int comboCount, boolean isSneaking, int selectedSlot, int[] entityIds) {
+        public C2S_AttackRequest(int comboCount, boolean isSneaking, int selectedSlot, List<Entity> entities) {
+            this(comboCount, isSneaking, selectedSlot, convertEntityList(entities));
         }
 
         private static int[] convertEntityList(List<Entity> entities) {
@@ -30,6 +30,7 @@ public class Packets {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeInt(comboCount);
             buffer.writeBoolean(isSneaking);
+            buffer.writeInt(selectedSlot);
             buffer.writeIntArray(entityIds);
             return buffer;
         }
@@ -37,8 +38,9 @@ public class Packets {
         public static C2S_AttackRequest read(PacketByteBuf buffer) {
             int comboCount = buffer.readInt();
             boolean isSneaking = buffer.readBoolean();
+            int selectedSlot = buffer.readInt();
             int[] ids = buffer.readIntArray();
-            return new C2S_AttackRequest(comboCount, isSneaking, ids);
+            return new C2S_AttackRequest(comboCount, isSneaking, selectedSlot, ids);
         }
     }
 

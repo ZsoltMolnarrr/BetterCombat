@@ -76,6 +76,7 @@ public class ServerNetwork {
                 LOGGER.error("Combo count: " + request.comboCount() + " is dual wielding: " + PlayerAttackHelper.isDualWielding(player));
                 LOGGER.error("Main-hand stack: " + player.getMainHandStack());
                 LOGGER.error("Off-hand stack: " + player.getOffHandStack());
+                LOGGER.error("Selected slot server: " + player.getInventory().selectedSlot + " | client: " + request.selectedSlot());
                 return;
             }
             final var attack = hand.attack();
