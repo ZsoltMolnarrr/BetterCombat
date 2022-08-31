@@ -15,7 +15,6 @@ import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.encryption.PlayerPublicKey;
@@ -90,17 +89,13 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             }
         }
 
-
         mainHandItemPose.setPose(newMainHandPose, isLeftHanded);
         offHandItemPose.setPose(newOffHandPose, isLeftHanded);
 
         if (!PlayerAttackHelper.isTwoHandedWielding(player)) {
-            if (player instanceof ClientPlayerEntity clientPlayer) {
-                if (((ClientPlayerEntityAccessor)clientPlayer).invokeIsWalking()
-                        || clientPlayer.isSneaking()) {
-                    newMainHandPose = null;
-                    newOffHandPose = null;
-                }
+            if (this.isWalking() || this.isSneaking()) {
+                newMainHandPose = null;
+                newOffHandPose = null;
             }
         }
         mainHandBodyPose.setPose(newMainHandPose, isLeftHanded);
@@ -226,11 +221,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             case SPIN_ATTACK -> {
             }
             case CROUCHING -> {
-//                configurBodyPart(animation.head, true, false);
-//                configurBodyPart(animation.rightArm, true, false);
-//                configurBodyPart(animation.leftArm, true, false);
-//                configurBodyPart(animation.rightLeg, false, false);
-//                configurBodyPart(animation.leftLeg, false, false);
             }
             case LONG_JUMPING -> {
             }
@@ -250,6 +240,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
         }
+    }
+
+    private boolean isWalking() {
+        return !this.isDead() && (this.isSwimming() || this.getVelocity().horizontalLength() > 0.1);
     }
 
     private boolean isMounting() {
