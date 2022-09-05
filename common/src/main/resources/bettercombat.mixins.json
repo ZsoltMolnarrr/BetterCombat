@@ -14,6 +14,7 @@
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
+    "client.ClientPlayerEntityMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.ColliderDebugRenderer",
     "client.InGameHudInject",

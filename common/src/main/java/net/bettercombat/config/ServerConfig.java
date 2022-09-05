@@ -2,6 +2,7 @@ package net.bettercombat.config;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "server")
@@ -12,6 +13,10 @@ public class ServerConfig implements ConfigData {
     public boolean allow_attacking_mount = false;
     @Comment("Allows vanilla sweeping mechanic (and Sweeping Edge enchant) to work")
     public boolean allow_sweeping = true;
+    @Comment("Applies movement speed multiplier while attacking. (Min: 0, Max: 1). Use `0` for a full stop while attacking. Use `1` for no movement speed penalty")
+    public float movement_speed_while_attacking = 0.5F;
+    @Comment("Determines if applying the movement speed multiplier while attacking is done smoothly or instantly")
+    public boolean movement_speed_applied_smoothly = true;
     @Comment("Multiplier for `attack_range`, during target lookup on both sides. " +
             "Large sized entities may be colliding with weapon hitbox, but center of entities can have bigger distance than `attack_range`")
     public float target_search_range_multiplier = 2F;

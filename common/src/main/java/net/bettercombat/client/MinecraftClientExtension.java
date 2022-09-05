@@ -18,4 +18,6 @@ public interface MinecraftClientExtension {
         }
         return null;
     }
+
+    float getSwingProgress();
 }

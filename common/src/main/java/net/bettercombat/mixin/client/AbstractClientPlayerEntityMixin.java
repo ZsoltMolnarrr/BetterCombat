@@ -242,7 +242,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     private boolean isWalking() {
-        return !this.isDead() && (this.isSwimming() || this.getVelocity().horizontalLength() > 0.1);
+        return !this.isDead() && (this.isSwimming() || this.getVelocity().horizontalLength() > 0.03);
     }
 
     private boolean isMounting() {
