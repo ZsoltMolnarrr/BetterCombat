@@ -1,7 +1,6 @@
 package net.bettercombat.mixin.client;
 
 import net.bettercombat.BetterCombat;
-import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.MathHelper;
 import net.bettercombat.client.MinecraftClientExtension;
 import net.minecraft.client.MinecraftClient;
@@ -14,11 +13,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin {
     @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/input/Input;tick(ZF)V", shift = At.Shift.AFTER))
-    private void injected(CallbackInfo ci) {
+    private void tickMovement_ModifyInput(CallbackInfo ci) {
+        var config = BetterCombat.config;
+        var multiplier = Math.min(Math.max(config.movement_speed_while_attacking, 0.0), 1.0);
+//        System.out.println("Multiplier " + multiplier);
+        if (multiplier == 1) {
+            return;
+        }
         var client = (MinecraftClientExtension) MinecraftClient.getInstance();
         var clientPlayer = (ClientPlayerEntity)((Object)this);
-        var config = BetterCombat.config;
-        var multiplier = config.movement_speed_while_attacking;
         var swingProgress = client.getSwingProgress();
         if (swingProgress < 0.98) {
             if (config.movement_speed_applied_smoothly) {

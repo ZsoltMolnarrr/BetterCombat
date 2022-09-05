@@ -26,6 +26,7 @@ Add unique behaviour to your weapon, or just reuse a preset, using data files (a
 
 ## Auxiliary features
 - [X] Two-handed weapons ignore offhand slot
+- [X] Movement speed reduction while attacking (Server configurable)
 - [X] Attacking with dual wielded weapons (Server configurable)
 - [X] Cancel attack during upswing (aka "feint") (Client configurable)
 - [X] Hold attack key to spam attack (Client configurable)
@@ -42,7 +43,6 @@ Add unique behaviour to your weapon, or just reuse a preset, using data files (a
 ```
 
 ## Future plans:
-- [ ] Movement penalty while attacking
 - [ ] Rolling
 - [ ] Weapon trail animation while hitting
 - [ ] Parry (under consideration)
