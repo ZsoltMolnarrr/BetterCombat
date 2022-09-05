@@ -166,7 +166,7 @@ When `"parent"` and `"attributes"` are both specified, you can customize attribu
 {
   "parent": "bettercombat:claymore",
   "attributes": {
-    "attackRange": 3.5
+    "attack_range": 3.5
     "attacks": [
       {
         "angle": 100
