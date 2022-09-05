@@ -176,6 +176,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     private ItemStack lastAttacedWithItemStack;
     private int upswingTicks = 0;
     private int lastAttacked = 1000;
+    private float lastSwingDuration = 0;
     private int comboReset = 0;
 
     private void startUpswing(WeaponAttributes attributes) {
@@ -201,6 +202,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         float attackCooldownTicks = player.getAttackCooldownProgressPerTick(); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
         this.comboReset = Math.round(attackCooldownTicks * ComboResetRate);
         this.upswingTicks = (int)(Math.round(attackCooldownTicks * upswingRate));
+        this.lastSwingDuration = attackCooldownTicks;
 //        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
@@ -355,5 +357,12 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
             return false;
         }
         return ItemStack.areEqual(left, right);
+    }
+
+    public float getSwingProgress() {
+        if (lastAttacked > lastSwingDuration || lastSwingDuration <= 0) {
+            return 1F;
+        }
+        return (float)lastAttacked / lastSwingDuration;
     }
 }
