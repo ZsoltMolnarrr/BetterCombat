@@ -20,8 +20,11 @@ public class ClientPlayerEntityMixin {
         if (multiplier == 1) {
             return;
         }
-        var client = (MinecraftClientExtension) MinecraftClient.getInstance();
         var clientPlayer = (ClientPlayerEntity)((Object)this);
+        if (clientPlayer.hasVehicle() && !config.movement_speed_effected_while_mounting) {
+            return;
+        }
+        var client = (MinecraftClientExtension) MinecraftClient.getInstance();
         var swingProgress = client.getSwingProgress();
         if (swingProgress < 0.98) {
             if (config.movement_speed_applied_smoothly) {
