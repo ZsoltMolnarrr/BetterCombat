@@ -3,8 +3,6 @@ package net.bettercombat.api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import net.bettercombat.api.AttributesContainer;
-import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -15,8 +13,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class WeaponAttributesHelper {
     public static WeaponAttributes override(WeaponAttributes a, WeaponAttributes b) {
@@ -91,7 +87,7 @@ public class WeaponAttributesHelper {
         var nbt = itemStack.getNbt();
         var attributedItemStack = (AttributesOwner) ((Object)itemStack);
         var string = nbt.getString(nbtTag);
-        if (string != null && !string.isEmpty()) {
+        if (string != null && !string.isEmpty() && !attributedItemStack.hasInvalidAttributes()) {
             var cachedAttributes = attributedItemStack.getWeaponAttributes();
             if(cachedAttributes != null) {
                 // System.out.println("NBT Attributes - Cache");
@@ -102,12 +98,16 @@ public class WeaponAttributesHelper {
                 var json = new StringReader(string);
                 var container = decode(json);
                 var attributes = WeaponRegistry.resolveAttributes(itemId, container);
+                if (attributes == null) {
+                    attributedItemStack.setInvalidAttributes(true);
+                }
                 attributedItemStack.setWeaponAttributes(attributes);
                 // System.out.println("NBT Attributes - Resolved");
                 return attributes;
             } catch (Exception e) {
                 System.err.println("Failed to resolve weapon attributes from ItemStack of item: " + itemId);
                 System.err.println(e.getMessage());
+                attributedItemStack.setInvalidAttributes(true);
             }
         }
         return null;
@@ -120,6 +120,7 @@ public class WeaponAttributesHelper {
         try {
             var json = encode(container);
             nbt.putString(nbtTag, json);
+            attributedItemStack.setInvalidAttributes(false);
             attributedItemStack.setWeaponAttributes(null);
         } catch (Exception e) {
             System.err.println("Failed to write weapon attributes to ItemStack of item: " + itemId);

@@ -7,6 +7,14 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements AttributesOwner {
+    private boolean hasInvalidAttributes = false;
+    public boolean hasInvalidAttributes() {
+        return hasInvalidAttributes;
+    }
+    public void setInvalidAttributes(boolean invalid) {
+        this.hasInvalidAttributes = invalid;
+    }
+
     private WeaponAttributes weaponAttributes;
     @Override
     public WeaponAttributes getWeaponAttributes() {
