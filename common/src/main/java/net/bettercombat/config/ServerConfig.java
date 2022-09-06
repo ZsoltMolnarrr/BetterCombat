@@ -17,6 +17,8 @@ public class ServerConfig implements ConfigData {
     public float movement_speed_while_attacking = 0.5F;
     @Comment("Determines if applying the movement speed multiplier while attacking is done smoothly or instantly")
     public boolean movement_speed_applied_smoothly = true;
+    @Comment("Determines whether or not to apply movement speed reduction while attacking mounted")
+    public boolean movement_speed_effected_while_mounting = false;
     @Comment("Multiplier for `attack_range`, during target lookup on both sides. " +
             "Large sized entities may be colliding with weapon hitbox, but center of entities can have bigger distance than `attack_range`")
     public float target_search_range_multiplier = 2F;
