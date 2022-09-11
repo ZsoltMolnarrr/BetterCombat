@@ -38,8 +38,10 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modApi include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
     modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
+
+    shadowCommon(implementation ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
+    // modApi include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 }
 
 processResources {

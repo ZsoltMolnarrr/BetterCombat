@@ -34,7 +34,6 @@ public class ClientPlayerEntityMixin {
                 } else {
                     p2 = MathHelper.easeOutCubic(1 - ((swingProgress - 0.5) * 2));
                 }
-
                 multiplier = (float) ( 1.0 - (1.0 - multiplier) * p2 );
 //                var chart = "-".repeat((int)(100.0 * multiplier)) + "x";
 //                System.out.println("Movement speed multiplier: " + String.format("%.4f", multiplier) + ">" + chart);

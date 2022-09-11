@@ -27,6 +27,7 @@ configurations {
 repositories {
     maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.kosmx.dev/' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -37,6 +38,8 @@ dependencies {
 
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${project.player_anim_version}")
     modApi("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
+
+    shadowCommon(common("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
 }
 
 processResources {
@@ -51,6 +54,7 @@ shadowJar {
     classifier "dev-shadow"
 
     relocate 'net.fabricmc', 'net.bettercombat.fabricmc'
+    relocate 'net.tinyconfig', 'net.bettercombat.tinyconfig'
 }
 
 remapJar {
