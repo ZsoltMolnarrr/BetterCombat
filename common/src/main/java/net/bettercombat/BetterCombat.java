@@ -25,7 +25,6 @@ public class BetterCombat implements ModInitializer {
     public static ConfigManager<FallbackConfig> fallbackConfig = new ConfigManager<FallbackConfig>
             ("fallback_compatibility", fallbackDefault)
             .builder()
-            .enableLogging(true)
             .setDirectory(MODID)
             .sanitize(true)
             .build();
