@@ -52,7 +52,6 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
-
     relocate 'net.fabricmc', 'net.bettercombat.fabricmc'
     relocate 'net.tinyconfig', 'net.bettercombat.tinyconfig'
 }
