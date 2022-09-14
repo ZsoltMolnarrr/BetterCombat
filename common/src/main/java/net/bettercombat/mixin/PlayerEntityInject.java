@@ -3,6 +3,8 @@ package net.bettercombat.mixin;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.bettercombat.BetterCombat;
+import net.bettercombat.api.AttackHand;
+import net.bettercombat.api.BetterCombatPlayer;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
@@ -14,6 +16,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -24,7 +27,7 @@ import java.util.UUID;
 import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityInject implements PlayerAttackProperties {
+public abstract class PlayerEntityInject implements PlayerAttackProperties, BetterCombatPlayer {
     private int comboCount = 0;
     public int getComboCount() {
         return comboCount;
@@ -50,7 +53,7 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
             return value;
         }
 
-        var player = ((PlayerEntity) ((Object)this) );
+        var player = ((PlayerEntity) ((Object)this));
         var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
         if (currentHand != null) {
             // Disable sweeping
@@ -196,5 +199,16 @@ public abstract class PlayerEntityInject implements PlayerAttackProperties {
         }
         var redirectedHand = hand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
         instance.setStackInHand(redirectedHand, itemStack);
+    }
+
+    // SECTION: BetterCombatPlayer
+
+    @Nullable
+    public AttackHand getCurrentAttack() {
+        if (comboCount < 0) {
+            return null;
+        }
+        var player = ((PlayerEntity) ((Object)this));
+        return PlayerAttackHelper.getCurrentAttack(player, comboCount);
     }
 }

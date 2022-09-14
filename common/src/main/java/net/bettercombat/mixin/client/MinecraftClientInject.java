@@ -10,7 +10,7 @@ import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
-import net.bettercombat.logic.AttackHand;
+import net.bettercombat.api.AttackHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;

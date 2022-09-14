@@ -3,6 +3,7 @@ package net.bettercombat.api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import net.bettercombat.logic.ItemStackNBTWeaponAttributes;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -85,7 +86,7 @@ public class WeaponAttributesHelper {
     public static final String nbtTag = "weapon_attributes";
     public static WeaponAttributes readFromNBT(ItemStack itemStack) {
         var nbt = itemStack.getNbt();
-        var attributedItemStack = (AttributesOwner) ((Object)itemStack);
+        var attributedItemStack = (ItemStackNBTWeaponAttributes) ((Object)itemStack);
         var string = nbt.getString(nbtTag);
         if (string != null && !string.isEmpty() && !attributedItemStack.hasInvalidAttributes()) {
             var cachedAttributes = attributedItemStack.getWeaponAttributes();
@@ -115,7 +116,7 @@ public class WeaponAttributesHelper {
 
     public static void writeToNBT(ItemStack itemStack, AttributesContainer container) {
         Identifier itemId = Registry.ITEM.getId(itemStack.getItem());
-        var attributedItemStack = (AttributesOwner) ((Object)itemStack);
+        var attributedItemStack = (ItemStackNBTWeaponAttributes) ((Object)itemStack);
         var nbt = itemStack.getNbt();
         try {
             var json = encode(container);
