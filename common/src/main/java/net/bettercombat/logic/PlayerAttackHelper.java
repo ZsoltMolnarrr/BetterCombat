@@ -4,6 +4,7 @@ import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShieldItem;
 
 import java.util.Arrays;
 
@@ -106,6 +107,20 @@ public class PlayerAttackHelper {
                     return false;
                 }
                 return mainHandAttributes.category().equals(offHandAttributes.category());
+            }
+            case NO_OFFHAND_ITEM -> {
+                var offhandStack = player.getOffHandStack();
+                if(offhandStack == null || offhandStack.isEmpty()) {{
+                    return true;
+                }}
+                return false;
+            }
+            case OFF_HAND_SHIELD -> {
+                var offhandStack = player.getOffHandStack();
+                if(offhandStack != null || offhandStack.getItem() instanceof ShieldItem) {{
+                    return true;
+                }}
+                return false;
             }
             case MAIN_HAND_ONLY -> {
                 return !isOffHandAttack;

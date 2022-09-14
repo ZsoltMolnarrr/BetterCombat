@@ -275,6 +275,14 @@ public final class WeaponAttributes {
          */
         DUAL_WIELDING_SAME_CATEGORY,
         /**
+         * Fulfilled if the player has not item at all in the off-hand
+         */
+        NO_OFFHAND_ITEM,
+        /**
+         * Fulfilled if the player has a shield in the off-hand
+         */
+        OFF_HAND_SHIELD,
+        /**
          * Fulfilled for attacks performed with main-hand only
          */
         MAIN_HAND_ONLY,
