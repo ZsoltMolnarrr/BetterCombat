@@ -287,9 +287,8 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         if (BetterCombatKeybindings.toggleMineKeyBinding.wasPressed()) {
             BetterCombatClient.config.isMiningWithWeaponsEnabled = !BetterCombatClient.config.isMiningWithWeaponsEnabled;
             AutoConfig.getConfigHolder(ClientConfigWrapper.class).save();
-            textToRender = I18n.translate("text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled")
-                    + ": "
-                    + I18n.translate(BetterCombatClient.config.isMiningWithWeaponsEnabled ? "gui.yes" : "gui.no");
+            textToRender = I18n.translate(BetterCombatClient.config.isMiningWithWeaponsEnabled ?
+                    "hud.bettercombat.mine_with_weapons_on" : "hud.bettercombat.mine_with_weapons_off");
             textFade = 40;
         }
         if (textFade > 0) {
