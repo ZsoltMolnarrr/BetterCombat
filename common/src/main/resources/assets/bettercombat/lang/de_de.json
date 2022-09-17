@@ -3,7 +3,10 @@
   "item.modifiers.two_handed": "Zweihändige",
   "keybinds.bettercombat.feint" : "Finte",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Schalten Sie den Bergbau mit Waffen um",
-
+  "hud.bettercombat.mine_with_weapons_on" : "Bergbau mit Waffen: Ja",
+  "hud.bettercombat.mine_with_weapons_off" : "Bergbau mit Waffen: Nein",
+  
+  "text.autoconfig.bettercombat.title" : "Besser Kampf",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Halten um anzugreifen",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Greife automatisch an, während du die Angriffstaste gedrückt hältst",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "Bergbau mit Waffen",
@@ -15,9 +18,15 @@
   "text.autoconfig.bettercombat.option.client.hudHighlightColor" : "Hervorhebungsfarbe",
   "text.autoconfig.bettercombat.option.client.hudHighlightColor.@Tooltip" : "Farbe wird nach Bedarf auf UI-Elemente angewendet",
   "text.autoconfig.bettercombat.option.client.isShowingArmsInFirstPerson": "Handsichtbarkeit im First-Person-Modus",
-  "text.autoconfig.bettercombat.option.client.isShowingArmsInFirstPerson.@Tooltip": "Rendern Sie Hände für Angriffsanimationen, die in der First-Person-Modus gespielt werden",
+  "text.autoconfig.bettercombat.option.client.isShowingArmsInFirstPerson.@Tooltip": "Rendern Sie die Hand für Angriffsanimationen, die in der First-Person-Modus gespielt werden",
+  "text.autoconfig.bettercombat.option.client.isShowingOtherHandFirstPerson": "Inaktive Handsichtbarkeit im First-Person-Modus",
+  "text.autoconfig.bettercombat.option.client.isShowingOtherHandFirstPerson.@Tooltip": "Rendern Sie die Hand, mit der Sie nicht angreifen, im First-Person-Modus", 
   "text.autoconfig.bettercombat.option.client.isSmoothAnimationTransitionEnabled": "Animationsübergängen geglätten",
   "text.autoconfig.bettercombat.option.client.isSmoothAnimationTransitionEnabled.@Tooltip": "Angriffsanimationsübergänge werden auf Kosten der Animationstreue geglättet",
   "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled": "Gegenstands-Tooltip: Reichweite",
-  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled.@Tooltip": "Zeigt den Wert der Reichweite im Tooltip der Waffe"
+  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled.@Tooltip": "Zeigt den Wert der Reichweite im Tooltip der Waffe",
+  "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume" : "Lautstärke des Waffenschwinggeräuschs in Prozent",
+  "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume.@Tooltip" : "Ändern Sie die Lautstärke der Waffenschwinggeräusche",
+  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled" : "Show sweeping",
+  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Zeigen Sie die Animation des Schwungschläge"
 }
