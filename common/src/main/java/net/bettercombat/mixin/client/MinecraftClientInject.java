@@ -49,6 +49,8 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     @Shadow @Nullable public ClientPlayerEntity player;
     @Shadow @Final public TextRenderer textRenderer;
 
+    @Shadow private int itemUseCooldown;
+
     private MinecraftClient thisClient() {
         return (MinecraftClient)((Object)this);
     }
@@ -148,7 +150,6 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         }
     }
 
-
     private boolean isTargetingMineableBlock() {
         if (!BetterCombatClient.config.isMiningWithWeaponsEnabled) {
             return false;
@@ -203,6 +204,7 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
         this.comboReset = Math.round(attackCooldownTicks * ComboResetRate);
         this.upswingTicks = (int)(Math.round(attackCooldownTicks * upswingRate));
         this.lastSwingDuration = attackCooldownTicks;
+        this.itemUseCooldown = upswingTicks; // Vanilla MinecraftClient property for compatibility
 //        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
