@@ -3,7 +3,9 @@
   "item.modifiers.two_handed": "Двуручное",
   "keybinds.bettercombat.feint" : "Финт",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Вкл./выкл. копание оружием",
-  
+  "hud.bettercombat.mine_with_weapons_on" : "Копание оружием: Вкл.",
+  "hud.bettercombat.mine_with_weapons_off" : "Копание оружием: Выкл.",
+
   "text.autoconfig.bettercombat.title" : "Better Combat",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled": "Удерживать для атаки",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip": "Автоматически атаковать при удерживании кнопки атаки",

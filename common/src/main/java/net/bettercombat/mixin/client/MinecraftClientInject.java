@@ -216,14 +216,20 @@ public abstract class MinecraftClientInject implements MinecraftClientExtension 
     }
 
     private void feintIfNeeded() {
-        if (upswingTicks > 0 &&
-                (BetterCombatKeybindings.feintKeyBinding.isPressed() || !areItemStackEqual(player.getMainHandStack(), upswingStack))) {
+        if (BetterCombatKeybindings.feintKeyBinding.isPressed() || !areItemStackEqual(player.getMainHandStack(), upswingStack) {
+            cancelUpswing();
+        }
+    }
+
+    private void cancelUpswing() {
+        if (upswingTicks > 0) {
             ((PlayerAttackAnimatable) player).stopAttackAnimation();
             ClientPlayNetworking.send(
                     Packets.AttackAnimation.ID,
                     Packets.AttackAnimation.stop(player.getId()).write());
             upswingTicks = 0;
             upswingStack = null;
+            itemUseCooldown = 0;
         }
     }
 
