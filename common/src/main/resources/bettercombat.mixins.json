@@ -9,7 +9,7 @@
     "LivingEntityAccessor",
     "LivingEntityInject",
     "PlayerEntityAccessor",
-    "PlayerEntityInject",
+    "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin"
   ],
   "client": [

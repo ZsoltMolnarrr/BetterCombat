@@ -52,15 +52,10 @@ public class BetterCombat implements ModInitializer {
     }
 
     private void loadFallbackConfig() {
-        try {
-            fallbackConfig.load();
-            if (fallbackConfig.currentConfig.schema_version < fallbackDefault.schema_version) {
-                fallbackConfig.currentConfig = FallbackConfig.migrate(fallbackConfig.currentConfig, FallbackConfig.createDefault());
-            }
-            fallbackConfig.save();
-        } catch (Exception e) {
-            LOGGER.error("Failed to load fallback compatibility configuration");
-            LOGGER.error(e.getMessage());
+        fallbackConfig.load();
+        if (fallbackConfig.currentConfig.schema_version < fallbackDefault.schema_version) {
+            fallbackConfig.currentConfig = FallbackConfig.migrate(fallbackConfig.currentConfig, FallbackConfig.createDefault());
         }
+        fallbackConfig.save();
     }
 }

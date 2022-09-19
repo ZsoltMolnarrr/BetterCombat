@@ -2,7 +2,7 @@ package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.bettercombat.client.BetterCombatClient;
-import net.bettercombat.client.MinecraftClientExtension;
+import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
@@ -21,7 +21,7 @@ public abstract class InGameHudInject {
     }
 
     private void setShaderForHighlighting() {
-        if(((MinecraftClientExtension)MinecraftClient.getInstance()).hasTargetsInRange()) {
+        if(((MinecraftClient_BetterCombat)MinecraftClient.getInstance()).hasTargetsInRange()) {
             var color = BetterCombatClient.config.hudHighlightColor;
             float red = ((float) ((color >> 16) & 0xFF)) / 255F;
             float green = ((float) ((color >> 8) & 0xFF)) / 255F;

@@ -2,7 +2,7 @@ package net.bettercombat.mixin.client;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.client.MathHelper;
-import net.bettercombat.client.MinecraftClientExtension;
+import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +24,7 @@ public class ClientPlayerEntityMixin {
         if (clientPlayer.hasVehicle() && !config.movement_speed_effected_while_mounting) {
             return;
         }
-        var client = (MinecraftClientExtension) MinecraftClient.getInstance();
+        var client = (MinecraftClient_BetterCombat) MinecraftClient.getInstance();
         var swingProgress = client.getSwingProgress();
         if (swingProgress < 0.98) {
             if (config.movement_speed_applied_smoothly) {
@@ -34,7 +34,6 @@ public class ClientPlayerEntityMixin {
                 } else {
                     p2 = MathHelper.easeOutCubic(1 - ((swingProgress - 0.5) * 2));
                 }
-
                 multiplier = (float) ( 1.0 - (1.0 - multiplier) * p2 );
 //                var chart = "-".repeat((int)(100.0 * multiplier)) + "x";
 //                System.out.println("Movement speed multiplier: " + String.format("%.4f", multiplier) + ">" + chart);

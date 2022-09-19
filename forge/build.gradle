@@ -27,6 +27,7 @@ configurations {
 repositories {
     maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.kosmx.dev/' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -37,6 +38,8 @@ dependencies {
 
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${project.player_anim_version}")
     modApi("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
+
+    shadowCommon(common("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
 }
 
 processResources {
@@ -49,8 +52,8 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
-
     relocate 'net.fabricmc', 'net.bettercombat.fabricmc'
+    relocate 'net.tinyconfig', 'net.bettercombat.tinyconfig'
 }
 
 remapJar {
@@ -109,7 +112,8 @@ if(project.hasProperty('release_type')) {
     modrinth {
         token = System.getenv("MODRINTH_API_KEY")
         projectId = "better-combat" // This can be the project ID or the slug. Either will work!
-        versionNumber = "${project.version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+        versionName = "${project.version}"
+        versionNumber = "${project.version}-forge" // You don't need to set this manually. Will fail if Modrinth has this version already
         versionType = release_type // This is the default -- can also be `beta` or `alpha`
         uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
         gameVersions = ["1.18.2"] // Must be an array, even with only one version

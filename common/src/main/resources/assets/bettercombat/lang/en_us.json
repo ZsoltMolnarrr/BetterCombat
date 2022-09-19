@@ -3,6 +3,8 @@
   "item.modifiers.two_handed": "Two-Handed",
   "keybinds.bettercombat.feint" : "Feint",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Toggle Mine with weapons",
+  "hud.bettercombat.mine_with_weapons_on" : "Mine with weapons: Yes",
+  "hud.bettercombat.mine_with_weapons_off" : "Mine with weapons: No",
 
   "text.autoconfig.bettercombat.title" : "Better Combat",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Hold to attack",

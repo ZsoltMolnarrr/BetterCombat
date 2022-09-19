@@ -38,8 +38,10 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modApi include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
     modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
+
+    shadowCommon(implementation ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
+    // modApi include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 }
 
 processResources {
@@ -52,6 +54,7 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
+    relocate 'net.tinyconfig', 'net.bettercombat.tinyconfig'
 }
 
 remapJar {
@@ -131,7 +134,8 @@ if(project.hasProperty('release_type')) {
     modrinth {
         token = System.getenv("MODRINTH_API_KEY")
         projectId = "better-combat" // This can be the project ID or the slug. Either will work!
-        versionNumber = "${project.version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+        versionName = "${project.version}"
+        versionNumber = "${project.version}-fabric" // You don't need to set this manually. Will fail if Modrinth has this version already
         versionType = release_type // This is the default -- can also be `beta` or `alpha`
         uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
         gameVersions = ["1.18.2"] // Must be an array, even with only one version

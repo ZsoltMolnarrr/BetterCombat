@@ -1,17 +1,18 @@
 package net.bettercombat.client.collision;
 
 import net.bettercombat.BetterCombat;
-import net.bettercombat.PlatformClient;
 import net.bettercombat.api.WeaponAttributes.Attack;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.bettercombat.compatibility.PehkuiHelper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ public class TargetFinder {
     }
 
     public static TargetResult findAttackTargetResult(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
+//        long startTime = System.nanoTime();
         Vec3d origin = getInitialTracingPoint(player);
         List<Entity> entities = getInitialTargets(player, cursorTarget, attackRange);
 
@@ -46,6 +48,8 @@ public class TargetFinder {
         entities = collisionFilter.filter(entities);
         var radialFilter = new RadialFilter(origin, obb.axisZ, attackRange, attack.angle());
         entities = radialFilter.filter(entities);
+//        long elapsedTime = System.nanoTime() - startTime;
+//        System.out.println("TargetResult findAttackTargetResult (ms): " + ((double)elapsedTime) / 1000000.0);
         return new TargetResult(entities, obb);
     }
 
@@ -54,7 +58,7 @@ public class TargetFinder {
     }
 
     public static Vec3d getInitialTracingPoint(PlayerEntity player) {
-        double shoulderHeight = player.getHeight() * 0.2 * player.getScaleFactor();
+        double shoulderHeight = player.getHeight() * 0.15 * player.getScaleFactor();
         return player.getEyePos().subtract(0, shoulderHeight, 0);
     }
 
@@ -123,10 +127,20 @@ public class TargetFinder {
                         Vec3d positionVector = entity.getPos().subtract(origin);
                         return distanceVector.length() <= attackRange
                                 && ((attackAngle == 0)
-                                || CollisionHelper.angleBetween(positionVector, orientation) <= maxAngleDif
-                                || CollisionHelper.angleBetween(distanceVector, orientation) <= maxAngleDif);
+                                    || (CollisionHelper.angleBetween(positionVector, orientation) <= maxAngleDif
+                                    || CollisionHelper.angleBetween(distanceVector, orientation) <= maxAngleDif))
+                                && (BetterCombat.config.allow_attacking_thru_walls
+                                    || rayContainsNoObstacle(origin, origin.add(distanceVector))
+                                    || rayContainsNoObstacle(origin, origin.add(positionVector)));
                     })
                     .collect(Collectors.toList());
+        }
+
+        private static boolean rayContainsNoObstacle(Vec3d start, Vec3d end) {
+            var client = MinecraftClient.getInstance();
+            var world = client.world;
+            var hit = client.world.raycast(new RaycastContext(start, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, client.player));
+            return hit.getType() != HitResult.Type.BLOCK;
         }
     }
 }

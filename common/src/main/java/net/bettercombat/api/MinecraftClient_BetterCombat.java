@@ -1,4 +1,4 @@
-package net.bettercombat.client;
+package net.bettercombat.api;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.util.hit.HitResult.Type.ENTITY;
 
-public interface MinecraftClientExtension {
+public interface MinecraftClient_BetterCombat {
     int getComboCount();
     boolean hasTargetsInRange();
     @Nullable
@@ -19,5 +19,7 @@ public interface MinecraftClientExtension {
         return null;
     }
 
+    int getUpswingTicks();
     float getSwingProgress();
+    void cancelUpswing();
 }
