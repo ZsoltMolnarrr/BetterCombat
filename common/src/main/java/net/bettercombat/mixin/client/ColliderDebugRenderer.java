@@ -2,7 +2,7 @@ package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.bettercombat.api.WeaponAttributes;
-import net.bettercombat.client.MinecraftClientExtension;
+import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.logic.PlayerAttackHelper;
@@ -40,7 +40,7 @@ public class ColliderDebugRenderer {
         if (client.player.getMainHandStack() == null) {
             return;
         }
-        var extendedClient = (MinecraftClientExtension)client;
+        var extendedClient = (MinecraftClient_BetterCombat)client;
         var comboCount = extendedClient.getComboCount();
         var hand = PlayerAttackHelper.getCurrentAttack(client.player, comboCount);
         if (hand == null) {

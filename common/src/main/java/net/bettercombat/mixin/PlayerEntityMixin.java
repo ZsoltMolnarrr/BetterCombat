@@ -4,7 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
-import net.bettercombat.api.BetterCombatPlayer;
+import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
@@ -27,7 +27,7 @@ import java.util.UUID;
 import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityInject implements PlayerAttackProperties, BetterCombatPlayer {
+public abstract class PlayerEntityMixin implements PlayerAttackProperties, EntityPlayer_BetterCombat {
     private int comboCount = 0;
     public int getComboCount() {
         return comboCount;
