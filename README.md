@@ -43,7 +43,6 @@ Add unique behaviour to your weapon, or just reuse a preset, using data files (a
 ```
 
 ## Future plans:
-- [ ] Rolling
 - [ ] Weapon trail animation while hitting
 - [ ] Parry (under consideration)
 - [ ] Additional weapon attributes (for example: pushback)
