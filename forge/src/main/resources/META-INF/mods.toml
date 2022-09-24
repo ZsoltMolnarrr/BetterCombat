@@ -13,7 +13,7 @@ loaderVersion="[39,)"
 
 displayURL="https://github.com/ZsoltMolnarrr/BetterCombat"
 
-license="CC-BY-4.0 License"
+license="GPL-3.0"
 
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
@@ -36,7 +36,7 @@ authors="Daedelus" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Easy, spectacular and fun melee combat system we know from Minecraft Dungeons.
+Easy, spectacular and fun melee combat system from Minecraft Dungeons.
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
