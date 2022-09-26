@@ -83,7 +83,27 @@ Make sure to remove or disable all logic from your mod that is semantically conf
 - Attack/mining key handler modifications (of MinecraftClient)
 - Dual wielding logic
 
-Download the latest release of the mod, and install it in your project run directory (`./run/mods`).
+Forge:
+```
+repositories{
+        maven { url 'https://api.modrinth.com/maven' }
+}
+dependencies{
+        implementation fg.deobf('maven.modrinth:better-combat:modversion+mcversion-forge')
+}
+```
+
+Fabric:
+```
+repositories {
+        maven { url 'https://api.modrinth.com/maven' }
+}
+dependencies {
+        modImplementation 'maven.modrinth:better-combat:modversion+mcversion-fabric'
+}
+```
+
+Please note for both Forge and Fabric, [Cloth Config](https://shedaniel.gitbook.io/cloth-config/setup-cloth-config/cloth-config-fabric) and [playerAnimator](https://github.com/KosmX/minecraftPlayerAnimator#include-in-your-dev-environment) are required as well. Please see each link on how to add these to your dev environments.
 
 ## Basics
 
@@ -254,7 +274,6 @@ Content:
   "parent": "bettercombat:claymore"
 }
 ```
-
 
 # ⛓ Mod compatibility
 
