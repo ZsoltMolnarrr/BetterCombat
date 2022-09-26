@@ -3,7 +3,7 @@
   "id": "bettercombat",
   "version": "${version}",
   "name": "Better Combat",
-  "description": "Easy, spectacular and fun melee combat system we know from Minecraft Dungeons.",
+  "description": "Easy, spectacular and fun melee combat system from Minecraft Dungeons.",
   "authors": [
     "Daedelus"
   ],
@@ -14,7 +14,7 @@
     "issues": "https://github.com/ZsoltMolnarrr/BetterCombat/issues",
     "homepage": "https://github.com/ZsoltMolnarrr/BetterCombat"
   },
-  "license": "CC-BY-4.0 License",
+  "license": "GPL-3.0",
   "icon": "assets/bettercombat/icon.png",
   "environment": "*",
   "entrypoints": {

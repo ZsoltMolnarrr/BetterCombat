@@ -38,33 +38,12 @@ subprojects {
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
-    apply plugin: "org.cadixdev.licenser"
 
     group = rootProject.maven_group
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
         options.release.set 17
-    }
-
-    javadoc {
-        // Architectury's common javadoc has references to platform code, which cannot be resolved normally.
-        // Let's just skip the errors!
-        failOnError = false
-    }
-
-    license {
-        header = rootProject.file("HEADER")
-
-        ext {
-            name = "bettercombat"
-            year = "2022"
-        }
-
-        include "**/*.java"
-        exclude "**/NbtType.java"
-
-        ignoreFailures = true
     }
 
     java {

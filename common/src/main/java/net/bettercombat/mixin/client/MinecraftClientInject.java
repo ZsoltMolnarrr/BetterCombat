@@ -100,6 +100,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     // Press to attack
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
     private void pre_doAttack(CallbackInfoReturnable<Boolean> info) {
+        if (!BetterCombatClient.ENABLED) { return; }
+
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null) {
@@ -116,6 +118,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     // Hold to attack
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
     private void pre_handleBlockBreaking(boolean bl, CallbackInfo ci) {
+        if (!BetterCombatClient.ENABLED) { return; }
+
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null) {
@@ -142,6 +146,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
     private void pre_doItemUse(CallbackInfo ci) {
+        if (!BetterCombatClient.ENABLED) { return; }
+
         var hand = getCurrentHand();
         if (hand == null) { return; }
         double upswingRate = hand.upswingRate();
