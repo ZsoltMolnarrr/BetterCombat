@@ -18,6 +18,7 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class BetterCombatClient implements ClientModInitializer {
+    public static boolean ENABLED = false;
     public static ClientConfig config;
     @Override
     public void onInitializeClient() {
