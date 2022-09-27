@@ -73,44 +73,59 @@ Server configuration is synchronized with clients upon joining the server.
 
 The next steps describe how to add dedicated compatibility for any item.
 
+## Installation
+
+### Fabric
+
+Download the latest release version of the mod with all of its dependencies, and put them into `./run/mods` director.
+
+Alternatively, if you would like to use the JAVA API provided by Better Combat. Install it via gradle:
+```groovy
+repositories {
+    maven { url 'https://api.modrinth.com/maven' }  
+}
+
+dependencies {
+    [...]
+    modImplementation "maven.modrinth:better-combat:VERSION-fabric"
+}
+```
+(Note: JAVA API is only needed for special integration cases.)
+
+Please note for both Forge and Fabric, [Cloth Config](https://shedaniel.gitbook.io/cloth-config/setup-cloth-config/cloth-config-fabric) and [playerAnimator](https://github.com/KosmX/minecraftPlayerAnimator#include-in-your-dev-environment) are required as well. Please see each link on how to add these to your dev environments.
+
+### Forge
+```groovy
+repositories {
+    maven { url 'https://api.modrinth.com/maven' }  
+}
+
+dependencies {
+    [...]
+    implementation fg.deobf('maven.modrinth:better-combat:VERSION-forge')
+}
+```
+Please note for both Forge and Fabric, [Cloth Config](https://shedaniel.gitbook.io/cloth-config/setup-cloth-config/cloth-config-fabric) and [playerAnimator](https://github.com/KosmX/minecraftPlayerAnimator#include-in-your-dev-environment) are required as well. Please see each link on how to add these to your dev environments.
+
 ## Prerequisite
 
 Make sure to remove or disable all logic from your mod that is semantically conflicting with this mod:
-- Player animation modifications
+- Player animation and or model modifications
 - Attack range modifications
 - Attack timing or cooldown logic modifications
 - Custom attack sound playback
 - Attack/mining key handler modifications (of MinecraftClient)
 - Dual wielding logic
+- Custom item wielding appearance 
 
-Forge:
-```
-repositories{
-        maven { url 'https://api.modrinth.com/maven' }
-}
-dependencies{
-        implementation fg.deobf('maven.modrinth:better-combat:modversion+mcversion-forge')
-}
-```
-
-Fabric:
-```
-repositories {
-        maven { url 'https://api.modrinth.com/maven' }
-}
-dependencies {
-        modImplementation 'maven.modrinth:better-combat:modversion+mcversion-fabric'
-}
-```
-
-Please note for both Forge and Fabric, [Cloth Config](https://shedaniel.gitbook.io/cloth-config/setup-cloth-config/cloth-config-fabric) and [playerAnimator](https://github.com/KosmX/minecraftPlayerAnimator#include-in-your-dev-environment) are required as well. Please see each link on how to add these to your dev environments.
+(Note: Better Combat expects all items to be held like swords, it rotates them accordingly during animations. If you have a dagger that is facing backwards, you need to disable that, otherwise it will be facing backwards during attack animations too. Better Combat offers weapon specific poses for adjusting position and rotation of items while idling.)
 
 ## Basics
 
 Weapon attributes describe the behaviour of a weapon including: range, combos (list of attacks), animations and sounds, etc...
 
 Assign weapon attributes to weapons of your mod, just by creating **resource files**. This is done similar to how you assign crafting recipes to an item.
-**No need for any java or gradle dependency**.
+**No need for any java dependency**.
 
 Weapon attributes can describe:
 - How the weapon is held (is two-handed, idle pose)
@@ -126,7 +141,7 @@ Each mod should provide their own resources files for compatibility (preferably 
 - A single source of configuration files is difficult to maintain
 - More intuitive installation process for users
 - Every mod developer should decide how their weapon is meant to behave
-- Some mods may need to disable semantically conflicting features
+- Some mods may need to disable semantically conflicting features (mentioned at [Prerequisite](#prerequisite))
 
 Let's see an example where we add attributes to a custom sword named "Big Sword" from your mod:
 - mod id is `my-mod-id`
