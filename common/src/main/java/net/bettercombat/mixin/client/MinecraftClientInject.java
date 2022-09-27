@@ -22,6 +22,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
@@ -47,7 +48,6 @@ import static net.minecraft.util.hit.HitResult.Type.BLOCK;
 public abstract class MinecraftClientInject implements MinecraftClient_BetterCombat {
     @Shadow public ClientWorld world;
     @Shadow @Nullable public ClientPlayerEntity player;
-    @Shadow @Final public TextRenderer textRenderer;
 
     @Shadow private int itemUseCooldown;
 
@@ -63,6 +63,12 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Inject(method = "<init>", at = @At("TAIL"))
     private void postInit(RunArgs args, CallbackInfo ci) {
         setupTextRenderer();
+    }
+
+    // Targeting the method where all the disconnection related logic is.
+    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V",at = @At("TAIL"))
+    private void disconnect_TAIL(Screen screen, CallbackInfo ci) {
+        BetterCombatClient.ENABLED = false;
     }
 
     private void setupTextRenderer() {
