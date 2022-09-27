@@ -2,21 +2,21 @@ package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
+import net.bettercombat.api.AttackHand;
+import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.BetterCombatKeybindings;
-import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
-import net.bettercombat.api.AttackHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
@@ -188,6 +188,12 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     private void startUpswing(WeaponAttributes attributes) {
         // Guard conditions
+
+        if (player.isRiding()) {
+            // isRiding is `isHandsBusy()` according to official mappings
+            // Support for revival mod
+            return;
+        }
 
         var hand = getCurrentHand();
         if (hand == null) { return; }
