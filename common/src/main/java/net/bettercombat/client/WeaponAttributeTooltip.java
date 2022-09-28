@@ -17,7 +17,9 @@ public class WeaponAttributeTooltip {
                 // Looking for last attribute line in the list
                 var lastAttributeLine = 0;
                 var firstHandLine = 0;
+                Integer lastGreenAttributeIndex = null;
                 var attributePrefix = "attribute.modifier";
+                var attributeEqualsPrefix = "attribute.modifier.equals.0";
                 var handPrefix = "item.modifiers";
                 for (int i = 0; i < lines.size(); i++) {
                     var line = lines.get(i);
@@ -33,9 +35,11 @@ public class WeaponAttributeTooltip {
                     } else {
                         for(var part: line.getSiblings()) {
                             if (part instanceof TranslatableText translatableText) {
+                                if (translatableText.getKey().contains(attributeEqualsPrefix)) {
+                                    lastGreenAttributeIndex = i;
+                                }
                                 if (translatableText.getKey().startsWith(attributePrefix)) {
                                     lastAttributeLine = i;
-                                    break;
                                 }
                             }
                         }
@@ -47,7 +51,8 @@ public class WeaponAttributeTooltip {
                     var rangeTranslationKey = "attribute.name.generic.attack_range";
                     var rangeValue = attributes.attackRange();
                     var rangeLine = new LiteralText(" ").append(new TranslatableText("attribute.modifier.equals." + operationId, MODIFIER_FORMAT.format(rangeValue), new TranslatableText(rangeTranslationKey))).formatted(Formatting.DARK_GREEN);
-                    lines.add(lastAttributeLine + 1, rangeLine);
+                    int index = lastGreenAttributeIndex != null ? lastGreenAttributeIndex : lastAttributeLine;
+                    lines.add(index + 1, rangeLine);
                 }
 
                 if (attributes.isTwoHanded() && firstHandLine > 0) {
