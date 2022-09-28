@@ -37,7 +37,6 @@ public class ClientNetwork {
                     var configVolume = BetterCombatClient.config.weaponSwingSoundVolume;
                     var volume = packet.volume() * ((float)Math.min(Math.max(configVolume, 0), 100) / 100F);
                     client.world.playSound(
-                            client.player,
                             packet.x(),
                             packet.y(),
                             packet.z(),
@@ -45,7 +44,7 @@ public class ClientNetwork {
                             SoundCategory.PLAYERS,
                             volume,
                             packet.pitch(),
-                            packet.seed());
+                            true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
