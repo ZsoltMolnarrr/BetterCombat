@@ -158,6 +158,8 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         }
     }
 
+    private AttackHand lastAttack;
+
     @Redirect(method = "attack", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;"))
     public ItemStack getMainHandStack_Redirect(PlayerEntity instance) {
@@ -178,6 +180,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
                 return instance.getMainHandStack();
             }
         }
+        lastAttack = hand;
         return hand.itemStack();
     }
 
@@ -192,7 +195,10 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
             instance.setStackInHand(handArg, itemStack);
         }
         // `handArg` argument is always `MAIN`, we can ignore it
-        var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+        AttackHand hand = lastAttack;
+        if (hand == null) {
+            hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+        }
         if (hand == null) {
             instance.setStackInHand(handArg, itemStack);
             return;
