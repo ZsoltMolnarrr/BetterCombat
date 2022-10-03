@@ -2,6 +2,7 @@ package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
+import net.bettercombat.PlatformClient;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
@@ -328,6 +329,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
                 attack,
                 hand.attributes().attackRange());
         updateTargetsInRage(targets);
+        if(targets.size() == 0) PlatformClient.onEmptyLeftClick(player);
         ClientPlayNetworking.send(
                 Packets.C2S_AttackRequest.ID,
                 new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), player.getInventory().selectedSlot, targets).write());
