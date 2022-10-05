@@ -124,7 +124,7 @@ public class TargetFinder {
                     .filter(entity -> {
                         var maxAngleDif = (attackAngle / 2.0);
                         Vec3d distanceVector = CollisionHelper.distanceVector(origin, entity.getBoundingBox());
-                        Vec3d positionVector = entity.getPos().subtract(origin);
+                        Vec3d positionVector = entity.getPos().add(0, entity.getHeight() / 2F, 0).subtract(origin);
                         return distanceVector.length() <= attackRange
                                 && ((attackAngle == 0)
                                     || (CollisionHelper.angleBetween(positionVector, orientation) <= maxAngleDif
