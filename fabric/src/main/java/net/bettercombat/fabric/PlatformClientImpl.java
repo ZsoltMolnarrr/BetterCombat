@@ -14,6 +14,6 @@ public class PlatformClientImpl {
         }
     }
     public static void onEmptyLeftClick(PlayerEntity player) {
-        //Do nothing, this event does not exist on Fabric
+        // Do nothing, this event does not exist on Fabric
     }
 }
