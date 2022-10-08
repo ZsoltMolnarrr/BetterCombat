@@ -3,11 +3,14 @@ package net.bettercombat.mixin.client;
 import com.mojang.authlib.GameProfile;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
+import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import net.bettercombat.api.animation.FirstPersonAnimation;
+import net.bettercombat.api.animation.FirstPersonAnimator;
 import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
@@ -26,15 +29,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
+public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable, FirstPersonAnimator {
     private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAttackAdjustment());
     private final PoseSubStack mainHandBodyPose = new PoseSubStack(createPoseAdjustment(), true, true);
     private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
     private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
     private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
+    private final ArrayList<ModifierLayer> additionalFirstPersonLayers = new ArrayList();
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @org.jetbrains.annotations.Nullable PlayerPublicKey publicKey) {
         super(world, pos, yaw, gameProfile, publicKey);
@@ -138,7 +143,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+            if (FirstPersonAnimation.isRenderingAttackAnimationInFirstPerson()) {
                 var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
                 switch (partName) {
@@ -233,14 +238,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         }
     }
 
-    @Override
-    public void stopAttackAnimation() {
-        IAnimation currentAnimation = attackAnimation.base.getAnimation();
-        if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
-            attackAnimation.base.replaceAnimationWithFade(
-                    AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
-        }
-    }
 
     private boolean isWalking() {
         return !this.isDead() && (this.isSwimming() || this.getVelocity().horizontalLength() > 0.03);
@@ -254,8 +251,30 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         return this.getMainArm() == Arm.LEFT;
     }
 
+    // PlayerAttackAnimatable
+
+    @Override
+    public void stopAttackAnimation() {
+        IAnimation currentAnimation = attackAnimation.base.getAnimation();
+        if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
+            attackAnimation.base.replaceAnimationWithFade(
+                    AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
+        }
+    }
+
     @Override
     public Optional<IAnimation> getCurrentAnimation() {
+        for (var layer: additionalFirstPersonLayers) {
+            if (layer.isActive()) {
+                return Optional.ofNullable(layer.getAnimation());
+            }
+        }
         return Optional.ofNullable(attackAnimation.base.getAnimation());
+    }
+
+    // FirstPersonAnimator
+
+    public void addLayer(ModifierLayer layer) {
+        additionalFirstPersonLayers.add(layer);
     }
 }
