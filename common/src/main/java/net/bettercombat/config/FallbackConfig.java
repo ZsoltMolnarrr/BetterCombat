@@ -20,13 +20,13 @@ public class FallbackConfig {
     public static FallbackConfig createDefault() {
         var object = new FallbackConfig();
         object.schema_version = 1;
-        object.blacklist_item_id_regex = "pickaxe";
+        object.blacklist_item_id_regex = "pickaxe|farmersdelight";
         object.fallback_compatibility = new CompatibilitySpecifier[] {
                 new CompatibilitySpecifier(
                         "claymore|great_sword|greatsword",
                         "bettercombat:claymore"),
                 new CompatibilitySpecifier(
-                        "great_hammer|greathammer|war_hammer|warhammer",
+                        "great_hammer|greathammer|war_hammer|warhammer|maul",
                         "bettercombat:hammer"),
                 new CompatibilitySpecifier(
                         "double_axe|doubleaxe|war_axe|waraxe|great_axe|greataxe",
@@ -74,7 +74,7 @@ public class FallbackConfig {
                         "dagger|knife",
                         "bettercombat:dagger"),
                 new CompatibilitySpecifier(
-                        "staff|wand|sceptre",
+                        "staff|wand|sceptre|stave|rod",
                         "bettercombat:wand"),
                 new CompatibilitySpecifier(
                         "mace|hammer|flail",

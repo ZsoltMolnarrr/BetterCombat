@@ -31,7 +31,8 @@ public class LivingEntityRendererMixin {
                 && entity == MinecraftClient.getInstance().player
                 && !camera.isThirdPerson()
         ) {
-            var isActive = currentAnimation.get().isActive();
+            // Only for IExtendedAnimation (weapon swings)
+            var isActive = false; // currentAnimation.get().isActive();
             if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
                 isActive = extendedAnimation.isActiveInFirstPerson();
             }
