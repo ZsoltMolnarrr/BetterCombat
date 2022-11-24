@@ -31,6 +31,8 @@
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume.@Tooltip" : "Change volume of weapon swing sounds",
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled" : "Show sweeping",
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Enable showing sword sweeping particle effects",
+  "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist" : "Swing thru grass blacklist",
+  "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip" : "Weapons with an ID that matches this regex will never swing thru grass",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Debug hitbox",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Show weapon hitbox when entity hitboxes are displayed"
 }

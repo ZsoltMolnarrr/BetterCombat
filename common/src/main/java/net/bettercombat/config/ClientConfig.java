@@ -32,4 +32,6 @@ public class ClientConfig implements ConfigData {
     public int weaponSwingSoundVolume = 100;
     @ConfigEntry.Gui.Tooltip
     public boolean isDebugOBBEnabled = true;
+    @ConfigEntry.Gui.Tooltip
+    public String swingThruGrassBlacklist = "farmersdelight";
 }

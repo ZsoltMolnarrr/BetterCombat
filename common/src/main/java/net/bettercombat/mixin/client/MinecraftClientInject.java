@@ -12,6 +12,7 @@ import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
+import net.bettercombat.logic.PatternMatching;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
@@ -31,6 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -174,7 +176,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             BlockHitResult blockHitResult = (BlockHitResult) crosshairTarget;
             BlockPos pos = blockHitResult.getBlockPos();
             BlockState clicked = world.getBlockState(pos);
-            if (BetterCombatClient.config.isSwingThruGrassEnabled) {
+            if (shouldSwingThruGrass()) {
                 if (!clicked.getCollisionShape(world, pos).isEmpty() || clicked.getHardness(world, pos) != 0.0F) {
                     return true;
                 }
@@ -183,6 +185,19 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             }
         }
         return false;
+    }
+
+    private boolean shouldSwingThruGrass() {
+        if(!BetterCombatClient.config.isSwingThruGrassEnabled) {
+            return false;
+        }
+        var regex = BetterCombatClient.config.swingThruGrassBlacklist;
+        if (regex == null || regex.isEmpty()) {
+            return true;
+        }
+        var itemStack = player.getMainHandStack();
+        var id = Registry.ITEM.getId(itemStack.getItem()).toString();
+        return !PatternMatching.matches(id, regex);
     }
 
     private static float ComboResetRate = 3F;
