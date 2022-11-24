@@ -13,7 +13,7 @@ public interface MinecraftClient_BetterCombat {
     @Nullable
     default Entity getCursorTarget() {
         var client = (MinecraftClient)this;
-        if (client.crosshairTarget.getType() == ENTITY) {
+        if (client.crosshairTarget != null && client.crosshairTarget.getType() == ENTITY) {
             return ((EntityHitResult)client.crosshairTarget).getEntity();
         }
         return null;
