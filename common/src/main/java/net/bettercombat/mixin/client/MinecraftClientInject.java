@@ -55,7 +55,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
     private boolean isHoldingAttackInput = false;
     private boolean isHarvesting = false;
-    private boolean hasTargetsInRange = false;
     private String textToRender = null;
     private int textFade = 0;
 
@@ -165,6 +164,10 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if (!BetterCombatClient.config.isMiningWithWeaponsEnabled) {
             return false;
         }
+        if (BetterCombatClient.config.isAttackInsteadOfMineWhenEnemiesCloseEnabled
+                && this.hasTargetsInReach()) {
+            return false;
+        }
         MinecraftClient client = thisClient();
         HitResult crosshairTarget = client.crosshairTarget;
         if (crosshairTarget != null && crosshairTarget.getType() == BLOCK) {
@@ -264,17 +267,46 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         }
     }
 
-    private boolean ranTargetCheckCurrentTick = false;
+    private List<Entity> targetsInReach = null;
+
+    private boolean shouldUpdateTargetsInReach() {
+        if(BetterCombatClient.config.isHighlightCrosshairEnabled
+                || BetterCombatClient.config.isAttackInsteadOfMineWhenEnemiesCloseEnabled) {
+            return targetsInReach == null;
+        }
+        return false;
+    }
+
+    private void updateTargetsInReach(List<Entity> targets) {
+        targetsInReach = targets;
+    }
+
+    private void updateTargetsIfNeeded() {
+        if (shouldUpdateTargetsInReach()) {
+            var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
+            WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+            List<Entity> targets = List.of();
+            if (attributes != null) {
+                targets = TargetFinder.findAttackTargets(
+                        player,
+                        getCursorTarget(),
+                        hand.attack(),
+                        attributes.attackRange());
+            }
+            updateTargetsInReach(targets);
+        }
+    }
 
     @Inject(method = "tick",at = @At("HEAD"))
     private void pre_Tick(CallbackInfo ci) {
         if (player == null) {
             return;
         }
-        ranTargetCheckCurrentTick = false;
+        targetsInReach = null;
         lastAttacked += 1;
         feintIfNeeded();
         attackFromUpswingIfNeeded();
+        updateTargetsIfNeeded();
         resetComboIfNeeded();
     }
 
@@ -283,22 +315,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if (player == null) {
             return;
         }
-        if ((BetterCombatClient.config.isHighlightCrosshairEnabled)
-                && !ranTargetCheckCurrentTick) {
-            MinecraftClient client = thisClient();
-            var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
-            WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
-            List<Entity> targets = List.of();
-            if (attributes != null) {
-                targets = TargetFinder.findAttackTargets(
-                    player,
-                    getCursorTarget(),
-                    hand.attack(),
-                    attributes.attackRange());
-            }
-            updateTargetsInRage(targets);
-        }
-
         if (BetterCombatKeybindings.toggleMineKeyBinding.wasPressed()) {
             BetterCombatClient.config.isMiningWithWeaponsEnabled = !BetterCombatClient.config.isMiningWithWeaponsEnabled;
             AutoConfig.getConfigHolder(ClientConfigWrapper.class).save();
@@ -326,7 +342,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
                 getCursorTarget(),
                 attack,
                 hand.attributes().attackRange());
-        updateTargetsInRage(targets);
+        updateTargetsInReach(targets);
         if(targets.size() == 0) {
             PlatformClient.onEmptyLeftClick(player);
         }
@@ -342,11 +358,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     private AttackHand getCurrentHand() {
         return PlayerAttackHelper.getCurrentAttack(player, getComboCount());
-    }
-
-    private void updateTargetsInRage(List<Entity> targets) {
-        hasTargetsInRange = targets.size() > 0;
-        ranTargetCheckCurrentTick = true;
     }
 
     private void setComboCount(int comboCount) {
@@ -376,8 +387,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
 
     @Override
-    public boolean hasTargetsInRange() {
-        return hasTargetsInRange;
+    public boolean hasTargetsInReach() {
+        return targetsInReach != null && !targetsInReach.isEmpty();
     }
 
     @Override

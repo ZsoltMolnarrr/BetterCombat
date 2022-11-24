@@ -9,6 +9,8 @@
   "text.autoconfig.bettercombat.title" : "Better Combat",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Hold to attack",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Automatically attack while holding the attack button",
+  "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "Attack instead of mining",
+  "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled.@Tooltip" : "Attack instead of mining upon left click, when enemies are close enough to strike",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "Mine with weapons",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled.@Tooltip" : "Allow mining with weapons",
   "text.autoconfig.bettercombat.option.client.isSwingThruGrassEnabled" : "Swing through grass",
