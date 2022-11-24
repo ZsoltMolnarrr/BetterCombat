@@ -30,4 +30,6 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
     public int weaponSwingSoundVolume = 100;
+    @ConfigEntry.Gui.Tooltip
+    public boolean isDebugOBBEnabled = true;
 }

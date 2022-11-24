@@ -30,5 +30,7 @@
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume" : "Weapon swing sound volume %",
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume.@Tooltip" : "Change volume of weapon swing sounds",
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled" : "Show sweeping",
-  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Enable showing sword sweeping particle effects"
+  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Enable showing sword sweeping particle effects",
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Debug hitbox",
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Show weapon hitbox when entity hitboxes are displayed"
 }
