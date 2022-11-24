@@ -30,7 +30,7 @@ public class ServerConfig implements ConfigData {
     public float dual_wielding_main_hand_damage_multiplier = 1F;
     @Comment("Total multiplier, (examples: +30% = 1.3, -30% = 0.7)")
     public float dual_wielding_off_hand_damage_multiplier = 1F;
-    @Comment("Entities with `HOSTILE` relation will be hit by undirected weapon swings. NOTE: Vanilla sweeping will still happen, can be disabled via `allow_sweeping`")
+    @Comment("Entities with `HOSTILE` relation will be hit by undirected weapon swings. NOTE: Vanilla sweeping will still happen, if not disabled via `allow_sweeping`")
     public TargetHelper.Relation player_relation_to_teamless_players = TargetHelper.Relation.NEUTRAL;
     public TargetHelper.Relation player_relation_to_villagers = TargetHelper.Relation.NEUTRAL;
     public TargetHelper.Relation player_relation_to_passives = TargetHelper.Relation.HOSTILE;
