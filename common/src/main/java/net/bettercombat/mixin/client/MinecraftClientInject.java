@@ -343,12 +343,11 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
 
     private void performAttack() {
-        MinecraftClient client = thisClient();
         var hand = getCurrentHand();
         if (hand == null) { return; }
         var attack = hand.attack();
         var upswingRate = hand.upswingRate();
-        if (client.player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
+        if (player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
             return;
         }
         // System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
@@ -361,10 +360,17 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if(targets.size() == 0) {
             PlatformClient.onEmptyLeftClick(player);
         }
+
+        // Mimic logic of:
+        // ClientPlayerInteractionManager.attackEntity(PlayerEntity player, Entity target)
         ClientPlayNetworking.send(
                 Packets.C2S_AttackRequest.ID,
                 new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), player.getInventory().selectedSlot, targets).write());
-        client.player.resetLastAttackedTicks();
+        for (var target: targets) {
+            player.attack(target);
+        }
+        player.resetLastAttackedTicks();
+
         setComboCount(getComboCount() + 1);
         if (!hand.isOffHand()) {
             lastAttacedWithItemStack = hand.itemStack();
