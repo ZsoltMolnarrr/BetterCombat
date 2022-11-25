@@ -4,6 +4,7 @@ import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes.Attack;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.bettercombat.compatibility.PehkuiHelper;
+import net.bettercombat.logic.TargetHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Tameable;
@@ -72,11 +73,8 @@ public class TargetFinder {
                     var result = entity != player
                             && entity != cursorTarget
                             && entity.isAttackable()
-                            && (BetterCombat.config.allow_attacking_mount || !entity.equals(player.getVehicle()));
-                    if (entity instanceof Tameable tameable) {
-                        result = result &&
-                                (tameable.getOwnerUuid() != null && !tameable.getOwnerUuid().equals(player.getUuid()));
-                    }
+                            && (BetterCombat.config.allow_attacking_mount || !entity.equals(player.getVehicle()))
+                            && TargetHelper.getRelation(player, entity) == TargetHelper.Relation.HOSTILE;
                     return result;
                 })
                 .collect(Collectors.toList());

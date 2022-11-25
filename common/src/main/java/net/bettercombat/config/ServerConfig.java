@@ -3,6 +3,7 @@ package net.bettercombat.config;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.bettercombat.logic.TargetHelper;
 
 @Config(name = "server")
 public class ServerConfig implements ConfigData {
@@ -29,6 +30,12 @@ public class ServerConfig implements ConfigData {
     public float dual_wielding_main_hand_damage_multiplier = 1F;
     @Comment("Total multiplier, (examples: +30% = 1.3, -30% = 0.7)")
     public float dual_wielding_off_hand_damage_multiplier = 1F;
+    @Comment("Entities with `HOSTILE` relation will be hit by undirected weapon swings. NOTE: Vanilla sweeping will still happen, if not disabled via `allow_sweeping`")
+    public TargetHelper.Relation player_relation_to_teamless_players = TargetHelper.Relation.NEUTRAL;
+    public TargetHelper.Relation player_relation_to_villagers = TargetHelper.Relation.NEUTRAL;
+    public TargetHelper.Relation player_relation_to_passives = TargetHelper.Relation.HOSTILE;
+    public TargetHelper.Relation player_relation_to_hostiles = TargetHelper.Relation.HOSTILE;
+    public TargetHelper.Relation player_relation_to_other = TargetHelper.Relation.HOSTILE;
     @Comment("Try to guess and apply a preset for items without weapon attributes data file")
     public boolean fallback_compatibility_enabled = true;
     @Comment("Allow printing the content of weapon attributes registry")

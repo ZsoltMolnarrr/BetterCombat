@@ -9,11 +9,11 @@ import static net.minecraft.util.hit.HitResult.Type.ENTITY;
 
 public interface MinecraftClient_BetterCombat {
     int getComboCount();
-    boolean hasTargetsInRange();
+    boolean hasTargetsInReach();
     @Nullable
     default Entity getCursorTarget() {
         var client = (MinecraftClient)this;
-        if (client.crosshairTarget.getType() == ENTITY) {
+        if (client.crosshairTarget != null && client.crosshairTarget.getType() == ENTITY) {
             return ((EntityHitResult)client.crosshairTarget).getEntity();
         }
         return null;

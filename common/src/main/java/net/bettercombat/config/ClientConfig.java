@@ -13,6 +13,8 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean isSwingThruGrassEnabled = true;
     @ConfigEntry.Gui.Tooltip
+    public boolean isAttackInsteadOfMineWhenEnemiesCloseEnabled = true;
+    @ConfigEntry.Gui.Tooltip
     public boolean isHighlightCrosshairEnabled = true;
     @ConfigEntry.ColorPicker
     @ConfigEntry.Gui.Tooltip
@@ -28,4 +30,8 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
     public int weaponSwingSoundVolume = 100;
+    @ConfigEntry.Gui.Tooltip
+    public boolean isDebugOBBEnabled = true;
+    @ConfigEntry.Gui.Tooltip
+    public String swingThruGrassBlacklist = "farmersdelight";
 }

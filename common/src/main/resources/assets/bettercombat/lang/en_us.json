@@ -9,6 +9,8 @@
   "text.autoconfig.bettercombat.title" : "Better Combat",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Hold to attack",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Automatically attack while holding the attack button",
+  "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "Attack instead of mining",
+  "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled.@Tooltip" : "Attack instead of mining upon left click, when enemies are close enough to strike",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "Mine with weapons",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled.@Tooltip" : "Allow mining with weapons",
   "text.autoconfig.bettercombat.option.client.isSwingThruGrassEnabled" : "Swing through grass",
@@ -28,5 +30,9 @@
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume" : "Weapon swing sound volume %",
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume.@Tooltip" : "Change volume of weapon swing sounds",
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled" : "Show sweeping",
-  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Enable showing sword sweeping particle effects"
+  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Enable showing sword sweeping particle effects",
+  "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist" : "Swing thru grass blacklist",
+  "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip" : "Weapons with an ID that matches this regex will never swing thru grass",
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Debug hitbox",
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Show weapon hitbox when entity hitboxes are displayed"
 }

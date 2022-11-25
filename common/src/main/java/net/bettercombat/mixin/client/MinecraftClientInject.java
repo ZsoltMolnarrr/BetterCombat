@@ -12,6 +12,7 @@ import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.FirstPersonRenderHelper;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
+import net.bettercombat.logic.PatternMatching;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
@@ -31,6 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -55,7 +57,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
     private boolean isHoldingAttackInput = false;
     private boolean isHarvesting = false;
-    private boolean hasTargetsInRange = false;
     private String textToRender = null;
     private int textFade = 0;
 
@@ -165,13 +166,17 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if (!BetterCombatClient.config.isMiningWithWeaponsEnabled) {
             return false;
         }
+        if (BetterCombatClient.config.isAttackInsteadOfMineWhenEnemiesCloseEnabled
+                && this.hasTargetsInReach()) {
+            return false;
+        }
         MinecraftClient client = thisClient();
         HitResult crosshairTarget = client.crosshairTarget;
         if (crosshairTarget != null && crosshairTarget.getType() == BLOCK) {
             BlockHitResult blockHitResult = (BlockHitResult) crosshairTarget;
             BlockPos pos = blockHitResult.getBlockPos();
             BlockState clicked = world.getBlockState(pos);
-            if (BetterCombatClient.config.isSwingThruGrassEnabled) {
+            if (shouldSwingThruGrass()) {
                 if (!clicked.getCollisionShape(world, pos).isEmpty() || clicked.getHardness(world, pos) != 0.0F) {
                     return true;
                 }
@@ -180,6 +185,19 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             }
         }
         return false;
+    }
+
+    private boolean shouldSwingThruGrass() {
+        if(!BetterCombatClient.config.isSwingThruGrassEnabled) {
+            return false;
+        }
+        var regex = BetterCombatClient.config.swingThruGrassBlacklist;
+        if (regex == null || regex.isEmpty()) {
+            return true;
+        }
+        var itemStack = player.getMainHandStack();
+        var id = Registry.ITEM.getId(itemStack.getItem()).toString();
+        return !PatternMatching.matches(id, regex);
     }
 
     private static float ComboResetRate = 3F;
@@ -264,17 +282,46 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         }
     }
 
-    private boolean ranTargetCheckCurrentTick = false;
+    private List<Entity> targetsInReach = null;
+
+    private boolean shouldUpdateTargetsInReach() {
+        if(BetterCombatClient.config.isHighlightCrosshairEnabled
+                || BetterCombatClient.config.isAttackInsteadOfMineWhenEnemiesCloseEnabled) {
+            return targetsInReach == null;
+        }
+        return false;
+    }
+
+    private void updateTargetsInReach(List<Entity> targets) {
+        targetsInReach = targets;
+    }
+
+    private void updateTargetsIfNeeded() {
+        if (shouldUpdateTargetsInReach()) {
+            var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
+            WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+            List<Entity> targets = List.of();
+            if (attributes != null) {
+                targets = TargetFinder.findAttackTargets(
+                        player,
+                        getCursorTarget(),
+                        hand.attack(),
+                        attributes.attackRange());
+            }
+            updateTargetsInReach(targets);
+        }
+    }
 
     @Inject(method = "tick",at = @At("HEAD"))
     private void pre_Tick(CallbackInfo ci) {
         if (player == null) {
             return;
         }
-        ranTargetCheckCurrentTick = false;
+        targetsInReach = null;
         lastAttacked += 1;
         feintIfNeeded();
         attackFromUpswingIfNeeded();
+        updateTargetsIfNeeded();
         resetComboIfNeeded();
     }
 
@@ -283,22 +330,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if (player == null) {
             return;
         }
-        if ((BetterCombatClient.config.isHighlightCrosshairEnabled)
-                && !ranTargetCheckCurrentTick) {
-            MinecraftClient client = thisClient();
-            var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
-            WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
-            List<Entity> targets = List.of();
-            if (attributes != null) {
-                targets = TargetFinder.findAttackTargets(
-                    player,
-                    getCursorTarget(),
-                    hand.attack(),
-                    attributes.attackRange());
-            }
-            updateTargetsInRage(targets);
-        }
-
         if (BetterCombatKeybindings.toggleMineKeyBinding.wasPressed()) {
             BetterCombatClient.config.isMiningWithWeaponsEnabled = !BetterCombatClient.config.isMiningWithWeaponsEnabled;
             AutoConfig.getConfigHolder(ClientConfigWrapper.class).save();
@@ -312,12 +343,11 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
 
     private void performAttack() {
-        MinecraftClient client = thisClient();
         var hand = getCurrentHand();
         if (hand == null) { return; }
         var attack = hand.attack();
         var upswingRate = hand.upswingRate();
-        if (client.player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
+        if (player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
             return;
         }
         // System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
@@ -326,14 +356,21 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
                 getCursorTarget(),
                 attack,
                 hand.attributes().attackRange());
-        updateTargetsInRage(targets);
+        updateTargetsInReach(targets);
         if(targets.size() == 0) {
             PlatformClient.onEmptyLeftClick(player);
         }
+
+        // Mimic logic of:
+        // ClientPlayerInteractionManager.attackEntity(PlayerEntity player, Entity target)
         ClientPlayNetworking.send(
                 Packets.C2S_AttackRequest.ID,
                 new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), player.getInventory().selectedSlot, targets).write());
-        client.player.resetLastAttackedTicks();
+        for (var target: targets) {
+            player.attack(target);
+        }
+        player.resetLastAttackedTicks();
+
         setComboCount(getComboCount() + 1);
         if (!hand.isOffHand()) {
             lastAttacedWithItemStack = hand.itemStack();
@@ -342,11 +379,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     private AttackHand getCurrentHand() {
         return PlayerAttackHelper.getCurrentAttack(player, getComboCount());
-    }
-
-    private void updateTargetsInRage(List<Entity> targets) {
-        hasTargetsInRange = targets.size() > 0;
-        ranTargetCheckCurrentTick = true;
     }
 
     private void setComboCount(int comboCount) {
@@ -376,8 +408,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
 
     @Override
-    public boolean hasTargetsInRange() {
-        return hasTargetsInRange;
+    public boolean hasTargetsInReach() {
+        return targetsInReach != null && !targetsInReach.isEmpty();
     }
 
     @Override

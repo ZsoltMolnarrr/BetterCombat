@@ -89,7 +89,8 @@ if(project.hasProperty('release_type')) {
         apiKey = System.getenv("CURSEFORGE_API_KEY")
         project {
             id = '639842'
-            changelog = ''
+            changelog = changelog_last_section()
+            changelogType = 'markdown'
             releaseType = release_type
             addGameVersion "1.18.2"
             addGameVersion "Forge"
