@@ -8,7 +8,7 @@ import net.bettercombat.logic.TargetHelper;
 @Config(name = "server")
 public class ServerConfig implements ConfigData {
     @Comment("""
-            Upswing is the first phase of the attack (between clicking and performing the damage).
+            Upswing (aka windup) is the first phase of the attack (between clicking and performing the damage).
             Typical duration of upswing is `weapon cooldown * 0.5`. (Weapon specific upswing values can be defined in weapon attributes)
             This config allows you to change upswing duration.
             Example values:
