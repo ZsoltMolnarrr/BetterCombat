@@ -3,10 +3,10 @@ package net.bettercombat.client.animation;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
-import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 
 public class AttackAnimationSubStack {
-    public final SpeedModifier speed = new SpeedModifier();
+    //public final SpeedModifier speed = new SpeedModifier();
+    public final DualSpeedModifier speed = new DualSpeedModifier(1);
     public final MirrorModifier mirror = new MirrorModifier();
     public final ModifierLayer base = new ModifierLayer(null);
 

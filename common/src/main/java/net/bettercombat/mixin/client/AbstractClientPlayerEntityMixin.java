@@ -9,6 +9,7 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.api.animation.FirstPersonAnimation;
 import net.bettercombat.api.animation.FirstPersonAnimator;
 import net.bettercombat.client.AnimationRegistry;
@@ -121,8 +122,15 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 mirror = !mirror;
             }
 
+            float upswing = 0.5F * BetterCombat.config.upswing_multiplier;
             var fadeIn = copy.beginTick;
-            attackAnimation.speed.speed = speed;
+            attackAnimation.speed.set(speed / BetterCombat.config.upswing_multiplier,
+                    length * 0.1F,
+                    speed * (1F - upswing));
+//            attackAnimation.speed.speed = speed / BetterCombat.config.upswing_multiplier;
+//            attackAnimation.speed.change = length * upswing;
+//            attackAnimation.speed.speed2 = speed * (1F - upswing);
+            System.out.println("Start playing" + ", speed: " + attackAnimation.speed.speed + ", change: " + attackAnimation.speed.change + ", speed2: " + attackAnimation.speed.speed2);
             attackAnimation.mirror.setEnabled(mirror);
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),

@@ -7,6 +7,7 @@ import net.bettercombat.logic.TargetHelper;
 
 @Config(name = "server")
 public class ServerConfig implements ConfigData {
+    public float upswing_multiplier = 0.5F;
     @Comment("Bypass damage receive throttling of LivingEntity from player attacks.")
     public boolean allow_fast_attacks = true;
     @Comment("Allows client-side target search and server-side attack request execution against currently mounted entity of the player")
