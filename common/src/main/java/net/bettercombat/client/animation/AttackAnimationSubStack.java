@@ -5,7 +5,7 @@ import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 
 public class AttackAnimationSubStack {
-    public final DualSpeedModifier speed = new DualSpeedModifier();
+    public final TransmissionSpeedModifier speed = new TransmissionSpeedModifier();
     public final MirrorModifier mirror = new MirrorModifier();
     public final ModifierLayer base = new ModifierLayer(null);
 

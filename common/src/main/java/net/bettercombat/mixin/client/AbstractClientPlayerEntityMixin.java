@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
@@ -124,8 +125,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
             var fadeIn = copy.beginTick;
             attackAnimation.speed.set(speed / BetterCombat.config.upswing_multiplier,
-                    length * upswing,
-                    speed * (1F - upswing));
+                    List.of(
+                            new TransmissionSpeedModifier.Gear(length * upswing, speed * (1F - upswing)),
+                            new TransmissionSpeedModifier.Gear(length, speed)
+                    ));
             attackAnimation.mirror.setEnabled(mirror);
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
