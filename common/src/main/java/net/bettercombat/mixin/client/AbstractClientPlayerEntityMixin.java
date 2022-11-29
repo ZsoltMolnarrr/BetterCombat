@@ -109,7 +109,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     @Override
-    public void playAttackAnimation(String name, boolean isOffHand, float length) {
+    public void playAttackAnimation(String name, boolean isOffHand, float length, float upswing) {
         try {
             KeyframeAnimation animation = AnimationRegistry.animations.get(name);
             var copy = animation.mutableCopy();
@@ -122,15 +122,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 mirror = !mirror;
             }
 
-            float upswing = 0.5F * BetterCombat.config.upswing_multiplier;
             var fadeIn = copy.beginTick;
             attackAnimation.speed.set(speed / BetterCombat.config.upswing_multiplier,
-                    length * 0.1F,
+                    length * upswing,
                     speed * (1F - upswing));
-//            attackAnimation.speed.speed = speed / BetterCombat.config.upswing_multiplier;
-//            attackAnimation.speed.change = length * upswing;
-//            attackAnimation.speed.speed2 = speed * (1F - upswing);
-            System.out.println("Start playing" + ", speed: " + attackAnimation.speed.speed + ", change: " + attackAnimation.speed.change + ", speed2: " + attackAnimation.speed.speed2);
             attackAnimation.mirror.setEnabled(mirror);
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),

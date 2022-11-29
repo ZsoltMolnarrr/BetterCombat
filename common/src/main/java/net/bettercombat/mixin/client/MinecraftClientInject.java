@@ -220,7 +220,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         var hand = getCurrentHand();
         if (hand == null) { return; }
-        double upswingRate = hand.upswingRate();
+        float upswingRate = (float) hand.upswingRate();
         if (upswingTicks > 0
                 || player.isUsingItem()
                 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
@@ -246,10 +246,10 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
         FirstPersonRenderHelper.isAttackingWithOffHand = isOffHand;
-        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, isOffHand, attackCooldownTicksFloat);
+        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, isOffHand, attackCooldownTicksFloat, upswingRate);
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
-                new Packets.AttackAnimation(player.getId(), isOffHand, animationName, attackCooldownTicksFloat).write());
+                new Packets.AttackAnimation(player.getId(), isOffHand, animationName, attackCooldownTicksFloat, upswingRate).write());
     }
 
     private void feintIfNeeded() {

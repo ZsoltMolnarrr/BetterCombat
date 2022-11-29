@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface PlayerAttackAnimatable {
     void updateAnimationsOnTick();
-    void playAttackAnimation(String name, boolean isOffHand, float length);
+    void playAttackAnimation(String name, boolean isOffHand, float length, float upswing);
     void stopAttackAnimation();
     Optional<IAnimation> getCurrentAnimation();
 }
