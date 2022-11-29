@@ -24,6 +24,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -124,9 +125,14 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             }
 
             var fadeIn = copy.beginTick;
-            attackAnimation.speed.set(speed / BetterCombat.config.upswing_multiplier,
+            float upswingSpeed = speed / BetterCombat.config.getUpswingMultiplier();
+            float downwindSpeed = (float) (speed *
+                    MathHelper.lerp(Math.max(BetterCombat.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
+                    (1F - upswing),                     // Use this value at config `0.5`
+                    upswing / (1F - upswing)));         // Use this value at config `1.0`
+            attackAnimation.speed.set(upswingSpeed,
                     List.of(
-                            new TransmissionSpeedModifier.Gear(length * upswing, speed * (1F - upswing)),
+                            new TransmissionSpeedModifier.Gear(length * upswing, downwindSpeed),
                             new TransmissionSpeedModifier.Gear(length, speed)
                     ));
             attackAnimation.mirror.setEnabled(mirror);

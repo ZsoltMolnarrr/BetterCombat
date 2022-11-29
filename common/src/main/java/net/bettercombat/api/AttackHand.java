@@ -11,6 +11,6 @@ public record AttackHand(
         WeaponAttributes attributes,
         ItemStack itemStack) {
     public double upswingRate() {
-        return MathHelper.clamp(attack.upswing(), 0, 1) * BetterCombat.config.upswing_multiplier;
+        return MathHelper.clamp(attack.upswing(), 0, 1) * BetterCombat.config.getUpswingMultiplier();
     }
 }

@@ -7,6 +7,13 @@ import net.bettercombat.logic.TargetHelper;
 
 @Config(name = "server")
 public class ServerConfig implements ConfigData {
+    @Comment("""
+            Upswing is the first phase of the attack (between clicking and performing the damage).
+            Typical duration of upswing is `weapon cooldown * 0.5`. (Weapon specific upswing values can be defined in weapon attributes)
+            This config allows you to change upswing duration.
+            Example values:
+            - `0.5` (default, fast paced attack initiation) upswing typically lasts 25% of the attack cooldown
+            - `1.0` (classic setting, realistic attack initiation) upswing typically lasts 50% of the attack cooldown""")
     public float upswing_multiplier = 0.5F;
     @Comment("Bypass damage receive throttling of LivingEntity from player attacks.")
     public boolean allow_fast_attacks = true;
@@ -41,4 +48,8 @@ public class ServerConfig implements ConfigData {
     public boolean fallback_compatibility_enabled = true;
     @Comment("Allow printing the content of weapon attributes registry")
     public boolean weapon_registry_logging = false;
+
+    public float getUpswingMultiplier() {
+        return Math.max(0.2F, Math.min(1, upswing_multiplier));
+    }
 }
