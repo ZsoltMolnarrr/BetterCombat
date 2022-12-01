@@ -1,3 +1,8 @@
+# 1.5.1
+- Reduced upswing (aka windup) from 50% to 25% of attack cooldown (server configurable), attacks are faster to initiate
+- Reduced attack cooldown after cancelling mining
+- Improved several bundled animations
+
 # 1.5
 - Added `️Attack instead of mining` feature (client side configurable). When an enemy is in reach, even if aiming at a near mineable block
 - Reduced friendly fire from big weapon swings (So nearby players and villagers won't be hit accidentally, server side configurable)
