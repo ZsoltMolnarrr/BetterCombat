@@ -53,8 +53,8 @@ public class BetterCombat implements ModInitializer {
 
     private void loadFallbackConfig() {
         fallbackConfig.load();
-        if (fallbackConfig.currentConfig.schema_version < fallbackDefault.schema_version) {
-            fallbackConfig.currentConfig = FallbackConfig.migrate(fallbackConfig.currentConfig, FallbackConfig.createDefault());
+        if (fallbackConfig.value.schema_version < fallbackDefault.schema_version) {
+            fallbackConfig.value = FallbackConfig.migrate(fallbackConfig.value, FallbackConfig.createDefault());
         }
         fallbackConfig.save();
     }

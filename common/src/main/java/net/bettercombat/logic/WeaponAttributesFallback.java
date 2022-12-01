@@ -10,7 +10,7 @@ import net.minecraft.util.registry.Registry;
 
 public class WeaponAttributesFallback {
     public static void initialize() {
-        var config = BetterCombat.fallbackConfig.currentConfig;
+        var config = BetterCombat.fallbackConfig.value;
         for(var itemId: Registry.ITEM.getIds()) {
             var item = Registry.ITEM.get(itemId);
             if (!hasAttributeModifier(item, EntityAttributes.GENERIC_ATTACK_DAMAGE)
