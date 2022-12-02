@@ -2,6 +2,7 @@
 - Reduced upswing (aka windup) from 50% to 25% of attack cooldown (server configurable), attacks are faster to initiate
 - Reduced attack cooldown after cancelling mining
 - Improved several bundled animations
+- Allow sweeping server config, when set to false disables Sweeping Edge enchantment 
 
 # 1.5
 - Added `️Attack instead of mining` feature (client side configurable). When an enemy is in reach, even if aiming at a near mineable block
