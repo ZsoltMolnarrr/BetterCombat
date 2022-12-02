@@ -19,7 +19,7 @@ public class ServerConfig implements ConfigData {
     public boolean allow_fast_attacks = true;
     @Comment("Allows client-side target search and server-side attack request execution against currently mounted entity of the player")
     public boolean allow_attacking_mount = false;
-    @Comment("Allows vanilla sweeping mechanic (and Sweeping Edge enchant) to work")
+    @Comment("Allows vanilla sweeping mechanic to work and Sweeping Edge enchantment")
     public boolean allow_sweeping = true;
     @Comment("Allows client-side target search to ignore obstacles. WARNING! Setting this to `false` significantly increases the load on clients.")
     public boolean allow_attacking_thru_walls = false;

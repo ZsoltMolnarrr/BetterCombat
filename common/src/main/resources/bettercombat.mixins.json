@@ -10,7 +10,8 @@
     "LivingEntityInject",
     "PlayerEntityAccessor",
     "PlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin"
+    "ServerPlayNetworkHandlerMixin",
+    "SweepingEnchantmentMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
