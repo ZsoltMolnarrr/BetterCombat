@@ -9,6 +9,7 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.api.animation.FirstPersonAnimation;
 import net.bettercombat.api.animation.FirstPersonAnimator;
 import net.bettercombat.client.AnimationRegistry;
@@ -22,6 +23,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
@@ -107,7 +110,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     @Override
-    public void playAttackAnimation(String name, boolean isOffHand, float length) {
+    public void playAttackAnimation(String name, boolean isOffHand, float length, float upswing) {
         try {
             KeyframeAnimation animation = AnimationRegistry.animations.get(name);
             var copy = animation.mutableCopy();
@@ -121,7 +124,16 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             }
 
             var fadeIn = copy.beginTick;
-            attackAnimation.speed.speed = speed;
+            float upswingSpeed = speed / BetterCombat.config.getUpswingMultiplier();
+            float downwindSpeed = (float) (speed *
+                    MathHelper.lerp(Math.max(BetterCombat.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
+                    (1F - upswing),                     // Use this value at config `0.5`
+                    upswing / (1F - upswing)));         // Use this value at config `1.0`
+            attackAnimation.speed.set(upswingSpeed,
+                    List.of(
+                            new TransmissionSpeedModifier.Gear(length * upswing, downwindSpeed),
+                            new TransmissionSpeedModifier.Gear(length, speed)
+                    ));
             attackAnimation.mirror.setEnabled(mirror);
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),

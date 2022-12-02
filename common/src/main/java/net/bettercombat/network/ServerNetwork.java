@@ -52,7 +52,7 @@ public class ServerNetwork {
                 return;
             }
             final var packet = Packets.AttackAnimation.read(buf);
-            final var forwardBuffer = new Packets.AttackAnimation(player.getId(), packet.isOffHand(), packet.animationName(), packet.length()).write();
+            final var forwardBuffer = new Packets.AttackAnimation(player.getId(), packet.isOffHand(), packet.animationName(), packet.length(), packet.upswing()).write();
             PlayerLookup.tracking(player).forEach(serverPlayer -> {
                 try {
                     if (serverPlayer.getId() != player.getId() && ServerPlayNetworking.canSend(serverPlayer, Packets.AttackAnimation.ID)) {

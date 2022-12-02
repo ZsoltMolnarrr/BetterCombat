@@ -1,6 +1,6 @@
 {
   "attributes": {
-    "attack_range": 2.5,
+    "attack_range": 2.75,
     "pose": "bettercombat:pose_two_handed_heavy",
     "two_handed": true,
     "category": "hammer",
