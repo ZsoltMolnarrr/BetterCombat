@@ -12,7 +12,7 @@ public class SweepingEnchantmentMixin {
 
     @Inject(method = "getMaxLevel", at = @At("HEAD"), cancellable = true)
     public void getMaxLevel_DisableSweeping(CallbackInfoReturnable<Integer> cir) {
-        if (BetterCombat.config.allow_sweeping) {
+        if (BetterCombat.config == null || BetterCombat.config.allow_sweeping) {
             return;
         }
         cir.setReturnValue(0);

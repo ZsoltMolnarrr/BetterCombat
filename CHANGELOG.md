@@ -1,3 +1,6 @@
+# 1.5.2
+- Duct tape for faulty Forge
+
 # 1.5.1
 - Reduced upswing (aka windup) from 50% to 25% of attack cooldown (server configurable), attacks are faster to initiate
 - Reduced attack cooldown after cancelling mining
