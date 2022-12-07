@@ -3,7 +3,6 @@ package net.bettercombat;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Hand;
 
 import java.util.List;
 

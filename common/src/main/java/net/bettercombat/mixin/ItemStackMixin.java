@@ -1,7 +1,7 @@
 package net.bettercombat.mixin;
 
-import net.bettercombat.logic.ItemStackNBTWeaponAttributes;
 import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.logic.ItemStackNBTWeaponAttributes;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 

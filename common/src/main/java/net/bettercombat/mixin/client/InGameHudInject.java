@@ -1,8 +1,8 @@
 package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
+import net.bettercombat.client.BetterCombatClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;

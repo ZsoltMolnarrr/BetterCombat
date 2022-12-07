@@ -3,7 +3,6 @@ package net.bettercombat.client;
 import com.mojang.logging.LogUtils;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.data.gson.AnimationSerializing;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.ResourceManager;
 import org.slf4j.Logger;
 

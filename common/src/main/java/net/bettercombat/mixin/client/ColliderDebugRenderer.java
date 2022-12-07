@@ -1,8 +1,8 @@
 package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
+import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.bettercombat.client.collision.TargetFinder;
