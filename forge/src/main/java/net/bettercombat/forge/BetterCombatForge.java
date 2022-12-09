@@ -34,7 +34,7 @@ public class BetterCombatForge {
 
     private void registerSounds() {
         for (var soundKey: SoundHelper.soundKeys) {
-            BetterCombatForge.SOUNDS.register(soundKey, () -> new SoundEvent(new Identifier(BetterCombat.MODID, soundKey)));
+            BetterCombatForge.SOUNDS.register(soundKey, () -> SoundEvent.of(new Identifier(BetterCombat.MODID, soundKey)));
         }
     }
 }
