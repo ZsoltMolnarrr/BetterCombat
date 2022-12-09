@@ -67,6 +67,6 @@ side="BOTH"
 [[dependencies.bettercombat]]
 modId="cloth_config"
 mandatory=true
-versionRange="[7.0.0,)"
+versionRange="[8.0.0,)"
 ordering="AFTER"
 side="BOTH"
