@@ -15,7 +15,7 @@ public class LivingEntityInject {
 
     // FEATURE: Dual wielded attacking - Client side weapon cooldown for offhand
 
-    @Inject(method = "getAttributeValue",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getAttributeValue(Lnet/minecraft/entity/attribute/EntityAttribute;)D",at = @At("HEAD"), cancellable = true)
     public void getAttributeValue_Inject(EntityAttribute attribute, CallbackInfoReturnable<Double> cir) {
         var object = (Object)this;
         if (object instanceof PlayerEntity) {

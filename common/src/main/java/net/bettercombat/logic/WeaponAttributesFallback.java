@@ -5,14 +5,14 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class WeaponAttributesFallback {
     public static void initialize() {
         var config = BetterCombat.fallbackConfig.value;
-        for(var itemId: Registry.ITEM.getIds()) {
-            var item = Registry.ITEM.get(itemId);
+        for(var itemId: Registries.ITEM.getIds()) {
+            var item = Registries.ITEM.get(itemId);
             if (!hasAttributeModifier(item, EntityAttributes.GENERIC_ATTACK_DAMAGE)
                     || PatternMatching.matches(itemId.toString(), config.blacklist_item_id_regex)) {
                 // Skipping items without attack damage attribute
@@ -34,11 +34,11 @@ public class WeaponAttributesFallback {
     }
 
     private static boolean hasAttributeModifier(Item item, EntityAttribute searchedAttribute) {
-        var searchedAttributeId = Registry.ATTRIBUTE.getId(searchedAttribute);
+        var searchedAttributeId = Registries.ATTRIBUTE.getId(searchedAttribute);
         var attributes = item.getAttributeModifiers(EquipmentSlot.MAINHAND);
         for (var entry: attributes.entries()) {
             var attribute = entry.getKey();
-            var attributeId = Registry.ATTRIBUTE.getId(attribute);
+            var attributeId = Registries.ATTRIBUTE.getId(attribute);
             if (attributeId.equals(searchedAttributeId)) {
                 return true;
             }

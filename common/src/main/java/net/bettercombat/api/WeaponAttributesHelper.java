@@ -6,8 +6,8 @@ import com.google.gson.stream.JsonReader;
 import net.bettercombat.logic.ItemStackNBTWeaponAttributes;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.io.InvalidObjectException;
 import java.io.Reader;
@@ -94,7 +94,7 @@ public class WeaponAttributesHelper {
                 // System.out.println("NBT Attributes - Cache");
                 return cachedAttributes;
             }
-            Identifier itemId = Registry.ITEM.getId(itemStack.getItem());
+            Identifier itemId = Registries.ITEM.getId(itemStack.getItem());
             try {
                 var json = new StringReader(string);
                 var container = decode(json);
@@ -115,7 +115,7 @@ public class WeaponAttributesHelper {
     }
 
     public static void writeToNBT(ItemStack itemStack, AttributesContainer container) {
-        Identifier itemId = Registry.ITEM.getId(itemStack.getItem());
+        Identifier itemId = Registries.ITEM.getId(itemStack.getItem());
         var attributedItemStack = (ItemStackNBTWeaponAttributes) ((Object)itemStack);
         var nbt = itemStack.getNbt();
         try {

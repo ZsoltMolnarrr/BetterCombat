@@ -77,7 +77,7 @@ public class ColliderDebugRenderer {
 
     private void drawOutline(OrientedBoundingBox obb, List<OrientedBoundingBox> otherObbs, boolean collides) {
         RenderSystem.enableDepthTest();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         RenderSystem.disableTexture();

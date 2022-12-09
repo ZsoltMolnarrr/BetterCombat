@@ -12,9 +12,9 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
@@ -48,7 +48,7 @@ public class WeaponRegistry {
             }
         }
         Item item = itemStack.getItem();
-        Identifier id = Registry.ITEM.getId(item);
+        Identifier id = Registries.ITEM.getId(item);
         WeaponAttributes attributes = WeaponRegistry.getAttributes(id);
         return attributes;
     }
@@ -60,7 +60,7 @@ public class WeaponRegistry {
 
         // Resolving parents
         containers.forEach( (itemId, container) -> {
-            if (!Registry.ITEM.containsId(itemId)) {
+            if (!Registries.ITEM.containsId(itemId)) {
                 return;
             }
             resolveAndRegisterAttributes(itemId, container);

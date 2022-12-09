@@ -29,10 +29,10 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -196,7 +196,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             return true;
         }
         var itemStack = player.getMainHandStack();
-        var id = Registry.ITEM.getId(itemStack.getItem()).toString();
+        var id = Registries.ITEM.getId(itemStack.getItem()).toString();
         return !PatternMatching.matches(id, regex);
     }
 

@@ -6,11 +6,12 @@ import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 
 import java.util.List;
 import java.util.Random;
@@ -37,7 +38,7 @@ public class SoundHelper {
                     rng.nextLong())
                     .write();
 
-            var soundEvent = Registry.SOUND_EVENT.get(new Identifier(sound.id()));
+            var soundEvent = Registries.SOUND_EVENT.get(new Identifier(sound.id()));
             var distance = soundEvent.getDistanceToTravel(sound.volume());
             var origin = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
             PlayerLookup.around(world, origin, distance).forEach(serverPlayer -> {
@@ -88,8 +89,8 @@ public class SoundHelper {
     public static void registerSounds() {
         for (var soundKey: soundKeys) {
             var soundId = new Identifier(BetterCombat.MODID, soundKey);
-            var soundEvent = new SoundEvent(soundId);
-            Registry.register(Registry.SOUND_EVENT, soundId, soundEvent);
+            var soundEvent = SoundEvent.of(soundId);
+            Registry.register(Registries.SOUND_EVENT, soundId, soundEvent);
         }
     }
 }

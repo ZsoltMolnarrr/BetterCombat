@@ -44,12 +44,12 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
     private final ArrayList<ModifierLayer> additionalFirstPersonLayers = new ArrayList();
 
-    public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @org.jetbrains.annotations.Nullable PlayerPublicKey publicKey) {
-        super(world, pos, yaw, gameProfile, publicKey);
+    public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
+        super(world, pos, yaw, gameProfile);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void postInit(ClientWorld world, GameProfile profile, PlayerPublicKey publicKey, CallbackInfo ci) {
+    private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
         var stack = ((IAnimatedPlayer) this).getAnimationStack();
         stack.addAnimLayer(1, offHandItemPose.base);
         stack.addAnimLayer(2, offHandBodyPose.base);

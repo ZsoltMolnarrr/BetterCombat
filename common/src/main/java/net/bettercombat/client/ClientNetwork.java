@@ -5,9 +5,9 @@ import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class ClientNetwork {
     public static void initializeHandlers() {
@@ -33,7 +33,7 @@ public class ClientNetwork {
                         return;
                     }
 
-                    var soundEvent = Registry.SOUND_EVENT.get(new Identifier(packet.soundId()));
+                    var soundEvent = Registries.SOUND_EVENT.get(new Identifier(packet.soundId()));
                     var configVolume = BetterCombatClient.config.weaponSwingSoundVolume;
                     var volume = packet.volume() * ((float)Math.min(Math.max(configVolume, 0), 100) / 100F);
                     client.world.playSound(
