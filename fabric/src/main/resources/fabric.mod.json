@@ -33,9 +33,9 @@
     "bettercombat-fabric.mixins.json"
   ],
   "depends": {
+    "minecraft": ">=1.19.3",
     "fabricloader": ">=0.14.0",
     "fabric-api": "*",
-    "minecraft": ">=1.19.3",
     "cloth-config": ">=9.0.0",
     "player-animator": ">=0.4.0"
   },
