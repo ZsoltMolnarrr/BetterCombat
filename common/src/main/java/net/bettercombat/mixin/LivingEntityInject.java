@@ -24,11 +24,11 @@ public class LivingEntityInject {
             if (player.world.isClient
                     && comboCount > 0
                     && PlayerAttackHelper.shouldAttackWithOffHand(player, comboCount)) {
-                PlayerAttackHelper.setAttributesForOffHandAttack(player, true);
-                var value = player.getAttributes().getValue(attribute);
-                PlayerAttackHelper.setAttributesForOffHandAttack(player, false);
+                PlayerAttackHelper.offhandAttributes(player, () -> {
+                    var value = player.getAttributes().getValue(attribute);
+                    cir.setReturnValue(value);
+                });
                 cir.cancel();
-                cir.setReturnValue(value);
             }
         }
     }
