@@ -1,3 +1,7 @@
+# 1.5.3
+- Fix offhand attack attribute race condition causing random crashes #174
+- Weapon collision detection no longer ignores `Entity.getTargetingMargin()`
+
 # 1.5.2
 - Duct tape for faulty Forge
 
