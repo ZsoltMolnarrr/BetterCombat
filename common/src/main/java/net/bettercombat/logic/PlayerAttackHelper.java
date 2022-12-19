@@ -140,6 +140,16 @@ public class PlayerAttackHelper {
         return true;
     }
 
+    private static final Object attributesLock = new Object();
+
+    public static void offhandAttributes(PlayerEntity player, Runnable runnable) {
+        synchronized (attributesLock) {
+            setAttributesForOffHandAttack(player, true);
+            runnable.run();
+            setAttributesForOffHandAttack(player, false);
+        }
+    }
+
     public static void setAttributesForOffHandAttack(PlayerEntity player, boolean useOffHand) {
         var mainHandStack = player.getMainHandStack();
         var offHandStack = player.getOffHandStack();
