@@ -7,6 +7,7 @@ import net.bettercombat.compatibility.PehkuiHelper;
 import net.bettercombat.logic.TargetHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
@@ -72,7 +73,7 @@ public class TargetFinder {
                     var result = entity != player
                             && entity != cursorTarget
                             && entity.isAttackable()
-                            && (BetterCombat.config.allow_attacking_mount || !entity.equals(player.getVehicle()) || BetterCombat.config.isEntityHostileVehicle(entity.getEntityName()))
+                            && (BetterCombat.config.allow_attacking_mount || !entity.equals(player.getVehicle()) || entity instanceof HostileEntity || BetterCombat.config.isEntityHostileVehicle(entity.getEntityName()))
                             && TargetHelper.getRelation(player, entity) == TargetHelper.Relation.HOSTILE;
                     return result;
                 })

@@ -22,6 +22,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
@@ -127,7 +128,7 @@ public class ServerNetwork {
                     }
 
                     if (entity == null
-                            || (!BetterCombat.config.allow_attacking_mount && (entity.equals(player.getVehicle()) || BetterCombat.config.isEntityHostileVehicle(entity.getEntityName())))
+                            || (!BetterCombat.config.allow_attacking_mount && (entity.equals(player.getVehicle()) || entity instanceof HostileEntity || BetterCombat.config.isEntityHostileVehicle(entity.getEntityName())))
                             || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
                         continue;
                     }
