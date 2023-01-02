@@ -5,6 +5,8 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.bettercombat.logic.TargetHelper;
 
+import java.util.Arrays;
+
 @Config(name = "server")
 public class ServerConfig implements ConfigData {
     @Comment("""
@@ -19,6 +21,8 @@ public class ServerConfig implements ConfigData {
     public boolean allow_fast_attacks = true;
     @Comment("Allows client-side target search and server-side attack request execution against currently mounted entity of the player")
     public boolean allow_attacking_mount = false;
+    @Comment("Blacklist for entities that are acting as vehicle but should not be treated as protected mounts. Classical example is an alexsmobs:crocodile attempting a death spin.")
+    public String[] hostile_player_vehicles = {"alexsmobs:crocodile"};
     @Comment("Allows vanilla sweeping mechanic to work and Sweeping Edge enchantment")
     public boolean allow_sweeping = true;
     @Comment("Allows client-side target search to ignore obstacles. WARNING! Setting this to `false` significantly increases the load on clients.")
@@ -51,5 +55,12 @@ public class ServerConfig implements ConfigData {
 
     public float getUpswingMultiplier() {
         return Math.max(0.2F, Math.min(1, upswing_multiplier));
+    }
+
+    public boolean isEntityHostileVehicle(String entityName){
+        // An entity is a hostile vehicle via blacklist specifically for now
+        return hostile_player_vehicles != null
+                && hostile_player_vehicles.length > 0
+                && Arrays.asList(hostile_player_vehicles).contains(entityName);
     }
 }

@@ -72,7 +72,7 @@ public class TargetFinder {
                     var result = entity != player
                             && entity != cursorTarget
                             && entity.isAttackable()
-                            && (BetterCombat.config.allow_attacking_mount || !entity.equals(player.getVehicle()))
+                            && (BetterCombat.config.allow_attacking_mount || !entity.equals(player.getVehicle()) || BetterCombat.config.isEntityHostileVehicle(entity.getEntityName()))
                             && TargetHelper.getRelation(player, entity) == TargetHelper.Relation.HOSTILE;
                     return result;
                 })

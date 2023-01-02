@@ -127,7 +127,7 @@ public class ServerNetwork {
                     }
 
                     if (entity == null
-                            || (!BetterCombat.config.allow_attacking_mount && entity.equals(player.getVehicle()))
+                            || (!BetterCombat.config.allow_attacking_mount && (entity.equals(player.getVehicle()) || BetterCombat.config.isEntityHostileVehicle(entity.getEntityName())))
                             || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
                         continue;
                     }
