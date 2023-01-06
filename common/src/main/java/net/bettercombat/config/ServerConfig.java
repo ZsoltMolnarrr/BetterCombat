@@ -19,6 +19,11 @@ public class ServerConfig implements ConfigData {
     public boolean allow_fast_attacks = true;
     @Comment("Allows client-side target search and server-side attack request execution against currently mounted entity of the player")
     public boolean allow_attacking_mount = false;
+    @Comment("""
+            Blacklist for entities that are acting as vehicle but should not be treated as protected mounts.
+            Classical example is an alexsmobs:crocodile attempting a death spin.
+            (Note all hostile mobs hittable by default, this config is to fix faulty mobs)""")
+    public String[] hostile_player_vehicles = {"alexsmobs:crocodile"};
     @Comment("Allows vanilla sweeping mechanic to work and Sweeping Edge enchantment")
     public boolean allow_sweeping = true;
     @Comment("Allows client-side target search to ignore obstacles. WARNING! Setting this to `false` significantly increases the load on clients.")

@@ -1,3 +1,8 @@
+# 1.5.4
+- Fix attacking hostile mounts/vehicles (Thanks to Emily Darrow)
+- Fix cleaving for decoration items (such as Item Frames)
+- (Fabric) Figura `breaks` flag lifted
+
 # 1.5.3
 - Fix offhand attack attribute race condition causing random crashes #174
 - Weapon collision detection no longer ignores `Entity.getTargetingMargin()`

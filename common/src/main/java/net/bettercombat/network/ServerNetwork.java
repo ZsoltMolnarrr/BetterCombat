@@ -8,6 +8,7 @@ import net.bettercombat.BetterCombat;
 import net.bettercombat.Platform;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
+import net.bettercombat.logic.TargetHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.bettercombat.utils.SoundHelper;
@@ -23,6 +24,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
@@ -129,7 +131,7 @@ public class ServerNetwork {
                     }
 
                     if (entity == null
-                            || (!BetterCombat.config.allow_attacking_mount && entity.equals(player.getVehicle()))
+                            || (entity.equals(player.getVehicle()) && !TargetHelper.isAttackableMount(entity))
                             || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
                         continue;
                     }
