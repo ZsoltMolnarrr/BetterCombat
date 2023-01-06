@@ -7,6 +7,7 @@ import com.mojang.logging.LogUtils;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
+import net.bettercombat.logic.TargetHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.bettercombat.utils.SoundHelper;
@@ -128,7 +129,7 @@ public class ServerNetwork {
                     }
 
                     if (entity == null
-                            || (!BetterCombat.config.allow_attacking_mount && (entity.equals(player.getVehicle()) || entity instanceof HostileEntity || BetterCombat.config.isEntityHostileVehicle(entity.getEntityName())))
+                            || (entity.equals(player.getVehicle()) && !TargetHelper.isAttackableMount(entity))
                             || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
                         continue;
                     }

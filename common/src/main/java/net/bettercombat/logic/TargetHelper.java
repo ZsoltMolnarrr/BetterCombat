@@ -8,6 +8,8 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
+import java.util.Arrays;
+
 public class TargetHelper {
     public enum Relation {
         FRIENDLY, NEUTRAL, HOSTILE;
@@ -51,5 +53,20 @@ public class TargetHelper {
         } else {
             return attacker.isTeammate(target) ? Relation.FRIENDLY : Relation.HOSTILE;
         }
+    }
+
+    public static boolean isAttackableMount(Entity entity) {
+        if (entity instanceof HostileEntity || isEntityHostileVehicle(entity.getEntityName())) {
+            return true;
+        }
+        return BetterCombat.config.allow_attacking_mount;
+    }
+
+    public static boolean isEntityHostileVehicle(String entityName) {
+        // An entity is a hostile vehicle via blacklist specifically
+        var config = BetterCombat.config;
+        return config.hostile_player_vehicles != null
+                && config.hostile_player_vehicles.length > 0
+                && Arrays.asList(config.hostile_player_vehicles).contains(entityName);
     }
 }
