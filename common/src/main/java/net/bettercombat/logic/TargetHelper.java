@@ -3,6 +3,7 @@ package net.bettercombat.logic;
 import net.bettercombat.BetterCombat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Tameable;
+import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -48,6 +49,9 @@ public class TargetHelper {
             }
             if (target instanceof HostileEntity) {
                 return Relation.coalesce(config.player_relation_to_hostiles, Relation.HOSTILE);
+            }
+            if (target instanceof AbstractDecorationEntity) {
+                return Relation.NEUTRAL;
             }
             return Relation.coalesce(config.player_relation_to_other, Relation.HOSTILE);
         } else {
