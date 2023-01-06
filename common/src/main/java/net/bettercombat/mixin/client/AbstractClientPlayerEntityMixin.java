@@ -11,7 +11,7 @@ import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.animation.FirstPersonAnimation;
-import net.bettercombat.api.animation.FirstPersonAnimator;
+import net.bettercombat.client.animation.FirstPersonAnimator;
 import net.bettercombat.client.AnimationRegistry;
 import net.bettercombat.client.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;

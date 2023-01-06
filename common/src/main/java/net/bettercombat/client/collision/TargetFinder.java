@@ -72,7 +72,7 @@ public class TargetFinder {
                     var result = entity != player
                             && entity != cursorTarget
                             && entity.isAttackable()
-                            && (BetterCombat.config.allow_attacking_mount || !entity.equals(player.getVehicle()))
+                            && (!entity.equals(player.getVehicle()) || TargetHelper.isAttackableMount(entity))
                             && TargetHelper.getRelation(player, entity) == TargetHelper.Relation.HOSTILE;
                     return result;
                 })
@@ -82,6 +82,7 @@ public class TargetFinder {
         }
         return entities;
     }
+
 
     public interface Filter {
         List<Entity> filter(List<Entity> entities);
