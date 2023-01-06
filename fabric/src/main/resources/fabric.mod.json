@@ -40,8 +40,7 @@
     "player-animator": ">=0.4.0"
   },
   "breaks": {
-    "inventorio": "*",
-    "figura": "*"
+    "inventorio": "*"
   },
   "custom": {
     "modmenu": {
