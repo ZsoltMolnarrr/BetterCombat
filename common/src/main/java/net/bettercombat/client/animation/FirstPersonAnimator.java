@@ -1,4 +1,4 @@
-package net.bettercombat.api.animation;
+package net.bettercombat.client.animation;
 
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 
