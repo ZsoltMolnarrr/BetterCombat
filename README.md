@@ -165,9 +165,9 @@ A fitting preset for a big two handed sword is the `claymore` from Better Combat
 }
 ```
 
-You can check out all available presets [here](/common/src/main/resources/data/bettercombat/weapon_attributes).
+You can check out all available presets [here](common/src/main/resources/data/bettercombat/weapon_attributes).
 
-You can check out how presets are used to add compatibility for Vanilla weapons [here](/common/src/main/resources/data/minecraft/weapon_attributes).
+You can check out how presets are used to add compatibility for Vanilla weapons [here](common/src/main/resources/data/minecraft/weapon_attributes).
 
 You can make and reference your own presets the same way.
 
@@ -175,9 +175,9 @@ You can make and reference your own presets the same way.
 
 If you want unique behaviour for your weapon, you can create attributes from scratch.
 
-The content of your weapon attributes JSON file is parsed into an [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) object. (Check out the inline java documentation of [AttributesContainer](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/AttributesContainer.java) for details.)
+The content of your weapon attributes JSON file is parsed into an [AttributesContainer](common/src/main/java/net/bettercombat/api/AttributesContainer.java) object. (Check out the inline java documentation of [AttributesContainer](common/src/main/java/net/bettercombat/api/AttributesContainer.java) for details.)
 
-When no parent is specified, the value for `"attributes"` key must be a full json object that can be parsed into [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
+When no parent is specified, the value for `"attributes"` key must be a full json object that can be parsed into [WeaponAttributes](common/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
 
 ```
 {
@@ -193,7 +193,7 @@ If you need more details, the java documentation of [WeaponAttributes](common/sr
 
 ---
 
-When `"parent"` and `"attributes"` are both specified, you can customize attributes by partially (or fully) overriding the properties. Make sure the inheritance results in fully parsable [WeaponAttributes](https://github.com/ZsoltMolnarrr/BetterCombat/blob/main/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
+When `"parent"` and `"attributes"` are both specified, you can customize attributes by partially (or fully) overriding the properties. Make sure the inheritance results in fully parsable [WeaponAttributes](common/src/main/java/net/bettercombat/api/WeaponAttributes.java) object.
 
 (Attributes are merged in parent -> child order. So parent properties are copied and overridden with child. The chain of inheritance can be any length.)
 ```
