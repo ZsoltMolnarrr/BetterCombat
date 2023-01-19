@@ -1,5 +1,5 @@
 package net.bettercombat.client.animation.first_person;
 
 public interface IExtendedAnimation {
-    boolean isActiveInFirstPerson();
+    boolean isActiveInFirstPerson(float tickDelta);
 }

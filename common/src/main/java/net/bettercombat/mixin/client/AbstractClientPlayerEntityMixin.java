@@ -300,12 +300,12 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     @Override
-    public Optional<IAnimation> getActiveFirstPersonAnimation() {
+    public Optional<IAnimation> getActiveFirstPersonAnimation(float tickDelta) {
         for (var layer: additionalFirstPersonLayers) {
             var animation = layer.getAnimation();
             if (animation == null) { continue; }
             if (animation instanceof IExtendedAnimation extendedAnimation) {
-                if (extendedAnimation.isActiveInFirstPerson()) {
+                if (extendedAnimation.isActiveInFirstPerson(tickDelta)) {
                     return Optional.of(animation);
                 }
             }

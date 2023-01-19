@@ -13,13 +13,13 @@ public class CustomAnimationPlayer extends KeyframeAnimationPlayer implements IE
         super(emote, t);
     }
 
-    public boolean isWindingDown() {
+    public boolean isWindingDown(float tickDelta) {
         var windDownStart = getData().endTick + ((getData().stopTick - getData().endTick) / 4);
-        return ((getTick() + 1) > windDownStart); // + 1 for smoother transition
+        return ((getTick() + tickDelta) > (windDownStart + 0.5F)); // + 0.5 for smoother transition
     }
 
     @Override
-    public boolean isActiveInFirstPerson() {
-        return isActive() && !isWindingDown();
+    public boolean isActiveInFirstPerson(float tickDelta) {
+        return isActive() && !isWindingDown(tickDelta);
     }
 }

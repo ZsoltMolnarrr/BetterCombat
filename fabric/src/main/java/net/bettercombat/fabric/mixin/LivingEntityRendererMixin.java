@@ -22,7 +22,7 @@ public class LivingEntityRendererMixin {
         LivingEntity entity = args.get(0);
         Optional<IAnimation> currentAnimation = Optional.empty();
         if (entity instanceof FirstPersonAnimator animator) {
-            currentAnimation = animator.getActiveFirstPersonAnimation();
+            currentAnimation = animator.getActiveFirstPersonAnimation(0);
         }
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
 
@@ -34,7 +34,7 @@ public class LivingEntityRendererMixin {
             // Only for IExtendedAnimation (weapon swings)
             var isActive = false; // currentAnimation.get().isActive();
             if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
-                isActive = extendedAnimation.isActiveInFirstPerson();
+                isActive = extendedAnimation.isActiveInFirstPerson(0);
             }
 
             if (isActive) {

@@ -47,7 +47,7 @@ public abstract class WorldRendererMixin {
 
         Optional<IAnimation> currentAnimation;
         if (entity instanceof FirstPersonAnimator animator) {
-            currentAnimation = animator.getActiveFirstPersonAnimation();
+            currentAnimation = animator.getActiveFirstPersonAnimation(tickDelta);
         } else {
             currentAnimation = Optional.empty();
         }

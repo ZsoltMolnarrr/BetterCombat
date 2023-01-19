@@ -29,7 +29,7 @@ public class HeldItemRendererMixin {
         if (!CompatibilityFlags.firstPersonRender()) {
             return;
         }
-        Optional<IAnimation> currentAnimation = ((FirstPersonAnimator) player).getActiveFirstPersonAnimation();
+        Optional<IAnimation> currentAnimation = ((FirstPersonAnimator) player).getActiveFirstPersonAnimation(tickDelta);
         if (currentAnimation.isPresent()) {
             ci.cancel();
         }
