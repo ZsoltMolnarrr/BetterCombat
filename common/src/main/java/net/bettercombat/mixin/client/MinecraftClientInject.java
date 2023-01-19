@@ -2,6 +2,7 @@ package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.PlatformClient;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
@@ -9,7 +10,6 @@ import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.BetterCombatKeybindings;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
-import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.logic.*;
@@ -249,9 +249,10 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
                 new Packets.AttackAnimation(player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate).write());
     }
 
-    private void feintIfNeeded() {
-        if (BetterCombatKeybindings.feintKeyBinding.isPressed() || !areItemStackEqual(player.getMainHandStack(), upswingStack)) {
-            cancelUpswing();
+    private void cancelSwingIfNeeded() {
+        if (upswingStack != null && !areItemStackEqual(player.getMainHandStack(), upswingStack)) {
+            cancelWeaponSwing();
+            return;
         }
     }
 
@@ -316,7 +317,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         }
         targetsInReach = null;
         lastAttacked += 1;
-        feintIfNeeded();
+        cancelSwingIfNeeded();
         attackFromUpswingIfNeeded();
         updateTargetsIfNeeded();
         resetComboIfNeeded();
@@ -340,6 +341,12 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
 
     private void performAttack() {
+        if (BetterCombatKeybindings.feintKeyBinding.isPressed()) {
+            player.resetLastAttackedTicks();
+            cancelWeaponSwing();
+            return;
+        }
+
         var hand = getCurrentHand();
         if (hand == null) { return; }
         var attack = hand.attack();
@@ -348,6 +355,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             return;
         }
         // System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
+
         List<Entity> targets = TargetFinder.findAttackTargets(
                 player,
                 getCursorTarget(),
@@ -397,6 +405,18 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         ((MinecraftClientAccessor) client).setAttackCooldown(ticks); // This is actually the mining cooldown
     }
 
+    private void cancelWeaponSwing() {
+        var downWind = (int)Math.round(PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (1 - 0.5 * BetterCombat.config.upswing_multiplier));
+        ((PlayerAttackAnimatable) player).stopAttackAnimation(downWind);
+        ClientPlayNetworking.send(
+                Packets.AttackAnimation.ID,
+                Packets.AttackAnimation.stop(player.getId(), downWind).write());
+        upswingStack = null;
+        itemUseCooldown = 0;
+        setMiningCooldown(0);
+    }
+
+
     // SECTION: MinecraftClient_BetterCombat
 
     @Override
@@ -425,14 +445,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Override
     public void cancelUpswing() {
         if (upswingTicks > 0) {
-            ((PlayerAttackAnimatable) player).stopAttackAnimation();
-            ClientPlayNetworking.send(
-                    Packets.AttackAnimation.ID,
-                    Packets.AttackAnimation.stop(player.getId()).write());
-            upswingTicks = 0;
-            upswingStack = null;
-            itemUseCooldown = 0;
-            setMiningCooldown(0);
+            cancelWeaponSwing();
         }
     }
 }

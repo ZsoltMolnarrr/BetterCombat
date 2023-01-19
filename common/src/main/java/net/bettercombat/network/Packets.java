@@ -48,7 +48,7 @@ public class Packets {
     public record AttackAnimation(int playerId, AnimatedHand animatedHand, String animationName, float length, float upswing) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "attack_animation");
         public static String StopSymbol = "!STOP!";
-        public static AttackAnimation stop(int playerId) { return new AttackAnimation(playerId, AnimatedHand.MAIN_HAND, StopSymbol, 0, 0); }
+        public static AttackAnimation stop(int playerId, int length) { return new AttackAnimation(playerId, AnimatedHand.MAIN_HAND, StopSymbol, length, 0); }
 
         public PacketByteBuf write() {
             PacketByteBuf buffer = PacketByteBufs.create();
