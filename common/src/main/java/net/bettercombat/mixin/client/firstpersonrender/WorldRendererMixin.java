@@ -1,9 +1,9 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
-import net.bettercombat.client.PlayerAttackAnimatable;
-import net.bettercombat.client.animation.FirstPersonRenderHelper;
-import net.bettercombat.client.animation.IExtendedAnimation;
+import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
@@ -47,12 +47,12 @@ public abstract class WorldRendererMixin {
         }
 
         Optional<IAnimation> currentAnimation;
-        if (entity instanceof PlayerAttackAnimatable) {
-            currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
+        if (entity instanceof FirstPersonAnimator animator) {
+            currentAnimation = animator.getActiveFirstPersonAnimation();
         } else {
             currentAnimation = Optional.empty();
         }
-        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+
         var isActive = false;
         if (currentAnimation.isPresent()) {
             isActive = currentAnimation.get().isActive();
@@ -61,6 +61,7 @@ public abstract class WorldRendererMixin {
             }
         }
 
+        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
         if (entity == camera.getFocusedEntity() && !camera.isThirdPerson()) {
             if(isActive) {
                 FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel = true;

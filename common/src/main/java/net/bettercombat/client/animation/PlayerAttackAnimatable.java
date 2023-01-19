@@ -1,4 +1,4 @@
-package net.bettercombat.client;
+package net.bettercombat.client.animation;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 
@@ -8,5 +8,4 @@ public interface PlayerAttackAnimatable {
     void updateAnimationsOnTick();
     void playAttackAnimation(String name, boolean isOffHand, float length, float upswing);
     void stopAttackAnimation();
-    Optional<IAnimation> getCurrentAnimation();
 }

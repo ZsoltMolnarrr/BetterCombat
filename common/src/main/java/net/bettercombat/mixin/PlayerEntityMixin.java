@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
-import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;

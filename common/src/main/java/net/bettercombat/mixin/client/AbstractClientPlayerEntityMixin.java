@@ -11,10 +11,14 @@ import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.animation.FirstPersonAnimation;
-import net.bettercombat.client.animation.FirstPersonAnimator;
-import net.bettercombat.client.AnimationRegistry;
-import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.client.animation.first_person.CustomAnimationPlayer;
+import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
+import net.bettercombat.client.animation.AnimationRegistry;
+import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.modifier.AdjustmentModifier;
+import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
@@ -76,7 +80,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         // Restore auto body rotation upon swing - Fix issue #11
 
-        if (getCurrentAnimation().isPresent() && getCurrentAnimation().get().isActive()) {
+        if (getActiveFirstPersonAnimation().isPresent() && getActiveFirstPersonAnimation().get().isActive()) {
             ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw(), 0);
         }
 
@@ -273,19 +277,19 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         }
     }
 
+    // FirstPersonAnimator
+
+    public void addFirstPersonAnimationLayer(ModifierLayer layer) {
+        additionalFirstPersonLayers.add(layer);
+    }
+
     @Override
-    public Optional<IAnimation> getCurrentAnimation() {
+    public Optional<IAnimation> getActiveFirstPersonAnimation() {
         for (var layer: additionalFirstPersonLayers) {
             if (layer.isActive()) {
                 return Optional.ofNullable(layer.getAnimation());
             }
         }
         return Optional.ofNullable(attackAnimation.base.getAnimation());
-    }
-
-    // FirstPersonAnimator
-
-    public void addLayer(ModifierLayer layer) {
-        additionalFirstPersonLayers.add(layer);
     }
 }

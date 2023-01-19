@@ -1,6 +1,6 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
-import net.bettercombat.client.animation.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.feature.PlayerHeldItemFeatureRenderer;
 import org.objectweb.asm.Opcodes;

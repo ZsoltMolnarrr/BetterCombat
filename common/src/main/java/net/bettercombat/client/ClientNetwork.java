@@ -1,6 +1,7 @@
 package net.bettercombat.client;
 
 import net.bettercombat.BetterCombat;
+import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

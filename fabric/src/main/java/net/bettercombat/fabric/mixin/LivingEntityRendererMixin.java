@@ -1,8 +1,8 @@
 package net.bettercombat.fabric.mixin;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
-import net.bettercombat.client.PlayerAttackAnimatable;
-import net.bettercombat.client.animation.IExtendedAnimation;
+import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
+import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -21,8 +21,8 @@ public class LivingEntityRendererMixin {
     private void modifyArg(Args args) {
         LivingEntity entity = args.get(0);
         Optional<IAnimation> currentAnimation = Optional.empty();
-        if (entity instanceof PlayerAttackAnimatable) {
-            currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
+        if (entity instanceof FirstPersonAnimator animator) {
+            currentAnimation = animator.getActiveFirstPersonAnimation();
         }
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
 

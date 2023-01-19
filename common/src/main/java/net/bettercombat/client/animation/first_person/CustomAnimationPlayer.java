@@ -1,7 +1,8 @@
-package net.bettercombat.client.animation;
+package net.bettercombat.client.animation.first_person;
 
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 
 public class CustomAnimationPlayer extends KeyframeAnimationPlayer implements IExtendedAnimation {
 

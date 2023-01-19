@@ -1,7 +1,7 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
 import net.bettercombat.client.BetterCombatClient;
-import net.bettercombat.client.animation.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;

@@ -1,4 +1,4 @@
-package net.bettercombat.client;
+package net.bettercombat.client.animation;
 
 import com.mojang.logging.LogUtils;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
