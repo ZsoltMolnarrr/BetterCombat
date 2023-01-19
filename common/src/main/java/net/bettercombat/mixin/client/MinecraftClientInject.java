@@ -12,10 +12,7 @@ import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
-import net.bettercombat.logic.PatternMatching;
-import net.bettercombat.logic.PlayerAttackHelper;
-import net.bettercombat.logic.PlayerAttackProperties;
-import net.bettercombat.logic.WeaponRegistry;
+import net.bettercombat.logic.*;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -245,11 +242,11 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 //        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
-        FirstPersonRenderHelper.isAttackingWithOffHand = isOffHand;
-        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, isOffHand, attackCooldownTicksFloat, upswingRate);
+        var animatedHand = AnimatedHand.from(isOffHand, attributes.isTwoHanded());
+        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
-                new Packets.AttackAnimation(player.getId(), isOffHand, animationName, attackCooldownTicksFloat, upswingRate).write());
+                new Packets.AttackAnimation(player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate).write());
     }
 
     private void feintIfNeeded() {

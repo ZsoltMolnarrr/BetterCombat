@@ -20,7 +20,7 @@ public class ClientNetwork {
                     if (packet.animationName().equals(Packets.AttackAnimation.StopSymbol)) {
                         ((PlayerAttackAnimatable)entity).stopAttackAnimation();
                     } else {
-                        ((PlayerAttackAnimatable)entity).playAttackAnimation(packet.animationName(), packet.isOffHand(), packet.length(), packet.upswing());
+                        ((PlayerAttackAnimatable)entity).playAttackAnimation(packet.animationName(), packet.animatedHand(), packet.length(), packet.upswing());
                     }
                 }
             });

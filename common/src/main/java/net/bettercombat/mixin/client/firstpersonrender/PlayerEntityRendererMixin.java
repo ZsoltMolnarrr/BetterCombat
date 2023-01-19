@@ -2,6 +2,7 @@ package net.bettercombat.mixin.client.firstpersonrender;
 
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.logic.AnimatedHand;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -42,15 +43,18 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             setPartsVisible(false);
             var showRightArm = showArms;
             var showLeftArm = showArms;
-            if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
-                showRightArm = showRightArm && !FirstPersonRenderHelper.isAttackingWithOffHand;
-                showLeftArm = showLeftArm && FirstPersonRenderHelper.isAttackingWithOffHand;
-            }
-            if (entity.getMainArm() == Arm.LEFT) {
-                var rightValue = showRightArm;
-                var leftValue = showLeftArm;
-                showRightArm = leftValue;
-                showLeftArm = rightValue;
+            if (FirstPersonRenderHelper.current.hand() != AnimatedHand.TWO_HANDED) {
+                if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
+                    boolean isOffhand = FirstPersonRenderHelper.current.hand().isOffHand();
+                    showRightArm = showRightArm && !isOffhand;
+                    showLeftArm = showLeftArm && isOffhand;
+                }
+                if (entity.getMainArm() == Arm.LEFT) {
+                    var rightValue = showRightArm;
+                    var leftValue = showLeftArm;
+                    showRightArm = leftValue;
+                    showLeftArm = rightValue;
+                }
             }
             this.model.rightArm.visible = showRightArm;
             this.model.rightSleeve.visible = showRightArm && player.isPartVisible(PlayerModelPart.RIGHT_SLEEVE);

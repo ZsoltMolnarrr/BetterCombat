@@ -45,7 +45,7 @@ public class HeldItemRendererMixin {
         if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
             if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
                 var isMainHandStack = player.getMainHandStack() == stack;
-                if (FirstPersonRenderHelper.isAttackingWithOffHand) {
+                if (FirstPersonRenderHelper.current.hand().isOffHand()) {
                     if (isMainHandStack) {
                         ci.cancel();
                     }

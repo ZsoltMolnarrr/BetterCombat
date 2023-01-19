@@ -20,9 +20,11 @@ import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
 import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 import net.bettercombat.client.animation.modifier.AdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
+import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -71,6 +73,13 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var instance = (Object)this;
         var player = (PlayerEntity)instance;
         var isLeftHanded = isLeftHanded();
+        var hasActiveAttackAnimation = attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
+
+        if (MinecraftClient.getInstance().getCameraEntity() == player) {
+            if (!hasActiveAttackAnimation) {
+                FirstPersonRenderHelper.resetProperties();
+            }
+        }
 
         // No pose during mining or item usage
 
@@ -82,7 +91,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         // Restore auto body rotation upon swing - Fix issue #11
 
-        if (getActiveFirstPersonAnimation().isPresent() && getActiveFirstPersonAnimation().get().isActive()) {
+        if (hasActiveAttackAnimation) {
             ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw(), 0);
         }
 
@@ -116,7 +125,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     @Override
-    public void playAttackAnimation(String name, boolean isOffHand, float length, float upswing) {
+    public void playAttackAnimation(String name, AnimatedHand animatedHand, float length, float upswing) {
+        if (MinecraftClient.getInstance().getCameraEntity() == this) {
+            FirstPersonRenderHelper.current = new FirstPersonRenderHelper.AnimationProperties(animatedHand);
+        }
         try {
             KeyframeAnimation animation = AnimationRegistry.animations.get(name);
             var copy = animation.mutableCopy();
@@ -124,7 +136,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             copy.torso.fullyEnablePart(true);
             copy.head.pitch.setEnabled(false);
             var speed = ((float)animation.endTick) / length;
-            var mirror = isOffHand;
+            var mirror = animatedHand.isOffHand();
             if(isLeftHanded()) {
                 mirror = !mirror;
             }
@@ -294,11 +306,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             if (animation == null) { continue; }
             if (animation instanceof IExtendedAnimation extendedAnimation) {
                 if (extendedAnimation.isActiveInFirstPerson()) {
-                    return Optional.ofNullable(animation);
+                    return Optional.of(animation);
                 }
             }
             if (layer.isActive()) {
-                return Optional.ofNullable(animation);
+                return Optional.of(animation);
             }
         }
         return Optional.empty();
