@@ -32,8 +32,34 @@ public final class AdjustmentModifier extends AbstractModifier {
         return fadeIn;
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (remainingFadeout > 0) {
+            remainingFadeout -= 1;
+            if(remainingFadeout <= 0) {
+                instructedFadeout = 0;
+            }
+        }
+    }
+
+    private int instructedFadeout = 0;
+    private int remainingFadeout = 0;
+
+    public void fadeOut(int fadeOut) {
+        instructedFadeout = fadeOut;
+        remainingFadeout = fadeOut + 1;
+    }
+
     private float getFadeOut(float delta) {
         float fadeOut = 1;
+        if(remainingFadeout > 0 && instructedFadeout > 0) {
+            float current = Math.max(remainingFadeout - delta , 0);
+            fadeOut = current / ((float)instructedFadeout);
+            Math.min(fadeOut, 1F);
+            return fadeOut;
+        }
         if(this.getAnim() instanceof KeyframeAnimationPlayer player) {
             float currentTick = player.getTick() + delta;
 
@@ -71,7 +97,7 @@ public final class AdjustmentModifier extends AbstractModifier {
                 return vector.add(partModifier.offset);
             }
             case ROTATION -> {
-                 return vector.add(partModifier.rotation.scale(fade));
+                return vector.add(partModifier.rotation.scale(fade));
             }
             case BEND -> {
                 // Nothing to do here...

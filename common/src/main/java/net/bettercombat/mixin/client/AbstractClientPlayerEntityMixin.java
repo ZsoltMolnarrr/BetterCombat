@@ -287,7 +287,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         IAnimation currentAnimation = attackAnimation.base.getAnimation();
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
             var fadeOut = Math.round(length);
-            // attackAnimation.adjustmentModifier.fadeOut(fadeOut);
+            attackAnimation.adjustmentModifier.fadeOut(fadeOut);
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeOut, Ease.INOUTSINE), null);
         }
