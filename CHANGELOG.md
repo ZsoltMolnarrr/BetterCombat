@@ -1,3 +1,8 @@
+# 1.5.5
+- Add attack speed cap
+- Improve back to back animation overlapping
+- Fix offhand arm invisible while 2H animations
+
 # 1.5.4
 - Fix attacking hostile mounts/vehicles (Thanks to Emily Darrow)
 - Fix cleaving for decoration items (such as Item Frames)
