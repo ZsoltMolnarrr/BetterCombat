@@ -4,7 +4,6 @@ import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
 import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
-import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -32,14 +31,7 @@ public class HeldItemRendererMixin {
         }
         Optional<IAnimation> currentAnimation = ((FirstPersonAnimator) player).getActiveFirstPersonAnimation();
         if (currentAnimation.isPresent()) {
-            var isActive = currentAnimation.get().isActive();
-            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
-                isActive = extendedAnimation.isActiveInFirstPerson();
-            }
-
-            if (isActive) {
-                ci.cancel();
-            }
+            ci.cancel();
         }
     }
 

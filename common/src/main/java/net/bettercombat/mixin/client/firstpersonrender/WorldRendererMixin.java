@@ -3,7 +3,6 @@ package net.bettercombat.mixin.client.firstpersonrender;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
 import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
-import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
@@ -53,17 +52,9 @@ public abstract class WorldRendererMixin {
             currentAnimation = Optional.empty();
         }
 
-        var isActive = false;
-        if (currentAnimation.isPresent()) {
-            isActive = currentAnimation.get().isActive();
-            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
-                isActive = extendedAnimation.isActiveInFirstPerson();
-            }
-        }
-
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
         if (entity == camera.getFocusedEntity() && !camera.isThirdPerson()) {
-            if(isActive) {
+            if(currentAnimation.isPresent()) {
                 FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel = true;
                 // Do nothing -> Fallthrough (allow render)
                 return;

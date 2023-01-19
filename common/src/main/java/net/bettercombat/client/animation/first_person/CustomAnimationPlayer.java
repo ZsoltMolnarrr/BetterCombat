@@ -2,7 +2,6 @@ package net.bettercombat.client.animation.first_person;
 
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 
 public class CustomAnimationPlayer extends KeyframeAnimationPlayer implements IExtendedAnimation {
 
@@ -16,7 +15,7 @@ public class CustomAnimationPlayer extends KeyframeAnimationPlayer implements IE
 
     public boolean isWindingDown() {
         var windDownStart = getData().endTick + ((getData().stopTick - getData().endTick) / 4);
-        return (getTick() > windDownStart);
+        return ((getTick() + 1) > windDownStart); // + 1 for smoother transition
     }
 
     @Override

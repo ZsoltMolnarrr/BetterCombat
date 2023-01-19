@@ -17,6 +17,7 @@ import net.bettercombat.client.animation.AnimationRegistry;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
 import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 import net.bettercombat.client.animation.modifier.AdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 import net.bettercombat.logic.PlayerAttackHelper;
@@ -45,7 +46,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
     private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
     private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
-    private final ArrayList<ModifierLayer> additionalFirstPersonLayers = new ArrayList();
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
         super(world, pos, yaw, gameProfile);
@@ -62,6 +62,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
         offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
+
+        addFirstPersonAnimationLayer(attackAnimation.base);
     }
 
     @Override
@@ -279,6 +281,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     // FirstPersonAnimator
 
+    private final ArrayList<ModifierLayer> additionalFirstPersonLayers = new ArrayList<>();
+
     public void addFirstPersonAnimationLayer(ModifierLayer layer) {
         additionalFirstPersonLayers.add(layer);
     }
@@ -286,10 +290,17 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Override
     public Optional<IAnimation> getActiveFirstPersonAnimation() {
         for (var layer: additionalFirstPersonLayers) {
+            var animation = layer.getAnimation();
+            if (animation == null) { continue; }
+            if (animation instanceof IExtendedAnimation extendedAnimation) {
+                if (extendedAnimation.isActiveInFirstPerson()) {
+                    return Optional.ofNullable(animation);
+                }
+            }
             if (layer.isActive()) {
-                return Optional.ofNullable(layer.getAnimation());
+                return Optional.ofNullable(animation);
             }
         }
-        return Optional.ofNullable(attackAnimation.base.getAnimation());
+        return Optional.empty();
     }
 }

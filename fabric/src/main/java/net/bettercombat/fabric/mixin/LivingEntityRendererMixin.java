@@ -26,7 +26,7 @@ public class LivingEntityRendererMixin {
         }
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
 
-        //When in first person make the animation play facing forward, instead of slowly adjusting to player rotations
+        // When in first person make the animation play facing forward, instead of slowly adjusting to player rotations
         if (currentAnimation.isPresent()
                 && entity == MinecraftClient.getInstance().player
                 && !camera.isThirdPerson()
