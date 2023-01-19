@@ -19,6 +19,8 @@ public class ServerConfig implements ConfigData {
     public boolean allow_fast_attacks = true;
     @Comment("Allows client-side target search and server-side attack request execution against currently mounted entity of the player")
     public boolean allow_attacking_mount = false;
+    @Comment("The minimum number of ticks between two attacks")
+    public int attack_interval_cap = 2;
     @Comment("""
             Blacklist for entities that are acting as vehicle but should not be treated as protected mounts.
             Classical example is an alexsmobs:crocodile attempting a death spin.

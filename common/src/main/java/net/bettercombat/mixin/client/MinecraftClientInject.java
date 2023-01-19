@@ -224,7 +224,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if (upswingTicks > 0
                 || player.isUsingItem()
                 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
-//            double attackCooldownTicks = player.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
+//            double attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player) / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
 //            var currentCD = Math.round(attackCooldownTicks * player.getAttackCooldownProgress(0));
 //            System.out.println("Waiting for cooldown: " + currentCD + "/" + attackCooldownTicks);
             return;
@@ -235,10 +235,10 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
-        float attackCooldownTicksFloat = player.getAttackCooldownProgressPerTick(); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
+        float attackCooldownTicksFloat = PlayerAttackHelper.getAttackCooldownTicksCapped(player); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
         int attackCooldownTicks = Math.round(attackCooldownTicksFloat);
         this.comboReset = Math.round(attackCooldownTicksFloat * ComboResetRate);
-        this.upswingTicks = (int)(Math.round(attackCooldownTicksFloat * upswingRate));
+        this.upswingTicks = Math.max(Math.round(attackCooldownTicksFloat * upswingRate), 1); // At least 1 upswing ticks
         this.lastSwingDuration = attackCooldownTicksFloat;
         this.itemUseCooldown = attackCooldownTicks; // Vanilla MinecraftClient property for compatibility
         setMiningCooldown(attackCooldownTicks);
