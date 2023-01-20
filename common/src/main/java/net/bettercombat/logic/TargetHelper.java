@@ -39,7 +39,7 @@ public class TargetHelper {
         var config = BetterCombat.config;
         var casterTeam = attacker.getScoreboardTeam();
         var targetTeam = target.getScoreboardTeam();
-        if (casterTeam == null && targetTeam == null) {
+        if (casterTeam == null || targetTeam == null) {
             if (target instanceof PlayerEntity) {
                 return Relation.coalesce(config.player_relation_to_teamless_players, Relation.NEUTRAL);
             }
