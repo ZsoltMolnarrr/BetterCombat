@@ -33,11 +33,13 @@ public class TargetHelper {
                 return getRelation(attacker, owner);
             }
         }
-
+        if (target instanceof AbstractDecorationEntity) {
+            return Relation.NEUTRAL;
+        }
         var config = BetterCombat.config;
         var casterTeam = attacker.getScoreboardTeam();
         var targetTeam = target.getScoreboardTeam();
-        if (casterTeam == null || targetTeam == null) {
+        if (casterTeam == null && targetTeam == null) {
             if (target instanceof PlayerEntity) {
                 return Relation.coalesce(config.player_relation_to_teamless_players, Relation.NEUTRAL);
             }
@@ -49,9 +51,6 @@ public class TargetHelper {
             }
             if (target instanceof HostileEntity) {
                 return Relation.coalesce(config.player_relation_to_hostiles, Relation.HOSTILE);
-            }
-            if (target instanceof AbstractDecorationEntity) {
-                return Relation.NEUTRAL;
             }
             return Relation.coalesce(config.player_relation_to_other, Relation.HOSTILE);
         } else {
