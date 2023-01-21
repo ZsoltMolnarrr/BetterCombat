@@ -9,7 +9,9 @@ import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.TargetHelper;
 import net.bettercombat.logic.WeaponRegistry;
+import net.bettercombat.logic.knockback.ConfigurableKnockback;
 import net.bettercombat.mixin.LivingEntityAccessor;
+import net.bettercombat.utils.MathHelp;
 import net.bettercombat.utils.SoundHelper;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -23,7 +25,6 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
@@ -114,6 +115,10 @@ public class ServerNetwork {
                     SoundHelper.playSound(world, player, attack.swingSound());
                 }
 
+                var attackCooldown = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
+                var knockbackMultiplier = BetterCombat.config.knockback_reduced_for_fast_attacks
+                        ? MathHelp.clamp(attackCooldown / 12.5F, 0.1F, 1F)
+                        : 1F;
                 var lastAttackedTicks = ((LivingEntityAccessor)player).getLastAttackedTicks();
                 if (!useVanillaPacket) {
                     player.setSneaking(request.isSneaking());
@@ -133,8 +138,13 @@ public class ServerNetwork {
                             || (entity instanceof ArmorStandEntity && ((ArmorStandEntity)entity).isMarker())) {
                         continue;
                     }
-                    if (BetterCombat.config.allow_fast_attacks && entity instanceof LivingEntity) {
-                        ((LivingEntity)entity).timeUntilRegen = 0;
+                    if (entity instanceof LivingEntity livingEntity) {
+                        if (BetterCombat.config.allow_fast_attacks) {
+                            livingEntity.timeUntilRegen = 0;
+                        }
+                        if (knockbackMultiplier != 1F) {
+                            ((ConfigurableKnockback)livingEntity).setKnockbackMultiplier_BetterCombat(knockbackMultiplier);
+                        }
                     }
                     ((LivingEntityAccessor) player).setLastAttackedTicks(lastAttackedTicks);
                     // System.out.println("Server - Attacking hand: " + (hand.isOffHand() ? "offhand" : "mainhand") + " CD: " + player.getAttackCooldownProgress(0));
@@ -151,6 +161,11 @@ public class ServerNetwork {
                                 return;
                             }
                             player.attack(entity);
+                        }
+                    }
+                    if (entity instanceof LivingEntity livingEntity) {
+                        if (knockbackMultiplier != 1F) {
+                            ((ConfigurableKnockback)livingEntity).setKnockbackMultiplier_BetterCombat(1F);
                         }
                     }
                 }

@@ -14,6 +14,7 @@ import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.logic.*;
 import net.bettercombat.network.Packets;
+import net.bettercombat.utils.PatternMatching;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.block.BlockState;

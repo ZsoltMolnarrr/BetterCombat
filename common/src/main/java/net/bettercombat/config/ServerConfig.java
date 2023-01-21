@@ -36,6 +36,8 @@ public class ServerConfig implements ConfigData {
     public boolean movement_speed_applied_smoothly = true;
     @Comment("Determines whether or not to apply movement speed reduction while attacking mounted")
     public boolean movement_speed_effected_while_mounting = false;
+    @Comment("Attacks faster than a vanilla sword will do smaller knockback, proportionally.")
+    public boolean knockback_reduced_for_fast_attacks = true;
     @Comment("Multiplier for `attack_range`, during target lookup on both sides. " +
             "Large sized entities may be colliding with weapon hitbox, but center of entities can have bigger distance than `attack_range`")
     public float target_search_range_multiplier = 2F;

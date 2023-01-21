@@ -1,9 +1,10 @@
 # 1.5.5
 - Add attack speed cap
+- Add knockback reduction for fast attacks (configurable)
 - Improve back to back animation overlapping
 - Fix offhand arm invisible while 2H animations
 - Rework feinting
-- Update `staff` and `battlestaff` persets
+- Update `staff` and `battlestaff` presets
 
 # 1.5.4
 - Fix attacking hostile mounts/vehicles (Thanks to Emily Darrow)
