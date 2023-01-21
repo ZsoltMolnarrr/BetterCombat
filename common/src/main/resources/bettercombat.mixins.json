@@ -7,7 +7,7 @@
     "EnchantmentMixin",
     "ItemStackMixin",
     "LivingEntityAccessor",
-    "LivingEntityInject",
+    "LivingEntityMixin",
     "PlayerEntityAccessor",
     "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",

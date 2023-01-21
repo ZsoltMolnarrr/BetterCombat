@@ -19,6 +19,8 @@ public class ServerConfig implements ConfigData {
     public boolean allow_fast_attacks = true;
     @Comment("Allows client-side target search and server-side attack request execution against currently mounted entity of the player")
     public boolean allow_attacking_mount = false;
+    @Comment("The minimum number of ticks between two attacks")
+    public int attack_interval_cap = 2;
     @Comment("""
             Blacklist for entities that are acting as vehicle but should not be treated as protected mounts.
             Classical example is an alexsmobs:crocodile attempting a death spin.
@@ -34,6 +36,8 @@ public class ServerConfig implements ConfigData {
     public boolean movement_speed_applied_smoothly = true;
     @Comment("Determines whether or not to apply movement speed reduction while attacking mounted")
     public boolean movement_speed_effected_while_mounting = false;
+    @Comment("Attacks faster than a vanilla sword will do smaller knockback, proportionally.")
+    public boolean knockback_reduced_for_fast_attacks = true;
     @Comment("Multiplier for `attack_range`, during target lookup on both sides. " +
             "Large sized entities may be colliding with weapon hitbox, but center of entities can have bigger distance than `attack_range`")
     public float target_search_range_multiplier = 2F;

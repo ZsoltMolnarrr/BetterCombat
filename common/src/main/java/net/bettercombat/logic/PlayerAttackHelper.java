@@ -40,6 +40,11 @@ public class PlayerAttackHelper {
         return false;
     }
 
+    public static float getAttackCooldownTicksCapped(PlayerEntity player) {
+        // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
+        return Math.max(player.getAttackCooldownProgressPerTick(), BetterCombat.config.attack_interval_cap);
+    }
+
     public static AttackHand getCurrentAttack(PlayerEntity player, int comboCount) {
         if (isDualWielding(player)) {
             boolean isOffHand = shouldAttackWithOffHand(player,comboCount);

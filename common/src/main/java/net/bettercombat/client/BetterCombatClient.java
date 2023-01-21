@@ -6,6 +6,7 @@ import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.Platform;
 import net.bettercombat.PlatformClient;
+import net.bettercombat.client.animation.AnimationRegistry;
 import net.bettercombat.config.ClientConfig;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.fabricmc.api.ClientModInitializer;

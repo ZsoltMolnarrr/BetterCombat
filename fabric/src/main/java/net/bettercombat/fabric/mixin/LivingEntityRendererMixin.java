@@ -1,8 +1,8 @@
 package net.bettercombat.fabric.mixin;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
-import net.bettercombat.client.PlayerAttackAnimatable;
-import net.bettercombat.client.animation.IExtendedAnimation;
+import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
+import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -21,12 +21,12 @@ public class LivingEntityRendererMixin {
     private void modifyArg(Args args) {
         LivingEntity entity = args.get(0);
         Optional<IAnimation> currentAnimation = Optional.empty();
-        if (entity instanceof PlayerAttackAnimatable) {
-            currentAnimation = ((PlayerAttackAnimatable) entity).getCurrentAnimation();
+        if (entity instanceof FirstPersonAnimator animator) {
+            currentAnimation = animator.getActiveFirstPersonAnimation(0);
         }
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
 
-        //When in first person make the animation play facing forward, instead of slowly adjusting to player rotations
+        // When in first person make the animation play facing forward, instead of slowly adjusting to player rotations
         if (currentAnimation.isPresent()
                 && entity == MinecraftClient.getInstance().player
                 && !camera.isThirdPerson()
@@ -34,7 +34,7 @@ public class LivingEntityRendererMixin {
             // Only for IExtendedAnimation (weapon swings)
             var isActive = false; // currentAnimation.get().isActive();
             if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
-                isActive = extendedAnimation.isActiveInFirstPerson();
+                isActive = extendedAnimation.isActiveInFirstPerson(0);
             }
 
             if (isActive) {
