@@ -2,9 +2,8 @@ package net.bettercombat.mixin.client.firstpersonrender;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.BetterCombatClient;
-import net.bettercombat.client.PlayerAttackAnimatable;
-import net.bettercombat.client.animation.FirstPersonRenderHelper;
-import net.bettercombat.client.animation.IExtendedAnimation;
+import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -30,16 +29,9 @@ public class HeldItemRendererMixin {
         if (!CompatibilityFlags.firstPersonRender()) {
             return;
         }
-        Optional<IAnimation> currentAnimation = ((PlayerAttackAnimatable) player).getCurrentAnimation();
+        Optional<IAnimation> currentAnimation = ((FirstPersonAnimator) player).getActiveFirstPersonAnimation(tickDelta);
         if (currentAnimation.isPresent()) {
-            var isActive = currentAnimation.get().isActive();
-            if (currentAnimation.get() instanceof IExtendedAnimation extendedAnimation) {
-                isActive = extendedAnimation.isActiveInFirstPerson();
-            }
-
-            if (isActive) {
-                ci.cancel();
-            }
+            ci.cancel();
         }
     }
 
@@ -53,7 +45,7 @@ public class HeldItemRendererMixin {
         if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
             if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
                 var isMainHandStack = player.getMainHandStack() == stack;
-                if (FirstPersonRenderHelper.isAttackingWithOffHand) {
+                if (FirstPersonRenderHelper.current.hand().isOffHand()) {
                     if (isMainHandStack) {
                         ci.cancel();
                     }

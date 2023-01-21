@@ -2,21 +2,19 @@ package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.PlatformClient;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.BetterCombatKeybindings;
-import net.bettercombat.client.PlayerAttackAnimatable;
-import net.bettercombat.client.animation.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
-import net.bettercombat.logic.PatternMatching;
-import net.bettercombat.logic.PlayerAttackHelper;
-import net.bettercombat.logic.PlayerAttackProperties;
-import net.bettercombat.logic.WeaponRegistry;
+import net.bettercombat.logic.*;
 import net.bettercombat.network.Packets;
+import net.bettercombat.utils.PatternMatching;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.block.BlockState;
@@ -224,7 +222,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if (upswingTicks > 0
                 || player.isUsingItem()
                 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
-//            double attackCooldownTicks = player.getAttackCooldownProgressPerTick() / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
+//            double attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player) / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
 //            var currentCD = Math.round(attackCooldownTicks * player.getAttackCooldownProgress(0));
 //            System.out.println("Waiting for cooldown: " + currentCD + "/" + attackCooldownTicks);
             return;
@@ -235,26 +233,27 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         lastAttacked = 0;
         upswingStack = player.getMainHandStack();
-        float attackCooldownTicksFloat = player.getAttackCooldownProgressPerTick(); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
+        float attackCooldownTicksFloat = PlayerAttackHelper.getAttackCooldownTicksCapped(player); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
         int attackCooldownTicks = Math.round(attackCooldownTicksFloat);
         this.comboReset = Math.round(attackCooldownTicksFloat * ComboResetRate);
-        this.upswingTicks = (int)(Math.round(attackCooldownTicksFloat * upswingRate));
+        this.upswingTicks = Math.max(Math.round(attackCooldownTicksFloat * upswingRate), 1); // At least 1 upswing ticks
         this.lastSwingDuration = attackCooldownTicksFloat;
         this.itemUseCooldown = attackCooldownTicks; // Vanilla MinecraftClient property for compatibility
         setMiningCooldown(attackCooldownTicks);
 //        System.out.println("Starting upswingTicks: " + upswingTicks);
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
-        FirstPersonRenderHelper.isAttackingWithOffHand = isOffHand;
-        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, isOffHand, attackCooldownTicksFloat, upswingRate);
+        var animatedHand = AnimatedHand.from(isOffHand, attributes.isTwoHanded());
+        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
-                new Packets.AttackAnimation(player.getId(), isOffHand, animationName, attackCooldownTicksFloat, upswingRate).write());
+                new Packets.AttackAnimation(player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate).write());
     }
 
-    private void feintIfNeeded() {
-        if (BetterCombatKeybindings.feintKeyBinding.isPressed() || !areItemStackEqual(player.getMainHandStack(), upswingStack)) {
-            cancelUpswing();
+    private void cancelSwingIfNeeded() {
+        if (upswingStack != null && !areItemStackEqual(player.getMainHandStack(), upswingStack)) {
+            cancelWeaponSwing();
+            return;
         }
     }
 
@@ -319,7 +318,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         }
         targetsInReach = null;
         lastAttacked += 1;
-        feintIfNeeded();
+        cancelSwingIfNeeded();
         attackFromUpswingIfNeeded();
         updateTargetsIfNeeded();
         resetComboIfNeeded();
@@ -343,6 +342,12 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
 
     private void performAttack() {
+        if (BetterCombatKeybindings.feintKeyBinding.isPressed()) {
+            player.resetLastAttackedTicks();
+            cancelWeaponSwing();
+            return;
+        }
+
         var hand = getCurrentHand();
         if (hand == null) { return; }
         var attack = hand.attack();
@@ -351,6 +356,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             return;
         }
         // System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
+
         List<Entity> targets = TargetFinder.findAttackTargets(
                 player,
                 getCursorTarget(),
@@ -400,6 +406,18 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         ((MinecraftClientAccessor) client).setAttackCooldown(ticks); // This is actually the mining cooldown
     }
 
+    private void cancelWeaponSwing() {
+        var downWind = (int)Math.round(PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (1 - 0.5 * BetterCombat.config.upswing_multiplier));
+        ((PlayerAttackAnimatable) player).stopAttackAnimation(downWind);
+        ClientPlayNetworking.send(
+                Packets.AttackAnimation.ID,
+                Packets.AttackAnimation.stop(player.getId(), downWind).write());
+        upswingStack = null;
+        itemUseCooldown = 0;
+        setMiningCooldown(0);
+    }
+
+
     // SECTION: MinecraftClient_BetterCombat
 
     @Override
@@ -428,14 +446,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Override
     public void cancelUpswing() {
         if (upswingTicks > 0) {
-            ((PlayerAttackAnimatable) player).stopAttackAnimation();
-            ClientPlayNetworking.send(
-                    Packets.AttackAnimation.ID,
-                    Packets.AttackAnimation.stop(player.getId()).write());
-            upswingTicks = 0;
-            upswingStack = null;
-            itemUseCooldown = 0;
-            setMiningCooldown(0);
+            cancelWeaponSwing();
         }
     }
 }

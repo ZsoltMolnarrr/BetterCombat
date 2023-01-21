@@ -11,13 +11,20 @@ import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.animation.FirstPersonAnimation;
-import net.bettercombat.client.animation.FirstPersonAnimator;
-import net.bettercombat.client.AnimationRegistry;
-import net.bettercombat.client.PlayerAttackAnimatable;
+import net.bettercombat.client.animation.first_person.CustomAnimationPlayer;
+import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
+import net.bettercombat.client.animation.AnimationRegistry;
+import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.IExtendedAnimation;
+import net.bettercombat.client.animation.modifier.AdjustmentModifier;
+import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
+import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,7 +49,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
     private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
     private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
-    private final ArrayList<ModifierLayer> additionalFirstPersonLayers = new ArrayList();
 
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @org.jetbrains.annotations.Nullable PlayerPublicKey publicKey) {
         super(world, pos, yaw, gameProfile, publicKey);
@@ -59,6 +65,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
         offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
+
+        addFirstPersonAnimationLayer(attackAnimation.base);
     }
 
     @Override
@@ -66,6 +74,13 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var instance = (Object)this;
         var player = (PlayerEntity)instance;
         var isLeftHanded = isLeftHanded();
+        var hasActiveAttackAnimation = attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
+
+        if (MinecraftClient.getInstance().getCameraEntity() == player) {
+            if (!hasActiveAttackAnimation) {
+                FirstPersonRenderHelper.resetProperties();
+            }
+        }
 
         // No pose during mining or item usage
 
@@ -77,7 +92,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         // Restore auto body rotation upon swing - Fix issue #11
 
-        if (getCurrentAnimation().isPresent() && getCurrentAnimation().get().isActive()) {
+        if (hasActiveAttackAnimation) {
             ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw(), 0);
         }
 
@@ -111,7 +126,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     @Override
-    public void playAttackAnimation(String name, boolean isOffHand, float length, float upswing) {
+    public void playAttackAnimation(String name, AnimatedHand animatedHand, float length, float upswing) {
+        if (MinecraftClient.getInstance().getCameraEntity() == this) {
+            FirstPersonRenderHelper.current = new FirstPersonRenderHelper.AnimationProperties(animatedHand);
+        }
         try {
             KeyframeAnimation animation = AnimationRegistry.animations.get(name);
             var copy = animation.mutableCopy();
@@ -119,7 +137,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             copy.torso.fullyEnablePart(true);
             copy.head.pitch.setEnabled(false);
             var speed = ((float)animation.endTick) / length;
-            var mirror = isOffHand;
+            var mirror = animatedHand.isOffHand();
             if(isLeftHanded()) {
                 mirror = !mirror;
             }
@@ -266,27 +284,38 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     // PlayerAttackAnimatable
 
     @Override
-    public void stopAttackAnimation() {
+    public void stopAttackAnimation(float length) {
         IAnimation currentAnimation = attackAnimation.base.getAnimation();
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
+            var fadeOut = Math.round(length);
+            attackAnimation.adjustmentModifier.fadeOut(fadeOut);
             attackAnimation.base.replaceAnimationWithFade(
-                    AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
+                    AbstractFadeModifier.standardFadeIn(fadeOut, Ease.INOUTSINE), null);
         }
-    }
-
-    @Override
-    public Optional<IAnimation> getCurrentAnimation() {
-        for (var layer: additionalFirstPersonLayers) {
-            if (layer.isActive()) {
-                return Optional.ofNullable(layer.getAnimation());
-            }
-        }
-        return Optional.ofNullable(attackAnimation.base.getAnimation());
     }
 
     // FirstPersonAnimator
 
-    public void addLayer(ModifierLayer layer) {
+    private final ArrayList<ModifierLayer> additionalFirstPersonLayers = new ArrayList<>();
+
+    public void addFirstPersonAnimationLayer(ModifierLayer layer) {
         additionalFirstPersonLayers.add(layer);
+    }
+
+    @Override
+    public Optional<IAnimation> getActiveFirstPersonAnimation(float tickDelta) {
+        for (var layer: additionalFirstPersonLayers) {
+            var animation = layer.getAnimation();
+            if (animation == null) { continue; }
+            if (animation instanceof IExtendedAnimation extendedAnimation) {
+                if (extendedAnimation.isActiveInFirstPerson(tickDelta)) {
+                    return Optional.of(animation);
+                }
+            }
+            if (layer.isActive()) {
+                return Optional.of(animation);
+            }
+        }
+        return Optional.empty();
     }
 }

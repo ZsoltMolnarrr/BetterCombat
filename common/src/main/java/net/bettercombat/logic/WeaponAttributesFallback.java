@@ -1,6 +1,7 @@
 package net.bettercombat.logic;
 
 import net.bettercombat.BetterCombat;
+import net.bettercombat.utils.PatternMatching;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;

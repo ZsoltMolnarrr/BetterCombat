@@ -3,6 +3,7 @@ package net.bettercombat.network;
 import com.google.gson.Gson;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.config.ServerConfig;
+import net.bettercombat.logic.AnimatedHand;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -44,15 +45,15 @@ public class Packets {
         }
     }
 
-    public record AttackAnimation(int playerId, boolean isOffHand, String animationName, float length, float upswing) {
+    public record AttackAnimation(int playerId, AnimatedHand animatedHand, String animationName, float length, float upswing) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "attack_animation");
         public static String StopSymbol = "!STOP!";
-        public static AttackAnimation stop(int playerId) { return new AttackAnimation(playerId, false, StopSymbol, 0, 0); }
+        public static AttackAnimation stop(int playerId, int length) { return new AttackAnimation(playerId, AnimatedHand.MAIN_HAND, StopSymbol, length, 0); }
 
         public PacketByteBuf write() {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeInt(playerId);
-            buffer.writeBoolean(isOffHand);
+            buffer.writeInt(animatedHand.ordinal());
             buffer.writeString(animationName);
             buffer.writeFloat(length);
             buffer.writeFloat(upswing);
@@ -61,11 +62,11 @@ public class Packets {
 
         public static AttackAnimation read(PacketByteBuf buffer) {
             int playerId = buffer.readInt();
-            boolean isOffHand = buffer.readBoolean();
+            var animatedHand = AnimatedHand.values()[buffer.readInt()];
             String animationName = buffer.readString();
             float length = buffer.readFloat();
             float upswing = buffer.readFloat();
-            return new AttackAnimation(playerId, isOffHand, animationName, length, upswing);
+            return new AttackAnimation(playerId, animatedHand, animationName, length, upswing);
         }
     }
 

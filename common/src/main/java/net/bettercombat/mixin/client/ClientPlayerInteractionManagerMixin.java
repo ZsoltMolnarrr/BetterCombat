@@ -1,6 +1,7 @@
 package net.bettercombat.mixin.client;
 
 import net.bettercombat.BetterCombat;
+import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -22,7 +23,7 @@ public class ClientPlayerInteractionManagerMixin {
     public void cancelBlockBreaking_FixAttackCD(CallbackInfo ci) {
         try {
             var player = client.player;
-            var cooldownLength = player.getAttackCooldownProgressPerTick(); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
+            var cooldownLength = PlayerAttackHelper.getAttackCooldownTicksCapped(player); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
             float typicalUpswing = 0.5F;
             int reducedCooldown = Math.round(cooldownLength * typicalUpswing * BetterCombat.config.upswing_multiplier);
             ((LivingEntityAccessor)player).setLastAttackedTicks(reducedCooldown);

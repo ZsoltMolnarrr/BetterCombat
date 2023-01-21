@@ -1,6 +1,7 @@
 package net.bettercombat.client;
 
 import net.bettercombat.BetterCombat;
+import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -17,9 +18,9 @@ public class ClientNetwork {
                 var entity = client.world.getEntityById(packet.playerId());
                 if (entity instanceof PlayerEntity) {
                     if (packet.animationName().equals(Packets.AttackAnimation.StopSymbol)) {
-                        ((PlayerAttackAnimatable)entity).stopAttackAnimation();
+                        ((PlayerAttackAnimatable)entity).stopAttackAnimation(packet.length());
                     } else {
-                        ((PlayerAttackAnimatable)entity).playAttackAnimation(packet.animationName(), packet.isOffHand(), packet.length(), packet.upswing());
+                        ((PlayerAttackAnimatable)entity).playAttackAnimation(packet.animationName(), packet.animatedHand(), packet.length(), packet.upswing());
                     }
                 }
             });
