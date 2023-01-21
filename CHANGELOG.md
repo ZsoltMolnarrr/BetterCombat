@@ -3,6 +3,7 @@
 - Improve back to back animation overlapping
 - Fix offhand arm invisible while 2H animations
 - Rework feinting
+- Update `staff` and `battlestaff` persets
 
 # 1.5.4
 - Fix attacking hostile mounts/vehicles (Thanks to Emily Darrow)

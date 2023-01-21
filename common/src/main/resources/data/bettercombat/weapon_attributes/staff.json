@@ -1,6 +1,5 @@
 {
   "attributes": {
-    "comment": "DEPRECATED STOP USING THIS",
     "attack_range": 3,
     "two_handed": true,
     "category": "staff",
@@ -8,7 +7,7 @@
       {
         "hitbox": "HORIZONTAL_PLANE",
         "damage_multiplier": 0.8,
-        "angle": 180,
+        "angle": 160,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slash_horizontal_right",
         "swing_sound": {
@@ -18,7 +17,7 @@
       {
         "hitbox": "HORIZONTAL_PLANE",
         "damage_multiplier": 1,
-        "angle": 180,
+        "angle": 160,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slash_horizontal_left",
         "swing_sound": {
@@ -26,46 +25,15 @@
         }
       },
       {
-        "hitbox": "HORIZONTAL_PLANE",
+        "hitbox": "VERTICAL_PLANE",
         "damage_multiplier": 1.2,
-        "angle": 360,
-        "upswing": 0.5,
-        "animation": "bettercombat:two_handed_spin",
-        "swing_sound": {
-          "id": "bettercombat:staff_slam"
-        }
-      },
-      {
-        "hitbox": "FORWARD_BOX",
-        "damage_multiplier": 1.4,
-        "angle": 180,
+        "angle": 120,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slam",
         "swing_sound": {
-          "id": "bettercombat:staff_stab"
-        }
-      },
-      {
-        "hitbox": "FORWARD_BOX",
-        "damage_multiplier": 1,
-        "angle": 180,
-        "upswing": 0.5,
-        "animation": "bettercombat:two_handed_stab_left",
-        "swing_sound": {
-          "id": "bettercombat:staff_stab"
-        }
-      },
-      {
-        "hitbox": "FORWARD_BOX",
-        "damage_multiplier": 1,
-        "angle": 180,
-        "upswing": 0.5,
-        "animation": "bettercombat:two_handed_stab_right",
-        "swing_sound": {
-          "id": "bettercombat:staff_stab"
+          "id": "bettercombat:staff_slam"
         }
       }
-
     ]
   }
 }
