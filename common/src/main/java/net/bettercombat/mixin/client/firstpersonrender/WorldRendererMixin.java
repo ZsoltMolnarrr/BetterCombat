@@ -1,6 +1,7 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
+import net.bettercombat.client.animation.first_person.FirstPersonAnimation;
 import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
 import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
 import net.bettercombat.compatibility.CompatibilityFlags;
@@ -45,17 +46,16 @@ public abstract class WorldRendererMixin {
             }
         }
 
-        Optional<IAnimation> currentAnimation;
+        Optional<FirstPersonAnimation> currentAnimation = Optional.empty();
         if (entity instanceof FirstPersonAnimator animator) {
             currentAnimation = animator.getActiveFirstPersonAnimation(tickDelta);
-        } else {
-            currentAnimation = Optional.empty();
         }
 
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
         if (entity == camera.getFocusedEntity() && !camera.isThirdPerson()) {
             if(currentAnimation.isPresent()) {
-                FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel = true;
+                // Mark this render cycle as First Person Render, with given configuration
+                FirstPersonRenderHelper.setFirstPersonRenderCycle(currentAnimation.get());
                 // Do nothing -> Fallthrough (allow render)
                 return;
             } else {
@@ -73,7 +73,7 @@ public abstract class WorldRendererMixin {
                                       float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
         if (entity == camera.getFocusedEntity()) {
-            FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel = false;
+            FirstPersonRenderHelper.clearFirstPersonRenderCycle(); // Unmark this render cycle
         }
     }
 }

@@ -1,18 +1,14 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
-import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
-import net.bettercombat.logic.AnimatedHand;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Arm;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,38 +29,26 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                                         float f, float g, MatrixStack matrixStack,
                                         VertexConsumerProvider vertexConsumerProvider,
                                         int i, CallbackInfo ci) {
-        if (!FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+        var animation = FirstPersonRenderHelper.getRenderCycleData();
+        if (animation == null) {
             return;
         }
 
-        var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
-        if (entity == MinecraftClient.getInstance().player) {
-            var player = MinecraftClient.getInstance().player;
-            setPartsVisible(false);
-            var showRightArm = showArms;
-            var showLeftArm = showArms;
-            if (FirstPersonRenderHelper.current.hand() != AnimatedHand.TWO_HANDED) {
-                if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
-                    boolean isOffhand = FirstPersonRenderHelper.current.hand().isOffHand();
-                    showRightArm = showRightArm && !isOffhand;
-                    showLeftArm = showLeftArm && isOffhand;
-                }
-                if (entity.getMainArm() == Arm.LEFT) {
-                    var rightValue = showRightArm;
-                    var leftValue = showLeftArm;
-                    showRightArm = leftValue;
-                    showLeftArm = rightValue;
-                }
-            }
+        if (entity == MinecraftClient.getInstance().getCameraEntity()) {
+            // Hiding all parts, because they should not be visible in first person
+            setAllPartsVisible(false);
+            // Showing arms based on configuration
+            var showRightArm = animation.config().showRightArm();
+            var showLeftArm = animation.config().showLeftArm();
             this.model.rightArm.visible = showRightArm;
-            this.model.rightSleeve.visible = showRightArm && player.isPartVisible(PlayerModelPart.RIGHT_SLEEVE);
+            this.model.rightSleeve.visible = showRightArm;
             this.model.leftArm.visible = showLeftArm;
-            this.model.leftSleeve.visible = showLeftArm && player.isPartVisible(PlayerModelPart.LEFT_SLEEVE);
+            this.model.leftSleeve.visible = showLeftArm;
         }
         // No `else` case needed to show parts, since the default state should be correct already
     }
 
-    private void setPartsVisible(boolean visible) {
+    private void setAllPartsVisible(boolean visible) {
         this.model.head.visible = visible;
         this.model.body.visible = visible;
         this.model.leftLeg.visible = visible;

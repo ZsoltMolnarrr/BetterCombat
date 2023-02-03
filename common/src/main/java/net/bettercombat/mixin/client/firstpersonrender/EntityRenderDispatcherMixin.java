@@ -15,7 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class EntityRenderDispatcherMixin {
     @Inject(method = "renderShadow", at = @At("HEAD"), cancellable = true)
     private static void pre_renderShadow(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Entity entity, float opacity, float tickDelta, WorldView world, float radius, CallbackInfo ci) {
-        if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+        if (FirstPersonRenderHelper.isRenderCycleFirstPerson()) {
+            // Shadow doesn't render in first person,
+            // so we don't want to make it appear during first person animation
             ci.cancel();
         }
     }

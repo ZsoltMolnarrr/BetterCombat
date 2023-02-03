@@ -19,12 +19,15 @@ public class LivingEntityRendererMixin {
     @Redirect(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
             at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/LivingEntityRenderer;features:Ljava/util/List;", opcode = Opcodes.GETFIELD))
     private List<Object> getFeaturesConditionally(LivingEntityRenderer renderer) {
-        if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+        if (FirstPersonRenderHelper.isRenderCycleFirstPerson()) {
+            // Inside first person render cycle
+            // We don't want to render any feature except the held items
             return features.stream()
                     .filter( item -> {
                         return item instanceof PlayerHeldItemFeatureRenderer;
                     }).collect(Collectors.toList());
         } else {
+            // Normal operations
             return features;
         }
     }

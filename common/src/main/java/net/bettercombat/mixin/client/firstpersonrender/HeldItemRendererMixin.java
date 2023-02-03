@@ -29,7 +29,7 @@ public class HeldItemRendererMixin {
         if (!CompatibilityFlags.firstPersonRender()) {
             return;
         }
-        Optional<IAnimation> currentAnimation = ((FirstPersonAnimator) player).getActiveFirstPersonAnimation(tickDelta);
+        var currentAnimation = ((FirstPersonAnimator) player).getActiveFirstPersonAnimation(tickDelta);
         if (currentAnimation.isPresent()) {
             ci.cancel();
         }
@@ -38,21 +38,20 @@ public class HeldItemRendererMixin {
     @Inject(method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
             at = @At("HEAD"), cancellable = true)
     private void renderItem_HEAD(LivingEntity entity, ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        var player = MinecraftClient.getInstance().player;
-        if (entity != player) {
+        if (entity != MinecraftClient.getInstance().getCameraEntity()) {
             return;
         }
-        if (FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
-            if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
-                var isMainHandStack = player.getMainHandStack() == stack;
-                if (FirstPersonRenderHelper.current.hand().isOffHand()) {
-                    if (isMainHandStack) {
-                        ci.cancel();
-                    }
-                } else {
-                    if (!isMainHandStack) {
-                        ci.cancel();
-                    }
+        if (FirstPersonRenderHelper.isRenderCycleFirstPerson()) {
+            var animation = FirstPersonRenderHelper.getRenderCycleData();
+            var isMainHandStack = entity.getMainHandStack() == stack;
+            // Hiding item stack
+            if (isMainHandStack) {
+                if (!animation.config().showRightItem()) {
+                    ci.cancel();
+                }
+            } else {
+                if (!animation.config().showLeftItem()) {
+                    ci.cancel();
                 }
             }
         }

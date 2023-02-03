@@ -10,14 +10,12 @@ import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.BetterCombat;
-import net.bettercombat.api.animation.FirstPersonAnimation;
-import net.bettercombat.client.animation.first_person.CustomAnimationPlayer;
-import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
+import net.bettercombat.api.animation.FirstPersonAnimationAPI;
+import net.bettercombat.client.BetterCombatClient;
+import net.bettercombat.client.animation.first_person.*;
 import net.bettercombat.client.animation.AnimationRegistry;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
-import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
-import net.bettercombat.client.animation.first_person.IExtendedAnimation;
 import net.bettercombat.client.animation.modifier.AdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 import net.bettercombat.logic.AnimatedHand;
@@ -173,7 +171,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            if (FirstPersonAnimation.isRenderingAttackAnimationInFirstPerson()) {
+            if (FirstPersonAnimationAPI.isRenderingAttackAnimationInFirstPerson()) {
                 var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
                 switch (partName) {
@@ -220,7 +218,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            if (!FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+            if (!FirstPersonRenderHelper.isRenderCycleFirstPerson()) {
                 switch (partName) {
                     case "rightArm", "leftArm" -> {
                         if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isSneaking()) {
@@ -303,19 +301,45 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     }
 
     @Override
-    public Optional<IAnimation> getActiveFirstPersonAnimation(float tickDelta) {
+    public Optional<FirstPersonAnimation> getActiveFirstPersonAnimation(float tickDelta) {
         for (var layer: additionalFirstPersonLayers) {
             var animation = layer.getAnimation();
             if (animation == null) { continue; }
             if (animation instanceof IExtendedAnimation extendedAnimation) {
                 if (extendedAnimation.isActiveInFirstPerson(tickDelta)) {
-                    return Optional.of(animation);
+                    return Optional.of(new FirstPersonAnimation(animation, firstPersonConfig()));
                 }
             }
             if (layer.isActive()) {
-                return Optional.of(animation);
+                return Optional.of(new FirstPersonAnimation(animation, firstPersonConfig()));
             }
         }
         return Optional.empty();
+    }
+
+    private FirstPersonAnimation.Configuration firstPersonConfig() {
+        boolean isOffhand = FirstPersonRenderHelper.current.hand().isOffHand();
+        var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
+        var showRightArm = showArms;
+        var showLeftArm = showArms;
+        var showRightItem = getMainArm() != Arm.LEFT; // Right item is main hand stack in normal stack
+        var showLeftItem = !showRightItem; // Left item is opposite of right item
+        if (FirstPersonRenderHelper.current.hand() != AnimatedHand.TWO_HANDED) {
+            if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
+                showRightArm = showRightArm && !isOffhand;
+                showLeftArm = showLeftArm && isOffhand;
+            }
+            if (getMainArm() == Arm.LEFT) {
+                var rightValue = showRightArm;
+                var leftValue = showLeftArm;
+                showRightArm = leftValue;
+                showLeftArm = rightValue;
+            }
+        }
+        if (BetterCombatClient.config.isShowingOtherHandFirstPerson) {
+            showRightItem = true;
+            showLeftItem = true;
+        }
+        return new FirstPersonAnimation.Configuration(showRightArm, showLeftArm, showRightItem, showLeftItem);
     }
 }

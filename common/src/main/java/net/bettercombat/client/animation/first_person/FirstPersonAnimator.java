@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface FirstPersonAnimator {
     void addFirstPersonAnimationLayer(ModifierLayer layer);
-    Optional<IAnimation> getActiveFirstPersonAnimation(float tickDelta);
+    Optional<FirstPersonAnimation> getActiveFirstPersonAnimation(float tickDelta);
 }
