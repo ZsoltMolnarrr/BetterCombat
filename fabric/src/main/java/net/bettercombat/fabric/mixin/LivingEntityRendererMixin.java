@@ -1,19 +1,10 @@
 package net.bettercombat.fabric.mixin;
 
-import dev.kosmx.playerAnim.api.layered.IAnimation;
-import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
-import net.bettercombat.client.animation.first_person.IExtendedAnimation;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-
-import java.util.Optional;
 
 @Mixin(LivingEntityRenderer.class)
 public class LivingEntityRendererMixin {

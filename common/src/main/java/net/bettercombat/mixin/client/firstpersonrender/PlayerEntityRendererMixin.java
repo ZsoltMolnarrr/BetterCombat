@@ -1,6 +1,6 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
-import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -29,7 +29,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                                         float f, float g, MatrixStack matrixStack,
                                         VertexConsumerProvider vertexConsumerProvider,
                                         int i, CallbackInfo ci) {
-        var animation = FirstPersonRenderHelper.getRenderCycleData();
+        var animation = FirstPersonRenderState.getRenderCycleData();
         if (animation == null) {
             return;
         }

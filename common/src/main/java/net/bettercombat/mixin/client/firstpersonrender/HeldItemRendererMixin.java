@@ -1,9 +1,7 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
-import dev.kosmx.playerAnim.api.layered.IAnimation;
-import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
-import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderState;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -17,8 +15,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Optional;
 
 @Mixin(HeldItemRenderer.class)
 public class HeldItemRendererMixin {
@@ -41,10 +37,10 @@ public class HeldItemRendererMixin {
         if (entity != MinecraftClient.getInstance().getCameraEntity()) {
             return;
         }
-        if (FirstPersonRenderHelper.isRenderCycleFirstPerson()) {
-            var animation = FirstPersonRenderHelper.getRenderCycleData();
+        if (FirstPersonRenderState.isRenderCycleFirstPerson()) {
+            var animation = FirstPersonRenderState.getRenderCycleData();
             var isMainHandStack = entity.getMainHandStack() == stack;
-            // Hiding item stack
+            // Hiding held items based on config
             if (isMainHandStack) {
                 if (!animation.config().showRightItem()) {
                     ci.cancel();

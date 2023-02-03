@@ -4,5 +4,9 @@ import dev.kosmx.playerAnim.api.layered.IAnimation;
 
 public record FirstPersonAnimation(IAnimation animation, Configuration config) {
     public record Configuration(boolean showRightArm, boolean showLeftArm,
-                                boolean showRightItem, boolean showLeftItem) {}
+                                boolean showRightItem, boolean showLeftItem) {
+        public static Configuration defaults() {
+            return new Configuration(false, false, true, true);
+        }
+    }
 }

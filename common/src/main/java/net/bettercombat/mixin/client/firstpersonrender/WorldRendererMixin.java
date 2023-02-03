@@ -1,9 +1,8 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
-import dev.kosmx.playerAnim.api.layered.IAnimation;
 import net.bettercombat.client.animation.first_person.FirstPersonAnimation;
 import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
-import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderState;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
@@ -27,8 +26,10 @@ public abstract class WorldRendererMixin {
             "isThirdPerson()Z"))
     private boolean renderInFirstPerson(Camera instance) {
         if (!CompatibilityFlags.firstPersonRender() || MinecraftClient.getInstance().player.isSleeping()) {
+            // Use vanilla behaviour special cases
             return instance.isThirdPerson();
         }
+        // This `return true` kicks off rendering of the player model in first person
         return true;
     }
 
@@ -55,7 +56,7 @@ public abstract class WorldRendererMixin {
         if (entity == camera.getFocusedEntity() && !camera.isThirdPerson()) {
             if(currentAnimation.isPresent()) {
                 // Mark this render cycle as First Person Render, with given configuration
-                FirstPersonRenderHelper.setFirstPersonRenderCycle(currentAnimation.get());
+                FirstPersonRenderState.setFirstPersonRenderCycle(currentAnimation.get());
                 // Do nothing -> Fallthrough (allow render)
                 return;
             } else {
@@ -73,7 +74,7 @@ public abstract class WorldRendererMixin {
                                       float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
         Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
         if (entity == camera.getFocusedEntity()) {
-            FirstPersonRenderHelper.clearFirstPersonRenderCycle(); // Unmark this render cycle
+            FirstPersonRenderState.clearFirstPersonRenderCycle(); // Unmark this render cycle
         }
     }
 }

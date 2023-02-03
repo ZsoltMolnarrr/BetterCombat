@@ -74,12 +74,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var isLeftHanded = isLeftHanded();
         var hasActiveAttackAnimation = attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
 
-        if (MinecraftClient.getInstance().getCameraEntity() == player) {
-            if (!hasActiveAttackAnimation) {
-                FirstPersonRenderHelper.resetProperties();
-            }
-        }
-
         // No pose during mining or item usage
 
         if (player.handSwinging || player.isUsingItem()) {
@@ -125,9 +119,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public void playAttackAnimation(String name, AnimatedHand animatedHand, float length, float upswing) {
-        if (MinecraftClient.getInstance().getCameraEntity() == this) {
-            FirstPersonRenderHelper.current = new FirstPersonRenderHelper.AnimationProperties(animatedHand);
-        }
         try {
             KeyframeAnimation animation = AnimationRegistry.animations.get(name);
             var copy = animation.mutableCopy();
@@ -152,9 +143,12 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                             new TransmissionSpeedModifier.Gear(length, speed)
                     ));
             attackAnimation.mirror.setEnabled(mirror);
+
+            var player = new CustomAnimationPlayer(copy.build(), 0);
+            player.playInFirstPersonAsCombat(firstPersonConfig(animatedHand));
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
-                    new CustomAnimationPlayer(copy.build(), 0));
+                    player);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -218,7 +212,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            if (!FirstPersonRenderHelper.isRenderCycleFirstPerson()) {
+            if (!FirstPersonRenderState.isRenderCycleFirstPerson()) {
                 switch (partName) {
                     case "rightArm", "leftArm" -> {
                         if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isSneaking()) {
@@ -305,41 +299,49 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         for (var layer: additionalFirstPersonLayers) {
             var animation = layer.getAnimation();
             if (animation == null) { continue; }
-            if (animation instanceof IExtendedAnimation extendedAnimation) {
-                if (extendedAnimation.isActiveInFirstPerson(tickDelta)) {
-                    return Optional.of(new FirstPersonAnimation(animation, firstPersonConfig()));
+            if (animation instanceof FirstPersonAnimationPlayer firstPersonPlayer) {
+                var firstPersonConfig = firstPersonPlayer.getFirstPersonPlaybackConfig();
+                firstPersonConfig = firstPersonConfig != null ? firstPersonConfig : FirstPersonAnimation.Configuration.defaults();
+                if (firstPersonPlayer.isActiveInFirstPerson(tickDelta)) {
+                    return Optional.of(new FirstPersonAnimation(animation, firstPersonConfig));
                 }
-            }
-            if (layer.isActive()) {
-                return Optional.of(new FirstPersonAnimation(animation, firstPersonConfig()));
             }
         }
         return Optional.empty();
     }
 
-    private FirstPersonAnimation.Configuration firstPersonConfig() {
-        boolean isOffhand = FirstPersonRenderHelper.current.hand().isOffHand();
+    private FirstPersonAnimation.Configuration firstPersonConfig(AnimatedHand animatedHand) {
+        boolean isOffhand = animatedHand.isOffHand();
+        boolean leftHanded = getMainArm() == Arm.LEFT;
         var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
         var showRightArm = showArms;
         var showLeftArm = showArms;
-        var showRightItem = getMainArm() != Arm.LEFT; // Right item is main hand stack in normal stack
-        var showLeftItem = !showRightItem; // Left item is opposite of right item
-        if (FirstPersonRenderHelper.current.hand() != AnimatedHand.TWO_HANDED) {
+        if (animatedHand != AnimatedHand.TWO_HANDED) {
             if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
                 showRightArm = showRightArm && !isOffhand;
                 showLeftArm = showLeftArm && isOffhand;
             }
-            if (getMainArm() == Arm.LEFT) {
+            if (leftHanded) {
+                // Inverting if player is left-handed
                 var rightValue = showRightArm;
                 var leftValue = showLeftArm;
                 showRightArm = leftValue;
                 showLeftArm = rightValue;
             }
         }
+
+        var showRightItem = !isOffhand; // Right item is main hand stack in normal stack
+        if (leftHanded) {
+            showRightItem = !showRightItem; // Inverting if player is left-handed
+        }
+        var showLeftItem = !showRightItem; // Left item is opposite of right item
         if (BetterCombatClient.config.isShowingOtherHandFirstPerson) {
             showRightItem = true;
             showLeftItem = true;
         }
-        return new FirstPersonAnimation.Configuration(showRightArm, showLeftArm, showRightItem, showLeftItem);
+
+        var config = new FirstPersonAnimation.Configuration(showRightArm, showLeftArm, showRightItem, showLeftItem);
+        System.out.println("FirstPersonAnimation.Configuration: " + config);
+        return config;
     }
 }

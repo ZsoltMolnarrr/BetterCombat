@@ -1,6 +1,6 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
-import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderState;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class EntityRenderDispatcherMixin {
     @Inject(method = "renderShadow", at = @At("HEAD"), cancellable = true)
     private static void pre_renderShadow(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Entity entity, float opacity, float tickDelta, WorldView world, float radius, CallbackInfo ci) {
-        if (FirstPersonRenderHelper.isRenderCycleFirstPerson()) {
+        if (FirstPersonRenderState.isRenderCycleFirstPerson()) {
             // Shadow doesn't render in first person,
             // so we don't want to make it appear during first person animation
             ci.cancel();

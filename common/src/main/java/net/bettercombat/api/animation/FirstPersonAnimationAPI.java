@@ -2,7 +2,7 @@ package net.bettercombat.api.animation;
 
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
-import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderState;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
 public class FirstPersonAnimationAPI {
@@ -12,6 +12,6 @@ public class FirstPersonAnimationAPI {
     }
 
     public static boolean isRenderingAttackAnimationInFirstPerson() {
-        return FirstPersonRenderHelper.isRenderCycleFirstPerson();
+        return FirstPersonRenderState.isRenderCycleFirstPerson();
     }
 }

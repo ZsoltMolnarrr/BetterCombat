@@ -1,6 +1,6 @@
 package net.bettercombat.mixin.client.firstpersonrender;
 
-import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
+import net.bettercombat.client.animation.first_person.FirstPersonRenderState;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.feature.PlayerHeldItemFeatureRenderer;
 import org.objectweb.asm.Opcodes;
@@ -19,7 +19,7 @@ public class LivingEntityRendererMixin {
     @Redirect(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
             at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/LivingEntityRenderer;features:Ljava/util/List;", opcode = Opcodes.GETFIELD))
     private List<Object> getFeaturesConditionally(LivingEntityRenderer renderer) {
-        if (FirstPersonRenderHelper.isRenderCycleFirstPerson()) {
+        if (FirstPersonRenderState.isRenderCycleFirstPerson()) {
             // Inside first person render cycle
             // We don't want to render any feature except the held items
             return features.stream()
