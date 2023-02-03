@@ -1,6 +1,8 @@
 package net.bettercombat.mixin.client;
 
 import com.mojang.authlib.GameProfile;
+import dev.kosmx.playerAnim.api.first_person.FirstPersonAnimation;
+import dev.kosmx.playerAnim.api.first_person.FirstPersonRenderState;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
@@ -12,7 +14,6 @@ import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.animation.FirstPersonAnimationAPI;
 import net.bettercombat.client.BetterCombatClient;
-import net.bettercombat.client.animation.first_person.*;
 import net.bettercombat.client.animation.AnimationRegistry;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
@@ -22,7 +23,6 @@ import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable, FirstPersonAnimator {
+public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
     private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAttackAdjustment());
     private final PoseSubStack mainHandBodyPose = new PoseSubStack(createPoseAdjustment(), true, true);
     private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
@@ -144,8 +144,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                     ));
             attackAnimation.mirror.setEnabled(mirror);
 
-            var player = new CustomAnimationPlayer(copy.build(), 0);
-            player.playInFirstPersonAsCombat(firstPersonConfig(animatedHand));
+            // player.playInFirstPersonAsCombat(firstPersonConfig(animatedHand));
+
+            var player = new KeyframeAnimationPlayer(copy.build(), 0);
+            player.playInFirstPersonAsCombat(new FirstPersonAnimation.Configuration(true, true, true, true));
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
                     player);
@@ -294,21 +296,21 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         additionalFirstPersonLayers.add(layer);
     }
 
-    @Override
-    public Optional<FirstPersonAnimation> getActiveFirstPersonAnimation(float tickDelta) {
-        for (var layer: additionalFirstPersonLayers) {
-            var animation = layer.getAnimation();
-            if (animation == null) { continue; }
-            if (animation instanceof FirstPersonAnimationPlayer firstPersonPlayer) {
-                var firstPersonConfig = firstPersonPlayer.getFirstPersonPlaybackConfig();
-                firstPersonConfig = firstPersonConfig != null ? firstPersonConfig : FirstPersonAnimation.Configuration.defaults();
-                if (firstPersonPlayer.isActiveInFirstPerson(tickDelta)) {
-                    return Optional.of(new FirstPersonAnimation(animation, firstPersonConfig));
-                }
-            }
-        }
-        return Optional.empty();
-    }
+//    @Override
+//    public Optional<FirstPersonAnimation> getActiveFirstPersonAnimation(float tickDelta) {
+//        for (var layer: additionalFirstPersonLayers) {
+//            var animation = layer.getAnimation();
+//            if (animation == null) { continue; }
+//            if (animation instanceof FirstPersonAnimationPlayer firstPersonPlayer) {
+//                var firstPersonConfig = firstPersonPlayer.getFirstPersonPlaybackConfig();
+//                firstPersonConfig = firstPersonConfig != null ? firstPersonConfig : FirstPersonAnimation.Configuration.defaults();
+//                if (firstPersonPlayer.isActiveInFirstPerson(tickDelta)) {
+//                    return Optional.of(new FirstPersonAnimation(animation, firstPersonConfig));
+//                }
+//            }
+//        }
+//        return Optional.empty();
+//    }
 
     private FirstPersonAnimation.Configuration firstPersonConfig(AnimatedHand animatedHand) {
         boolean isOffhand = animatedHand.isOffHand();
