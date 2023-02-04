@@ -5,14 +5,12 @@ import dev.kosmx.playerAnim.api.first_person.FirstPersonAnimation;
 import dev.kosmx.playerAnim.api.first_person.FirstPersonRenderState;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
-import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.BetterCombat;
-import net.bettercombat.api.animation.FirstPersonAnimationAPI;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.AnimationRegistry;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
@@ -36,7 +34,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,8 +60,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
         offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
-
-        addFirstPersonAnimationLayer(attackAnimation.base);
     }
 
     @Override
@@ -144,10 +139,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                     ));
             attackAnimation.mirror.setEnabled(mirror);
 
-            // player.playInFirstPersonAsCombat(firstPersonConfig(animatedHand));
-
             var player = new KeyframeAnimationPlayer(copy.build(), 0);
-            player.playInFirstPersonAsCombat(new FirstPersonAnimation.Configuration(true, true, true, true));
+            player.playInFirstPersonAsCombat(firstPersonConfig(animatedHand));
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
                     player);
@@ -167,7 +160,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            if (FirstPersonAnimationAPI.isRenderingAttackAnimationInFirstPerson()) {
+            if (FirstPersonRenderState.isRenderCycleFirstPerson()) {
                 var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
                 switch (partName) {
@@ -290,28 +283,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     // FirstPersonAnimator
 
-    private final ArrayList<ModifierLayer> additionalFirstPersonLayers = new ArrayList<>();
-
-    public void addFirstPersonAnimationLayer(ModifierLayer layer) {
-        additionalFirstPersonLayers.add(layer);
-    }
-
-//    @Override
-//    public Optional<FirstPersonAnimation> getActiveFirstPersonAnimation(float tickDelta) {
-//        for (var layer: additionalFirstPersonLayers) {
-//            var animation = layer.getAnimation();
-//            if (animation == null) { continue; }
-//            if (animation instanceof FirstPersonAnimationPlayer firstPersonPlayer) {
-//                var firstPersonConfig = firstPersonPlayer.getFirstPersonPlaybackConfig();
-//                firstPersonConfig = firstPersonConfig != null ? firstPersonConfig : FirstPersonAnimation.Configuration.defaults();
-//                if (firstPersonPlayer.isActiveInFirstPerson(tickDelta)) {
-//                    return Optional.of(new FirstPersonAnimation(animation, firstPersonConfig));
-//                }
-//            }
-//        }
-//        return Optional.empty();
-//    }
-
     private FirstPersonAnimation.Configuration firstPersonConfig(AnimatedHand animatedHand) {
         boolean isOffhand = animatedHand.isOffHand();
         boolean leftHanded = getMainArm() == Arm.LEFT;
@@ -343,7 +314,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         }
 
         var config = new FirstPersonAnimation.Configuration(showRightArm, showLeftArm, showRightItem, showLeftItem);
-        System.out.println("FirstPersonAnimation.Configuration: " + config);
+        // System.out.println("FirstPersonAnimation.Configuration: " + config);
         return config;
     }
 }
