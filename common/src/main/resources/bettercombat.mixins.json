@@ -25,6 +25,7 @@
   ],
   "server": [
   ],
+  "plugin": "net.bettercombat.mixin.BetterCombatMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }

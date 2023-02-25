@@ -139,7 +139,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                     ));
             attackAnimation.mirror.setEnabled(mirror);
 
-            var player = new KeyframeAnimationPlayer(copy.build(), 0);
+            var player = new CustomAnimationPlayer(copy.build(), 0);
             player.playInFirstPersonAsCombat(firstPersonConfig(animatedHand));
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
