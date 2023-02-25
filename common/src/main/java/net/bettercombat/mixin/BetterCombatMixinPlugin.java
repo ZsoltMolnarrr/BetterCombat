@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class BetterCombatMixinPlugin implements IMixinConfigPlugin {
     @Override
@@ -16,11 +17,27 @@ public class BetterCombatMixinPlugin implements IMixinConfigPlugin {
         return null;
     }
 
+
+    private Supplier<Boolean> playerAnimatorPresent = () -> {
+        boolean result;
+        try {
+            Class.forName("dev.kosmx.playerAnim.api.layered.IAnimation").getName();
+            result = true;
+        } catch(ClassNotFoundException e) {
+            result = false;
+        }
+
+        boolean finalResult = result;
+        playerAnimatorPresent = () -> { return finalResult; };
+
+        return result;
+    };
+
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-//        if (!Platform.isModLoaded("player-animator")) {
-//            return false;
-//        }
+        if (!playerAnimatorPresent.get()) {
+            return false;
+        }
         return true;
     }
 
