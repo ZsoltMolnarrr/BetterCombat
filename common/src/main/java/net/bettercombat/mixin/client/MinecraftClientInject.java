@@ -7,6 +7,7 @@ import net.bettercombat.PlatformClient;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
+import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.BetterCombatKeybindings;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
@@ -246,6 +247,9 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         ClientPlayNetworking.send(
                 Packets.AttackAnimation.ID,
                 new Packets.AttackAnimation(player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate).write());
+        BetterCombatClientEvents.ATTACK_START.invoke(handler -> {
+            handler.onPlayerAttackStart(player, hand);
+        });
     }
 
     private void cancelSwingIfNeeded() {
@@ -355,9 +359,10 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         }
         // System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
 
+        var cursorTarget = getCursorTarget();
         List<Entity> targets = TargetFinder.findAttackTargets(
                 player,
-                getCursorTarget(),
+                cursorTarget,
                 attack,
                 hand.attributes().attackRange());
         updateTargetsInReach(targets);
@@ -374,6 +379,9 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             player.attack(target);
         }
         player.resetLastAttackedTicks();
+        BetterCombatClientEvents.ATTACK_HIT.invoke(handler -> {
+            handler.onPlayerAttackStart(player, hand, targets, cursorTarget);
+        });
 
         setComboCount(getComboCount() + 1);
         if (!hand.isOffHand()) {
