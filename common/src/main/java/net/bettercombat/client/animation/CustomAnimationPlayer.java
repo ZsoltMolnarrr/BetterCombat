@@ -1,7 +1,9 @@
 package net.bettercombat.client.animation;
 
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import org.jetbrains.annotations.NotNull;
 
 public class CustomAnimationPlayer extends KeyframeAnimationPlayer {
     public CustomAnimationPlayer(KeyframeAnimation emote, int t, boolean mutable) {
@@ -18,7 +20,10 @@ public class CustomAnimationPlayer extends KeyframeAnimationPlayer {
     }
 
     @Override
-    public boolean isActiveInFirstPerson(float tickDelta) {
-        return super.isActiveInFirstPerson(tickDelta) && !isWindingDown(tickDelta);
+    public @NotNull FirstPersonMode getFirstPersonMode(float tickDelta) {
+        if (isWindingDown(tickDelta)) {
+            return FirstPersonMode.NONE;
+        }
+        return super.getFirstPersonMode(tickDelta);
     }
 }

@@ -20,7 +20,9 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+
     modImplementation ("dev.kosmx.player-anim:player-animation-lib:${project.player_anim_version}")
+    // modImplementation(files("../fabric/run/mods/dev/player-animation-lib-fabric-${project.player_anim_version}.jar"))
     implementation ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
     modCompileOnly("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive false }

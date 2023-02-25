@@ -1,8 +1,8 @@
 package net.bettercombat.mixin.client;
 
 import com.mojang.authlib.GameProfile;
-import dev.kosmx.playerAnim.api.first_person.FirstPersonAnimation;
-import dev.kosmx.playerAnim.api.first_person.FirstPersonRenderState;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
@@ -98,7 +98,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 newOffHandPose = AnimationRegistry.animations.get(offHandAttributes.offHandPose());
             }
         }
-
         mainHandItemPose.setPose(newMainHandPose, isLeftHanded);
         offHandItemPose.setPose(newOffHandPose, isLeftHanded);
 
@@ -140,7 +139,9 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             attackAnimation.mirror.setEnabled(mirror);
 
             var player = new CustomAnimationPlayer(copy.build(), 0);
-            player.playInFirstPersonAsCombat(firstPersonConfig(animatedHand));
+            player.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
+//            player.setFirstPersonConfiguration(new FirstPersonConfiguration(true, true, true, true));
+            player.setFirstPersonConfiguration(firstPersonConfig(animatedHand));
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
                     player);
@@ -160,7 +161,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            if (FirstPersonRenderState.isRenderCycleFirstPerson()) {
+            if (FirstPersonMode.isFirstPersonPass()) {
                 var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
                 switch (partName) {
@@ -207,7 +208,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            if (!FirstPersonRenderState.isRenderCycleFirstPerson()) {
+            if (!FirstPersonMode.isFirstPersonPass()) {
                 switch (partName) {
                     case "rightArm", "leftArm" -> {
                         if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isSneaking()) {
@@ -283,7 +284,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     // FirstPersonAnimator
 
-    private FirstPersonAnimation.Configuration firstPersonConfig(AnimatedHand animatedHand) {
+    private FirstPersonConfiguration firstPersonConfig(AnimatedHand animatedHand) {
         boolean isOffhand = animatedHand.isOffHand();
         boolean leftHanded = getMainArm() == Arm.LEFT;
         var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
@@ -294,26 +295,26 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 showRightArm = showRightArm && !isOffhand;
                 showLeftArm = showLeftArm && isOffhand;
             }
-            if (leftHanded) {
-                // Inverting if player is left-handed
-                var rightValue = showRightArm;
-                var leftValue = showLeftArm;
-                showRightArm = leftValue;
-                showLeftArm = rightValue;
-            }
+//            if (leftHanded) {
+//                // Inverting if player is left-handed
+//                var rightValue = showRightArm;
+//                var leftValue = showLeftArm;
+//                showRightArm = leftValue;
+//                showLeftArm = rightValue;
+//            }
         }
 
         var showRightItem = !isOffhand; // Right item is main hand stack in normal stack
-        if (leftHanded) {
-            showRightItem = !showRightItem; // Inverting if player is left-handed
-        }
+//        if (leftHanded) {
+//            showRightItem = !showRightItem; // Inverting if player is left-handed
+//        }
         var showLeftItem = !showRightItem; // Left item is opposite of right item
         if (BetterCombatClient.config.isShowingOtherHandFirstPerson) {
             showRightItem = true;
             showLeftItem = true;
         }
 
-        var config = new FirstPersonAnimation.Configuration(showRightArm, showLeftArm, showRightItem, showLeftItem);
+        var config = new FirstPersonConfiguration(showRightArm, showLeftArm, showRightItem, showLeftItem);
         // System.out.println("FirstPersonAnimation.Configuration: " + config);
         return config;
     }
