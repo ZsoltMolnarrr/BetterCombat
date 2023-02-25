@@ -198,8 +198,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         return !PatternMatching.matches(id, regex);
     }
 
-    private static float ComboResetRate = 3F;
-
     private ItemStack upswingStack;
     private ItemStack lastAttacedWithItemStack;
     private int upswingTicks = 0;
@@ -235,7 +233,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         upswingStack = player.getMainHandStack();
         float attackCooldownTicksFloat = PlayerAttackHelper.getAttackCooldownTicksCapped(player); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
         int attackCooldownTicks = Math.round(attackCooldownTicksFloat);
-        this.comboReset = Math.round(attackCooldownTicksFloat * ComboResetRate);
+        this.comboReset = Math.round(attackCooldownTicksFloat * BetterCombat.config.combo_reset_rate);
         this.upswingTicks = Math.max(Math.round(attackCooldownTicksFloat * upswingRate), 1); // At least 1 upswing ticks
         this.lastSwingDuration = attackCooldownTicksFloat;
         this.itemUseCooldown = attackCooldownTicks; // Vanilla MinecraftClient property for compatibility

@@ -38,6 +38,8 @@ public class ServerConfig implements ConfigData {
     public boolean movement_speed_effected_while_mounting = false;
     @Comment("Attacks faster than a vanilla sword will do smaller knockback, proportionally.")
     public boolean knockback_reduced_for_fast_attacks = true;
+    @Comment("Combo is reset after idling `combo_reset_rate * weapon_cooldown`")
+    public float combo_reset_rate = 3F;
     @Comment("Multiplier for `attack_range`, during target lookup on both sides. " +
             "Large sized entities may be colliding with weapon hitbox, but center of entities can have bigger distance than `attack_range`")
     public float target_search_range_multiplier = 2F;
