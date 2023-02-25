@@ -17,7 +17,6 @@ public class BetterCombatMixinPlugin implements IMixinConfigPlugin {
         return null;
     }
 
-
     private Supplier<Boolean> playerAnimatorPresent = () -> {
         boolean result;
         try {

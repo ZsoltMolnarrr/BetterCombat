@@ -1,3 +1,16 @@
+# 1.6.0
+
+- First Person animations are now performed by PlayerAnimator library
+- Combo reset time is now server configurable
+- Fix Forge launch crash when PlayerAnimator is missing (now a proper error screen is shown)
+- Fix over filtering particle effects #198
+- Fix players shadows missing in first person (when using shaders) 
+
+API Changes:
+- Add MinecraftClient extension `isWeaponSwingInProgress` #194
+- Add new client events: `BetterCombatClientEvents.ATTACK_START`, `BetterCombatClientEvents.ATTACK_HIT`
+- Remove first person animation package, this functionality is now served by PlayerAnimator 
+
 # 1.5.5
 - Add attack speed cap
 - Add knockback reduction for fast attacks (configurable)
