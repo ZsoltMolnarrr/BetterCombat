@@ -164,25 +164,33 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
                 switch (partName) {
-                    case "rightArm", "leftArm" -> {
-                        rotationX = pitch;
+                    case "body" -> {
+                        rotationX -= pitch;
+                        if (pitch < 0) {
+                            var offset = Math.abs(Math.sin(pitch));
+                            offsetY += offset * 0.5;
+                            offsetZ -= offset;
+                        }
                     }
+//                    case "rightArm", "leftArm" -> {
+//                        rotationX = pitch;
+//                    }
                     default -> {
                         return Optional.empty();
                     }
                 }
             } else {
-                var pitch = player.getPitch() / 2F;
+                var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
                 switch (partName) {
                     case "body" -> {
-                        rotationX = (-1F) * pitch;
+                        rotationX -= pitch * 0.75F;
                     }
                     case "rightArm", "leftArm" -> {
-                        rotationX = pitch;
+                        rotationX += pitch * 0.25F;
                     }
                     case "rightLeg", "leftLeg" -> {
-                        rotationX = (-1F) * pitch;
+                        rotationX -= pitch * 0.75;
                     }
                     default -> {
                         return Optional.empty();

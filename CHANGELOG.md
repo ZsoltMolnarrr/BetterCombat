@@ -5,6 +5,7 @@
 - Fix Forge launch crash when PlayerAnimator is missing (now a proper error screen is shown)
 - Fix over filtering particle effects #198
 - Fix players shadows missing in first person (when using shaders) 
+- Improve attack animation vertical rotation adjustment
 
 API Changes:
 - Add MinecraftClient extension `isWeaponSwingInProgress` #194
