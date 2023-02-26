@@ -37,6 +37,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
 
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${project.player_anim_version}")
+    // modImplementation(files("../fabric/run/mods/dev/player-animation-lib-forge-${project.player_anim_version}.jar"))
     modApi("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
 
     shadowCommon(common("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))

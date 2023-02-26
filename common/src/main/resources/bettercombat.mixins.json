@@ -21,15 +21,11 @@
     "client.ColliderDebugRenderer",
     "client.InGameHudInject",
     "client.MinecraftClientAccessor",
-    "client.MinecraftClientInject",
-    "client.firstpersonrender.EntityRenderDispatcherMixin",
-    "client.firstpersonrender.HeldItemRendererMixin",
-    "client.firstpersonrender.LivingEntityRendererMixin",
-    "client.firstpersonrender.PlayerEntityRendererMixin",
-    "client.firstpersonrender.WorldRendererMixin"
+    "client.MinecraftClientInject"
   ],
   "server": [
   ],
+  "plugin": "net.bettercombat.mixin.BetterCombatMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }

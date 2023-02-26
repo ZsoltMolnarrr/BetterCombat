@@ -39,7 +39,7 @@ dependencies {
     }
 
     modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
-
+    // modImplementation(files("../fabric/run/mods/dev/player-animation-lib-fabric-${project.player_anim_version}.jar"))
     shadowCommon(implementation ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
     // modApi include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 }

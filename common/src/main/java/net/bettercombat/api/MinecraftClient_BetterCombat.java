@@ -7,6 +7,11 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.util.hit.HitResult.Type.ENTITY;
 
+/**
+ * Extension for `MinecraftClient`.
+ * Example usage:
+ * ((MinecraftClient_BetterCombat)MinecraftClient.getInstance()).getComboCount();
+ */
 public interface MinecraftClient_BetterCombat {
     int getComboCount();
     boolean hasTargetsInReach();
@@ -21,5 +26,8 @@ public interface MinecraftClient_BetterCombat {
 
     int getUpswingTicks();
     float getSwingProgress();
+    default boolean isWeaponSwingInProgress() {
+        return getSwingProgress() < 1F;
+    }
     void cancelUpswing();
 }
