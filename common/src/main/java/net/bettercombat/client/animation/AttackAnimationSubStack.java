@@ -1,9 +1,8 @@
 package net.bettercombat.client.animation;
 
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
-import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
+import dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
-import net.bettercombat.client.animation.modifier.AdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 
 public class AttackAnimationSubStack {

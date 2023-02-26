@@ -1,30 +1,26 @@
 package net.bettercombat.mixin.client;
 
 import com.mojang.authlib.GameProfile;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
-import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
+import dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.BetterCombat;
-import net.bettercombat.api.animation.FirstPersonAnimation;
-import net.bettercombat.client.animation.first_person.CustomAnimationPlayer;
-import net.bettercombat.client.animation.first_person.FirstPersonAnimator;
+import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.AnimationRegistry;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
-import net.bettercombat.client.animation.first_person.FirstPersonRenderHelper;
-import net.bettercombat.client.animation.first_person.IExtendedAnimation;
-import net.bettercombat.client.animation.modifier.AdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,12 +33,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable, FirstPersonAnimator {
+public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
     private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAttackAdjustment());
     private final PoseSubStack mainHandBodyPose = new PoseSubStack(createPoseAdjustment(), true, true);
     private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
@@ -64,8 +59,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
         offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
-
-        addFirstPersonAnimationLayer(attackAnimation.base);
     }
 
     @Override
@@ -74,12 +67,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var player = (PlayerEntity)instance;
         var isLeftHanded = isLeftHanded();
         var hasActiveAttackAnimation = attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
-
-        if (MinecraftClient.getInstance().getCameraEntity() == player) {
-            if (!hasActiveAttackAnimation) {
-                FirstPersonRenderHelper.resetProperties();
-            }
-        }
 
         // No pose during mining or item usage
 
@@ -110,7 +97,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 newOffHandPose = AnimationRegistry.animations.get(offHandAttributes.offHandPose());
             }
         }
-
         mainHandItemPose.setPose(newMainHandPose, isLeftHanded);
         offHandItemPose.setPose(newOffHandPose, isLeftHanded);
 
@@ -126,9 +112,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public void playAttackAnimation(String name, AnimatedHand animatedHand, float length, float upswing) {
-        if (MinecraftClient.getInstance().getCameraEntity() == this) {
-            FirstPersonRenderHelper.current = new FirstPersonRenderHelper.AnimationProperties(animatedHand);
-        }
         try {
             KeyframeAnimation animation = AnimationRegistry.animations.get(name);
             var copy = animation.mutableCopy();
@@ -153,9 +136,13 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                             new TransmissionSpeedModifier.Gear(length, speed)
                     ));
             attackAnimation.mirror.setEnabled(mirror);
+
+            var player = new CustomAnimationPlayer(copy.build(), 0);
+            player.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
+            player.setFirstPersonConfiguration(firstPersonConfig(animatedHand));
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
-                    new CustomAnimationPlayer(copy.build(), 0));
+                    player);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,29 +159,37 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            if (FirstPersonAnimation.isRenderingAttackAnimationInFirstPerson()) {
+            if (FirstPersonMode.isFirstPersonPass()) {
                 var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
                 switch (partName) {
-                    case "rightArm", "leftArm" -> {
-                        rotationX = pitch;
+                    case "body" -> {
+                        rotationX -= pitch;
+                        if (pitch < 0) {
+                            var offset = Math.abs(Math.sin(pitch));
+                            offsetY += offset * 0.5;
+                            offsetZ -= offset;
+                        }
                     }
+//                    case "rightArm", "leftArm" -> {
+//                        rotationX = pitch;
+//                    }
                     default -> {
                         return Optional.empty();
                     }
                 }
             } else {
-                var pitch = player.getPitch() / 2F;
+                var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
                 switch (partName) {
                     case "body" -> {
-                        rotationX = (-1F) * pitch;
+                        rotationX -= pitch * 0.75F;
                     }
                     case "rightArm", "leftArm" -> {
-                        rotationX = pitch;
+                        rotationX += pitch * 0.25F;
                     }
                     case "rightLeg", "leftLeg" -> {
-                        rotationX = (-1F) * pitch;
+                        rotationX -= pitch * 0.75;
                     }
                     default -> {
                         return Optional.empty();
@@ -219,7 +214,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetY = 0;
             float offsetZ = 0;
 
-            if (!FirstPersonRenderHelper.isRenderingFirstPersonPlayerModel) {
+            if (!FirstPersonMode.isFirstPersonPass()) {
                 switch (partName) {
                     case "rightArm", "leftArm" -> {
                         if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isSneaking()) {
@@ -295,26 +290,35 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     // FirstPersonAnimator
 
-    private final ArrayList<ModifierLayer> additionalFirstPersonLayers = new ArrayList<>();
-
-    public void addFirstPersonAnimationLayer(ModifierLayer layer) {
-        additionalFirstPersonLayers.add(layer);
-    }
-
-    @Override
-    public Optional<IAnimation> getActiveFirstPersonAnimation(float tickDelta) {
-        for (var layer: additionalFirstPersonLayers) {
-            var animation = layer.getAnimation();
-            if (animation == null) { continue; }
-            if (animation instanceof IExtendedAnimation extendedAnimation) {
-                if (extendedAnimation.isActiveInFirstPerson(tickDelta)) {
-                    return Optional.of(animation);
-                }
+    private FirstPersonConfiguration firstPersonConfig(AnimatedHand animatedHand) {
+        boolean leftHanded = getMainArm() == Arm.LEFT;
+        var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
+        var showRightArm = showArms;
+        var showLeftArm = showArms;
+        if (animatedHand != AnimatedHand.TWO_HANDED) {
+            if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
+                showRightArm = showArms;
+                showLeftArm = false;
             }
-            if (layer.isActive()) {
-                return Optional.of(animation);
+            if (leftHanded) {
+                showRightArm = !showRightArm;
+                showLeftArm = !showLeftArm;
             }
         }
-        return Optional.empty();
+
+        // MirrorModifier already handles swaps `hand` and `item` visibility in `getFirstPersonConfiguration`
+        // And mirror is enabled/disabled based on attackhand based upon animation launch
+        var showRightItem = true;
+        if (leftHanded) {
+            showRightItem = !showRightItem; // Inverting if player is left-handed
+        }
+        var showLeftItem = !showRightItem; // Left item is opposite of right item
+        if (BetterCombatClient.config.isShowingOtherHandFirstPerson) {
+            showRightItem = true;
+            showLeftItem = true;
+        }
+
+        var config = new FirstPersonConfiguration(showRightArm, showLeftArm, showRightItem, showLeftItem);
+        return config;
     }
 }

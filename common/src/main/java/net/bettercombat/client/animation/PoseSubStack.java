@@ -1,5 +1,6 @@
 package net.bettercombat.client.animation;
 
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
@@ -7,7 +8,6 @@ import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
-import net.bettercombat.client.animation.first_person.CustomAnimationPlayer;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -24,7 +24,6 @@ public class PoseSubStack {
     public PoseSubStack(AbstractModifier adjustmentModifier, boolean isBodyChannel, boolean isMainHand) {
         this.isMainHand = isMainHand;
         this.isBodyChannel = isBodyChannel;
-
         if (adjustmentModifier != null) {
             base.addModifier(adjustmentModifier, 0);
         }
@@ -64,9 +63,11 @@ public class PoseSubStack {
             }
             var animation = copy.build();
             this.mirror.setEnabled(mirror);
+            var player = new KeyframeAnimationPlayer(animation, 0);
+            player.setFirstPersonMode(FirstPersonMode.NONE);
             this.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE),
-                    new CustomAnimationPlayer(animation, 0));
+                    player);
             lastAnimationUsesBodyChannel = copy.body.isEnabled();
         }
 
