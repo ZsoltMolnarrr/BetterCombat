@@ -1,3 +1,7 @@
+# 1.6.1
+
+- Fix First Person Model integration
+
 # 1.6.0
 
 - First Person animations are now performed by PlayerAnimator library
@@ -8,6 +12,7 @@
 - Improve attack animation vertical rotation adjustment
 
 API Changes:
+
 - Add MinecraftClient extension `isWeaponSwingInProgress` #194
 - Add new client events: `BetterCombatClientEvents.ATTACK_START`, `BetterCombatClientEvents.ATTACK_HIT`
 - Remove first person animation package, this functionality is now served by PlayerAnimator 
