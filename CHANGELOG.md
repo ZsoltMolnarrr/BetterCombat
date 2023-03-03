@@ -1,3 +1,8 @@
+# 1.6.2
+
+- Update claymore pose
+- Update Forge mods.toml
+
 # 1.6.1
 
 - Fix First Person Model integration
