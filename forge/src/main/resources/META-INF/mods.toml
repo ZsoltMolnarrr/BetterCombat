@@ -61,7 +61,7 @@ side="BOTH"
 [[dependencies.bettercombat]]
 modId="playeranimator"
 mandatory=true
-versionRange="[0.3.5,)"
+versionRange="[0.9.9,)"
 ordering="AFTER"
 side="BOTH"
 [[dependencies.bettercombat]]
