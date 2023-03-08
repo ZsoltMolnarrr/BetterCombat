@@ -2,6 +2,7 @@
 
 - Update claymore pose
 - Update Forge mods.toml
+- Add Ukrainian translation, thanks to un_roman
 
 # 1.6.1
 
