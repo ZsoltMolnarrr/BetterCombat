@@ -33,11 +33,11 @@
     "bettercombat-fabric.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.19.3",
+    "minecraft": ">=1.19.4",
     "fabricloader": ">=0.14.0",
     "fabric-api": "*",
     "cloth-config": ">=9.0.0",
-    "player-animator": ">=0.9.9"
+    "player-animator": ">=1.0.2"
   },
   "breaks": {
     "inventorio": "*"

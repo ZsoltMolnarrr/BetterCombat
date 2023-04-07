@@ -14,10 +14,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public abstract class InGameHudInject {
     @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
-    public void pre_renderCrosshair(MatrixStack matrices, CallbackInfo ci) {
+    private void pre_renderCrosshair(MatrixStack matrices, CallbackInfo ci) {
         if (BetterCombatClient.config.isHighlightCrosshairEnabled) {
             setShaderForHighlighting();
         }
+    }
+
+    @Inject(method = "renderCrosshair", at = @At(value = "TAIL"))
+    private void post_renderCrosshair(MatrixStack matrices, CallbackInfo ci) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     private void setShaderForHighlighting() {
