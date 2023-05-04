@@ -1,3 +1,7 @@
+# 1.7.0
+
+- Reworked support for Sweeping Edge
+
 # 1.6.2
 
 - Update claymore pose

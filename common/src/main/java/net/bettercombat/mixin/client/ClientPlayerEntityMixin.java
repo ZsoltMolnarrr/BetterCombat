@@ -2,7 +2,7 @@ package net.bettercombat.mixin.client;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
-import net.bettercombat.client.MathHelper;
+import net.bettercombat.utils.MathHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
