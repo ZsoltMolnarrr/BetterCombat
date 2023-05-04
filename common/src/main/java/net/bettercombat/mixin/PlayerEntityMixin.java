@@ -49,7 +49,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
 
     @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 3)
     private boolean disableSweeping(boolean value) {
-        if (BetterCombat.config.allow_sweeping) {
+        if (BetterCombat.config.allow_vanilla_sweeping) {
             return value;
         }
 

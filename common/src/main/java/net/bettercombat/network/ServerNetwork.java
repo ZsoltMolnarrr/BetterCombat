@@ -11,12 +11,14 @@ import net.bettercombat.logic.TargetHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.logic.knockback.ConfigurableKnockback;
 import net.bettercombat.mixin.LivingEntityAccessor;
-import net.bettercombat.utils.MathHelp;
+import net.bettercombat.utils.MathHelper;
 import net.bettercombat.utils.SoundHelper;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
@@ -26,9 +28,12 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.item.SwordItem;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 
@@ -38,6 +43,10 @@ public class ServerNetwork {
     static final Logger LOGGER = LogUtils.getLogger();
 
     private static PacketByteBuf configSerialized = PacketByteBufs.create();
+
+    private static final UUID COMBO_DAMAGE_MODIFIER_ID = UUID.randomUUID();
+    private static final UUID DUAL_WIELDING_MODIFIER_ID = UUID.randomUUID();
+    private static final UUID SWEEPING_MODIFIER_ID = UUID.randomUUID();
 
     public static void initializeHandlers() {
         configSerialized = Packets.ConfigSync.write(BetterCombat.config);
@@ -88,6 +97,7 @@ public class ServerNetwork {
                 ((PlayerAttackProperties)player).setComboCount(request.comboCount());
                 Multimap<EntityAttribute, EntityAttributeModifier> comboAttributes = null;
                 Multimap<EntityAttribute, EntityAttributeModifier> dualWieldingAttributes = null;
+                Multimap<EntityAttribute, EntityAttributeModifier> sweepingModifiers = HashMultimap.create();
                 double range = 18.0;
                 if (attributes != null && attack != null) {
                     range = attributes.attackRange();
@@ -96,7 +106,7 @@ public class ServerNetwork {
                     double comboMultiplier = attack.damageMultiplier() - 1;
                     comboAttributes.put(
                             EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                            new EntityAttributeModifier(UUID.randomUUID(), "COMBO_DAMAGE_MULTIPLIER", comboMultiplier, EntityAttributeModifier.Operation.MULTIPLY_BASE));
+                            new EntityAttributeModifier(COMBO_DAMAGE_MODIFIER_ID, "COMBO_DAMAGE_MULTIPLIER", comboMultiplier, EntityAttributeModifier.Operation.MULTIPLY_BASE));
                     player.getAttributes().addTemporaryModifiers(comboAttributes);
 
                     var dualWieldingMultiplier = PlayerAttackHelper.getDualWieldingAttackDamageMultiplier(player, hand) - 1;
@@ -104,7 +114,7 @@ public class ServerNetwork {
                         dualWieldingAttributes = HashMultimap.create();
                         dualWieldingAttributes.put(
                                 EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                                new EntityAttributeModifier(UUID.randomUUID(), "DUAL_WIELDING_DAMAGE_MULTIPLIER", dualWieldingMultiplier, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
+                                new EntityAttributeModifier(DUAL_WIELDING_MODIFIER_ID, "DUAL_WIELDING_DAMAGE_MULTIPLIER", dualWieldingMultiplier, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
                         player.getAttributes().addTemporaryModifiers(dualWieldingAttributes);
                     }
 
@@ -113,16 +123,41 @@ public class ServerNetwork {
                     }
 
                     SoundHelper.playSound(world, player, attack.swingSound());
+
+                    if (BetterCombat.config.allow_reworked_sweeping && request.entityIds().length > 1) {
+                        double multiplier = 1.0
+                                - (BetterCombat.config.reworked_sweeping_maximum_damage_penalty / BetterCombat.config.reworked_sweeping_extra_target_count)
+                                * Math.min(BetterCombat.config.reworked_sweeping_extra_target_count, request.entityIds().length - 1);
+                        int sweepingLevel = EnchantmentHelper.getLevel(Enchantments.SWEEPING, hand.itemStack());
+                        double sweepingSteps = BetterCombat.config.reworked_sweeping_enchant_restores / ((double)Enchantments.SWEEPING.getMaxLevel());
+                        multiplier += sweepingLevel * sweepingSteps;
+                        multiplier = Math.min(multiplier, 1);
+                        sweepingModifiers.put(
+                                EntityAttributes.GENERIC_ATTACK_DAMAGE,
+                                new EntityAttributeModifier(SWEEPING_MODIFIER_ID, "SWEEPING_DAMAGE_MODIFIER", multiplier - 1, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
+                        // System.out.println("Applied sweeping multiplier " + multiplier + " , sweepingSteps " + sweepingSteps + " , enchant bonus: " + (sweepingLevel * sweepingSteps));
+                        player.getAttributes().addTemporaryModifiers(sweepingModifiers);
+
+                        boolean playEffects = !BetterCombat.config.reworked_sweeping_sound_and_particles_only_for_swords
+                                || (hand.itemStack().getItem() instanceof SwordItem);
+                        if (BetterCombat.config.reworked_sweeping_plays_sound && playEffects) {
+                            world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0f, 1.0f);
+                        }
+                        if (BetterCombat.config.reworked_sweeping_emits_particles && playEffects) {
+                            player.spawnSweepAttackParticles();
+                        }
+                    }
                 }
 
                 var attackCooldown = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
                 var knockbackMultiplier = BetterCombat.config.knockback_reduced_for_fast_attacks
-                        ? MathHelp.clamp(attackCooldown / 12.5F, 0.1F, 1F)
+                        ? MathHelper.clamp(attackCooldown / 12.5F, 0.1F, 1F)
                         : 1F;
                 var lastAttackedTicks = ((LivingEntityAccessor)player).getLastAttackedTicks();
                 if (!useVanillaPacket) {
                     player.setSneaking(request.isSneaking());
                 }
+
 
                 for (int entityId: request.entityIds()) {
                     // getEntityById(entityId);
@@ -182,6 +217,9 @@ public class ServerNetwork {
                 }
                 if (dualWieldingAttributes != null) {
                     player.getAttributes().removeModifiers(dualWieldingAttributes);
+                }
+                if (!sweepingModifiers.isEmpty()) {
+                    player.getAttributes().removeModifiers(sweepingModifiers);
                 }
                 ((PlayerAttackProperties)player).setComboCount(-1);
             });
