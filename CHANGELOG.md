@@ -1,6 +1,7 @@
 # 1.7.0
 
 - Reworked support for Sweeping Edge
+- Reduce multipliers spread for maces
 
 # 1.6.2
 
