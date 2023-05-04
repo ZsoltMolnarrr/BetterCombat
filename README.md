@@ -33,11 +33,12 @@ Add unique behaviour to your weapon, or just reuse a preset, using data files (a
 - [X] Target in hitbox indication (Client configurable)
 - [X] Swing thru grass (Client configurable)
 - [X] Can disable mining with weapons (Client configurable)
+- [X] Sweeping Edge enchantment reworked 
 
 ## Compatibility features
 - [X] Dedicated compatibility (Add weapon attribute data files for individual items, to specify their animations and behaviour) aka JSON API 
 - [X] Fallback compatibility (Tries to automatically assign the correct type of weapon attributes to weapons without attribute file. Highly configurable)
-- [X] NBT compatibility (Weapon attributes can be read from ItemStack NBT). For example:
+- [ ] ~~NBT compatibility (Weapon attributes can be read from ItemStack NBT). For example:~~ (This feature does not work correctly in multiplayer)
 ```
 /give @p minecraft:wooden_sword{weapon_attributes:'{"parent":"bettercombat:claymore"}'} 1
 ```
