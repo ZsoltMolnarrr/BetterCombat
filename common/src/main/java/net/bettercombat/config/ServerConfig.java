@@ -27,7 +27,29 @@ public class ServerConfig implements ConfigData {
             (Note all hostile mobs hittable by default, this config is to fix faulty mobs)""")
     public String[] hostile_player_vehicles = {"alexsmobs:crocodile"};
     @Comment("Allows vanilla sweeping mechanic to work and Sweeping Edge enchantment")
-    public boolean allow_sweeping = true;
+    public boolean allow_vanilla_sweeping = false;
+    @Comment("Allows new sweeping mechanic (by Better Combat) to work, including Sweeping Edge enchantment")
+    public boolean allow_reworked_sweeping = true;
+    @Comment("""
+            The more additional targets a weapon swing hits, the weaker it will get.
+            Entities struck (+1) in a swing more than this, won't get weakened any further.
+            """)
+    public int reworked_sweeping_extra_target_count = 4;
+    @Comment("""
+            Determines how weak the attack becomes when striking `reworked_sweeping_extra_target_count + 1` targets.
+            Example values:
+            - `0.5` -50% damage
+            """)
+    public float reworked_sweeping_maximum_damage_penalty = 0.5F;
+    @Comment("""
+            The maximum level Sweeping Edge enchantment applied to the attackers weapon will restore this amount of penalty.
+            Example values:
+            - `0.5` restores 50% damage penalty when 3 levels are applied, so 16.66% when 1 level is applied
+            """)
+    public float reworked_sweeping_enchant_restores = 0.5F;
+    public boolean reworked_sweeping_plays_sound = true;
+    public boolean reworked_sweeping_emits_particles = true;
+    public boolean reworked_sweeping_sound_and_particles_only_for_swords = true;
     @Comment("Allows client-side target search to ignore obstacles. WARNING! Setting this to `false` significantly increases the load on clients.")
     public boolean allow_attacking_thru_walls = false;
     @Comment("Applies movement speed multiplier while attacking. (Min: 0, Max: 1). Use `0` for a full stop while attacking. Use `1` for no movement speed penalty")
