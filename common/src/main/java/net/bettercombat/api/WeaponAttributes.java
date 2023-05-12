@@ -96,6 +96,8 @@ public final class WeaponAttributes {
         /**
          * Conditions those need to be fulfilled for the attack to be performed,
          * otherwise the attack is skipped.
+         * Conditions are in a logic AND (&&) relation.
+         *
          * For no conditions use `null` or empty array.
          */
         private Condition[] conditions;
@@ -289,7 +291,15 @@ public final class WeaponAttributes {
         /**
          * Fulfilled for attacks performed with off-hand only
          */
-        OFF_HAND_ONLY
+        OFF_HAND_ONLY,
+        /**
+         * Fulfilled if the player is riding some entity
+         */
+        MOUNTED,
+        /**
+         * Fulfilled if the player is not riding any entity
+         */
+        NOT_MOUNTED
     }
 
     /**

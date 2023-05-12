@@ -141,6 +141,12 @@ public class PlayerAttackHelper {
             case OFF_HAND_ONLY -> {
                 return isOffHandAttack;
             }
+            case MOUNTED -> {
+                return player.getVehicle() != null;
+            }
+            case NOT_MOUNTED -> {
+                return player.getVehicle() == null;
+            }
         }
         return true;
     }
