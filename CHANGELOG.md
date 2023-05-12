@@ -1,3 +1,8 @@
+# 1.7.1
+
+- Fix glitching shoulders while sneaking with 2 handed weapons
+- Lift `breaks` on Inventorio
+
 # 1.7.0
 
 - Reworked support for Sweeping Edge
