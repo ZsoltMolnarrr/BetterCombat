@@ -16,6 +16,7 @@ import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.AnimationRegistry;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
+import net.bettercombat.client.animation.modifier.HarshAdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.bettercombat.logic.AnimatedHand;
@@ -210,7 +211,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     private AdjustmentModifier createPoseAdjustment() {
         var player = (PlayerEntity)this;
-        return new AdjustmentModifier((partName) -> {
+        return new HarshAdjustmentModifier((partName) -> {
             float rotationX = 0;
             float rotationY = 0;
             float rotationZ = 0;
@@ -222,7 +223,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 switch (partName) {
                     case "rightArm", "leftArm" -> {
                         if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isSneaking()) {
-                            offsetY += 4;
+                            offsetY += 3;
                         }
                     }
                     default -> {
