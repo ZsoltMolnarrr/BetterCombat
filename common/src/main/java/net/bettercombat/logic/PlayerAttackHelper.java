@@ -144,6 +144,9 @@ public class PlayerAttackHelper {
             case MOUNTED -> {
                 return player.getVehicle() != null;
             }
+            case NOT_MOUNTED -> {
+                return player.getVehicle() == null;
+            }
         }
         return true;
     }

@@ -295,7 +295,11 @@ public final class WeaponAttributes {
         /**
          * Fulfilled if the player is riding some entity
          */
-        MOUNTED
+        MOUNTED,
+        /**
+         * Fulfilled if the player is not riding any entity
+         */
+        NOT_MOUNTED
     }
 
     /**
