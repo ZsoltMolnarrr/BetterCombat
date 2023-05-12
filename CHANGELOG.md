@@ -1,5 +1,6 @@
 # 1.7.1
 
+- Add `MOUNTED` attack condition
 - Fix glitching shoulders while sneaking with 2 handed weapons
 - Lift `breaks` on Inventorio
 
