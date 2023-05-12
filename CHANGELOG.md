@@ -1,3 +1,10 @@
+# 1.7.1
+
+- Add `MOUNTED` attack condition
+- Add `lance` preset with mount friendly animation
+- Fix glitching shoulders while sneaking with 2 handed weapons
+- Lift `breaks` on Inventorio
+
 # 1.7.0
 
 - Reworked support for Sweeping Edge

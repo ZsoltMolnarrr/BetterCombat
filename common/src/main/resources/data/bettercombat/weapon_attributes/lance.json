@@ -1,0 +1,27 @@
+{
+  "attributes" : {
+    "attack_range": 3.5,
+    "two_handed": false,
+    "category": "lance",
+    "attacks": [
+      {
+        "conditions": ["NOT_MOUNTED"],
+        "hitbox": "FORWARD_BOX",
+        "upswing": 0.5,
+        "animation": "bettercombat:one_handed_stab",
+        "swing_sound": {
+          "id": "bettercombat:spear_stab"
+        }
+      },
+      {
+        "conditions": ["MOUNTED"],
+        "hitbox": "FORWARD_BOX",
+        "upswing": 0.5,
+        "animation": "bettercombat:one_handed_stab_mounted",
+        "swing_sound": {
+          "id": "bettercombat:spear_stab"
+        }
+      }
+    ]
+  }
+}

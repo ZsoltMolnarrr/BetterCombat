@@ -41,8 +41,11 @@ public class FallbackConfig {
                         "glaive",
                         "bettercombat:glaive"),
                 new CompatibilitySpecifier(
-                        "spear|lance",
+                        "spear",
                         "bettercombat:spear"),
+                new CompatibilitySpecifier(
+                        "lance",
+                        "bettercombat:lance"),
                 new CompatibilitySpecifier(
                         "anchor",
                         "bettercombat:anchor"),
