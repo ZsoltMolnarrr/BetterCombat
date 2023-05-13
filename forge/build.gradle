@@ -2,7 +2,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id "me.shedaniel.unified-publishing"
     id "com.matthewprenger.cursegradle"
-    id "com.modrinth.minotaur"
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 loom {
@@ -114,6 +114,7 @@ if(project.hasProperty('release_type')) {
     modrinth {
         token = System.getenv("MODRINTH_API_KEY")
         projectId = "better-combat" // This can be the project ID or the slug. Either will work!
+        changelog = changelog_last_section()
         versionName = "${project.version}"
         versionNumber = "${project.version}-forge" // You don't need to set this manually. Will fail if Modrinth has this version already
         versionType = release_type // This is the default -- can also be `beta` or `alpha`
