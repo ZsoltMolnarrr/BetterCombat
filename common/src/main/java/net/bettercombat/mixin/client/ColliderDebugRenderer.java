@@ -86,12 +86,12 @@ public class ColliderDebugRenderer {
         bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
         if (collides) {
-            System.out.println("Drawing collider +");
+            //System.out.println("Drawing collider +");
             outlineOBB(matrixStack, obb, bufferBuilder,
                     1, 0, 0,
                     1, 0, 0,0.5F);
         } else {
-            System.out.println("Drawing collider -");
+            //System.out.println("Drawing collider -");
             outlineOBB(matrixStack, obb, bufferBuilder,
                     0, 1, 0,
                     1, 1, 0,0.5F);
