@@ -11,7 +11,7 @@ import java.util.List;
 
 public class PlayerLookup {
     public static Collection<ServerPlayerEntity> tracking(Entity player) {
-        return (Collection<ServerPlayerEntity>) player.world.getPlayers(); // TODO
+        return (Collection<ServerPlayerEntity>) player.getWorld().getPlayers(); // TODO
     }
 
     public static Collection<ServerPlayerEntity> around(ServerWorld world, Vec3d origin, double distance) {

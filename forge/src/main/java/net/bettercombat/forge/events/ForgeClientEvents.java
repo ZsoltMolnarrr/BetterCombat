@@ -17,6 +17,6 @@ public class ForgeClientEvents {
 
     @SubscribeEvent
     public static void onRenderHud(RenderGuiEvent.Post event){
-        ClientHelper.onRenderHud.forEach((action) -> action.onHudRender(event.getPoseStack(), event.getPartialTick()));
+        ClientHelper.onRenderHud.forEach((action) -> action.onHudRender(event.getGuiGraphics(), event.getPartialTick()));
     }
 }
