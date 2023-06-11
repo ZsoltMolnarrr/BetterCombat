@@ -65,7 +65,7 @@ public class TargetFinder {
     public static List<Entity> getInitialTargets(PlayerEntity player, Entity cursorTarget, double attackRange) {
         Box box = player.getBoundingBox().expand(attackRange * BetterCombat.config.target_search_range_multiplier + 1.0);
         List<Entity> entities = player
-                .world
+                .getWorld()
                 .getOtherEntities(player, box, entity ->  !entity.isSpectator() && entity.canHit())
                 .stream()
                 .filter(entity -> {

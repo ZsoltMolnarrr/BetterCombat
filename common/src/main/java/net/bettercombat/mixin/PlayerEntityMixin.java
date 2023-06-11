@@ -39,7 +39,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
     @Inject(method = "tick", at = @At("TAIL"))
     public void post_Tick(CallbackInfo ci) {
         var instance = (Object)this;
-        if (((PlayerEntity)instance).world.isClient()) {
+        if (((PlayerEntity)instance).getWorld().isClient()) {
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
         }
         updateDualWieldingSpeedBoost();

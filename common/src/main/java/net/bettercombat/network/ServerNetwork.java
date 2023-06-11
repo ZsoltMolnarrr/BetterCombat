@@ -56,7 +56,7 @@ public class ServerNetwork {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (server, player, handler, buf, responseSender) -> {
-            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
+            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.getWorld())
                     .orNull();
             if (world == null || world.isClient) {
                 return;
@@ -75,7 +75,7 @@ public class ServerNetwork {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.C2S_AttackRequest.ID, (server, player, handler, buf, responseSender) -> {
-            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
+            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.getWorld())
                     .orNull();
             if (world == null || world.isClient) {
                 return;

@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -33,6 +34,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -50,6 +52,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Shadow @Nullable public ClientPlayerEntity player;
 
     @Shadow private int itemUseCooldown;
+
+    @Shadow @Final public TextRenderer textRenderer;
 
     private MinecraftClient thisClient() {
         return (MinecraftClient)((Object)this);
@@ -71,7 +75,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
 
     private void setupTextRenderer() {
-        HudRenderCallback.EVENT.register((matrices, f) -> {
+        HudRenderCallback.EVENT.register((context, f) -> {
             if (textToRender != null && !textToRender.isEmpty()) {
                 var client = MinecraftClient.getInstance();
                 var textRenderer = client.inGameHud.getTextRenderer();
@@ -91,8 +95,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
                 if (l > 0) {
                     RenderSystem.enableBlend();
                     RenderSystem.defaultBlendFunc();
-                    InGameHud.fill(matrices, j - 2, k - 2, j + i + 2, k + textRenderer.fontHeight + 2, client.options.getTextBackgroundColor(0));
-                    textRenderer.drawWithShadow(matrices, textToRender, (float)j, (float)k, 0xFFFFFF + (l << 24));
+                    context.fill(j - 2, k - 2, j + i + 2, k + textRenderer.fontHeight + 2, client.options.getTextBackgroundColor(0));
+                    context.drawTextWithShadow(textRenderer, textToRender, j, k, 0xFFFFFF + (l << 24));
                     RenderSystem.disableBlend();
                 }
             }

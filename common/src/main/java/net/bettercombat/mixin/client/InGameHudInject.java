@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.client.BetterCombatClient;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,15 +14,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudInject {
-    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
-    private void pre_renderCrosshair(MatrixStack matrices, CallbackInfo ci) {
+    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
+    private void pre_renderCrosshair(DrawContext context, CallbackInfo ci) {
         if (BetterCombatClient.config.isHighlightCrosshairEnabled) {
             setShaderForHighlighting();
         }
     }
 
     @Inject(method = "renderCrosshair", at = @At(value = "TAIL"))
-    private void post_renderCrosshair(MatrixStack matrices, CallbackInfo ci) {
+    private void post_renderCrosshair(DrawContext context, CallbackInfo ci) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
