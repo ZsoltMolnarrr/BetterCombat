@@ -1,3 +1,7 @@
+# 1.7.2
+
+- Fix mod version requirements
+
 # 1.7.1
 
 - Add `MOUNTED` attack condition
