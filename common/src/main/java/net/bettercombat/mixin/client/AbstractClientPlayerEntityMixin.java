@@ -88,14 +88,18 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         KeyframeAnimation newMainHandPose = null;
         var mainHandAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
-        if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
+        if (mainHandAttributes != null                  // There is a pose to set
+                && mainHandAttributes.pose() != null    // There is no pose currently
+                && !player.isUsingItem()) {             // Player is not using the item
             newMainHandPose = AnimationRegistry.animations.get(mainHandAttributes.pose());
         }
 
         KeyframeAnimation newOffHandPose = null;
         if (PlayerAttackHelper.isDualWielding(player)) {
             var offHandAttributes = WeaponRegistry.getAttributes(player.getOffHandStack());
-            if (offHandAttributes != null && offHandAttributes.offHandPose() != null) {
+            if (offHandAttributes != null
+                    && offHandAttributes.offHandPose() != null
+                    && !player.isUsingItem()) {
                 newOffHandPose = AnimationRegistry.animations.get(offHandAttributes.offHandPose());
             }
         }

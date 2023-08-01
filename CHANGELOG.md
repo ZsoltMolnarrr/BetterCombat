@@ -1,3 +1,7 @@
+# 1.7.3
+
+- Fix displaying idle animations while using item
+
 # 1.7.2
 
 - Fix mod version requirements
