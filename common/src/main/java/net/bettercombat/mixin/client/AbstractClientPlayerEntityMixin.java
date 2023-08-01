@@ -300,34 +300,14 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     // FirstPersonAnimator
 
     private FirstPersonConfiguration firstPersonConfig(AnimatedHand animatedHand) {
-        boolean leftHanded = getMainArm() == Arm.LEFT;
-        var showArms = BetterCombatClient.config.isShowingArmsInFirstPerson;
-        var showRightArm = showArms;
-        var showLeftArm = showArms;
-        if (animatedHand != AnimatedHand.TWO_HANDED) {
-            if (!BetterCombatClient.config.isShowingOtherHandFirstPerson) {
-                showRightArm = showArms;
-                showLeftArm = false;
-            }
-            if (leftHanded) {
-                showRightArm = !showRightArm;
-                showLeftArm = !showLeftArm;
-            }
-        }
-
-        // MirrorModifier already handles swaps `hand` and `item` visibility in `getFirstPersonConfiguration`
-        // And mirror is enabled/disabled based on attackhand based upon animation launch
+        // boolean leftHanded = getMainArm() == Arm.LEFT;
         var showRightItem = true;
-        if (leftHanded) {
-            showRightItem = !showRightItem; // Inverting if player is left-handed
-        }
-        var showLeftItem = !showRightItem; // Left item is opposite of right item
-        if (BetterCombatClient.config.isShowingOtherHandFirstPerson) {
-            showRightItem = true;
-            showLeftItem = true;
-        }
+        var showLeftItem = BetterCombatClient.config.isShowingOtherHandFirstPerson || animatedHand == AnimatedHand.TWO_HANDED;
+        var showRightArm = showRightItem && BetterCombatClient.config.isShowingArmsInFirstPerson;
+        var showLeftArm = showLeftItem && BetterCombatClient.config.isShowingArmsInFirstPerson;
 
         var config = new FirstPersonConfiguration(showRightArm, showLeftArm, showRightItem, showLeftItem);
+        // System.out.println("Animation config: " + config);
         return config;
     }
 }
