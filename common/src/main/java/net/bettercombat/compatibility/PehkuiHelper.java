@@ -1,6 +1,7 @@
 package net.bettercombat.compatibility;
 
 import net.bettercombat.Platform;
+import net.bettercombat.api.client.AttackRangeExtensions;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
@@ -8,6 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.function.Function;
 
 public class PehkuiHelper {
     public static Identifier scaleId = new Identifier("pehkui", "entity_reach");
@@ -33,6 +35,8 @@ public class PehkuiHelper {
                 getScaleDataMethod = scaleTypeClass.getMethod("getScaleData", Entity.class);
                 getScaleMethod = scaleDataClass.getMethod("getScale", float.class);
                 scaleTypes = (Map<Identifier, Object>) scaleTypesField.get(null);
+
+                AttackRangeExtensions.register(context -> new AttackRangeExtensions.Modifier(PehkuiHelper.getScale(context.player()), AttackRangeExtensions.Operation.MULTIPLY));
             }
             catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException e)
             {

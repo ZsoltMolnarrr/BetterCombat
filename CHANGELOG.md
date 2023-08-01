@@ -1,5 +1,6 @@
 # 1.7.3
 
+- Add barebone attack range modification API
 - Fix displaying idle animations while using item
 
 # 1.7.2

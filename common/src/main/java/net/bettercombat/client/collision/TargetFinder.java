@@ -2,6 +2,7 @@ package net.bettercombat.client.collision;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes.Attack;
+import net.bettercombat.api.client.AttackRangeExtensions;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.bettercombat.compatibility.PehkuiHelper;
 import net.bettercombat.logic.TargetHelper;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +34,8 @@ public class TargetFinder {
         Vec3d origin = getInitialTracingPoint(player);
         List<Entity> entities = getInitialTargets(player, cursorTarget, attackRange);
 
-        if (CompatibilityFlags.usePehkui) {
-            attackRange = attackRange * PehkuiHelper.getScale(player);
+        if (!AttackRangeExtensions.sources().isEmpty()) {
+            attackRange = applyAttackRangeModifiers(player, attackRange);
         }
 
         boolean isSpinAttack = attack.angle() > 180;
@@ -51,6 +53,27 @@ public class TargetFinder {
 //        long elapsedTime = System.nanoTime() - startTime;
 //        System.out.println("TargetResult findAttackTargetResult (ms): " + ((double)elapsedTime) / 1000000.0);
         return new TargetResult(entities, obb);
+    }
+
+    private static double applyAttackRangeModifiers(PlayerEntity player, double attackRange) {
+        var context = new AttackRangeExtensions.Context(player,attackRange);
+        var modifiers = AttackRangeExtensions.sources()
+                .stream()
+                .map(function -> function.apply(context))
+                .sorted(Comparator.comparingInt(AttackRangeExtensions.Modifier::operationOrder))
+                .toList();
+        var result = attackRange;
+        for (var modifier: modifiers) {
+            switch (modifier.operation()) {
+                case ADD -> {
+                    result += modifier.value();
+                }
+                case MULTIPLY -> {
+                    result *= modifier.value();
+                }
+            }
+        }
+        return result;
     }
 
     public static List<Entity> findAttackTargets(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
