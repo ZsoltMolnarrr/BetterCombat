@@ -70,11 +70,13 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var isLeftHanded = isLeftHanded();
         var hasActiveAttackAnimation = attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
 
-        // No pose during mining or item usage
+        // No pose during special activities
 
-        if (player.handSwinging || player.isUsingItem()) {
-            offHandBodyPose.setPose(null, isLeftHanded);
+        if (player.handSwinging || player.isSwimming() || player.isUsingItem()) {
             mainHandBodyPose.setPose(null, isLeftHanded);
+            mainHandItemPose.setPose(null, isLeftHanded);
+            offHandBodyPose.setPose(null, isLeftHanded);
+            offHandItemPose.setPose(null, isLeftHanded);
             return;
         }
 
@@ -88,18 +90,14 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         KeyframeAnimation newMainHandPose = null;
         var mainHandAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
-        if (mainHandAttributes != null                  // There is a pose to set
-                && mainHandAttributes.pose() != null    // There is no pose currently
-                && !player.isUsingItem()) {             // Player is not using the item
+        if (mainHandAttributes != null && mainHandAttributes.pose() != null) {             // Player is not using the item
             newMainHandPose = AnimationRegistry.animations.get(mainHandAttributes.pose());
         }
 
         KeyframeAnimation newOffHandPose = null;
         if (PlayerAttackHelper.isDualWielding(player)) {
             var offHandAttributes = WeaponRegistry.getAttributes(player.getOffHandStack());
-            if (offHandAttributes != null
-                    && offHandAttributes.offHandPose() != null
-                    && !player.isUsingItem()) {
+            if (offHandAttributes != null && offHandAttributes.offHandPose() != null) {
                 newOffHandPose = AnimationRegistry.animations.get(offHandAttributes.offHandPose());
             }
         }

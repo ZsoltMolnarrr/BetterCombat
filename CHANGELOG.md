@@ -1,7 +1,9 @@
 # 1.7.3
 
 - Add barebone attack range modification API
-- Fix displaying idle animations while using item
+- Disable idle animations while swimming
+- Fix displaying idle animations while using item #267
+- Fix arm visibility in first person view for left handed players #272
 
 # 1.7.2
 
