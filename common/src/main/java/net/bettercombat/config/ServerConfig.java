@@ -5,6 +5,8 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.bettercombat.logic.TargetHelper;
 
+import java.util.Map;
+
 @Config(name = "server")
 public class ServerConfig implements ConfigData {
     @Comment("""
@@ -71,12 +73,34 @@ public class ServerConfig implements ConfigData {
     public float dual_wielding_main_hand_damage_multiplier = 1F;
     @Comment("Total multiplier, (examples: +30% = 1.3, -30% = 0.7)")
     public float dual_wielding_off_hand_damage_multiplier = 1F;
-    @Comment("Entities with `HOSTILE` relation will be hit by undirected weapon swings. NOTE: Vanilla sweeping will still happen, if not disabled via `allow_sweeping`")
-    public TargetHelper.Relation player_relation_to_teamless_players = TargetHelper.Relation.NEUTRAL;
-    public TargetHelper.Relation player_relation_to_villagers = TargetHelper.Relation.NEUTRAL;
+
+    @Comment("""
+            Relations determine when players' undirected weapon swings (cleaves) will hurt another entity (target).
+            - `FRIENDLY` - The target can never be damaged by the player.
+            - `NEUTRAL` - The target can be damaged only if the player is directly looking at it.
+            - `HOSTILE` - The target can be damaged if located within the weapon swing area.         
+            (NOTE: Vanilla sweeping can still hit targets, if not disabled via `allow_sweeping`)
+            
+            The various relation related configs are being checked in the following order:
+            - `player_relations`
+            - `player_relation_to_passives`
+            - `player_relation_to_hostiles`
+            - `player_relation_to_other`
+            (The first relation to be found for the target will be applied.)
+            """)
+    public Map<String, TargetHelper.Relation> player_relations = Map.of(
+            "minecraft:player", TargetHelper.Relation.NEUTRAL,
+            "minecraft:villager", TargetHelper.Relation.NEUTRAL,
+            "minecraft:iron_golem", TargetHelper.Relation.NEUTRAL,
+            "guardvillagers:guard", TargetHelper.Relation.NEUTRAL
+    );
+    @Comment("Relation to unspecified entities those are instance of PassiveEntity(Yarn)")
     public TargetHelper.Relation player_relation_to_passives = TargetHelper.Relation.HOSTILE;
+    @Comment("Relation to unspecified entities those are instance of HostileEntity(Yarn)")
     public TargetHelper.Relation player_relation_to_hostiles = TargetHelper.Relation.HOSTILE;
+    @Comment("Fallback relation")
     public TargetHelper.Relation player_relation_to_other = TargetHelper.Relation.HOSTILE;
+
     @Comment("Try to guess and apply a preset for items without weapon attributes data file")
     public boolean fallback_compatibility_enabled = true;
     @Comment("Allow printing the content of weapon attributes registry")

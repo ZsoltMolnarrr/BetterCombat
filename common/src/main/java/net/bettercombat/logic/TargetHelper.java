@@ -6,8 +6,8 @@ import net.minecraft.entity.Tameable;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
 
 import java.util.Arrays;
 
@@ -40,11 +40,10 @@ public class TargetHelper {
         var casterTeam = attacker.getScoreboardTeam();
         var targetTeam = target.getScoreboardTeam();
         if (casterTeam == null || targetTeam == null) {
-            if (target instanceof PlayerEntity) {
-                return Relation.coalesce(config.player_relation_to_teamless_players, Relation.NEUTRAL);
-            }
-            if (target instanceof VillagerEntity) {
-                return Relation.coalesce(config.player_relation_to_villagers, Relation.NEUTRAL);
+            var id = Registries.ENTITY_TYPE.getId(target.getType());
+            var mappedRelation = config.player_relations.get(id.toString());
+            if (mappedRelation != null) {
+                return mappedRelation;
             }
             if (target instanceof PassiveEntity) {
                 return Relation.coalesce(config.player_relation_to_passives, Relation.HOSTILE);

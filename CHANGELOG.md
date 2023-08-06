@@ -1,5 +1,6 @@
 # 1.7.3
 
+- Add configurable entity relations (by arbitrary entity id). Iron Golem and Guard Villagers included by default as neutral.
 - Add barebone attack range modification API
 - Disable idle animations while swimming
 - Fix default configs for Farmer's Delight items (delete `config/bettercombat` folder to reset your configs)
