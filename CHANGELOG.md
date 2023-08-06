@@ -2,6 +2,7 @@
 
 - Add barebone attack range modification API
 - Disable idle animations while swimming
+- Fix default configs for Farmer's Delight items (delete `config/bettercombat` folder to reset your configs)
 - Fix displaying idle animations while using item #267
 - Fix arm visibility in first person view for left handed players #272
 

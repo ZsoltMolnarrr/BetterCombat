@@ -20,7 +20,7 @@ public class FallbackConfig {
     public static FallbackConfig createDefault() {
         var object = new FallbackConfig();
         object.schema_version = 1;
-        object.blacklist_item_id_regex = "pickaxe|farmersdelight";
+        object.blacklist_item_id_regex = "pickaxe";
         object.fallback_compatibility = new CompatibilitySpecifier[] {
                 new CompatibilitySpecifier(
                         "claymore|great_sword|greatsword",
