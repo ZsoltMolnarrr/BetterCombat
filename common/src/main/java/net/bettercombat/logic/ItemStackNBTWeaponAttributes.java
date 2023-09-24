@@ -1,8 +1,7 @@
 package net.bettercombat.logic;
 
 import net.bettercombat.api.WeaponAttributes;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface ItemStackNBTWeaponAttributes {
     boolean hasInvalidAttributes();
