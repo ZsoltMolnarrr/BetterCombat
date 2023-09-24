@@ -52,7 +52,7 @@ processResources {
 
 shadowJar {
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier.set("dev-shadow")
     relocate 'net.fabricmc', 'net.bettercombat.fabricmc'
     relocate 'net.tinyconfig', 'net.bettercombat.tinyconfig'
 }
@@ -60,15 +60,15 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier.set(null)
 }
 
 task renameJarForPublication(type: Zip, dependsOn: remapJar) {
     from remapJar.archiveFile.map { zipTree(it) }
-    extension "jar"
+    // extension "jar"
     metadataCharset "UTF-8"
     destinationDirectory = base.libsDirectory
-    classifier project.name
+    archiveClassifier.set(project.name)
 }
 
 assemble.dependsOn renameJarForPublication
