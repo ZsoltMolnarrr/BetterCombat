@@ -1,6 +1,7 @@
 # 1.7.4
 
 - No longer ignore `attackCooldown` field in MinecraftClient, for better compatibility with other mods
+- Fix server config `player_relations` being reset on every launch
 
 # 1.7.3
 
