@@ -5,8 +5,7 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.bettercombat.logic.TargetHelper;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 @Config(name = "server")
 public class ServerConfig implements ConfigData {
@@ -89,7 +88,7 @@ public class ServerConfig implements ConfigData {
             - `player_relation_to_other`
             (The first relation to be found for the target will be applied.)
             """)
-    public HashMap<String, TargetHelper.Relation> player_relations = new HashMap<>() {{
+    public LinkedHashMap<String, TargetHelper.Relation> player_relations = new LinkedHashMap<>() {{
         put("minecraft:player", TargetHelper.Relation.NEUTRAL);
         put("minecraft:villager", TargetHelper.Relation.NEUTRAL);
         put("minecraft:iron_golem", TargetHelper.Relation.NEUTRAL);

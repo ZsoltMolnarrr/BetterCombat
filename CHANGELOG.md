@@ -1,3 +1,7 @@
+# 1.7.5
+
+- Keep order of `player_relations` in server config
+
 # 1.7.4
 
 - No longer ignore `attackCooldown` field in MinecraftClient, for better compatibility with other mods
