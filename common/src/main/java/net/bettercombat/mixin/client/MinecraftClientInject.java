@@ -55,6 +55,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @Shadow @Final public TextRenderer textRenderer;
 
+    @Shadow public int attackCooldown;
+
     private MinecraftClient thisClient() {
         return (MinecraftClient)((Object)this);
     }
@@ -223,6 +225,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if (hand == null) { return; }
         float upswingRate = (float) hand.upswingRate();
         if (upswingTicks > 0
+                || attackCooldown > 0
                 || player.isUsingItem()
                 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
 //            double attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player) / PlayerAttackHelper.getDualWieldingAttackSpeedMultiplier(player);
