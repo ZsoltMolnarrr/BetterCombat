@@ -1,3 +1,7 @@
+# 1.7.4
+
+- No longer ignore `attackCooldown` field in MinecraftClient, for better compatibility with other mods
+
 # 1.7.3
 
 - Add configurable entity relations (by arbitrary entity id). Iron Golem and Guard Villagers included by default as neutral.
