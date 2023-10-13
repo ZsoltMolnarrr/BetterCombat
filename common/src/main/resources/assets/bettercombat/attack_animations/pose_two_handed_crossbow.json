@@ -1,7 +1,7 @@
 {
-    "name": "pose_two_handed_bow",
+    "name": "pose_two_handed_crossbow",
     "author": "Daedelus",
-    "description": "Two-handed bow pose",
+    "description": "Two-handed crossbow pose",
     "emote":{
         "isLoop": "true",
         "returnTick": 1,
@@ -112,7 +112,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "leftArm":{
-                    "roll":0.37997570633888245
+                    "roll":0.1383834034204483
                 }
             },
             {
@@ -120,7 +120,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "leftArm":{
-                    "roll":0.37997570633888245
+                    "roll":0.1383834034204483
                 }
             },
             {
@@ -128,7 +128,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "leftArm":{
-                    "yaw":0.4447326064109802
+                    "yaw":0.2586425542831421
                 }
             },
             {
@@ -136,7 +136,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "leftArm":{
-                    "yaw":0.4447326064109802
+                    "yaw":0.2586425542831421
                 }
             },
             {
@@ -144,7 +144,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "leftArm":{
-                    "pitch":-0.6059236526489258
+                    "pitch":-0.8040207624435425
                 }
             },
             {
@@ -152,7 +152,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "leftArm":{
-                    "pitch":-0.6059236526489258
+                    "pitch":-0.8040207624435425
                 }
             },
             {
@@ -208,7 +208,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "x":-1.3509442806243896
+                    "x":-0.7749221920967102
                 }
             },
             {
@@ -216,7 +216,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "x":-1.3509442806243896
+                    "x":-0.7749221920967102
                 }
             },
             {
@@ -224,7 +224,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "z":-0.17488379776477814
+                    "z":1.9514293670654297
                 }
             },
             {
@@ -232,7 +232,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "z":-0.17488379776477814
+                    "z":1.9514293670654297
                 }
             },
             {
@@ -240,7 +240,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "y":-0.21115969121456146
+                    "y":0.5612638592720032
                 }
             },
             {
@@ -248,7 +248,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "y":-0.21115969121456146
+                    "y":0.5612638592720032
                 }
             },
             {
@@ -256,7 +256,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "pitch":-0.13917265832424164
+                    "pitch":0.015532673336565495
                 }
             },
             {
@@ -264,7 +264,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "pitch":-0.13917265832424164
+                    "pitch":0.015532673336565495
                 }
             },
             {
@@ -272,7 +272,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "yaw":-0.3700597584247589
+                    "yaw":0.8544853329658508
                 }
             },
             {
@@ -280,7 +280,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "yaw":-0.3700597584247589
+                    "yaw":0.8544853329658508
                 }
             },
             {
@@ -288,7 +288,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "roll":0.7646898627281189
+                    "roll":-0.17214462161064148
                 }
             },
             {
@@ -296,7 +296,7 @@
                 "easing": "EASEINOUTQUAD",
                 "turn": 0,
                 "rightItem":{
-                    "roll":0.7646898627281189
+                    "roll":-0.17214462161064148
                 }
             }
         ]
