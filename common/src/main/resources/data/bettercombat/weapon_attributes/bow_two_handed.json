@@ -1,0 +1,7 @@
+{
+  "attributes": {
+    "attack_range": 0,
+    "two_handed": true,
+    "pose": "bettercombat:pose_two_handed_bow"
+  }
+}

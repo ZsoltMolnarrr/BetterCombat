@@ -22,7 +22,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
@@ -115,7 +114,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
-        if (attributes != null) {
+        if (attributes != null && attributes.attacks() != null) {
             if (isTargetingMineableBlock() || isHarvesting) {
                 isHarvesting = true;
                 return;
@@ -133,7 +132,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
-        if (attributes != null) {
+        if (attributes != null && attributes.attacks() != null) {
             boolean isPressed = client.options.attackKey.isPressed();
             if(isPressed && !isHoldingAttackInput) {
                 if (isTargetingMineableBlock() || isHarvesting) {

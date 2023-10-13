@@ -59,7 +59,7 @@ public class WeaponAttributeTooltip {
                 }
 
                 if (attributes.isTwoHanded() && firstHandLine > 0) {
-                    var handLine = Text.translatable("item.modifiers.two_handed").formatted(Formatting.GRAY);
+                    var handLine = Text.translatable("item.held.two_handed").formatted(Formatting.GRAY);
                     lines.add(firstHandLine, handLine);
                 }
             }
