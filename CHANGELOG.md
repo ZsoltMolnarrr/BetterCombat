@@ -1,5 +1,6 @@
-# 1.7.5
+# 1.8.0
 
+- Ranged weapons can now be attributed in a limited way (idle animation, is two-handed)
 - Keep order of `player_relations` in server config
 
 # 1.7.4

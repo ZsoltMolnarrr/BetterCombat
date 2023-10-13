@@ -309,7 +309,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
             WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
             List<Entity> targets = List.of();
-            if (attributes != null) {
+            if (attributes != null && attributes.attacks() != null) {
                 targets = TargetFinder.findAttackTargets(
                         player,
                         getCursorTarget(),

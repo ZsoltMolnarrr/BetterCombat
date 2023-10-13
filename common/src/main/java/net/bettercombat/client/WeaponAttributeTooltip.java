@@ -48,7 +48,8 @@ public class WeaponAttributeTooltip {
                     }
                 }
 
-                if (BetterCombatClient.config.isTooltipAttackRangeEnabled) {
+                if (BetterCombatClient.config.isTooltipAttackRangeEnabled
+                        && attributes.attackRange() > 0) {
                     var operationId = EntityAttributeModifier.Operation.ADDITION.getId();
                     var rangeTranslationKey = "attribute.name.generic.attack_range";
                     var rangeValue = attributes.attackRange();
