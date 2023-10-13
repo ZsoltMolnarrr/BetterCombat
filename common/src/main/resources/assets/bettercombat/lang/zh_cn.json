@@ -1,6 +1,6 @@
 {
   "attribute.name.generic.attack_range" : "攻击范围",
-  "item.modifiers.two_handed": "双手武器",
+  "item.held.two_handed": "双手武器",
   "keybinds.bettercombat.feint" : "卖个破绽",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "切换使用武器进行采矿的能力",
 

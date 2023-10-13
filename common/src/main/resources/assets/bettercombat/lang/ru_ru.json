@@ -1,6 +1,6 @@
 {
   "attribute.name.generic.attack_range": "Дальность атаки",
-  "item.modifiers.two_handed": "Двуручное",
+  "item.held.two_handed": "Двуручное",
   "keybinds.bettercombat.feint" : "Финт",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Вкл./выкл. копание оружием",
   "hud.bettercombat.mine_with_weapons_on" : "Копание оружием: Вкл.",

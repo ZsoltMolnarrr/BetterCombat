@@ -1,6 +1,6 @@
 {
   "attribute.name.generic.attack_range" : "Attack Range",
-  "item.modifiers.two_handed": "Two-Handed",
+  "item.held.two_handed": "Two-Handed",
   "keybinds.bettercombat.feint" : "Feint",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Toggle Mine with weapons",
   "hud.bettercombat.mine_with_weapons_on" : "Mine with weapons: Yes",
