@@ -1,6 +1,7 @@
 # 1.8.0
 
 - Ranged weapons can now be attributed in a limited way (idle animation, is two-handed)
+- Add `ranged_weapons` to fallback compatibility config, to specify attributes for ranged weapons 
 - Keep order of `player_relations` in server config
 
 # 1.7.4

@@ -4,6 +4,7 @@ public class FallbackConfig {
     public int schema_version;
     public String blacklist_item_id_regex;
     public CompatibilitySpecifier[] fallback_compatibility;
+    public CompatibilitySpecifier[] ranged_weapons;
 
     public static class CompatibilitySpecifier {
         public String item_id_regex;
@@ -97,6 +98,14 @@ public class FallbackConfig {
                 new CompatibilitySpecifier(
                         "sword|blade",
                         "bettercombat:sword")
+        };
+        object.ranged_weapons = new CompatibilitySpecifier[]{
+                new CompatibilitySpecifier(
+                        "two_handed_crossbow",
+                        "bettercombat:crossbow_two_handed_heavy"),
+                new CompatibilitySpecifier(
+                        "two_handed_bow",
+                        "bettercombat:bow_two_handed_heavy")
         };
         return object;
     }
