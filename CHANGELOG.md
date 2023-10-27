@@ -12,6 +12,8 @@ Added new presets:
 
 Other changes:
 - Keep order of `player_relations` in server config
+- Add Japanese translation, thanks to SAGA23456 #289
+- Update Russian translation, thanks to mpustovoi #288
 
 # 1.7.4
 
