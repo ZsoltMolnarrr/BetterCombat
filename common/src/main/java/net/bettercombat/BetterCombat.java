@@ -53,6 +53,10 @@ public class BetterCombat implements ModInitializer {
 
     private void loadFallbackConfig() {
         fallbackConfig.load();
+        if (fallbackConfig.value == null) {
+            // Most likely corrupt config
+            fallbackConfig.value = FallbackConfig.createDefault();
+        }
         if (fallbackConfig.value.schema_version < fallbackDefault.schema_version) {
             fallbackConfig.value = FallbackConfig.migrate(fallbackConfig.value, FallbackConfig.createDefault());
         }

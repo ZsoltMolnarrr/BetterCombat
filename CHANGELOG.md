@@ -13,6 +13,7 @@ Added new presets:
 
 Other changes:
 - (1.20.2) Fix packet handling issues preventing multiplayer, and rejoining a world in single player
+- Fix corrupted fallback config causing crash 
 - Keep order of `player_relations` in server config
 - Add Japanese translation, thanks to SAGA23456 #289
 - Update Russian translation, thanks to mpustovoi #288
