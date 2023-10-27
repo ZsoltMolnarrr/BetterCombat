@@ -8,6 +8,7 @@ import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttributesContainer;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.WeaponAttributesHelper;
+import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -131,10 +132,10 @@ public class WeaponRegistry {
 
     // NETWORK SYNC
 
-    private static PacketByteBuf encodedRegistrations = PacketByteBufs.create();
+    private static Packets.WeaponRegistrySync encodedRegistrations = new Packets.WeaponRegistrySync(List.of());
 
     public static void encodeRegistry() {
-        PacketByteBuf buffer = PacketByteBufs.create();
+
         var gson = new Gson();
         var json = gson.toJson(registrations);
         if (BetterCombat.config.weapon_registry_logging) {
@@ -147,14 +148,9 @@ public class WeaponRegistry {
             chunks.add(json.substring(i, Math.min(json.length(), i + chunkSize)));
         }
 
-        buffer.writeInt(chunks.size());
-        for (var chunk: chunks) {
-            buffer.writeString(chunk);
-        }
-
-        LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes()
+        encodedRegistrations = new Packets.WeaponRegistrySync(chunks);
+        LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + encodedRegistrations.write().readableBytes()
                 + " bytes (in " + chunks.size() + " string chunks with the size of "  + chunkSize + ")");
-        encodedRegistrations = buffer;
     }
 
     public static void decodeRegistry(PacketByteBuf buffer) {
@@ -177,7 +173,7 @@ public class WeaponRegistry {
         registrations = newRegistrations;
     }
 
-    public static PacketByteBuf getEncodedRegistry() {
+    public static Packets.WeaponRegistrySync getEncodedRegistry() {
         return encodedRegistrations;
     }
 }

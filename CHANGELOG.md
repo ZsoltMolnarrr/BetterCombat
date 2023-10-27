@@ -12,6 +12,7 @@ Added new presets:
 - `crossbow_two_handed_heavy`
 
 Other changes:
+- (1.20.2) Fix packet handling issues preventing multiplayer, and rejoining a world in single player
 - Keep order of `player_relations` in server config
 - Add Japanese translation, thanks to SAGA23456 #289
 - Update Russian translation, thanks to mpustovoi #288

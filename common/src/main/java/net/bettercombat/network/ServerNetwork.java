@@ -42,17 +42,17 @@ import java.util.UUID;
 public class ServerNetwork {
     static final Logger LOGGER = LogUtils.getLogger();
 
-    private static PacketByteBuf configSerialized = PacketByteBufs.create();
+    private static String configSerialized = "";
 
     private static final UUID COMBO_DAMAGE_MODIFIER_ID = UUID.randomUUID();
     private static final UUID DUAL_WIELDING_MODIFIER_ID = UUID.randomUUID();
     private static final UUID SWEEPING_MODIFIER_ID = UUID.randomUUID();
 
     public static void initializeHandlers() {
-        configSerialized = Packets.ConfigSync.write(BetterCombat.config);
+        configSerialized = Packets.ConfigSync.serialize(BetterCombat.config);
         ServerPlayConnectionEvents.JOIN.register( (handler, sender, server) -> {
-            sender.sendPacket(Packets.WeaponRegistrySync.ID, WeaponRegistry.getEncodedRegistry());
-            sender.sendPacket(Packets.ConfigSync.ID, configSerialized);
+            sender.sendPacket(Packets.WeaponRegistrySync.ID, WeaponRegistry.getEncodedRegistry().write());
+            sender.sendPacket(Packets.ConfigSync.ID, (new Packets.ConfigSync(configSerialized)).write());
         });
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (server, player, handler, buf, responseSender) -> {
@@ -62,11 +62,11 @@ public class ServerNetwork {
                 return;
             }
             final var packet = Packets.AttackAnimation.read(buf);
-            final var forwardBuffer = new Packets.AttackAnimation(player.getId(), packet.animatedHand(), packet.animationName(), packet.length(), packet.upswing()).write();
+            final var forwardBuffer = new Packets.AttackAnimation(player.getId(), packet.animatedHand(), packet.animationName(), packet.length(), packet.upswing());
             PlayerLookup.tracking(player).forEach(serverPlayer -> {
                 try {
                     if (serverPlayer.getId() != player.getId() && ServerPlayNetworking.canSend(serverPlayer, Packets.AttackAnimation.ID)) {
-                        ServerPlayNetworking.send(serverPlayer, Packets.AttackAnimation.ID, forwardBuffer);
+                        ServerPlayNetworking.send(serverPlayer, Packets.AttackAnimation.ID, forwardBuffer.write());
                     }
                 } catch (Exception e){
                     e.printStackTrace();

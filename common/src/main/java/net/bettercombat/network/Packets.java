@@ -96,16 +96,34 @@ public class Packets {
         }
     }
 
-    public static class WeaponRegistrySync {
+    public record WeaponRegistrySync(List<String> chunks) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "weapon_registry");
+        public PacketByteBuf write() {
+            var buffer = PacketByteBufs.create();
+            buffer.writeInt(chunks.size());
+            for (var chunk: chunks) {
+                buffer.writeString(chunk);
+            }
+            return buffer;
+        }
+
+        public static ServerConfig read(PacketByteBuf buffer) {
+            var gson = new Gson();
+            var json = buffer.readString();
+            var config = gson.fromJson(json, ServerConfig.class);
+            return config;
+        }
     }
 
-    public static class ConfigSync {
+    public record ConfigSync(String json) {
         public static Identifier ID = new Identifier(BetterCombat.MODID, "config_sync");
 
-        public static PacketByteBuf write(ServerConfig config) {
+        public static String serialize(ServerConfig config) {
             var gson = new Gson();
-            var json = gson.toJson(config);
+            return gson.toJson(config);
+        }
+
+        public PacketByteBuf write() {
             var buffer = PacketByteBufs.create();
             buffer.writeString(json);
             return buffer;
