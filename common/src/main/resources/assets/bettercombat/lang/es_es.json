@@ -1,6 +1,6 @@
 {
   "attribute.name.generic.attack_range" : "Alcance de golpe",
-  "item.modifiers.two_handed": "de dos manos",
+  "item.held.two_handed": "de dos manos",
   "keybinds.bettercombat.feint" : "amagar",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Alternar minando con armas",
   "hud.bettercombat.mine_with_weapons_on" : "Minando con armas: Sí",

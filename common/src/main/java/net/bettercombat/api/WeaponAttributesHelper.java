@@ -48,20 +48,19 @@ public class WeaponAttributesHelper {
 
     public static void validate(WeaponAttributes attributes) throws Exception {
         if (attributes.attacks() == null) {
-            throw new InvalidObjectException("Undefined `attacks` array");
+            return;
         }
-        if (attributes.attacks().length == 0) {
-            throw new InvalidObjectException("Empty `attacks` array");
-        }
-        var index = 0;
-        for (WeaponAttributes.Attack attack : attributes.attacks()) {
-            try {
-                validate(attack);
-            } catch(InvalidObjectException exception) {
-                var message = "Invalid attack at index:" + index + " - " + exception.getMessage();
-                throw new InvalidObjectException(message);
+        if (attributes.attacks().length > 0) {
+            var index = 0;
+            for (WeaponAttributes.Attack attack : attributes.attacks()) {
+                try {
+                    validate(attack);
+                } catch(InvalidObjectException exception) {
+                    var message = "Invalid attack at index:" + index + " - " + exception.getMessage();
+                    throw new InvalidObjectException(message);
+                }
+                index += 1;
             }
-            index += 1;
         }
     }
 

@@ -5,7 +5,7 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.bettercombat.logic.TargetHelper;
 
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 @Config(name = "server")
 public class ServerConfig implements ConfigData {
@@ -88,12 +88,13 @@ public class ServerConfig implements ConfigData {
             - `player_relation_to_other`
             (The first relation to be found for the target will be applied.)
             """)
-    public Map<String, TargetHelper.Relation> player_relations = Map.of(
-            "minecraft:player", TargetHelper.Relation.NEUTRAL,
-            "minecraft:villager", TargetHelper.Relation.NEUTRAL,
-            "minecraft:iron_golem", TargetHelper.Relation.NEUTRAL,
-            "guardvillagers:guard", TargetHelper.Relation.NEUTRAL
-    );
+    public LinkedHashMap<String, TargetHelper.Relation> player_relations = new LinkedHashMap<>() {{
+        put("minecraft:player", TargetHelper.Relation.NEUTRAL);
+        put("minecraft:villager", TargetHelper.Relation.NEUTRAL);
+        put("minecraft:iron_golem", TargetHelper.Relation.NEUTRAL);
+        put("guardvillagers:guard", TargetHelper.Relation.NEUTRAL);
+    }};
+
     @Comment("Relation to unspecified entities those are instance of PassiveEntity(Yarn)")
     public TargetHelper.Relation player_relation_to_passives = TargetHelper.Relation.HOSTILE;
     @Comment("Relation to unspecified entities those are instance of HostileEntity(Yarn)")

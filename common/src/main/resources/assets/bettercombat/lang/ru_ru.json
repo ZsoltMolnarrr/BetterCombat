@@ -1,6 +1,6 @@
 {
   "attribute.name.generic.attack_range": "Дальность атаки",
-  "item.modifiers.two_handed": "Двуручное",
+  "item.held.two_handed": "Двуручное",
   "keybinds.bettercombat.feint" : "Финт",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Вкл./выкл. копание оружием",
   "hud.bettercombat.mine_with_weapons_on" : "Копание оружием: Вкл.",
@@ -9,6 +9,8 @@
   "text.autoconfig.bettercombat.title" : "Better Combat",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled": "Удерживать для атаки",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip": "Автоматически атаковать при удерживании кнопки атаки",
+  "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "Атаковать вместо копания",
+  "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled.@Tooltip" : "Атакуйте вместо копания при нажатии кнопки атаки, когда враги находятся достаточно близко для нанесения удара",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled": "Копание оружием",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled.@Tooltip": "Позволяет копать оружием",
   "text.autoconfig.bettercombat.option.client.isSwingThruGrassEnabled": "Атака сквозь траву",
@@ -28,5 +30,9 @@
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume" : "Громкость звуков взмаха %",
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume.@Tooltip" : "Поменять громкость звуков взмаха оружием",
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled" : "Отображать разящий удар",
-  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Включает отображение частицы при разящем ударе"
+  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Включает отображение частицы при разящем ударе",
+  "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist" : "Чёрный список блоков для функции \"Атака сквозь траву\"",
+  "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip" : "Оружие с идентификатором, соответствующим этому регулярному выражению, никогда не пройдёт через нетвёрдые блоки из списка",
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Отладочный хитбокс",
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Показывать хитбокс оружия, когда отображаются хитбоксы объектов"
 }

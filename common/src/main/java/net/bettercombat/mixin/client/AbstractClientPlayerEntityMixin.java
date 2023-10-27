@@ -26,6 +26,7 @@ import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -69,10 +70,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var player = (PlayerEntity)instance;
         var isLeftHanded = isLeftHanded();
         var hasActiveAttackAnimation = attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
-
+        var mainHandStack = player.getMainHandStack();
         // No pose during special activities
 
-        if (player.handSwinging || player.isSwimming() || player.isUsingItem()) {
+        if (player.handSwinging || player.isSwimming() || player.isUsingItem() || CrossbowItem.isCharged(mainHandStack)) {
             mainHandBodyPose.setPose(null, isLeftHanded);
             mainHandItemPose.setPose(null, isLeftHanded);
             offHandBodyPose.setPose(null, isLeftHanded);
@@ -89,7 +90,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         // Pose
 
         KeyframeAnimation newMainHandPose = null;
-        var mainHandAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
         if (mainHandAttributes != null && mainHandAttributes.pose() != null) {             // Player is not using the item
             newMainHandPose = AnimationRegistry.animations.get(mainHandAttributes.pose());
         }

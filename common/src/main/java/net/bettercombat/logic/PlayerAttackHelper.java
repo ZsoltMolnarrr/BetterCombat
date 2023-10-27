@@ -52,15 +52,17 @@ public class PlayerAttackHelper {
                     ? player.getOffHandStack()
                     : player.getMainHandStack();
             var attributes = WeaponRegistry.getAttributes(itemStack);
-            int handSpecificComboCount = ( (isOffHand && comboCount > 0) ? (comboCount - 1) : (comboCount) ) / 2;
-            var attackSelection = selectAttack(handSpecificComboCount, attributes, player, isOffHand);
-            var attack = attackSelection.attack;
-            var combo = attackSelection.comboState;
-            return new AttackHand(attack, combo, isOffHand, attributes, itemStack);
+            if (attributes != null && attributes.attacks() != null) {
+                int handSpecificComboCount = ((isOffHand && comboCount > 0) ? (comboCount - 1) : (comboCount)) / 2;
+                var attackSelection = selectAttack(handSpecificComboCount, attributes, player, isOffHand);
+                var attack = attackSelection.attack;
+                var combo = attackSelection.comboState;
+                return new AttackHand(attack, combo, isOffHand, attributes, itemStack);
+            }
         } else {
             var itemStack = player.getMainHandStack();
             WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
-            if (attributes != null) {
+            if (attributes != null && attributes.attacks() != null) {
                 var attackSelection = selectAttack(comboCount, attributes, player, false);
                 var attack = attackSelection.attack;
                 var combo = attackSelection.comboState;

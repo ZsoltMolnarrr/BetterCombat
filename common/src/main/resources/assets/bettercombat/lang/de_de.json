@@ -1,6 +1,6 @@
 {
   "attribute.name.generic.attack_range" : "Reichweite",
-  "item.modifiers.two_handed": "Zweihändige",
+  "item.held.two_handed": "Zweihändige",
   "keybinds.bettercombat.feint" : "Finte",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Schalten Sie den Bergbau mit Waffen um",
   "hud.bettercombat.mine_with_weapons_on" : "Bergbau mit Waffen: Ja",

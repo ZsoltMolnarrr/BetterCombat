@@ -1,3 +1,26 @@
+# 1.8.0
+
+New features:
+- Ranged weapons can now be attributed in a limited way (idle animation, is two-handed)
+- Add `ranged_weapons` to fallback compatibility config, to specify attributes for ranged weapons
+- Add client side config for mine with weapons blacklist regex #284
+
+Added new presets:
+- `bow_two_handed`
+- `bow_two_handed_heavy`
+- `crossbow_two_handed`
+- `crossbow_two_handed_heavy`
+
+Other changes:
+- Keep order of `player_relations` in server config
+- Add Japanese translation, thanks to SAGA23456 #289
+- Update Russian translation, thanks to mpustovoi #288
+
+# 1.7.4
+
+- No longer ignore `attackCooldown` field in MinecraftClient, for better compatibility with other mods
+- Fix server config `player_relations` being reset on every launch
+
 # 1.7.3
 
 - Add configurable entity relations (by arbitrary entity id). Iron Golem and Guard Villagers included by default as neutral.

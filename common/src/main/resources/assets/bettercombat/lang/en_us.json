@@ -1,6 +1,6 @@
 {
   "attribute.name.generic.attack_range" : "Attack Range",
-  "item.modifiers.two_handed": "Two-Handed",
+  "item.held.two_handed": "Two-Handed",
   "keybinds.bettercombat.feint" : "Feint",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "Toggle Mine with weapons",
   "hud.bettercombat.mine_with_weapons_on" : "Mine with weapons: Yes",
@@ -33,6 +33,8 @@
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Enable showing sword sweeping particle effects",
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist" : "Swing thru grass blacklist",
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip" : "Weapons with an ID that matches this regex will never swing thru grass",
+  "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist" : "Mine with weapon blacklist",
+  "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist.@Tooltip" : "Weapons with an ID that matches this regex will never be used to harvest blocks",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Debug hitbox",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Show weapon hitbox when entity hitboxes are displayed"
 }

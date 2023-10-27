@@ -34,4 +34,6 @@ public class ClientConfig implements ConfigData {
     public boolean isDebugOBBEnabled = true;
     @ConfigEntry.Gui.Tooltip
     public String swingThruGrassBlacklist = "farmersdelight";
+    @ConfigEntry.Gui.Tooltip
+    public String mineWithWeaponBlacklist = "";
 }

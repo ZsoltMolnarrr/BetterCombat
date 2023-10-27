@@ -1,6 +1,6 @@
 {
     "attribute.name.generic.attack_range" : "Raio de ataque",
-    "item.modifiers.two_handed": "Duas mãos",
+    "item.held.two_handed": "Duas mãos",
     "keybinds.bettercombat.feint" : "Finta",
     "keybinds.bettercombat.toggle_mine_with_weapons" : "Alternar Mina com armas",
     "hud.bettercombat.mine_with_weapons_on" : "Mina com armas: Sim",
