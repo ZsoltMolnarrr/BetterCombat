@@ -170,6 +170,14 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if (!BetterCombatClient.config.isMiningWithWeaponsEnabled) {
             return false;
         }
+        var regex = BetterCombatClient.config.mineWithWeaponBlacklist;
+        if (regex != null && !regex.isEmpty()) {
+            var itemStack = player.getMainHandStack();
+            var id = Registries.ITEM.getId(itemStack.getItem()).toString();
+            if (PatternMatching.matches(id, regex)) {
+                return false;
+            }
+        }
         if (BetterCombatClient.config.isAttackInsteadOfMineWhenEnemiesCloseEnabled
                 && this.hasTargetsInReach()) {
             return false;

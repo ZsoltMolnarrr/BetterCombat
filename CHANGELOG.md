@@ -2,7 +2,8 @@
 
 New features:
 - Ranged weapons can now be attributed in a limited way (idle animation, is two-handed)
-- Add `ranged_weapons` to fallback compatibility config, to specify attributes for ranged weapons 
+- Add `ranged_weapons` to fallback compatibility config, to specify attributes for ranged weapons
+- Add client side config for mine with weapons blacklist regex #284
 
 Added new presets:
 - `bow_two_handed`
