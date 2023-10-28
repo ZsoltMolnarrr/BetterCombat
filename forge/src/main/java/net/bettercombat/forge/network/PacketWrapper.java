@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.function.Supplier;
 
@@ -29,9 +29,9 @@ public class PacketWrapper {
         return new PacketWrapper(packetByteBuf.readBoolean(), packetByteBuf.readIdentifier(), packetByteBuf.readBytes(packetByteBuf.readableBytes()));
     }
 
-    public static void handle(PacketWrapper msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(PacketWrapper msg, CustomPayloadEvent.Context context) {
         if (msg.isClientBound) ClientPlayNetworking.handle(msg);
-        else ServerPlayNetworking.handle(msg, contextSupplier.get().getSender());
-        contextSupplier.get().setPacketHandled(true);
+        else ServerPlayNetworking.handle(msg, context.getSender());
+        context.setPacketHandled(true);
     }
 }

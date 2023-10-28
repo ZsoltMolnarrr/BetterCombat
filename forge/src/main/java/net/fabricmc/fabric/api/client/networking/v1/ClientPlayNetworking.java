@@ -20,7 +20,10 @@ public class ClientPlayNetworking {
     }
 
     public static void send(Identifier id, PacketByteBuf forwardBuffer) {
-        NetworkHandler.INSTANCE.sendToServer(new PacketWrapper(false, id, forwardBuffer));
+        ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
+        if (networkHandler != null) {
+            NetworkHandler.INSTANCE.send(new PacketWrapper(false, id, forwardBuffer), networkHandler.getConnection());
+        }
     }
 
     public static void handle(PacketWrapper msg) {
