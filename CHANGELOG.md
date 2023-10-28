@@ -1,3 +1,7 @@
+# 1.8.1
+
+- (1.20.2) Fix packet handling issues in multiplayer causing players to disconnect.
+
 # 1.8.0
 
 New features:

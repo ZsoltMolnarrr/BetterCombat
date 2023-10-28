@@ -35,8 +35,7 @@ public class SoundHelper {
                     sound.id(),
                     sound.volume(),
                     pitch,
-                    rng.nextLong())
-                    .write();
+                    rng.nextLong());
 
             var soundEvent = Registries.SOUND_EVENT.get(new Identifier(sound.id()));
             var distance = soundEvent.getDistanceToTravel(sound.volume());
@@ -45,7 +44,7 @@ public class SoundHelper {
                 var channel = Packets.AttackSound.ID;
                 try {
                     if (ServerPlayNetworking.canSend(serverPlayer, channel)) {
-                        ServerPlayNetworking.send(serverPlayer, channel, packet);
+                        ServerPlayNetworking.send(serverPlayer, channel, packet.write());
                     }
                 } catch (Exception e){
                     e.printStackTrace();
