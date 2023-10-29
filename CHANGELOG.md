@@ -23,6 +23,7 @@ Other changes:
 - Update Russian translation, thanks to mpustovoi #288
 - (Forge) fix hand swap deleting offhand item, when holding two handed items.
 - (Forge) Requires at least Forge 47.2.0
+- (Forge) Fixed networking stack, thanks to YuRaNnNzZZ #295
 
 # 1.7.4
 
