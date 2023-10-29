@@ -34,5 +34,7 @@
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist" : "草貫通のブラックリスト",
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip" : "この正規表現に一致するIDを持つ武器は、草を貫通してスイングすることはありません。",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "デバッグ攻撃判定",
-  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "エンティティの当たり判定が表示されている場合に武器の当たり判定を表示します。"
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "エンティティの当たり判定が表示されている場合に武器の当たり判定を表示します。",
+  "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist" : "採掘可能な武器のブラックリスト",
+  "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist.@Tooltip" : "この正規表現に一致するIDを持つ武器は、ブロックを採掘することはありません。",
 }
