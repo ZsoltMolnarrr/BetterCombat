@@ -16,6 +16,8 @@ Other changes:
 - Keep order of `player_relations` in server config
 - Add Japanese translation, thanks to SAGA23456 #289
 - Update Russian translation, thanks to mpustovoi #288
+- (Forge) fix hand swap deleting offhand item, when holding two handed items.
+- (Forge) Requires at least Forge 47.2.0
 
 # 1.7.4
 
