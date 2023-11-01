@@ -12,6 +12,7 @@ import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.bettercombat.BetterCombat;
+import net.bettercombat.Platform;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.AnimationRegistry;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
@@ -73,7 +74,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var mainHandStack = player.getMainHandStack();
         // No pose during special activities
 
-        if (player.handSwinging || player.isSwimming() || player.isUsingItem() || CrossbowItem.isCharged(mainHandStack)) {
+        if (player.handSwinging // Official mapping name: `isHandBusy`
+                || player.isSwimming()
+                || player.isUsingItem()
+                || Platform.isCastingSpell(player)
+                || CrossbowItem.isCharged(mainHandStack)) {
             mainHandBodyPose.setPose(null, isLeftHanded);
             mainHandItemPose.setPose(null, isLeftHanded);
             offHandBodyPose.setPose(null, isLeftHanded);

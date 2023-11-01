@@ -1,3 +1,7 @@
+# 1.8.2
+
+- Add soft compatibility with Spell Engine, disable idle animation while casting spells
+
 # 1.8.1
 
 - (Forge) fix hand swap deleting offhand item, when holding two handed items.

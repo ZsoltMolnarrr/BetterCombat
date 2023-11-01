@@ -24,6 +24,13 @@ repositories {
     maven { url 'https://jitpack.io' }
     maven { url 'https://maven.shedaniel.me' }
     maven { url 'https://maven.terraformersmc.com' }
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
 }
 
 dependencies {
@@ -42,6 +49,7 @@ dependencies {
     // modImplementation(files("../fabric/run/mods/dev/player-animation-lib-fabric-${project.player_anim_version}.jar"))
     shadowCommon(implementation ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
     // modApi include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
+    modCompileOnly("maven.modrinth:spell-engine:${project.spell_engine_version}")
 }
 
 processResources {
