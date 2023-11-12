@@ -10,6 +10,7 @@
     "LivingEntityMixin",
     "PlayerEntityAccessor",
     "PlayerEntityMixin",
+    "RangedWeaponItemMixin",
     "ServerPlayNetworkHandlerMixin",
     "SweepingEnchantmentMixin"
   ],

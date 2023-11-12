@@ -1,3 +1,7 @@
+# 1.8.3
+
+- Fix two-handed ranged weapons ignoring projectile held in the offhand slot
+
 # 1.8.2
 
 - Add soft compatibility with Spell Engine, disable idle animation while casting spells
