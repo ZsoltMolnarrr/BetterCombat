@@ -25,20 +25,41 @@ Add unique behaviour to your weapon, or just reuse a preset, using data files (a
 - [x] Integrate any weapon from any mod by just creating data files
 
 ## Auxiliary features
-- [X] Two-handed weapons ignore offhand slot
-- [X] Movement speed reduction while attacking (Server configurable)
 - [X] Attacking with dual wielded weapons (held weapons are used alternated, +20% attack speed while dual wielding, Server configurable)
+- [X] Two-handed weapons ignore offhand slot (melee and ranged weapons also supported)
+- [X] Movement speed reduction while attacking (Server configurable)
 - [X] Cancel attack during upswing (aka "feint") (Client configurable)
 - [X] Hold attack key to spam attack (Client configurable)
 - [X] Target in hitbox indication (Client configurable)
 - [X] Swing thru grass (Client configurable)
 - [X] Can disable mining with weapons (Client configurable)
-- [X] Sweeping Edge enchantment reworked 
+- [X] Sweeping Edge enchantment reworked
 
 ## Compatibility features
-- [X] Dedicated compatibility (Add weapon attribute data files for individual items, to specify their animations and behaviour) aka JSON API 
-- [X] Fallback compatibility (Tries to automatically assign the correct type of weapon attributes to weapons without attribute file. Highly configurable)
-- [ ] ~~NBT compatibility (Weapon attributes can be read from ItemStack NBT). For example:~~ (This feature does not work correctly in multiplayer)
+
+### Dedicated compatibility
+
+To be used by developers and modpack creators.
+
+Assign weapon attribute to weapons individually, using data files (similar how item models are assigned), to specify their animations and behaviour.
+
+This also known as JSON API. Read more about it at [Integrate your mod](#-integrate-your-mod) section.
+
+### Fallback compatibility
+
+To be used by players (requires knowledge of JSON and Regex).
+
+Built into Better Combat, tries to automatically assign weapon attributes to items without attribute file, based on item id.
+
+To change assignments, edit: `config/bettercombat/fallback_compatibility.json` file.
+
+(Note: Fallback compatibility can only assign attributes to non-attributed weapons, it cannot override data file based assignments.)
+
+### NBT compatibility
+
+⚠️ This feature does not work correctly in multiplayer, currently.
+
+Weapon attributes can be read from ItemStack NBT. For example:
 ```
 /give @p minecraft:wooden_sword{weapon_attributes:'{"parent":"bettercombat:claymore"}'} 1
 ```
@@ -76,6 +97,11 @@ The next steps describe how to add dedicated compatibility for any item.
 
 ## Installation
 
+Dependencies to resolve via gradle:
+- [Cloth Config](https://shedaniel.gitbook.io/cloth-config/setup-cloth-config/cloth-config-fabric)
+- [PlayerAnimator](https://github.com/KosmX/minecraftPlayerAnimator#include-in-your-dev-environment)
+- [MixinExtras](https://github.com/LlamaLad7/MixinExtras)
+
 ### Fabric
 
 Download the latest release version of the mod with all of its dependencies, and put them into `./run/mods` director.
@@ -106,7 +132,6 @@ dependencies {
     implementation fg.deobf('maven.modrinth:better-combat:VERSION-forge')
 }
 ```
-Please note for both Forge and Fabric, [Cloth Config](https://shedaniel.gitbook.io/cloth-config/setup-cloth-config/cloth-config-fabric) and [playerAnimator](https://github.com/KosmX/minecraftPlayerAnimator#include-in-your-dev-environment) are required as well. Please see each link on how to add these to your dev environments.
 
 ## Prerequisite
 
