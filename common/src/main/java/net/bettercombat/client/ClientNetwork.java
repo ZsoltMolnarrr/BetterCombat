@@ -16,7 +16,7 @@ public class ClientNetwork {
             final var packet = Packets.AttackAnimation.read(buf);
             client.execute(() -> {
                 var entity = client.world.getEntityById(packet.playerId());
-                if (entity instanceof PlayerEntity) {
+                if (entity instanceof PlayerEntity && entity != MinecraftClient.getInstance().player) {
                     if (packet.animationName().equals(Packets.AttackAnimation.StopSymbol)) {
                         ((PlayerAttackAnimatable)entity).stopAttackAnimation(packet.length());
                     } else {

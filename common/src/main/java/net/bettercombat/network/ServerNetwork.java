@@ -71,7 +71,13 @@ public class ServerNetwork {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-            });
+            });//the provided entity is a player, it is not guaranteed by the contract that said player is included in the resulting stream.
+            Entity initiator = world.getEntityById(player.getId());
+            if (initiator instanceof ServerPlayerEntity){
+                if (ServerPlayNetworking.canSend((ServerPlayerEntity)initiator, Packets.AttackAnimation.ID)) {
+                    ServerPlayNetworking.send((ServerPlayerEntity)initiator, Packets.AttackAnimation.ID, forwardBuffer);
+                }
+            }
         });
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.C2S_AttackRequest.ID, (server, player, handler, buf, responseSender) -> {
