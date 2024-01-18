@@ -1,6 +1,7 @@
 package net.bettercombat.logic;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.mojang.logging.LogUtils;
@@ -59,7 +60,7 @@ public class WeaponRegistry {
         loadContainers(resourceManager);
 
         // Resolving parents
-        containers.forEach( (itemId, container) -> {
+        containers.forEach((itemId, container) -> {
             if (!Registries.ITEM.containsId(itemId)) {
                 return;
             }
@@ -103,7 +104,7 @@ public class WeaponRegistry {
                 }
             }
 
-            var empty = new WeaponAttributes(0, null, null, false, null,null);
+            var empty = new WeaponAttributes(0, null, null, false, null, null);
             var resolvedAttributes = resolutionChain
                     .stream()
                     .reduce(empty, (a, b) -> {
@@ -136,9 +137,15 @@ public class WeaponRegistry {
     public static void encodeRegistry() {
         PacketByteBuf buffer = PacketByteBufs.create();
         var gson = new Gson();
-        var json = gson.toJson(registrations);
+
+        Map<String, JsonElement> data = new HashMap<>();
+        data.put("weapon_attributes", gson.toJsonTree(registrations));
+        data.put("attribute_containers", gson.toJsonTree(containers));
+
+        var json = gson.toJson(data);
+
         if (BetterCombat.config.weapon_registry_logging) {
-            LOGGER.info("Weapon Attribute registry loaded: " + json);
+            LOGGER.info("Encoded registries: " + json);
         }
 
         List<String> chunks = new ArrayList<>();
@@ -148,33 +155,55 @@ public class WeaponRegistry {
         }
 
         buffer.writeInt(chunks.size());
-        for (var chunk: chunks) {
+
+        for (var chunk : chunks) {
             buffer.writeString(chunk);
         }
 
-        LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes()
-                + " bytes (in " + chunks.size() + " string chunks with the size of "  + chunkSize + ")");
+        LOGGER.info("Encoded registries size (with package overhead): " + buffer.readableBytes()
+                + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
         encodedRegistrations = buffer;
     }
 
     public static void decodeRegistry(PacketByteBuf buffer) {
-        var chunkCount = buffer.readInt();
-        String json = "";
-        for (int i = 0; i < chunkCount; ++i) {
-            json = json.concat(buffer.readString());
+        var totalChunkCount = buffer.readInt();
+
+        StringBuilder jsonBuilder = new StringBuilder();
+
+        for (int i = 0; i < totalChunkCount; ++i) {
+            jsonBuilder.append(buffer.readString());
+            LOGGER.info("Decoded registry in chunk " + (i + 1));
         }
-        LOGGER.info("Decoded Weapon Attribute registry in " + chunkCount + " string chunks");
+
+        String json = jsonBuilder.toString();
+
         if (BetterCombat.config.weapon_registry_logging) {
-            LOGGER.info("Weapon Attribute registry received: " + json);
+            LOGGER.info("Decoded registries: " + json);
         }
+
         var gson = new Gson();
-        Type mapType = new TypeToken<Map<String, WeaponAttributes>>() {}.getType();
-        Map<String, WeaponAttributes> readRegistrations = gson.fromJson(json, mapType);
+        Type mapType = new TypeToken<Map<String, JsonElement>>() {
+        }.getType();
+        Type weaponAttributeType = new TypeToken<Map<String, WeaponAttributes>>() {
+        }.getType();
+        Type attributeContainerType = new TypeToken<Map<String, AttributesContainer>>() {
+        }.getType();
+        Map<String, JsonElement> data = gson.fromJson(json, mapType);
+
+        Map<String, WeaponAttributes> readRegistrations = gson.fromJson(data.get("weapon_attributes"), weaponAttributeType);
         Map<Identifier, WeaponAttributes> newRegistrations = new HashMap();
         readRegistrations.forEach((key, value) -> {
             newRegistrations.put(new Identifier(key), value);
         });
+
+        Map<String, AttributesContainer> readAttributes = gson.fromJson(data.get("attribute_containers"), attributeContainerType);
+        Map<Identifier, AttributesContainer> newAttributes = new HashMap();
+        readAttributes.forEach((key, value) -> {
+            newAttributes.put(new Identifier(key), value);
+        });
+
         registrations = newRegistrations;
+        containers = newAttributes;
     }
 
     public static PacketByteBuf getEncodedRegistry() {
