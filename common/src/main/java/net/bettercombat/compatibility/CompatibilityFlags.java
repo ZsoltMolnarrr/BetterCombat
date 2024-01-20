@@ -17,6 +17,7 @@ public class CompatibilityFlags {
         }
         if (Platform.isModLoaded("pehkui")) {
             usePehkui = true;
+            PehkuiHelper.load();
         }
     }
 
