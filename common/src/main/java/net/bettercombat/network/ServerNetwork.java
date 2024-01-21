@@ -27,6 +27,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.SwordItem;
 import net.minecraft.network.PacketByteBuf;
@@ -37,6 +38,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public class ServerNetwork {
@@ -63,9 +65,17 @@ public class ServerNetwork {
             }
             final var packet = Packets.AttackAnimation.read(buf);
             final var forwardBuffer = new Packets.AttackAnimation(player.getId(), packet.animatedHand(), packet.animationName(), packet.length(), packet.upswing()).write();
+            try {
+                //send info back for Replaymod Compat
+                if (ServerPlayNetworking.canSend(player, Packets.AttackAnimation.ID)) {
+                    ServerPlayNetworking.send(player, Packets.AttackAnimation.ID, forwardBuffer);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             PlayerLookup.tracking(player).forEach(serverPlayer -> {
                 try {
-                    if (serverPlayer.getId() != player.getId() && ServerPlayNetworking.canSend(serverPlayer, Packets.AttackAnimation.ID)) {
+                    if (ServerPlayNetworking.canSend(serverPlayer, Packets.AttackAnimation.ID)) {
                         ServerPlayNetworking.send(serverPlayer, Packets.AttackAnimation.ID, forwardBuffer);
                     }
                 } catch (Exception e){
