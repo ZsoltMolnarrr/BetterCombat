@@ -17,6 +17,8 @@ public class PehkuiHelper {
     private static final Method GET_SCALE;
     private static final Map<Identifier, Object> SCALE_TYPES;
 
+    public static void load() {}
+
     static
     {
         Method getScaleDataMethod = null;
