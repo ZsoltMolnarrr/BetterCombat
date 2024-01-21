@@ -1,6 +1,7 @@
 package net.bettercombat.client;
 
 import net.bettercombat.BetterCombat;
+import net.bettercombat.Platform;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
@@ -16,9 +17,9 @@ public class ClientNetwork {
             final var packet = Packets.AttackAnimation.read(buf);
             client.execute(() -> {
                 var entity = client.world.getEntityById(packet.playerId());
-                //This addition check is not required, ive tested without it,
-                //but it probably retriggers the animation and could lead to issues on servers with higher pings
-                if (entity instanceof PlayerEntity player && player != client.player) {
+                if (entity instanceof PlayerEntity player
+                        // Avoid local playback, unless replay mod is loaded
+                        && (player != client.player || Platform.isModLoaded("replaymod")) ) {
                     if (packet.animationName().equals(Packets.AttackAnimation.StopSymbol)) {
                         ((PlayerAttackAnimatable) entity).stopAttackAnimation(packet.length());
                     } else {
