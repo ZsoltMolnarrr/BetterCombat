@@ -1,3 +1,8 @@
+# 1.8.4
+
+- Fix ReplayMod Compat, thanks to Smartin-b #317 #24
+- Fix Pehkui Compatibility, thanks to Leximon #326
+
 # 1.8.3
 
 - Fix two-handed ranged weapons ignoring projectile held in the offhand slot
