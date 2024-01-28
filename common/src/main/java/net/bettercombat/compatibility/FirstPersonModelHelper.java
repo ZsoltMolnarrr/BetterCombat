@@ -1,13 +1,13 @@
 package net.bettercombat.compatibility;
 
-import dev.tr7zw.firstperson.FirstPersonModelCore;
+import dev.tr7zw.firstperson.api.FirstPersonAPI;
 
 import java.util.function.Supplier;
 
 public class FirstPersonModelHelper {
     public static Supplier<Boolean> isDisabled() {
         return (() -> {
-            return !FirstPersonModelCore.enabled;
+            return !FirstPersonAPI.isEnabled();
         });
     }
 }

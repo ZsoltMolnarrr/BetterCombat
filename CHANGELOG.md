@@ -2,6 +2,7 @@
 
 - Fix ReplayMod Compat, thanks to Smartin-b #317 #24
 - Fix Pehkui Compatibility, thanks to Leximon #326
+- Improve First Person Model compatibility #329
 
 # 1.8.3
 
