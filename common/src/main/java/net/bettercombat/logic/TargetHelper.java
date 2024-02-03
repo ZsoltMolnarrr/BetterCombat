@@ -58,7 +58,7 @@ public class TargetHelper {
     }
 
     public static boolean isAttackableMount(Entity entity) {
-        if (entity instanceof HostileEntity || isEntityHostileVehicle(entity.getEntityName())) {
+        if (entity instanceof HostileEntity || isEntityHostileVehicle(entity.getName().getString())) {
             return true;
         }
         return BetterCombat.config.allow_attacking_mount;

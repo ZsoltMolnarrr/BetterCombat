@@ -9,6 +9,7 @@ import net.bettercombat.logic.TargetHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -91,14 +92,11 @@ public class TargetFinder {
                 .getWorld()
                 .getOtherEntities(player, box, entity ->  !entity.isSpectator() && entity.canHit())
                 .stream()
-                .filter(entity -> {
-                    var result = entity != player
-                            && entity != cursorTarget
-                            && entity.isAttackable()
-                            && (!entity.equals(player.getVehicle()) || TargetHelper.isAttackableMount(entity))
-                            && TargetHelper.getRelation(player, entity) == TargetHelper.Relation.HOSTILE;
-                    return result;
-                })
+                .filter(entity -> entity != player
+                        && entity != cursorTarget
+                        && entity.isAttackable()
+                        && (!entity.equals(player.getVehicle()) || TargetHelper.isAttackableMount(entity))
+                        && TargetHelper.getRelation(player, entity) == TargetHelper.Relation.HOSTILE)
                 .collect(Collectors.toList());
         if (cursorTarget != null && cursorTarget.isAttackable()) {
             entities.add(cursorTarget);
@@ -161,9 +159,14 @@ public class TargetFinder {
 
         private static boolean rayContainsNoObstacle(Vec3d start, Vec3d end) {
             var client = MinecraftClient.getInstance();
-            var world = client.world;
-            var hit = client.world.raycast(new RaycastContext(start, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, client.player));
-            return hit.getType() != HitResult.Type.BLOCK;
+            BlockHitResult hit = null;
+            if (client.world != null) {
+                hit = client.world.raycast(new RaycastContext(start, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, client.player));
+            }
+            if (hit != null) {
+                return hit.getType() != HitResult.Type.BLOCK;
+            }
+            return false;
         }
     }
 }

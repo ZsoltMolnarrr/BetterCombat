@@ -72,7 +72,8 @@ remapJar {
     archiveClassifier.set(null)
 }
 
-task renameJarForPublication(type: Zip, dependsOn: remapJar) {
+tasks.register('renameJarForPublication', Zip) {
+    dependsOn remapJar
     from remapJar.archiveFile.map { zipTree(it) }
     // extension "jar"
     metadataCharset "UTF-8"
