@@ -1,11 +1,13 @@
 package net.bettercombat.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.bettercombat.client.collision.TargetFinder;
+import net.bettercombat.logic.CombatMode;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
 public class ColliderDebugRenderer {
     @Inject(method = "render",at = @At("TAIL"))
     public void renderColliderDebug(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (!((MinecraftClientAccessor) client).getEntityRenderDispatcher().shouldRenderHitboxes()) {
             return;

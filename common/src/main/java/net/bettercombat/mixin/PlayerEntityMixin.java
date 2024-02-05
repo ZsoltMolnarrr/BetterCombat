@@ -6,6 +6,7 @@ import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
+import net.bettercombat.logic.CombatMode;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
@@ -38,6 +39,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void post_Tick(CallbackInfo ci) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
         var instance = (Object)this;
         if (((PlayerEntity)instance).getWorld().isClient()) {
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
@@ -49,6 +51,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
 
     @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 3)
     private boolean disableSweeping(boolean value) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return false;
         if (BetterCombat.config.allow_vanilla_sweeping) {
             return value;
         }
@@ -87,6 +90,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
 
     @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
     public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
         var mainHandHasTwoHanded = false;
         var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
         var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
@@ -149,6 +153,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
             target = "Lnet/minecraft/entity/player/PlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"),
             index = 0)
     public Hand getHand(Hand hand) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return Hand.MAIN_HAND;
         var player = ((PlayerEntity) ((Object)this) );
         var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
         if (currentHand != null) {
@@ -163,6 +168,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
     @Redirect(method = "attack", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;"))
     public ItemStack getMainHandStack_Redirect(PlayerEntity instance) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return instance.getMainHandStack();
         // DUAL WIELDING LOGIC
         // Here we return the off-hand stack as fake main-hand, purpose:
         // - Getting enchants
@@ -187,6 +193,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
     @Redirect(method = "attack", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;setStackInHand(Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V"))
     public void setStackInHand_Redirect(PlayerEntity instance, Hand handArg, ItemStack itemStack) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
         // DUAL WIELDING LOGIC
         // In case item got destroyed due to durability loss
         // We empty the correct hand

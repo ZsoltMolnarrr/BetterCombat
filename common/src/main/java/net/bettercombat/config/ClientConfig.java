@@ -3,9 +3,13 @@ package net.bettercombat.config;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.bettercombat.logic.CombatMode;
 
 @Config(name = "client")
 public class ClientConfig implements ConfigData {
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public CombatMode singlePlayerCombatMode = CombatMode.BETTER_COMBAT;
     @ConfigEntry.Gui.Tooltip
     public boolean isHoldToAttackEnabled = true;
     @ConfigEntry.Gui.Tooltip

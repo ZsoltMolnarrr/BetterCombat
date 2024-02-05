@@ -1,5 +1,7 @@
 package net.bettercombat.mixin;
 
+import net.bettercombat.BetterCombat;
+import net.bettercombat.logic.CombatMode;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.knockback.ConfigurableKnockback;
@@ -19,6 +21,8 @@ public class LivingEntityMixin implements ConfigurableKnockback {
 
     @Inject(method = "getAttributeValue(Lnet/minecraft/entity/attribute/EntityAttribute;)D",at = @At("HEAD"), cancellable = true)
     public void getAttributeValue_Inject(EntityAttribute attribute, CallbackInfoReturnable<Double> cir) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
+
         var object = (Object)this;
         if (object instanceof PlayerEntity) {
             var player = (PlayerEntity)object;
@@ -40,11 +44,13 @@ public class LivingEntityMixin implements ConfigurableKnockback {
 
     @Override
     public void setKnockbackMultiplier_BetterCombat(float value) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
         customKnockbackMultiplier_BetterCombat = value;
     }
 
     @ModifyVariable(method = "takeKnockback", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     public double takeKnockback_HEAD_changeStrength(double knockbackStrength) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return knockbackStrength;
         return knockbackStrength * customKnockbackMultiplier_BetterCombat;
     }
 }

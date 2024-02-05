@@ -3,6 +3,7 @@ package net.bettercombat.client;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.Platform;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
+import net.bettercombat.logic.CombatMode;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -64,7 +65,7 @@ public class ClientNetwork {
             // var gson = new Gson();
             // System.out.println("Received server config: " + gson.toJson(config));
             BetterCombat.config = config;
-            BetterCombatClient.ENABLED = true;
+            BetterCombatClient.serverCombatMode = CombatMode.BETTER_COMBAT;
         });
     }
 }

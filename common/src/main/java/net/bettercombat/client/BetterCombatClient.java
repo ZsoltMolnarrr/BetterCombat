@@ -9,6 +9,7 @@ import net.bettercombat.PlatformClient;
 import net.bettercombat.client.animation.AnimationRegistry;
 import net.bettercombat.config.ClientConfig;
 import net.bettercombat.config.ClientConfigWrapper;
+import net.bettercombat.logic.CombatMode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +20,7 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class BetterCombatClient implements ClientModInitializer {
-    public static boolean ENABLED = false;
+    public static CombatMode serverCombatMode = CombatMode.ANIMATIONS_ONLY; // Default
     public static ClientConfig config;
     @Override
     public void onInitializeClient() {

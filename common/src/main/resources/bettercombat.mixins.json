@@ -22,8 +22,7 @@
     "client.ColliderDebugRenderer",
     "client.InGameHudInject",
     "client.MinecraftClientAccessor",
-    "client.MinecraftClientInject",
-    "client.VanillaCombatMixin"
+    "client.MinecraftClientInject"
   ],
   "server": [
   ],

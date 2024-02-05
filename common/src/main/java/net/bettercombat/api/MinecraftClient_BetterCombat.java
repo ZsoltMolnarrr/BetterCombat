@@ -14,34 +14,20 @@ import static net.minecraft.util.hit.HitResult.Type.ENTITY;
  */
 public interface MinecraftClient_BetterCombat {
     int getComboCount();
-
-    default boolean hasTargetsInReach() {
-        return false; // Testing
-    }
-
+    boolean hasTargetsInReach();
     @Nullable
     default Entity getCursorTarget() {
-        // Testing
-        //var client = (MinecraftClient)this;
-        //if (client.crosshairTarget != null && client.crosshairTarget.getType() == ENTITY) {
-        //  return ((EntityHitResult)client.crosshairTarget).getEntity();
-        //}
+        var client = (MinecraftClient)this;
+        if (client.crosshairTarget != null && client.crosshairTarget.getType() == ENTITY) {
+            return ((EntityHitResult)client.crosshairTarget).getEntity();
+        }
         return null;
     }
 
-    default int getUpswingTicks() {
-        return 0; // Testing
-    }
-
-    default float getSwingProgress() {
-        return 0F; // Testing
-    }
-
+    int getUpswingTicks();
+    float getSwingProgress();
     default boolean isWeaponSwingInProgress() {
-        return false;  // Testing
+        return getSwingProgress() < 1F;
     }
-
-    default void cancelUpswing() {
-        // Testing
-    }
+    void cancelUpswing();
 }

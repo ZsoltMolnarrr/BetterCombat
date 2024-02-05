@@ -1,6 +1,7 @@
 package net.bettercombat.mixin.client;
 
 import net.bettercombat.BetterCombat;
+import net.bettercombat.logic.CombatMode;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.mixin.LivingEntityAccessor;
 import net.minecraft.client.MinecraftClient;
@@ -21,6 +22,8 @@ public class ClientPlayerInteractionManagerMixin {
             target = "Lnet/minecraft/client/network/ClientPlayerEntity;resetLastAttackedTicks()V",
             shift = At.Shift.AFTER))
     public void cancelBlockBreaking_FixAttackCD(CallbackInfo ci) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
+
         try {
             var player = client.player;
             var cooldownLength = PlayerAttackHelper.getAttackCooldownTicksCapped(player); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`

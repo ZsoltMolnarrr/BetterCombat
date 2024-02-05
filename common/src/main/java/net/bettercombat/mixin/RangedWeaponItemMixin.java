@@ -2,6 +2,8 @@ package net.bettercombat.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.bettercombat.BetterCombat;
+import net.bettercombat.logic.CombatMode;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -36,6 +38,7 @@ public class RangedWeaponItemMixin {
             // LivingEntity entity, Predicate<ItemStack> predicate
     ) {
         var originalResult = original.call(entity, hand); // Always call original first to allow others' side effects
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return originalResult;
         if (entity instanceof PlayerEntity player) {
             return player.getInventory().offHand.get(0);
         } else {
