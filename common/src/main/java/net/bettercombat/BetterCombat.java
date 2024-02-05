@@ -36,7 +36,8 @@ public class BetterCombat implements ModInitializer {
         config = AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig().server;
         loadFallbackConfig();
         CompatibilityFlags.initialize();
-        ServerNetwork.initializeHandlers();
+        // Testing
+        // ServerNetwork.initializeHandlers();
         ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
             WeaponRegistry.loadAttributes(minecraftServer.getResourceManager());
             if (config.fallback_compatibility_enabled) {
