@@ -7,6 +7,8 @@
   "hud.bettercombat.mine_with_weapons_off" : "Mine with weapons: No",
 
   "text.autoconfig.bettercombat.title" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "Combat mode (single player)",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "Better Combat: All mod features.\nAnimations only: Vanilla combat with upgraded animations.\n\nIf playing online, the server will overwrite this.\nServers without Better Combat will only support animations.",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Hold to attack",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Automatically attack while holding the attack button",
   "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "Attack instead of mining",

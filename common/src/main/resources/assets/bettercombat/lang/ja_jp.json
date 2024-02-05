@@ -7,6 +7,8 @@
   "hud.bettercombat.mine_with_weapons_off" : "武器による採掘: いいえ",
 
   "text.autoconfig.bettercombat.title" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "TODO",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "TODO",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "長押しで攻撃",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "攻撃ボタンを押している間自動で攻撃します。",
   "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "採掘ではなく攻撃する",

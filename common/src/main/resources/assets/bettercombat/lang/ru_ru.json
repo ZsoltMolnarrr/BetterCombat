@@ -7,6 +7,8 @@
   "hud.bettercombat.mine_with_weapons_off" : "Копание оружием: Выкл.",
 
   "text.autoconfig.bettercombat.title" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "TODO",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "TODO",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled": "Удерживать для атаки",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip": "Автоматически атаковать при удерживании кнопки атаки",
   "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "Атаковать вместо копания",

@@ -7,6 +7,8 @@
   "hud.bettercombat.mine_with_weapons_off" : "Bergbau mit Waffen: Nein",
   
   "text.autoconfig.bettercombat.title" : "Besser Kampf",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "TODO",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "TODO",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Halten um anzugreifen",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Greife automatisch an, während du die Angriffstaste gedrückt hältst",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "Bergbau mit Waffen",

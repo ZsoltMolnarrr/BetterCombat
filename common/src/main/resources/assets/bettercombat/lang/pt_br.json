@@ -7,6 +7,8 @@
     "hud.bettercombat.mine_with_weapons_off" : "Mina com armas: Não",
   
     "text.autoconfig.bettercombat.title" : "Better Combat",
+    "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "TODO",
+    "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "TODO",
     "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Segure para atacar",
     "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Ataque automaticamente enquanto segura o botão de ataque",
     "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "Atacar em vez de minerar",

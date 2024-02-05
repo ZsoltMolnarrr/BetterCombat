@@ -4,6 +4,8 @@
   "keybinds.bettercombat.feint" : "卖个破绽",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "切换使用武器进行采矿的能力",
 
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "TODO",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "TODO",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "按住按钮进行攻击",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "按住攻击键自动攻击",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "进行采矿武器",
