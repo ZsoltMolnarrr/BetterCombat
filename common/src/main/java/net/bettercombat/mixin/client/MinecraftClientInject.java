@@ -114,6 +114,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     // Press to attack
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
     private void pre_doAttack(CallbackInfoReturnable<Boolean> info) {
+        if (true) return; // Testing
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null && attributes.attacks() != null) {
