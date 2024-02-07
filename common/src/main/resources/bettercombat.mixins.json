@@ -16,14 +16,14 @@
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
+    "client.AnimationsOnlyMixin",
     "client.ClientPlayerEntityMixin",
     "client.ClientPlayerInteractionManagerMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.ColliderDebugRenderer",
     "client.InGameHudInject",
     "client.MinecraftClientAccessor",
-    "client.MinecraftClientInject",
-    "client.AnimationsOnlyMixin"
+    "client.MinecraftClientInject"
   ],
   "server": [
   ],

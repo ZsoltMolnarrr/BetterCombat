@@ -15,6 +15,8 @@ import net.minecraft.util.Identifier;
 public class ClientNetwork {
     public static void initializeHandlers() {
         ClientPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (client, handler, buf, responseSender) -> {
+            if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
+
             final var packet = Packets.AttackAnimation.read(buf);
             client.execute(() -> {
                 var entity = client.world.getEntityById(packet.playerId());
@@ -31,6 +33,8 @@ public class ClientNetwork {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(Packets.AttackSound.ID, (client, handler, buf, responseSender) -> {
+            if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
+
             final var packet = Packets.AttackSound.read(buf);
             client.execute(() -> {
                 try {
@@ -61,10 +65,10 @@ public class ClientNetwork {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(Packets.ConfigSync.ID, (client, handler, buf, responseSender) -> {
-            var config = Packets.ConfigSync.read(buf);
+            // Server supports Better Combat!
             // var gson = new Gson();
             // System.out.println("Received server config: " + gson.toJson(config));
-            BetterCombat.config = config;
+            BetterCombat.config = Packets.ConfigSync.read(buf);
             BetterCombatClient.serverCombatMode = CombatMode.BETTER_COMBAT;
         });
     }
