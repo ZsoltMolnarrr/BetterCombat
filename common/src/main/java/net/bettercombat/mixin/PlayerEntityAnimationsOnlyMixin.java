@@ -1,4 +1,4 @@
-package net.bettercombat.mixin.client;
+package net.bettercombat.mixin;
 
 import com.mojang.logging.LogUtils;
 import net.bettercombat.BetterCombat;
@@ -9,16 +9,10 @@ import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.utils.SoundHelper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,8 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ServerPlayerEntity.class)
-public abstract class AnimationsOnlyMixin {
+@Mixin(PlayerEntity.class)
+public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimationsOnlyMixin {
     private final Logger LOGGER = LogUtils.getLogger();
 
     @Unique private int comboCount = 0;
@@ -40,15 +34,17 @@ public abstract class AnimationsOnlyMixin {
 
     private PlayerEntity getPlayer() {
         // TODO: Fix this
-        var player = (ServerPlayerEntity)((Object)this);
+        var player = (PlayerEntity)((Object)this);
+        if (player == null) return null;
         return (PlayerEntity) MinecraftClient.getInstance().world.getEntityById(player.getId());
     }
 
-    @Inject(method = "swingHand", at = @At("HEAD"))
-    private void swingHand(CallbackInfo ci) {
+    @Override
+    protected void swingHand(CallbackInfo ci) {
         if (BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) return;
-
         var player = getPlayer();
+        if (player == null) return;
+
         if (!playerShouldAttack(player)) {
             var downWind = (int)Math.round(PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (1 - 0.5 * BetterCombat.config.upswing_multiplier));
             ((PlayerAttackAnimatable) player).stopAttackAnimation(downWind);
