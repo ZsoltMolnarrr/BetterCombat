@@ -26,8 +26,8 @@ import java.util.Map;
 
 public class WeaponRegistry {
     static final Logger LOGGER = LogUtils.getLogger();
-    static Map<Identifier, WeaponAttributes> registrations = new HashMap();
-    static Map<Identifier, AttributesContainer> containers = new HashMap();
+    static Map<Identifier, WeaponAttributes> registrations = new HashMap<>();
+    static Map<Identifier, AttributesContainer> containers = new HashMap<>();
 
     public static void register(Identifier itemId, WeaponAttributes attributes) {
         registrations.put(itemId, attributes);
@@ -179,5 +179,11 @@ public class WeaponRegistry {
 
     public static PacketByteBuf getEncodedRegistry() {
         return encodedRegistrations;
+    }
+
+    public static void clear() {
+        // When disconnecting from server
+        registrations = new HashMap<>();
+        containers = new HashMap<>();
     }
 }

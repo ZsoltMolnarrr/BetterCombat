@@ -76,6 +76,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V",at = @At("TAIL"))
     private void disconnect_TAIL(Screen screen, CallbackInfo ci) {
         BetterCombatClient.serverCombatMode = CombatMode.ANIMATIONS_ONLY;
+        WeaponRegistry.clear();
     }
 
     private void setupTextRenderer() {
