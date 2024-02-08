@@ -6,9 +6,9 @@ import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.CombatMode;
 import net.bettercombat.logic.PlayerAttackHelper;
-import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.utils.SoundHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.hit.HitResult;
@@ -32,20 +32,23 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
 
     @Unique private Item itemLastAttackedWith = null;
 
-    private PlayerEntity getPlayer() {
-        // TODO: Fix this
+    @Unique
+    private PlayerEntity getPlayer(ClientWorld world) {
         var player = (PlayerEntity)((Object)this);
         if (player == null) return null;
-        return (PlayerEntity) MinecraftClient.getInstance().world.getEntityById(player.getId());
+        return (PlayerEntity) world.getEntityById(player.getId());
     }
 
     @Override
     protected void swingHand(CallbackInfo ci) {
         if (BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) return;
-        var player = getPlayer();
+
+        var clientWorld = MinecraftClient.getInstance().world;
+        if (clientWorld == null) return;
+        var player = getPlayer(clientWorld);
         if (player == null) return;
 
-        if (!playerShouldAttack(player)) {
+        if (isPlayerMining(player)) {
             var downWind = (int)Math.round(PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (1 - 0.5 * BetterCombat.config.upswing_multiplier));
             ((PlayerAttackAnimatable) player).stopAttackAnimation(downWind);
             return;
@@ -53,35 +56,40 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
 
         var attackHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
         if (attackHand == null) return;
-        var attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
 
+        var attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
         ((PlayerAttackAnimatable) player).playAttackAnimation(attackHand.attack().animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attackHand.upswingRate());
-        SoundHelper.playSound(MinecraftClient.getInstance().world, player, attackHand.attack().swingSound());
+        SoundHelper.playSound(clientWorld, player, attackHand.attack().swingSound());
 
         ticksToResetCombo = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
         lastAttackedTicks = 0;
         ++comboCount;
-        LOGGER.info("comboCount: " + comboCount);
 
         var playerMainHandStack = player.getMainHandStack();
         if (playerMainHandStack != null) itemLastAttackedWith = playerMainHandStack.getItem();
     }
 
-    private boolean playerShouldAttack(PlayerEntity player) {
-        var wherePlayerIsLooking = player.raycast(3, 1.0F, false);
-        var entitiesInPlayerCrosshair = MinecraftClient.getInstance().world.getOtherEntities(null, new Box(player.getEyePos(), wherePlayerIsLooking.getPos()));
-        if (entitiesInPlayerCrosshair != null && entitiesInPlayerCrosshair.size() > 1) {
-            LOGGER.info("Player looking at entity");
-            return true;
-        }
-        return wherePlayerIsLooking.getType() == HitResult.Type.MISS;
+    @Unique
+    private static double getPlayerBuildReach(PlayerEntity player) {
+        if (player.isCreative()) return 5;
+        return 4.5;
+    }
+
+    @Unique
+    private boolean isPlayerMining(PlayerEntity player) {
+        var playerCrosshairTarget = player.raycast(getPlayerBuildReach(player), 1.0F, false);
+        var entitiesInPlayerCrosshair = player.getWorld().getOtherEntities(null, new Box(player.getEyePos(), playerCrosshairTarget.getPos()));
+        if (entitiesInPlayerCrosshair.size() > 1) return true;
+        return playerCrosshairTarget.getType() == HitResult.Type.BLOCK;
     }
 
     @Inject(method = "tick",at = @At("HEAD"))
     private void pre_Tick(CallbackInfo ci) {
         if (BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) return;
 
-        var player = getPlayer();
+        var clientWorld = MinecraftClient.getInstance().world;
+        if (clientWorld == null) return;
+        var player = getPlayer(clientWorld);
         if (player == null || comboCount <= 0) return;
 
         ++lastAttackedTicks;
@@ -93,7 +101,7 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
         }
 
         // Switching weapon
-        var playerMainHandStack = getPlayer().getMainHandStack();
+        var playerMainHandStack = player.getMainHandStack();
         if (playerMainHandStack == null || playerMainHandStack.getItem() != itemLastAttackedWith) {
             comboCount = 0;
         }
