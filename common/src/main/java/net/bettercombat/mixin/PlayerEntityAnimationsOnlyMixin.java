@@ -53,13 +53,9 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
 
         var attackHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
         if (attackHand == null) return;
-
-        var attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
-
-        var animatedHand = AnimatedHand.from(attackHand.isOffHand(), attributes.isTwoHanded());
         var attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
 
-        ((PlayerAttackAnimatable) player).playAttackAnimation(attackHand.attack().animation(), animatedHand, attackCooldownTicks, (float) attackHand.upswingRate());
+        ((PlayerAttackAnimatable) player).playAttackAnimation(attackHand.attack().animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attackHand.upswingRate());
         SoundHelper.playSound(MinecraftClient.getInstance().world, player, attackHand.attack().swingSound());
 
         ticksToResetCombo = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
