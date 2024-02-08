@@ -122,3 +122,4 @@ forge/run/
 *.blend1
 example/src/main/resources/data/mcdw/
 example/src/main/resources/data/gate*
+/common/src/main/resources/assets/bettercombat/weapon_attributes/
