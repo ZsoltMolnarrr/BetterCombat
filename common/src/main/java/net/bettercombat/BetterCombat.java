@@ -64,8 +64,7 @@ public class BetterCombat implements ModInitializer {
     }
 
     public static CombatMode getCurrentCombatMode() {
-        var world = MinecraftClient.getInstance().world;
-        if (world != null && world.isClient()) {
+        if (MinecraftClient.getInstance().isInSingleplayer()) {
             return BetterCombatClient.config.singlePlayerCombatMode;
         }
         return BetterCombatClient.serverCombatMode;

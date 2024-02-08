@@ -1,5 +1,6 @@
 package net.bettercombat.client;
 
+import com.mojang.logging.LogUtils;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.Platform;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
@@ -11,8 +12,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
 
 public class ClientNetwork {
+    static final Logger LOGGER = LogUtils.getLogger();
     public static void initializeHandlers() {
         ClientPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (client, handler, buf, responseSender) -> {
             if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
@@ -65,7 +68,7 @@ public class ClientNetwork {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(Packets.ConfigSync.ID, (client, handler, buf, responseSender) -> {
-            // Server supports Better Combat!
+            LOGGER.info("Server supports all Better Combat features!");
             // var gson = new Gson();
             // System.out.println("Received server config: " + gson.toJson(config));
             BetterCombat.config = Packets.ConfigSync.read(buf);
