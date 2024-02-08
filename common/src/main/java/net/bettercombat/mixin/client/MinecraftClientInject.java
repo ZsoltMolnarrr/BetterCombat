@@ -165,7 +165,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         var hand = getCurrentHand();
         if (hand == null) { return; }
-        double upswingRate = hand.upswingRate();
+        double upswingRate = hand.attack().upswingRate();
         if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
             ci.cancel();
         }
@@ -235,7 +235,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         var hand = getCurrentHand();
         if (hand == null) { return; }
-        float upswingRate = (float) hand.upswingRate();
+        float upswingRate = (float) hand.attack().upswingRate();
         if (upswingTicks > 0
                 || attackCooldown > 0
                 || player.isUsingItem()
@@ -374,7 +374,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         var hand = getCurrentHand();
         if (hand == null) { return; }
         var attack = hand.attack();
-        var upswingRate = hand.upswingRate();
+        var upswingRate = hand.attack().upswingRate();
         if (player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
             return;
         }

@@ -54,7 +54,7 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
         if (attackHand == null) return;
 
         var attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
-        ((PlayerAttackAnimatable) player).playAttackAnimation(attackHand.attack().animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attackHand.upswingRate());
+        ((PlayerAttackAnimatable) player).playAttackAnimation(attackHand.attack().animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attackHand.attack().upswingRate());
         SoundHelper.playSound(clientWorld, player, attackHand.attack().swingSound());
 
         ticksToResetCombo = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
