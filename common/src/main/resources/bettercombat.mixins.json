@@ -15,8 +15,8 @@
     "SweepingEnchantmentMixin"
   ],
   "client": [
-    "LivingEntityAnimationsOnlyMixin",
-    "PlayerEntityAnimationsOnlyMixin",
+    "animationsonly.LivingEntityAnimationsOnlyMixin",
+    "animationsonly.PlayerEntityAnimationsOnlyMixin",
     "client.AbstractClientPlayerEntityMixin",
     "client.ClientPlayerEntityMixin",
     "client.ClientPlayerInteractionManagerMixin",
