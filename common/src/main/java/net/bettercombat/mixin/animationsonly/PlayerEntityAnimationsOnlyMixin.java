@@ -50,7 +50,7 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
             return;
         }
 
-        var attackHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
+        var attackHand = PlayerAttackHelper.getCurrentAttackAnimationOnly(player, comboCount);
         if (attackHand == null) return;
 
         var attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
