@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 
 public class ClientNetwork {
-    static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     public static void initializeHandlers() {
         ClientPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (client, handler, buf, responseSender) -> {
             if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;

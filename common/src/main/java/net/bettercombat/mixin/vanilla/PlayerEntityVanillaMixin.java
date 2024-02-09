@@ -1,4 +1,4 @@
-package net.bettercombat.mixin.animationsonly;
+package net.bettercombat.mixin.vanilla;
 
 import net.bettercombat.BetterCombat;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimationsOnlyMixin {
+public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin {
     @Shadow public abstract void attack(Entity target);
 
     @Unique private int comboCount = 0;
