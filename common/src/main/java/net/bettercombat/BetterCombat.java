@@ -9,11 +9,11 @@ import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.config.ServerConfigWrapper;
 import net.bettercombat.logic.CombatMode;
-import net.bettercombat.logic.WeaponAttributesFallback;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.ServerNetwork;
 import net.bettercombat.utils.SoundHelper;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import net.tinyconfig.ConfigManager;
@@ -37,13 +37,9 @@ public class BetterCombat implements ModInitializer {
         loadFallbackConfig();
         CompatibilityFlags.initialize();
         ServerNetwork.initializeHandlers();
-        ServerLifecycleEvents.SERVER_STARTED.register((minecraftServer) -> {
-            WeaponRegistry.loadAttributes(minecraftServer.getResourceManager());
-            if (config.fallback_compatibility_enabled) {
-                WeaponAttributesFallback.initialize();
-            }
-            WeaponRegistry.encodeRegistry();
-        });
+
+        ClientLifecycleEvents.CLIENT_STARTED.register((client) -> WeaponRegistry.setup(client.getResourceManager()));
+        ServerLifecycleEvents.SERVER_STARTED.register((server) -> WeaponRegistry.setup(server.getResourceManager()));
 
         if(Platform.Fabric) {
             // forge locks the registries so this would crash

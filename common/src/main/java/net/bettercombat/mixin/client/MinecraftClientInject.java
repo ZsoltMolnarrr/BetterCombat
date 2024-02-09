@@ -76,7 +76,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V",at = @At("TAIL"))
     private void disconnect_TAIL(Screen screen, CallbackInfo ci) {
         BetterCombatClient.serverCombatMode = CombatMode.ANIMATIONS_ONLY;
-        WeaponRegistry.clear();
+        WeaponRegistry.setup(MinecraftClient.getInstance().getResourceManager());
     }
 
     private void setupTextRenderer() {
@@ -160,7 +160,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
     private void pre_doItemUse(CallbackInfo ci) {
-        LOGGER.info("Nope");
         if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
 
         var hand = getCurrentHand();

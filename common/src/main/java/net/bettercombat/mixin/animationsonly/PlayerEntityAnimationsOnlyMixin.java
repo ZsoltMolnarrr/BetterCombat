@@ -8,11 +8,13 @@ import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.utils.SoundHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimationsOnlyMixin {
+    @Shadow public abstract void attack(Entity target);
+
     @Unique private int comboCount = 0;
 
     @Unique private int ticksToResetCombo = 0;
@@ -50,12 +54,12 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
             return;
         }
 
-        var attackHand = PlayerAttackHelper.getCurrentAttackAnimationOnly(player, comboCount);
-        if (attackHand == null) return;
+        var attack = PlayerAttackHelper.getCurrentAttackAnimationOnly(player, comboCount);
+        if (attack == null) return;
 
         var attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
-        ((PlayerAttackAnimatable) player).playAttackAnimation(attackHand.attack().animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attackHand.attack().upswingRate());
-        SoundHelper.playSound(clientWorld, player, attackHand.attack().swingSound());
+        ((PlayerAttackAnimatable) player).playAttackAnimation(attack.animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attack.upswingRate());
+        SoundHelper.playSound(clientWorld, player, attack.swingSound());
 
         ticksToResetCombo = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
         lastAttackedTicks = 0;
