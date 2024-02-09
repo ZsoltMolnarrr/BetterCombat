@@ -75,7 +75,7 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
     private boolean isPlayerMining(PlayerEntity player) {
         var playerCrosshairTarget = player.raycast(getPlayerBuildReach(player), 1.0F, false);
         var entitiesInPlayerCrosshair = player.getWorld().getOtherEntities(null, new Box(player.getEyePos(), playerCrosshairTarget.getPos()));
-        if (entitiesInPlayerCrosshair.size() > 1) return true;
+        if (entitiesInPlayerCrosshair.size() > 1) return false;
         return playerCrosshairTarget.getType() == HitResult.Type.BLOCK;
     }
 
