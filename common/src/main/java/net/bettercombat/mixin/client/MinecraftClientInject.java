@@ -317,27 +317,41 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     private void updateTargetsIfNeeded() {
         if (shouldUpdateTargetsInReach()) {
-            var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
             WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
             List<Entity> targets = List.of();
+
             if (attributes != null && attributes.attacks() != null) {
-                targets = TargetFinder.findAttackTargets(
-                        player,
-                        getCursorTarget(),
-                        hand.attack(),
-                        attributes.attackRange());
+                if (BetterCombat.getCurrentCombatMode() == CombatMode.BETTER_COMBAT) {
+                    var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
+                    targets = TargetFinder.findAttackTargets(
+                            player,
+                            getCursorTarget(),
+                            hand.attack(),
+                            attributes.attackRange());
+                }
+                else {
+                    var cursorTarget = getCursorTarget();
+                    if (cursorTarget != null && cursorTarget.isAttackable()
+                            && TargetHelper.getRelation(player, cursorTarget) == TargetHelper.Relation.HOSTILE) {
+                        targets = List.of(cursorTarget);
+                    }
+                }
             }
+
             updateTargetsInReach(targets);
         }
     }
 
     @Inject(method = "tick",at = @At("HEAD"))
     private void pre_Tick(CallbackInfo ci) {
-        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
-        if (player == null) {
+        if (player == null) return;
+
+        targetsInReach = null;
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) {
+            updateTargetsIfNeeded();
             return;
         }
-        targetsInReach = null;
+
         lastAttacked += 1;
         cancelSwingIfNeeded();
         attackFromUpswingIfNeeded();
