@@ -75,7 +75,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     // Targeting the method where all the disconnection related logic is.
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V",at = @At("TAIL"))
     private void disconnect_TAIL(Screen screen, CallbackInfo ci) {
-        BetterCombatClient.serverCombatMode = CombatMode.ANIMATIONS_ONLY;
+        BetterCombatClient.SERVER_ENABLED = true;
         WeaponRegistry.setup(MinecraftClient.getInstance().getResourceManager());
     }
 
@@ -362,6 +362,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Inject(method = "tick",at = @At("TAIL"))
     private void post_Tick(CallbackInfo ci) {
         if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
+        
         if (player == null) {
             return;
         }

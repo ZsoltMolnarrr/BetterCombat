@@ -73,11 +73,6 @@ task renameJarForPublication(type: Zip, dependsOn: remapJar) {
     archiveClassifier.set(project.name)
 }
 
-task copyServerAnimations(type: Copy)  {
-    from "${rootProject.projectDir}/common/src/main/resources/data/bettercombat/weapon_attributes/"
-    into "${rootProject.projectDir}/common/src/main/resources/assets/bettercombat/weapon_attributes/"
-}
-
 assemble.dependsOn renameJarForPublication
 
 components.java {

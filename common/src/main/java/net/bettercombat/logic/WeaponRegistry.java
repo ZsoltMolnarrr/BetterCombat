@@ -56,6 +56,7 @@ public class WeaponRegistry {
     // LOADING
 
     public static void setup(ResourceManager resourceManager) {
+        // Reset
         registrations = new HashMap<>();
         containers = new HashMap<>();
 

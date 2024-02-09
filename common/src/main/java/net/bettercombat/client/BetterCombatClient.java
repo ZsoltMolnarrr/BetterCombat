@@ -20,7 +20,7 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class BetterCombatClient implements ClientModInitializer {
-    public static CombatMode serverCombatMode = CombatMode.ANIMATIONS_ONLY; // Default
+    public static boolean SERVER_ENABLED = false;
     public static ClientConfig config;
     @Override
     public void onInitializeClient() {

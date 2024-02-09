@@ -72,7 +72,7 @@ public class ClientNetwork {
             // var gson = new Gson();
             // System.out.println("Received server config: " + gson.toJson(config));
             BetterCombat.config = Packets.ConfigSync.read(buf);
-            BetterCombatClient.serverCombatMode = CombatMode.BETTER_COMBAT;
+            BetterCombatClient.SERVER_ENABLED = true;
         });
     }
 }

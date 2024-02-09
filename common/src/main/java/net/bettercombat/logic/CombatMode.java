@@ -1,7 +1,7 @@
 package net.bettercombat.logic;
 
 public enum CombatMode {
-    BETTER_COMBAT("Better Combat server"),
+    BETTER_COMBAT("Better Combat"),
     ANIMATIONS_ONLY("Vanilla server");
 
     private final String value;

@@ -74,12 +74,9 @@ public class PlayerAttackHelper {
 
     public static WeaponAttributes.Attack getCurrentAttackAnimationOnly(PlayerEntity player, int comboCount) {
         var itemStack = player.getMainHandStack();
-        WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
-        if (attributes != null && attributes.attacks() != null) {
-            var attackSelection = selectAttack(comboCount, attributes, player, false);
-            return attackSelection.attack;
-        }
-        return null;
+        var attributes = WeaponRegistry.getAttributes(itemStack);
+        if (attributes == null || attributes.attacks() == null) return null;
+        return selectAttack(comboCount, attributes, player, false).attack;
     }
 
     private record AttackSelection(WeaponAttributes.Attack attack, ComboState comboState) { }

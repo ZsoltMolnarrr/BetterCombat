@@ -40,6 +40,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
     @Inject(method = "tick", at = @At("TAIL"))
     public void post_Tick(CallbackInfo ci) {
         if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
+
         var instance = (Object)this;
         if (((PlayerEntity)instance).getWorld().isClient()) {
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
@@ -52,6 +53,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
     @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 3)
     private boolean disableSweeping(boolean value) {
         if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return false;
+
         if (BetterCombat.config.allow_vanilla_sweeping) {
             return value;
         }

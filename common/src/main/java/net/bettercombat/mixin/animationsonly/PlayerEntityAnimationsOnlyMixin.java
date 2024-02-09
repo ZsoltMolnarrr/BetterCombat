@@ -7,7 +7,6 @@ import net.bettercombat.logic.CombatMode;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.utils.SoundHelper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -33,10 +32,8 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
     @Unique private Item itemLastAttackedWith = null;
 
     @Unique
-    private PlayerEntity getPlayer(ClientWorld world) {
-        var player = (PlayerEntity)((Object)this);
-        if (player == null) return null;
-        return (PlayerEntity) world.getEntityById(player.getId());
+    private PlayerEntity getPlayer() {
+        return (PlayerEntity)((Object)this);
     }
 
     @Override
@@ -45,7 +42,7 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
 
         var clientWorld = MinecraftClient.getInstance().world;
         if (clientWorld == null) return;
-        var player = getPlayer(clientWorld);
+        var player = getPlayer();
         if (player == null) return;
 
         if (isPlayerMining(player)) {
@@ -89,7 +86,7 @@ public abstract class PlayerEntityAnimationsOnlyMixin extends LivingEntityAnimat
 
         var clientWorld = MinecraftClient.getInstance().world;
         if (clientWorld == null) return;
-        var player = getPlayer(clientWorld);
+        var player = getPlayer();
         if (player == null || comboCount <= 0) return;
 
         ++lastAttackedTicks;
