@@ -22,13 +22,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin {
     @Shadow public abstract void attack(Entity target);
-
+    @Unique private static final int MINING_COOLDOWN_TICKS = 10;
     @Unique private int comboCount = 0;
-
     @Unique private int ticksToResetCombo = 0;
-
     @Unique private int lastAttackedTicks = 0;
-
+    @Unique private int lastMinedTicks = MINING_COOLDOWN_TICKS;
     @Unique private Item itemLastAttackedWith = null;
 
     @Unique
@@ -46,17 +44,20 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
         if (player == null) return;
 
         if (isPlayerMining(player)) {
+            lastMinedTicks = 0;
             var downWind = (int)Math.round(PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (1 - 0.5 * BetterCombat.config.upswing_multiplier));
             ((PlayerAttackAnimatable) player).stopAttackAnimation(downWind);
             return;
         }
 
-        var attack = PlayerAttackHelper.getCurrentAttackAnimationOnly(player, comboCount);
-        if (attack == null) return;
-
         var attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
-        ((PlayerAttackAnimatable) player).playAttackAnimation(attack.animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attack.upswingRate());
-        SoundHelper.playSound(clientWorld, player, attack.swingSound());
+
+        if (lastMinedTicks >= MINING_COOLDOWN_TICKS) {
+            var attack = PlayerAttackHelper.getCurrentAttackAnimationOnly(player, comboCount);
+            if (attack == null) return;
+            ((PlayerAttackAnimatable) player).playAttackAnimation(attack.animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attack.upswingRate());
+            SoundHelper.playSound(clientWorld, player, attack.swingSound());
+        }
 
         ticksToResetCombo = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
         lastAttackedTicks = 0;
@@ -89,7 +90,8 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
         var player = getPlayer();
         if (player == null || comboCount <= 0) return;
 
-        ++lastAttackedTicks;
+        if (lastAttackedTicks <= 1000) ++lastAttackedTicks;
+        if (lastMinedTicks <= MINING_COOLDOWN_TICKS) ++lastMinedTicks;
 
         // Combo timeout
         if (lastAttackedTicks > ticksToResetCombo) {
