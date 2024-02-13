@@ -43,8 +43,16 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
         var player = getPlayer();
         if (player == null) return;
 
-        if (isPlayerMining(player)) {
+        var playerCrosshairReach = player.raycast(getPlayerBuildReach(player), 1.0F, false);
+        var entitiesInPlayerCrosshair = player.getWorld()
+                .getOtherEntities(null, new Box(player.getEyePos(), playerCrosshairReach.getPos())).size() > 1;
+
+        if (entitiesInPlayerCrosshair) {
+            lastMinedTicks = MINING_COOLDOWN_TICKS;
+        }
+        else if (playerCrosshairReach.getType() == HitResult.Type.BLOCK) {
             lastMinedTicks = 0;
+            comboCount = 0;
             var downWind = (int)Math.round(PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (1 - 0.5 * BetterCombat.config.upswing_multiplier));
             ((PlayerAttackAnimatable) player).stopAttackAnimation(downWind);
             return;
@@ -71,14 +79,6 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
     private static double getPlayerBuildReach(PlayerEntity player) {
         if (player.isCreative()) return 5;
         return 4.5;
-    }
-
-    @Unique
-    private boolean isPlayerMining(PlayerEntity player) {
-        var playerCrosshairTarget = player.raycast(getPlayerBuildReach(player), 1.0F, false);
-        var entitiesInPlayerCrosshair = player.getWorld().getOtherEntities(null, new Box(player.getEyePos(), playerCrosshairTarget.getPos()));
-        if (entitiesInPlayerCrosshair.size() > 1) return false;
-        return playerCrosshairTarget.getType() == HitResult.Type.BLOCK;
     }
 
     @Inject(method = "tick",at = @At("HEAD"))
