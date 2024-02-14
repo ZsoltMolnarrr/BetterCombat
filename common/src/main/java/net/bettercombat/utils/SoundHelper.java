@@ -5,12 +5,11 @@ import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
@@ -21,19 +20,14 @@ import java.util.Random;
 public class SoundHelper {
     private static final Random rng = new Random();
 
-    public static void playSound(ClientWorld world, Entity entity, WeaponAttributes.Sound sound) {
+    public static void playSound(PlayerEntity playerEntity, WeaponAttributes.Sound sound) {
         if (sound == null) return;
 
         try {
-            world.playSound(
-                    entity.getX(),
-                    entity.getY(),
-                    entity.getZ(),
+            playerEntity.playSound(
                     getSoundEvent(sound),
-                    SoundCategory.PLAYERS,
                     sound.volume(),
-                    getSoundPitch(sound),
-                    true);
+                    getSoundPitch(sound));
         } catch (Exception e) {
             System.out.println("Failed to play sound: " + sound.id());
             e.printStackTrace();

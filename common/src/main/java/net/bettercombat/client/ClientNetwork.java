@@ -18,10 +18,9 @@ public class ClientNetwork {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static void initializeHandlers() {
         ClientPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.ID, (client, handler, buf, responseSender) -> {
-            if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
-
             final var packet = Packets.AttackAnimation.read(buf);
             client.execute(() -> {
+                if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
                 var entity = client.world.getEntityById(packet.playerId());
                 if (entity instanceof PlayerEntity player
                         // Avoid local playback, unless replay mod is loaded

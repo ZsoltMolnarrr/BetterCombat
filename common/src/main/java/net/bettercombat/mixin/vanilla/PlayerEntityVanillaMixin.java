@@ -21,8 +21,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin {
+    @Unique private static final int MINING_COOLDOWN_TICKS = 8;
+
     @Shadow public abstract void attack(Entity target);
-    @Unique private static final int MINING_COOLDOWN_TICKS = 10;
+
     @Unique private int comboCount = 0;
     @Unique private int ticksToResetCombo = 0;
     @Unique private int lastAttackedTicks = 0;
@@ -31,15 +33,22 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
 
     @Unique
     private PlayerEntity getPlayer() {
-        return (PlayerEntity)((Object)this);
+        var clientWorld = MinecraftClient.getInstance().world;
+        if (clientWorld == null) return null;
+        return (PlayerEntity)clientWorld.getEntityById(getEntity().getId());
+    }
+
+    @Unique
+    private Entity getEntity() {
+        return (Entity)((Object)this);
     }
 
     @Override
     protected void swingHand(CallbackInfo ci) {
-        if (BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) return;
+        if (!getEntity().getWorld().isClient() || BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) {
+            return;
+        }
 
-        var clientWorld = MinecraftClient.getInstance().world;
-        if (clientWorld == null) return;
         var player = getPlayer();
         if (player == null) return;
 
@@ -64,7 +73,7 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
             var attack = PlayerAttackHelper.getCurrentAttackAnimationOnly(player, comboCount);
             if (attack == null) return;
             ((PlayerAttackAnimatable) player).playAttackAnimation(attack.animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attack.upswingRate());
-            SoundHelper.playSound(clientWorld, player, attack.swingSound());
+            SoundHelper.playSound(player, attack.swingSound());
         }
 
         ticksToResetCombo = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
@@ -83,12 +92,9 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
 
     @Inject(method = "tick",at = @At("HEAD"))
     private void pre_Tick(CallbackInfo ci) {
-        if (BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) return;
-
-        var clientWorld = MinecraftClient.getInstance().world;
-        if (clientWorld == null) return;
-        var player = getPlayer();
-        if (player == null || comboCount <= 0) return;
+        if (!getEntity().getWorld().isClient() || BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) {
+            return;
+        }
 
         if (lastAttackedTicks <= 1000) ++lastAttackedTicks;
         if (lastMinedTicks <= MINING_COOLDOWN_TICKS) ++lastMinedTicks;
@@ -98,6 +104,9 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
             comboCount = 0;
             return;
         }
+
+        var player = getPlayer();
+        if (player == null || comboCount <= 0) return;
 
         // Switching weapon
         var playerMainHandStack = player.getMainHandStack();
