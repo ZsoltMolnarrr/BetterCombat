@@ -21,15 +21,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin {
-    @Unique private static final int MINING_COOLDOWN_TICKS = 8;
-
-    @Shadow public abstract void attack(Entity target);
-
+    @Unique private static final int BLOCK_BREAKING_COOLDOWN = 5;
     @Unique private int comboCount = 0;
     @Unique private int ticksToResetCombo = 0;
     @Unique private int lastAttackedTicks = 0;
-    @Unique private int lastMinedTicks = MINING_COOLDOWN_TICKS;
     @Unique private Item itemLastAttackedWith = null;
+    @Unique private int lastMinedTicks = BLOCK_BREAKING_COOLDOWN;
+
+    @Shadow public abstract void attack(Entity target);
 
     @Unique
     private PlayerEntity getPlayer() {
@@ -53,11 +52,12 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
         if (player == null) return;
 
         var playerCrosshairReach = player.raycast(getPlayerBuildReach(player), 1.0F, false);
-        var entitiesInPlayerCrosshair = player.getWorld()
-                .getOtherEntities(null, new Box(player.getEyePos(), playerCrosshairReach.getPos())).size() > 1;
+        var attackableEntitiesInCrosshair = player.getWorld()
+                .getOtherEntities(null, new Box(player.getEyePos(), playerCrosshairReach.getPos()))
+                .stream().filter(Entity::isAttackable).count() > 1;
 
-        if (entitiesInPlayerCrosshair) {
-            lastMinedTicks = MINING_COOLDOWN_TICKS;
+        if (attackableEntitiesInCrosshair) {
+            lastMinedTicks = BLOCK_BREAKING_COOLDOWN + 1;
         }
         else if (playerCrosshairReach.getType() == HitResult.Type.BLOCK) {
             lastMinedTicks = 0;
@@ -69,7 +69,7 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
 
         var attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
 
-        if (lastMinedTicks >= MINING_COOLDOWN_TICKS) {
+        if (lastMinedTicks > BLOCK_BREAKING_COOLDOWN) {
             var attack = PlayerAttackHelper.getCurrentAttackAnimationOnly(player, comboCount);
             if (attack == null) return;
             ((PlayerAttackAnimatable) player).playAttackAnimation(attack.animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attack.upswingRate());
@@ -96,8 +96,8 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
             return;
         }
 
-        if (lastAttackedTicks <= 1000) ++lastAttackedTicks;
-        if (lastMinedTicks <= MINING_COOLDOWN_TICKS) ++lastMinedTicks;
+        if (lastAttackedTicks <= 500) ++lastAttackedTicks;
+        if (lastMinedTicks <= BLOCK_BREAKING_COOLDOWN) ++lastMinedTicks;
 
         // Combo timeout
         if (lastAttackedTicks > ticksToResetCombo) {
