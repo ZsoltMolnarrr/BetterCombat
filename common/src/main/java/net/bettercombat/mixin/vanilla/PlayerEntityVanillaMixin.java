@@ -10,8 +10,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,12 +19,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin {
-    @Unique private static final int BLOCK_BREAKING_COOLDOWN = 5;
     @Unique private int comboCount = 0;
     @Unique private int ticksToResetCombo = 0;
     @Unique private int lastAttackedTicks = 0;
     @Unique private Item itemLastAttackedWith = null;
-    @Unique private int lastMinedTicks = BLOCK_BREAKING_COOLDOWN;
 
     @Shadow public abstract void attack(Entity target);
 
@@ -51,30 +47,19 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
         var player = getPlayer();
         if (player == null) return;
 
-        var playerCrosshairReach = player.raycast(getPlayerBuildReach(player), 1.0F, false);
-        var attackableEntitiesInCrosshair = player.getWorld()
-                .getOtherEntities(null, new Box(player.getEyePos(), playerCrosshairReach.getPos()))
-                .stream().filter(Entity::isAttackable).count() > 1;
-
-        if (attackableEntitiesInCrosshair) {
-            lastMinedTicks = BLOCK_BREAKING_COOLDOWN + 1;
-        }
-        else if (playerCrosshairReach.getType() == HitResult.Type.BLOCK) {
-            lastMinedTicks = 0;
+        if (player.getAttackCooldownProgress(0) > 0) {
             comboCount = 0;
             var downWind = (int)Math.round(PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (1 - 0.5 * BetterCombat.config.upswing_multiplier));
             ((PlayerAttackAnimatable) player).stopAttackAnimation(downWind);
             return;
         }
 
+        var attack = PlayerAttackHelper.getCurrentAttackAnimationOnly(player, comboCount);
+        if (attack == null) return;
         var attackCooldownTicks = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
 
-        if (lastMinedTicks > BLOCK_BREAKING_COOLDOWN) {
-            var attack = PlayerAttackHelper.getCurrentAttackAnimationOnly(player, comboCount);
-            if (attack == null) return;
-            ((PlayerAttackAnimatable) player).playAttackAnimation(attack.animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attack.upswingRate());
-            SoundHelper.playSound(player, attack.swingSound());
-        }
+        ((PlayerAttackAnimatable) player).playAttackAnimation(attack.animation(), AnimatedHand.MAIN_HAND, attackCooldownTicks, (float) attack.upswingRate());
+        SoundHelper.playSound(player, attack.swingSound());
 
         ticksToResetCombo = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
         lastAttackedTicks = 0;
@@ -84,20 +69,13 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
         if (playerMainHandStack != null) itemLastAttackedWith = playerMainHandStack.getItem();
     }
 
-    @Unique
-    private static double getPlayerBuildReach(PlayerEntity player) {
-        if (player.isCreative()) return 5;
-        return 4.5;
-    }
-
-    @Inject(method = "tick",at = @At("HEAD"))
+    @Inject(method = "tick", at = @At("HEAD"))
     private void pre_Tick(CallbackInfo ci) {
         if (!getEntity().getWorld().isClient() || BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) {
             return;
         }
 
         if (lastAttackedTicks <= 500) ++lastAttackedTicks;
-        if (lastMinedTicks <= BLOCK_BREAKING_COOLDOWN) ++lastMinedTicks;
 
         // Combo timeout
         if (lastAttackedTicks > ticksToResetCombo) {
