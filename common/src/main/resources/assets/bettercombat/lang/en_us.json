@@ -8,7 +8,7 @@
 
   "text.autoconfig.bettercombat.title" : "Better Combat",
   "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "Single player combat mode",
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "If playing online, the server will overwrite this.\nServers without Better Combat will only support \"Vanilla server\" mode.\n\nBetter Combat: All mod features.\nVanilla server: Vanilla combat with animations and some features.",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "The server will override this in online play.\nServers without Better Combat will only support \"Vanilla server\" mode.\n\nBetter Combat: All features.\nVanilla server: Vanilla combat with animations and some features.",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Hold to attack *",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Server must support Better Combat\nAutomatically attack while holding the attack button",
   "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "Attack instead of mining *",
