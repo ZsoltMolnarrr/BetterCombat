@@ -40,7 +40,7 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
 
     @Override
     protected void swingHand(CallbackInfo ci) {
-        if (!getEntity().getWorld().isClient() || BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) {
+        if (!getEntity().getWorld().isClient() || BetterCombat.getCurrentCombatMode() != CombatMode.VANILLA_SERVER) {
             return;
         }
 
@@ -71,7 +71,7 @@ public abstract class PlayerEntityVanillaMixin extends LivingEntityVanillaMixin 
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void pre_Tick(CallbackInfo ci) {
-        if (!getEntity().getWorld().isClient() || BetterCombat.getCurrentCombatMode() != CombatMode.ANIMATIONS_ONLY) {
+        if (!getEntity().getWorld().isClient() || BetterCombat.getCurrentCombatMode() != CombatMode.VANILLA_SERVER) {
             return;
         }
 

@@ -1,8 +1,10 @@
 package net.bettercombat.logic;
 
+import net.minecraft.client.resource.language.I18n;
+
 public enum CombatMode {
-    BETTER_COMBAT("Better Combat"),
-    ANIMATIONS_ONLY("Vanilla server");
+    BETTER_COMBAT("betterCombat"),
+    VANILLA_SERVER("vanillaServer");
 
     private final String value;
 
@@ -12,6 +14,6 @@ public enum CombatMode {
 
     @Override
     public String toString() {
-        return this.value;
+        return I18n.translate("text.autoconfig.bettercombat.option.client.singlePlayerCombatMode." + value);
     }
 }

@@ -8,7 +8,9 @@
 
   "text.autoconfig.bettercombat.title" : "Better Combat",
   "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "シングルプレイヤー戦闘モード",
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "オンラインプレイではサーバーがこれをオーバーライドします。\nBetter Combat のないサーバーは、「Vanilla server」モードのみをサポートします。\n\nBetter Combat: すべての機能。\nVanilla server: アニメーションといくつかの機能を備えたバニラ戦闘。",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.betterCombat" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.vanillaServer" : "バニラサーバー",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "オンラインプレイではサーバーがこれをオーバーライドします。\nBetter Combat のないサーバーは、「バニラサーバー」モードのみをサポートします。\n\nBetter Combat: すべての機能。\nバニラサーバー: アニメーションといくつかの機能を備えたバニラ戦闘。",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "長押しで攻撃 *",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "サーバーは Better Combat をサポートする必要があります\n攻撃ボタンを押している間自動で攻撃します。",
   "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "採掘ではなく攻撃する *",

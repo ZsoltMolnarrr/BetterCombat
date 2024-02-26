@@ -5,7 +5,9 @@
   "keybinds.bettercombat.toggle_mine_with_weapons" : "切换使用武器进行采矿的能力",
 
   "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "单人战斗模式",
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "服务器将在在线游戏中覆盖此设置。\n没有 Better Combat 的服务器将仅支持“Vanilla server”模式。\n\nBetter Combat: 所有功能。\nVanilla server: 带有动画和一些功能的原版战斗。",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.betterCombat" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.vanillaServer" : "普通服务器",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "服务器将在在线游戏中覆盖此设置。\n没有 Better Combat 的服务器将仅支持“普通服务器”模式。\n\nBetter Combat: 所有功能。\n普通服务器: 带有动画和一些功能的原版战斗。",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "按住按钮进行攻击 *",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "服务器必须支持 Better Combat\n按住攻击键自动攻击",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "进行采矿武器 *",

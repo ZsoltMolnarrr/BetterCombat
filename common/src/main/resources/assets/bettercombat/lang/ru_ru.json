@@ -8,7 +8,9 @@
 
   "text.autoconfig.bettercombat.title" : "Better Combat",
   "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "боевой режим для одного игрока",
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "Сервер отменит это в онлайн-игре.\nСерверы без Better Combat будут поддерживать только режим «Vanilla server».\n\nBetter Combat: Все функции.\nVanilla server: Ванильный бой с анимацией и некоторыми функциями.",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.betterCombat" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.vanillaServer" : "Ванильный сервер",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "Сервер отменит это в онлайн-игре.\nСерверы без Better Combat будут поддерживать только режим «Ванильный сервер».\n\nBetter Combat: Все функции.\nВанильный сервер: Ванильный бой с анимацией и некоторыми функциями.",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled": "Удерживать для атаки *",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip": "Сервер должен поддерживать Better Combat\nАвтоматически атаковать при удерживании кнопки атаки",
   "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "Атаковать вместо копания *",

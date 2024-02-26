@@ -8,7 +8,9 @@
   
   "text.autoconfig.bettercombat.title" : "Besser Kampf",
   "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "Einzelspieler-Kampfmodus",
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "Der Server wird dies im Online-Spiel außer Kraft setzen.\nServer ohne Besser Kampf unterstützen nur den „Vanilla server“-Modus.\n\nBetter Combat: Alle Features.\nVanilla server: Vanilla-Kampf mit Animationen und einigen Features.",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.betterCombat" : "Besser Kampf",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.vanillaServer" : "Vanille-Server",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "Der Server wird dies im Online-Spiel außer Kraft setzen.\nServer ohne Besser Kampf unterstützen nur den „Vanille-Server“-Modus.\n\nBetter Combat: Alle Features.\nVanille-Server: Vanilla-Kampf mit Animationen und einigen Features.",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Halten um anzugreifen *",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Der Server muss Besser Kampf unterstützen\nGreife automatisch an, während du die Angriffstaste gedrückt hältst",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "Bergbau mit Waffen *",

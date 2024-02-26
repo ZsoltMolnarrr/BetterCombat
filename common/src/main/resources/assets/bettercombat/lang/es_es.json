@@ -8,7 +8,9 @@
   
   "text.autoconfig.bettercombat.title" : "Mejor Combate",
   "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "Modo de combate para un jugador",
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "El servidor anulará esto en el juego en línea.\nLos servidores sin Mejor Combate solo admitirán el modo \"Vanilla server\".\n\nBetter Combat: Todas las características.\nVanilla server: Combate vainilla con animaciones y algunas funciones.",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.betterCombat" : "Mejor Combate",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.vanillaServer" : "Servidor vainilla",
+  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "El servidor anulará esto en el juego en línea.\nLos servidores sin Mejor Combate solo admitirán el modo \"Servidor vainilla\".\n\nBetter Combat: Todas las características.\nServidor vainilla: Combate vainilla con animaciones y algunas funciones.",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Mantener para atacar *",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "El servidor debe soportar Mejor Combate\nAtaca automáticamente mientras mantienes presionado el botón de ataque",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "Minar con armas *",
