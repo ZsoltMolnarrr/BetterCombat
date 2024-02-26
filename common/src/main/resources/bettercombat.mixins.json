@@ -17,6 +17,7 @@
   "client": [
     "vanilla.LivingEntityVanillaMixin",
     "vanilla.PlayerEntityVanillaMixin",
+    "vanilla.ShieldItemVanillaMixin",
     "client.AbstractClientPlayerEntityMixin",
     "client.ClientPlayerEntityMixin",
     "client.ClientPlayerInteractionManagerMixin",
