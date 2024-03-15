@@ -9,6 +9,7 @@ import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.config.ServerConfigWrapper;
 import net.bettercombat.logic.CombatMode;
+import net.bettercombat.logic.FallbackAnimationsMode;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.ServerNetwork;
 import net.bettercombat.utils.SoundHelper;
@@ -60,7 +61,12 @@ public class BetterCombat implements ModInitializer {
     }
 
     public static CombatMode getCurrentCombatMode() {
-        if (MinecraftClient.getInstance().isInSingleplayer()) return BetterCombatClient.config.singlePlayerCombatMode;
-        return BetterCombatClient.SERVER_ENABLED ? CombatMode.BETTER_COMBAT : CombatMode.VANILLA_SERVER;
+        if (MinecraftClient.getInstance().isInSingleplayer()) {
+            if (BetterCombatClient.config.isEnabledInSinglePlayer) return CombatMode.BETTER_COMBAT;
+        }
+        else if (BetterCombatClient.SERVER_ENABLED) {
+            return CombatMode.BETTER_COMBAT;
+        }
+        return BetterCombatClient.config.fallbackAnimationsMode.equals(FallbackAnimationsMode.ANIMATIONS_ONLY) ? CombatMode.ANIMATIONS_ONLY : CombatMode.VANILLA;
     }
 }

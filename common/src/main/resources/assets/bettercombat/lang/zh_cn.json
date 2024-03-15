@@ -4,15 +4,11 @@
   "keybinds.bettercombat.feint" : "卖个破绽",
   "keybinds.bettercombat.toggle_mine_with_weapons" : "切换使用武器进行采矿的能力",
 
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode" : "单人战斗模式",
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.betterCombat" : "Better Combat",
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.vanillaServer" : "普通服务器",
-  "text.autoconfig.bettercombat.option.client.singlePlayerCombatMode.@Tooltip" : "服务器将在在线游戏中覆盖此设置。\n没有 Better Combat 的服务器将仅支持“普通服务器”模式。\n\nBetter Combat: 所有功能。\n普通服务器: 带有动画和一些功能的原版战斗。",
-  "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "按住按钮进行攻击 *",
+  "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "按住按钮进行攻击",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "服务器必须支持 Better Combat\n按住攻击键自动攻击",
-  "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "进行采矿武器 *",
+  "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled" : "进行采矿武器",
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled.@Tooltip" : "服务器必须支持 Better Combat\n允许使用武器开采方块",
-  "text.autoconfig.bettercombat.option.client.isSwingThruGrassEnabled" : "在草丛中挥舞武器 *",
+  "text.autoconfig.bettercombat.option.client.isSwingThruGrassEnabled" : "在草丛中挥舞武器",
   "text.autoconfig.bettercombat.option.client.isSwingThruGrassEnabled.@Tooltip" : "服务器必须支持 Better Combat\n攻击而不是用武器挖掘零硬度块",
   "text.autoconfig.bettercombat.option.client.isHighlightCrosshairEnabled" : "凸显十字线",
   "text.autoconfig.bettercombat.option.client.isHighlightCrosshairEnabled.@Tooltip" : "如果敌人足够近可以攻击，凸显示十字线。\n警告！ 启用此功能可能会显着降低帧速率。",
@@ -22,6 +18,12 @@
   "text.autoconfig.bettercombat.option.client.isShowingArmsInFirstPerson.@Tooltip": "为在第一人称视图中播放的攻击动画渲染手臂",
   "text.autoconfig.bettercombat.option.client.isSmoothAnimationTransitionEnabled": "平整动画过渡",
   "text.autoconfig.bettercombat.option.client.isSmoothAnimationTransitionEnabled.@Tooltip": "以牺牲动画保真度为代价来平滑攻击动画过渡",
-  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled": "项目工具提示: 攻击范围 *",
-  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled.@Tooltip": "服务器必须支持 Better Combat\n在武器工具提示上显示攻击范围属性"
+  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled": "项目工具提示: 攻击范围",
+  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled.@Tooltip": "服务器必须支持 Better Combat\n在武器工具提示上显示攻击范围属性",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer" : "在单人游戏中启用",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer.@Tooltip" : "如果设置为 false，将使用下面的后备动画模式。",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode" : "回退动画",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.vanilla" : "香草",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.animationsOnly" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.@Tooltip" : "如果服务器没有安装或启用 Better Combat，则将使用普通的 Minecraft 战斗逻辑。\n此功能是客户端功能，不会向其他玩家显示。"
 }
