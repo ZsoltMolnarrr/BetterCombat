@@ -28,5 +28,11 @@
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume" : "Lautstärke des Waffenschwinggeräuschs in Prozent",
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume.@Tooltip" : "Ändern Sie die Lautstärke der Waffenschwinggeräusche",
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled" : "Show sweeping",
-  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Zeigen Sie die Animation des Schwungschläge"
+  "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled.@Tooltip" : "Zeigen Sie die Animation des Schwungschläge",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer" : "Im Einzelspielermodus aktiviert",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer.@Tooltip" : "Wenn der Wert auf „false“ gesetzt ist, wird der unten aufgeführte Fallback-Animationsmodus verwendet.",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode" : "Fallback-Animationen",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.vanilla" : "Vanille",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.animationsOnly" : "Besser Kampf",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.@Tooltip" : "Wenn auf dem Server Better Combat nicht installiert oder aktiviert ist, wird die Vanilla-Minecraft-Kampflogik verwendet.\nDiese Funktion ist clientseitig und wird anderen Spielern nicht angezeigt."
 }

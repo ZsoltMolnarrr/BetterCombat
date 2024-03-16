@@ -33,3 +33,19 @@ dependencies {
 architectury {
     common(rootProject.platforms.split(","))
 }
+
+task copyServerAnimationsToClient(type: Copy) {
+    from 'src/main/resources/data/bettercombat/weapon_attributes'
+    into 'src/main/resources/assets/bettercombat/weapon_attributes'
+}
+
+task deleteCopiedAnimations(type: Delete) {
+    delete 'src/main/resources/assets/bettercombat/weapon_attributes'
+}
+
+processResources {
+    dependsOn copyServerAnimationsToClient
+    finalizedBy deleteCopiedAnimations
+}
+
+sourcesJar.dependsOn processResources

@@ -1,5 +1,7 @@
 package net.bettercombat.api;
 
+import net.bettercombat.BetterCombat;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -207,6 +209,10 @@ public final class WeaponAttributes {
 
         public double upswing() {
             return upswing;
+        }
+
+        public double upswingRate() {
+            return MathHelper.clamp(upswing(), 0, 1) * BetterCombat.config.getUpswingMultiplier();
         }
 
         public String animation() {

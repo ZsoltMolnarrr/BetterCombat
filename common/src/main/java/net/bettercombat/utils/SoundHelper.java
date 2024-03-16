@@ -6,6 +6,7 @@ import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
@@ -17,29 +18,37 @@ import java.util.List;
 import java.util.Random;
 
 public class SoundHelper {
-    private static Random rng = new Random();
+    private static final Random rng = new Random();
+
+    public static void playSound(PlayerEntity playerEntity, WeaponAttributes.Sound sound) {
+        if (sound == null) return;
+
+        try {
+            playerEntity.playSound(
+                    getSoundEvent(sound),
+                    sound.volume(),
+                    getSoundPitch(sound));
+        } catch (Exception e) {
+            System.out.println("Failed to play sound: " + sound.id());
+            e.printStackTrace();
+        }
+    }
 
     public static void playSound(ServerWorld world, Entity entity, WeaponAttributes.Sound sound) {
-        if (sound == null) {
-            return;
-        }
+        if (sound == null) return;
         
         try {
-            float pitch = (sound.randomness() > 0)
-                    ?  rng.nextFloat(sound.pitch() - sound.randomness(), sound.pitch() + sound.randomness())
-                    : sound.pitch();
             var packet = new Packets.AttackSound(
                     entity.getX(),
                     entity.getY(),
                     entity.getZ(),
                     sound.id(),
                     sound.volume(),
-                    pitch,
+                    getSoundPitch(sound),
                     rng.nextLong())
                     .write();
 
-            var soundEvent = Registries.SOUND_EVENT.get(new Identifier(sound.id()));
-            var distance = soundEvent.getDistanceToTravel(sound.volume());
+            var distance = getSoundEvent(sound).getDistanceToTravel(sound.volume());
             var origin = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
             PlayerLookup.around(world, origin, distance).forEach(serverPlayer -> {
                 var channel = Packets.AttackSound.ID;
@@ -92,5 +101,15 @@ public class SoundHelper {
             var soundEvent = SoundEvent.of(soundId);
             Registry.register(Registries.SOUND_EVENT, soundId, soundEvent);
         }
+    }
+
+    private static float getSoundPitch(WeaponAttributes.Sound sound) {
+        return (sound.randomness() > 0)
+                ? rng.nextFloat(sound.pitch() - sound.randomness(), sound.pitch() + sound.randomness())
+                : sound.pitch();
+    }
+
+    private static SoundEvent getSoundEvent(WeaponAttributes.Sound sound) {
+        return Registries.SOUND_EVENT.get(new Identifier(sound.id()));
     }
 }

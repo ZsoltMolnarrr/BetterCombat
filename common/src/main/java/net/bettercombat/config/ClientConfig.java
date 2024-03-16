@@ -3,6 +3,7 @@ package net.bettercombat.config;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.bettercombat.logic.FallbackAnimationsMode;
 
 @Config(name = "client")
 public class ClientConfig implements ConfigData {
@@ -36,4 +37,9 @@ public class ClientConfig implements ConfigData {
     public String swingThruGrassBlacklist = "farmersdelight";
     @ConfigEntry.Gui.Tooltip
     public String mineWithWeaponBlacklist = "";
+    @ConfigEntry.Gui.Tooltip
+    public boolean isEnabledInSinglePlayer = true;
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public FallbackAnimationsMode fallbackAnimationsMode = FallbackAnimationsMode.VANILLA;
 }

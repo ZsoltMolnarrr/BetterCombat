@@ -37,4 +37,10 @@
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "エンティティの当たり判定が表示されている場合に武器の当たり判定を表示します。",
   "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist" : "採掘可能な武器のブラックリスト",
   "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist.@Tooltip" : "この正規表現に一致するIDを持つ武器は、ブロックを採掘することはありません。",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer" : "シングルプレイヤーで有効になります",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer.@Tooltip" : "false に設定すると、以下のフォールバック アニメーション モードが使用されます。",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode" : "フォールバックアニメーション",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.vanilla" : "バニラ",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.animationsOnly" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.@Tooltip" : "サーバーに Better Combat がインストールまたは有効になっていない場合は、バニラの Minecraft 戦闘ロジックが使用されます。\nこの機能はクライアント側であり、他のプレイヤーには表示されません。"
 }

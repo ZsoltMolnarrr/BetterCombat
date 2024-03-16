@@ -1,5 +1,7 @@
 package net.bettercombat.mixin;
 
+import net.bettercombat.BetterCombat;
+import net.bettercombat.logic.CombatMode;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -13,6 +15,8 @@ public class ServerPlayNetworkHandlerMixin {
     @Redirect(method = "onPlayerAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"))
     public ItemStack getStackInHand(ServerPlayerEntity instance, Hand hand) {
         var player = instance;
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return player.getInventory().getMainHandStack();
+
         ItemStack result = null;
         switch (hand) {
             case MAIN_HAND -> {

@@ -33,6 +33,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -56,6 +57,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @Shadow public int attackCooldown;
 
+    @Shadow @Final private static Logger LOGGER;
+
     private MinecraftClient thisClient() {
         return (MinecraftClient)((Object)this);
     }
@@ -72,7 +75,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     // Targeting the method where all the disconnection related logic is.
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V",at = @At("TAIL"))
     private void disconnect_TAIL(Screen screen, CallbackInfo ci) {
-        BetterCombatClient.ENABLED = false;
+        BetterCombatClient.SERVER_ENABLED = false;
+        WeaponRegistry.setup(MinecraftClient.getInstance().getResourceManager());
     }
 
     private void setupTextRenderer() {
@@ -110,7 +114,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     // Press to attack
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
     private void pre_doAttack(CallbackInfoReturnable<Boolean> info) {
-        if (!BetterCombatClient.ENABLED) { return; }
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
 
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
@@ -128,7 +132,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     // Hold to attack
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
     private void pre_handleBlockBreaking(boolean bl, CallbackInfo ci) {
-        if (!BetterCombatClient.ENABLED) { return; }
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
 
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
@@ -156,11 +160,11 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
     private void pre_doItemUse(CallbackInfo ci) {
-        if (!BetterCombatClient.ENABLED) { return; }
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
 
         var hand = getCurrentHand();
         if (hand == null) { return; }
-        double upswingRate = hand.upswingRate();
+        double upswingRate = hand.attack().upswingRate();
         if (upswingTicks > 0 || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
             ci.cancel();
         }
@@ -230,7 +234,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         var hand = getCurrentHand();
         if (hand == null) { return; }
-        float upswingRate = (float) hand.upswingRate();
+        float upswingRate = (float) hand.attack().upswingRate();
         if (upswingTicks > 0
                 || attackCooldown > 0
                 || player.isUsingItem()
@@ -313,26 +317,41 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     private void updateTargetsIfNeeded() {
         if (shouldUpdateTargetsInReach()) {
-            var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
             WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
             List<Entity> targets = List.of();
+
             if (attributes != null && attributes.attacks() != null) {
-                targets = TargetFinder.findAttackTargets(
-                        player,
-                        getCursorTarget(),
-                        hand.attack(),
-                        attributes.attackRange());
+                if (BetterCombat.getCurrentCombatMode() == CombatMode.BETTER_COMBAT) {
+                    var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
+                    targets = TargetFinder.findAttackTargets(
+                            player,
+                            getCursorTarget(),
+                            hand.attack(),
+                            attributes.attackRange());
+                }
+                else {
+                    var cursorTarget = getCursorTarget();
+                    if (cursorTarget != null && cursorTarget.isAttackable()
+                            && TargetHelper.getRelation(player, cursorTarget) == TargetHelper.Relation.HOSTILE) {
+                        targets = List.of(cursorTarget);
+                    }
+                }
             }
+
             updateTargetsInReach(targets);
         }
     }
 
     @Inject(method = "tick",at = @At("HEAD"))
     private void pre_Tick(CallbackInfo ci) {
-        if (player == null) {
+        if (player == null) return;
+
+        targetsInReach = null;
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) {
+            updateTargetsIfNeeded();
             return;
         }
-        targetsInReach = null;
+
         lastAttacked += 1;
         cancelSwingIfNeeded();
         attackFromUpswingIfNeeded();
@@ -342,6 +361,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @Inject(method = "tick",at = @At("TAIL"))
     private void post_Tick(CallbackInfo ci) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
+        
         if (player == null) {
             return;
         }
@@ -367,7 +388,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         var hand = getCurrentHand();
         if (hand == null) { return; }
         var attack = hand.attack();
-        var upswingRate = hand.upswingRate();
+        var upswingRate = hand.attack().upswingRate();
         if (player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
             return;
         }

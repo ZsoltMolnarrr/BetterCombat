@@ -34,5 +34,11 @@
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist" : "Чёрный список блоков для функции \"Атака сквозь траву\"",
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip" : "Оружие с идентификатором, соответствующим этому регулярному выражению, никогда не пройдёт через нетвёрдые блоки из списка",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Отладочный хитбокс",
-  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Показывать хитбокс оружия, когда отображаются хитбоксы объектов"
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Показывать хитбокс оружия, когда отображаются хитбоксы объектов",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer" : "Включено в одиночном режиме",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer.@Tooltip" : "Если установлено значение false, будет использоваться режим резервной анимации, указанный ниже.",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode" : "Резервная анимация",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.vanilla" : "Ваниль",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.animationsOnly" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.@Tooltip" : "Если на сервере не установлена или включена Better Combat, будет использоваться стандартная боевая логика Minecraft.\nЭта функция является клиентской и не отображается для других игроков."
 }

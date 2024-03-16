@@ -26,8 +26,8 @@ import java.util.Map;
 
 public class WeaponRegistry {
     static final Logger LOGGER = LogUtils.getLogger();
-    static Map<Identifier, WeaponAttributes> registrations = new HashMap();
-    static Map<Identifier, AttributesContainer> containers = new HashMap();
+    static Map<Identifier, WeaponAttributes> registrations = new HashMap<>();
+    static Map<Identifier, AttributesContainer> containers = new HashMap<>();
 
     public static void register(Identifier itemId, WeaponAttributes attributes) {
         registrations.put(itemId, attributes);
@@ -55,7 +55,19 @@ public class WeaponRegistry {
 
     // LOADING
 
-    public static void loadAttributes(ResourceManager resourceManager) {
+    public static void setup(ResourceManager resourceManager) {
+        // Reset
+        registrations = new HashMap<>();
+        containers = new HashMap<>();
+
+        WeaponRegistry.loadAttributes(resourceManager);
+        if (BetterCombat.config.fallback_compatibility_enabled) {
+            WeaponAttributesFallback.initialize();
+        }
+        WeaponRegistry.encodeRegistry();
+    }
+
+    private static void loadAttributes(ResourceManager resourceManager) {
         loadContainers(resourceManager);
 
         // Resolving parents

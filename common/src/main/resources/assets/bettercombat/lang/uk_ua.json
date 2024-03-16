@@ -34,5 +34,11 @@
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist" : "Чорний список атаки крізь траву",
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip" : "Зброя, ID якої відповідає цьому регулярному виразу, ніколи не буде атакувати крізь траву",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Хітбокс зброї",
-  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Показувати хітбокси зброї, коли відображаються хітбокси сутностей"
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Показувати хітбокси зброї, коли відображаються хітбокси сутностей",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer" : "Увімкнено в одиночній грі",
+  "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer.@Tooltip" : "Якщо встановлено значення false, використовуватиметься наведений нижче резервний режим анімації.",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode" : "Резервна анімація",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.vanilla" : "Ваніль",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.animationsOnly" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.@Tooltip" : "Якщо на сервері не встановлено або не ввімкнено Better Combat, буде використано логіку бою Vanilla Minecraft.\nЦя функція є клієнтською та не відображається для інших гравців."
 }

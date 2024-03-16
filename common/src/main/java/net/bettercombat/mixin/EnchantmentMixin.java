@@ -1,5 +1,7 @@
 package net.bettercombat.mixin;
 
+import net.bettercombat.BetterCombat;
+import net.bettercombat.logic.CombatMode;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.minecraft.enchantment.Enchantment;
@@ -21,6 +23,8 @@ public class EnchantmentMixin {
 
     @Inject(method = "getEquipment", at = @At("RETURN"), cancellable = true)
     private void getEquipmentFix(LivingEntity entity, CallbackInfoReturnable<Map<EquipmentSlot, ItemStack>> cir) {
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT) return;
+
         if(entity instanceof PlayerEntity player) {
             var comboCount = ((PlayerAttackProperties) player).getComboCount();
             var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);

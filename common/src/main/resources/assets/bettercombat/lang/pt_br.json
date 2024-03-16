@@ -5,7 +5,7 @@
     "keybinds.bettercombat.toggle_mine_with_weapons" : "Alternar Mina com armas",
     "hud.bettercombat.mine_with_weapons_on" : "Mina com armas: Sim",
     "hud.bettercombat.mine_with_weapons_off" : "Mina com armas: Não",
-  
+
     "text.autoconfig.bettercombat.title" : "Better Combat",
     "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Segure para atacar",
     "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Ataque automaticamente enquanto segura o botão de ataque",
@@ -34,5 +34,11 @@
     "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist" : "Balançar através da lista negra de grama",
     "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip" : "Armas com um ID que corresponda a este regex nunca balançarão na grama",
     "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Depurar hitbox",
-    "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Mostrar hitbox de arma quando hitboxes de entidade são exibidos"
+    "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Mostrar hitbox de arma quando hitboxes de entidade são exibidos",
+    "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer" : "Habilitado no modo single-player",
+    "text.autoconfig.bettercombat.option.client.isEnabledInSinglePlayer.@Tooltip" : "Se definido como falso, o modo de animação de backup abaixo será usado.",
+    "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode" : "Animações de backup",
+    "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.vanilla" : "Baunilha",
+    "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.animationsOnly" : "Better Combat",
+    "text.autoconfig.bettercombat.option.client.fallbackAnimationsMode.@Tooltip" : "Se o servidor não tiver o Better Combat instalado ou ativado, a lógica de combate vanilla do Minecraft será usada.\nEsse recurso é do lado do cliente e não é exibido para outros jogadores."
   }

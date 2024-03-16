@@ -21,6 +21,7 @@ import net.bettercombat.client.animation.modifier.HarshAdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 import net.bettercombat.compatibility.CompatibilityFlags;
 import net.bettercombat.logic.AnimatedHand;
+import net.bettercombat.logic.CombatMode;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.LivingEntityAccessor;
@@ -270,6 +271,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             }
         }
         if (isMounting()) {
+            StateCollectionHelper.configure(animation.rightLeg, false, false);
+            StateCollectionHelper.configure(animation.leftLeg, false, false);
+        }
+        if (BetterCombat.getCurrentCombatMode() != CombatMode.BETTER_COMBAT && (isWalking() || isSprinting())) {
             StateCollectionHelper.configure(animation.rightLeg, false, false);
             StateCollectionHelper.configure(animation.leftLeg, false, false);
         }
