@@ -24,7 +24,7 @@
   "text.autoconfig.bettercombat.option.client.isSmoothAnimationTransitionEnabled": "Alisar transiciones animación",
   "text.autoconfig.bettercombat.option.client.isSmoothAnimationTransitionEnabled.@Tooltip": "Las transiciones de animación de ataque se alisan a expensas de la fidelidad de la animación",
   "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled": "Tooltip del ítem: Alcance de golpe",
-  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled.@Tooltip": "Mostrar el valor del rango de ataque en la información sobre herramientas del arma"
+  "text.autoconfig.bettercombat.option.client.isTooltipAttackRangeEnabled.@Tooltip": "Mostrar el valor del rango de ataque en la información sobre herramientas del arma",
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume" : "Porcentaje de volumen del sonido de blandiendo de arma",
   "text.autoconfig.bettercombat.option.client.weaponSwingSoundVolume.@Tooltip" : "Cambiar el volumen de los sonidos de blandiendo de armas",
   "text.autoconfig.bettercombat.option.client.isSweepingParticleEnabled" : "Mostrar partículas de blandiendo",
