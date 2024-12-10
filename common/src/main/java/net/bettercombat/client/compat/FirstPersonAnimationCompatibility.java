@@ -1,9 +1,9 @@
 package net.bettercombat.client.compat;
 
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
+import net.bettercombat.Platform;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.config.TriStateAuto;
-import net.fabricmc.loader.api.FabricLoader;
 
 public class FirstPersonAnimationCompatibility {
     private static boolean isCameraModPresent = false;
@@ -13,7 +13,7 @@ public class FirstPersonAnimationCompatibility {
                 "firstperson", "realcamera"
         };
         for (var mod : cameraMods) {
-            if (FabricLoader.getInstance().isModLoaded(mod)) {
+            if (Platform.isModLoaded(mod)) {
                 isCameraModPresent = true;
                 break;
             }
