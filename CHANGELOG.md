@@ -1,3 +1,8 @@
+# 2.0.4
+
+- Rewrite support of first person camera mods #423
+- Update russian translation, thanks to Heimdallr
+
 # 2.0.3
 
 - Fix hands while laddering with two-handed weapons
