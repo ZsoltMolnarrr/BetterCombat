@@ -101,14 +101,12 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var betterCombatPlayer = (EntityPlayer_BetterCombat)player;
 
         KeyframeAnimation newMainHandPose = null;
-        KeyframeAnimation newOffHandPose = null;
         if (betterCombatPlayer.getMainHandIdleAnimation() != null && !betterCombatPlayer.getMainHandIdleAnimation().isEmpty()) {             // Player is not using the item
             newMainHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getMainHandIdleAnimation()));
-
-            if (betterCombatPlayer.getOffHandIdleAnimation() != null && !betterCombatPlayer.getOffHandIdleAnimation().isEmpty()) {
-                newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getOffHandIdleAnimation()));
-                offHandItemPose.setPose(newOffHandPose, isLeftHanded);
-            }
+        }
+        KeyframeAnimation newOffHandPose = null;
+        if (betterCombatPlayer.getOffHandIdleAnimation() != null && !betterCombatPlayer.getOffHandIdleAnimation().isEmpty()) {
+            newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getOffHandIdleAnimation()));
         }
 
         mainHandItemPose.setPose(newMainHandPose, isLeftHanded);

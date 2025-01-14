@@ -52,23 +52,25 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
     public void post_Tick(CallbackInfo ci) {
         var instance = (Object)this;
         var player = ((PlayerEntity)instance);
-        var mainHandStack = player.getMainHandStack();
-        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
-        if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
-            player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, mainHandAttributes.pose());
-        } else {
-            player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, "");
-        }
-        var offHandStack = player.getOffHandStack();
-        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
-        if (offHandAttributes != null && offHandAttributes.pose() != null) {
-            player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, offHandAttributes.pose());
-        } else {
-            player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, "");
-        }
 
-        if (((PlayerEntity)instance).getWorld().isClient()) {
+        if (player.getWorld().isClient()) {
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
+        } else {
+            var mainHandStack = player.getMainHandStack();
+            var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
+            if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
+                player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, mainHandAttributes.pose());
+            } else {
+                player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, "");
+            }
+            var offHandStack = player.getOffHandStack();
+            var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
+            if (PlayerAttackHelper.isDualWielding(mainHandAttributes, offHandAttributes)
+                    && offHandAttributes != null && offHandAttributes.pose() != null) {
+                player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, offHandAttributes.pose());
+            } else {
+                player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, "");
+            }
         }
         updateDualWieldingSpeedBoost();
     }
