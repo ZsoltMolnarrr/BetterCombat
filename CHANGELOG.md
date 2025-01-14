@@ -1,3 +1,7 @@
+# 2.1.0
+
+- Idle animation handling moved to server side logic 
+
 # 2.0.4
 
 - Rewrite support of first person camera mods #423

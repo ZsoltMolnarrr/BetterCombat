@@ -14,6 +14,7 @@ import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
+import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
@@ -97,19 +98,19 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         // Pose
 
-        KeyframeAnimation newMainHandPose = null;
-        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
-        if (mainHandAttributes != null && mainHandAttributes.pose() != null) {             // Player is not using the item
-            newMainHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(mainHandAttributes.pose()));
-        }
+        var betterCombatPlayer = (EntityPlayer_BetterCombat)player;
 
+        KeyframeAnimation newMainHandPose = null;
         KeyframeAnimation newOffHandPose = null;
-        if (PlayerAttackHelper.isDualWielding(player)) {
-            var offHandAttributes = WeaponRegistry.getAttributes(player.getOffHandStack());
-            if (offHandAttributes != null && offHandAttributes.offHandPose() != null) {
-                newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(mainHandAttributes.pose()));
+        if (betterCombatPlayer.getMainHandIdleAnimation() != null && !betterCombatPlayer.getMainHandIdleAnimation().isEmpty()) {             // Player is not using the item
+            newMainHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getMainHandIdleAnimation()));
+
+            if (betterCombatPlayer.getOffHandIdleAnimation() != null && !betterCombatPlayer.getOffHandIdleAnimation().isEmpty()) {
+                newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getOffHandIdleAnimation()));
+                offHandItemPose.setPose(newOffHandPose, isLeftHanded);
             }
         }
+
         mainHandItemPose.setPose(newMainHandPose, isLeftHanded);
         offHandItemPose.setPose(newOffHandPose, isLeftHanded);
 

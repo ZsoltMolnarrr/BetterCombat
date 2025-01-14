@@ -13,6 +13,9 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -23,8 +26,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.UUID;
 
 import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
@@ -38,13 +39,46 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         this.comboCount = comboCount;
     }
 
+    private static final TrackedData<String> BETTER_COMBAT_MAIN_IDLE_ANIMATION = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.STRING);
+    private static final TrackedData<String> BETTER_COMBAT_OFF_IDLE_ANIMATION = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.STRING);
+
+    @Inject(method = "initDataTracker", at = @At("TAIL"))
+    private void initDataTracker_TAIL_SpellEngine_SyncEffects(DataTracker.Builder builder, CallbackInfo ci) {
+        builder.add(BETTER_COMBAT_MAIN_IDLE_ANIMATION, "");
+        builder.add(BETTER_COMBAT_OFF_IDLE_ANIMATION, "");
+    }
+
     @Inject(method = "tick", at = @At("TAIL"))
     public void post_Tick(CallbackInfo ci) {
         var instance = (Object)this;
+        var player = ((PlayerEntity)instance);
+        var mainHandStack = player.getMainHandStack();
+        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
+        if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
+            player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, mainHandAttributes.pose());
+        } else {
+            player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, "");
+        }
+        var offHandStack = player.getOffHandStack();
+        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
+        if (offHandAttributes != null && offHandAttributes.pose() != null) {
+            player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, offHandAttributes.pose());
+        } else {
+            player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, "");
+        }
+
         if (((PlayerEntity)instance).getWorld().isClient()) {
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
         }
         updateDualWieldingSpeedBoost();
+    }
+
+    public String getMainHandIdleAnimation() {
+        return ((PlayerEntity) ((Object)this)).getDataTracker().get(BETTER_COMBAT_MAIN_IDLE_ANIMATION);
+    }
+
+    public String getOffHandIdleAnimation() {
+        return ((PlayerEntity) ((Object)this)).getDataTracker().get(BETTER_COMBAT_OFF_IDLE_ANIMATION);
     }
 
     // FEATURE: Disable sweeping for attributed weapons
