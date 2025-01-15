@@ -1,6 +1,9 @@
 package net.bettercombat.client;
 
+import com.mojang.authlib.exceptions.MinecraftClientException;
+import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.ItemStack;
@@ -49,14 +52,20 @@ public class WeaponAttributeTooltip {
                 }
             }
 
+            double range = 0;
+            var player = MinecraftClient.getInstance().player;
+            if (player != null) {
+                range = BetterCombatClientMod.config.isTooltipAttackRangeDynamic
+                        ? PlayerAttackHelper.getRange(player, itemStack)
+                        : PlayerAttackHelper.getStaticRange(player, itemStack);
+            }
             if (BetterCombatClientMod.config.isTooltipAttackRangeEnabled
-                    && attributes.attackRange() > 0) {
+                    && range > 0) {
                 var operationId = EntityAttributeModifier.Operation.ADD_VALUE.getId();
                 var rangeTranslationKey = "attribute.name.generic.attack_range";
-                var rangeValue = attributes.attackRange();
                 var rangeLine = ScreenTexts.space()
                         .append(Text.translatable("attribute.modifier.equals." + operationId,
-                                new Object[]{AttributeModifiersComponent.DECIMAL_FORMAT.format(rangeValue),
+                                new Object[]{AttributeModifiersComponent.DECIMAL_FORMAT.format(range),
                                         Text.translatable(rangeTranslationKey)})
                         ).formatted(Formatting.DARK_GREEN);
                 int index = lastGreenAttributeIndex != null ? lastGreenAttributeIndex : lastAttributeLine;

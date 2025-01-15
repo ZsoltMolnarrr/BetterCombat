@@ -277,12 +277,13 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
             WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
             List<Entity> targets = List.of();
+            var range = PlayerAttackHelper.getRange(player, attributes);
             if (attributes != null && attributes.attacks() != null) {
                 targets = TargetFinder.findAttackTargets(
                         player,
                         getCursorTarget(),
                         hand.attack(),
-                        attributes.attackRange());
+                        range);
             }
             updateTargetsInReach(targets);
         }
@@ -333,11 +334,12 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         // System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
 
         var cursorTarget = getCursorTarget();
+        var range = PlayerAttackHelper.getRange(player, hand.attributes());
         List<Entity> targets = TargetFinder.findAttackTargets(
                 player,
                 cursorTarget,
                 attack,
-                hand.attributes().attackRange());
+                range);
         updateTargetsInReach(targets);
         if(targets.size() == 0) {
             PlatformClient.onEmptyLeftClick(player);

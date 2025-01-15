@@ -1,6 +1,6 @@
 {
   "attributes": {
-    "attack_range": 3,
+    "range_bonus": 0.5,
     "two_handed": true,
     "category": "battlestaff",
     "attacks": [

@@ -1,10 +1,15 @@
 # 2.1.0
 
+Functional Changes:
 - Improve idle animation handling with server side logic
+- Add support `player.entity_interaction_range` attribute, to serve as attack range
 - Add support for weapon attributes resolved from item data component. For example:
- 
+
 `/give @p minecraft:wooden_sword[bettercombat:preset_id="bettercombat:claymore"]`
 
+API Changes:
+- Added `WeaponAttributes.range_bonus` attribute, to add to the base attack range
+- Deprecated `WeaponAttributes.attack_range` property specifying absolute attack range
 
 # 2.0.4
 

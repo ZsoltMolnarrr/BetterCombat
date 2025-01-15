@@ -56,11 +56,12 @@ public class ColliderDebugRenderer {
             return;
         }
         var cursorTarget = extendedClient.getCursorTarget();
+        var range = PlayerAttackHelper.getRange(player, attributes);
         var target = TargetFinder.findAttackTargetResult(
                 player,
                 cursorTarget,
                 hand.attack(),
-                attributes.attackRange());
+                range);
         boolean collides = target.entities.size() > 0;
         Vec3d cameraOffset = camera.getPos().negate();
         var obb = target.obb.

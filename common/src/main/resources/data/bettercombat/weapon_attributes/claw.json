@@ -1,6 +1,6 @@
 {
   "attributes": {
-    "attack_range": 2.1,
+    "range_bonus": -0.5,
     "category": "claw",
     "attacks": [
       {

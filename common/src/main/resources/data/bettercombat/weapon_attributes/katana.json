@@ -1,6 +1,6 @@
 {
   "attributes": {
-    "attack_range": 2.75,
+    "range_bonus": 0,
     "pose": "bettercombat:pose_two_handed_katana",
     "two_handed": true,
     "category": "katana",

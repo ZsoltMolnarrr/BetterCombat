@@ -9,10 +9,21 @@ import java.util.Objects;
  */
 public final class WeaponAttributes {
 
+    public static WeaponAttributes empty() {
+        return new WeaponAttributes(0, 0, null, null, false, null, null);
+    }
+
     /**
-     * The maximal range of any attacks made with this weapon.
+     * DEPRECATED: Use `range_bonus` instead.
+     * Absolute range of any attacks made with this weapon.
      */
     private final double attack_range;
+
+    /**
+     * The range bonus of the weapon.
+     * This value is added to the attack range of the entity.
+     */
+    private final double range_bonus;
 
     /**
      * The pose animation to play when idling.
@@ -73,16 +84,19 @@ public final class WeaponAttributes {
      *   "attacks": [ {}, {}, { ... my new fully parsable attack object ... } ]
      * The properties of inherited attack objects can be overridden.
      */
+    @Nullable
     private final Attack[] attacks;
 
     public WeaponAttributes(
             double attack_range,
+            double range_bonus,
             @Nullable String pose,
             @Nullable String off_hand_pose,
             Boolean isTwoHanded,
             String category,
             Attack[] attacks) {
         this.attack_range = attack_range;
+        this.range_bonus = range_bonus;
         this.pose = pose;
         this.off_hand_pose = off_hand_pose;
         this.two_handed = isTwoHanded;
@@ -397,6 +411,10 @@ public final class WeaponAttributes {
 
     public double attackRange() {
         return attack_range;
+    }
+
+    public double rangeBonus() {
+        return range_bonus;
     }
 
     @Nullable

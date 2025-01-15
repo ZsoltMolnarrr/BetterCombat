@@ -1,6 +1,6 @@
 {
   "attributes" : {
-    "attack_range": 3.5,
+    "range_bonus": 1,
     "two_handed": false,
     "category": "lance",
     "attacks": [
