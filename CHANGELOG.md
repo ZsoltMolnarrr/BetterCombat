@@ -2,6 +2,7 @@
 
 Functional Changes:
 - Fix Combat Roll not cancelling attack properly
+- Increase attack range (slightly) on all built-in weapon attribute presets
 - Improve idle animation handling with server side logic
 - Add support `player.entity_interaction_range` attribute, to serve as attack range
 - Add support for weapon attributes resolved from item data component. For example:
