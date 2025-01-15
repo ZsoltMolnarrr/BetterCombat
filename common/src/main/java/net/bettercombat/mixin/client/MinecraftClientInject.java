@@ -392,6 +392,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         var packet = Packets.AttackAnimation.stop(player.getId(), downWind);
         Platform.networkC2S_Send(packet);
         upswingStack = null;
+        upswingTicks = 0;
         itemUseCooldown = 0;
         setMiningCooldown(0);
     }
