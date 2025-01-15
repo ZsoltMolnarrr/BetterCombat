@@ -274,16 +274,18 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     private void updateTargetsIfNeeded() {
         if (shouldUpdateTargetsInReach()) {
-            var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
-            WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
             List<Entity> targets = List.of();
-            var range = PlayerAttackHelper.getRange(player, attributes);
-            if (attributes != null && attributes.attacks() != null) {
-                targets = TargetFinder.findAttackTargets(
-                        player,
-                        getCursorTarget(),
-                        hand.attack(),
-                        range);
+            var hand = PlayerAttackHelper.getCurrentAttack(player, getComboCount());
+            if (hand != null) {
+                WeaponAttributes attributes = WeaponRegistry.getAttributes(hand.itemStack());
+                var range = PlayerAttackHelper.getRange(player, hand.itemStack());
+                if (attributes != null && attributes.attacks() != null) {
+                    targets = TargetFinder.findAttackTargets(
+                            player,
+                            getCursorTarget(),
+                            hand.attack(),
+                            range);
+                }
             }
             updateTargetsInReach(targets);
         }
@@ -334,7 +336,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         // System.out.println("Attack with CD: " + client.player.getAttackCooldownProgress(0));
 
         var cursorTarget = getCursorTarget();
-        var range = PlayerAttackHelper.getRange(player, hand.attributes());
+        var range = PlayerAttackHelper.getRange(player, hand.itemStack());
         List<Entity> targets = TargetFinder.findAttackTargets(
                 player,
                 cursorTarget,

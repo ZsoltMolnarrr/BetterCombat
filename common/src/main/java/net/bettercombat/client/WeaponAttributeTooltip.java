@@ -1,6 +1,6 @@
 package net.bettercombat.client;
 
-import com.mojang.authlib.exceptions.MinecraftClientException;
+import net.bettercombat.logic.EntityAttributeHelper;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -54,20 +54,12 @@ public class WeaponAttributeTooltip {
 
             double range = 0;
             var player = MinecraftClient.getInstance().player;
-            if (player != null) {
-                range = BetterCombatClientMod.config.isTooltipAttackRangeDynamic
-                        ? PlayerAttackHelper.getRange(player, itemStack)
-                        : PlayerAttackHelper.getStaticRange(player, itemStack);
+            if (player != null && !EntityAttributeHelper.itemHasRangeAttribute(itemStack)) {
+                range = PlayerAttackHelper.getStaticRange(player, itemStack);
             }
             if (BetterCombatClientMod.config.isTooltipAttackRangeEnabled
                     && range > 0) {
-                var operationId = EntityAttributeModifier.Operation.ADD_VALUE.getId();
-                var rangeTranslationKey = "attribute.name.generic.attack_range";
-                var rangeLine = ScreenTexts.space()
-                        .append(Text.translatable("attribute.modifier.equals." + operationId,
-                                new Object[]{AttributeModifiersComponent.DECIMAL_FORMAT.format(range),
-                                        Text.translatable(rangeTranslationKey)})
-                        ).formatted(Formatting.DARK_GREEN);
+                var rangeLine = attackRangeLine(range);
                 int index = lastGreenAttributeIndex != null ? lastGreenAttributeIndex : lastAttributeLine;
                 lines.add(index + 1, rangeLine);
             }
@@ -77,5 +69,15 @@ public class WeaponAttributeTooltip {
                 lines.add(firstHandLine, handLine);
             }
         }
+    }
+
+    public static Text attackRangeLine(double range) {
+        var operationId = EntityAttributeModifier.Operation.ADD_VALUE.getId();
+        var rangeTranslationKey = "attribute.name.generic.attack_range";
+        return ScreenTexts.space()
+                .append(Text.translatable("attribute.modifier.equals." + operationId,
+                        new Object[]{AttributeModifiersComponent.DECIMAL_FORMAT.format(range),
+                                Text.translatable(rangeTranslationKey)})
+                ).formatted(Formatting.DARK_GREEN);
     }
 }

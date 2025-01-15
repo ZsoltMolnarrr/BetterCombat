@@ -1,3 +1,9 @@
+# 2.1.2
+
+- Improved compatibility with Entity Interaction Range attribute
+  - Better Combat weapon attribute range is now only applied when a weapon has no modifier for vanilla range
+  - Added function to reformat `Entity Interaction Range` to `Attack Range` on weapon tooltips
+
 # 2.1.1
 
 - Fix subzero attack range bonuses

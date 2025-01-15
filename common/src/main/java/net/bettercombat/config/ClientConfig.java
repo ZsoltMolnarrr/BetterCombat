@@ -28,7 +28,7 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean isTooltipAttackRangeEnabled = true;
     @ConfigEntry.Gui.Tooltip
-    public boolean isTooltipAttackRangeDynamic = false;
+    public boolean isTooltipAttackRangeReformat = true;
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
     public int weaponSwingSoundVolume = 100;

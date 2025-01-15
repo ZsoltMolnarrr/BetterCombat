@@ -93,7 +93,7 @@ public class ServerNetwork {
 
 
                 if (attributes != null && attack != null) {
-                    range = PlayerAttackHelper.getRange(player, attributes);
+                    range = PlayerAttackHelper.getRange(player, hand.itemStack());
 
                     double comboMultiplier = attack.damageMultiplier() - 1;
                     damageBaseMultiplier += comboMultiplier;

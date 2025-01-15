@@ -12,7 +12,7 @@
     "PlayerEntityAccessor",
     "PlayerEntityMixin",
     "RangedWeaponItemMixin",
-    "ServerPlayNetworkHandlerMixin"
+    "ServerPlayNetworkHandlerMixin",
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
@@ -21,6 +21,7 @@
     "client.ClientPlayNetworkHandlerMixin",
     "client.ColliderDebugRenderer",
     "client.InGameHudInject",
+    "client.ItemStackTooltipMixin",
     "client.MinecraftClientAccessor",
     "client.MinecraftClientInject"
   ],

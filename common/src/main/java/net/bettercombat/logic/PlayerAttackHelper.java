@@ -5,6 +5,7 @@ import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.ComboState;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.utils.AttributeModifierHelper;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -228,22 +229,17 @@ public class PlayerAttackHelper {
         return new Pose(mainPose, offPose);
     }
 
-    public static double getRange(PlayerEntity player) {
-        return getRange(player, player.getMainHandStack());
-    }
-
     public static double getRange(PlayerEntity player, ItemStack stack) {
+        if (EntityAttributeHelper.itemHasRangeAttribute(stack)) {
+            return player.getEntityInteractionRange();
+        }
         var attributes = WeaponRegistry.getAttributes(stack);
-        return getRange(player, attributes);
+        return getRange(player, attributes, true);
     }
 
     public static double getStaticRange(PlayerEntity player, ItemStack stack) {
         var attributes = WeaponRegistry.getAttributes(stack);
         return getRange(player, attributes, false);
-    }
-
-    public static double getRange(PlayerEntity player, WeaponAttributes attributes) {
-        return getRange(player, attributes, true);
     }
 
     public static double getRange(PlayerEntity player, WeaponAttributes attributes, boolean realValue) {
