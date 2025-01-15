@@ -1,7 +1,7 @@
 package net.bettercombat.logic;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.mojang.logging.LogUtils;
 import net.bettercombat.BetterCombatMod;
@@ -9,6 +9,7 @@ import net.bettercombat.Platform;
 import net.bettercombat.api.AttributesContainer;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.WeaponAttributesHelper;
+import net.bettercombat.api.component.BetterCombatDataComponents;
 import net.bettercombat.network.Packets;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,7 +19,6 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +26,7 @@ import java.util.Map;
 
 public class WeaponRegistry {
     static final Logger LOGGER = LogUtils.getLogger();
+    // Actual attributes to weapon assignments
     static Map<Identifier, WeaponAttributes> registrations = new HashMap();
     static Map<Identifier, AttributesContainer> containers = new HashMap();
 
@@ -41,14 +42,21 @@ public class WeaponRegistry {
         if (itemStack == null) {
             return null;
         }
-        var attributes = WeaponAttributesHelper.readFromNBT(itemStack);
-        if (attributes != null) {
-            return attributes;
+//        var attributes = WeaponAttributesHelper.readFromNBT(itemStack);
+//        if (attributes != null) {
+//            return attributes;
+//        }
+
+        var component = itemStack.get(BetterCombatDataComponents.WEAPON_PRESET_ID);
+        if (component != null) {
+            var container = containers.get(component);
+            if (container != null) {
+                return container.attributes();
+            }
         }
         Item item = itemStack.getItem();
         Identifier id = Registries.ITEM.getId(item);
-        attributes = WeaponRegistry.getAttributes(id);
-        return attributes;
+        return WeaponRegistry.getAttributes(id);
     }
 
     // LOADING
@@ -130,26 +138,37 @@ public class WeaponRegistry {
     // NETWORK SYNC
 
     private static Packets.WeaponRegistrySync encodedRegistrations = new Packets.WeaponRegistrySync(List.of());
+    private static final int CHUNK_SIZE = 10000;
+    private static final Gson gson = new GsonBuilder().create();
+    public static class SyncFormat {
+        public Map<String, AttributesContainer> attributes = new HashMap<>();
+        public Map<String, WeaponAttributes> registrations = new HashMap<>();
+    }
 
     public static void encodeRegistry() {
-
-        var gson = new Gson();
-        var json = gson.toJson(registrations);
-        if (BetterCombatMod.config.weapon_registry_logging) {
-            LOGGER.info("Weapon Attribute registry loaded: " + json);
-        }
-
         List<String> chunks = new ArrayList<>();
-        var chunkSize = 10000;
-        for (int i = 0; i < json.length(); i += chunkSize) {
-            chunks.add(json.substring(i, Math.min(json.length(), i + chunkSize)));
+
+        var syncContent = new SyncFormat();
+        containers.forEach((key, value) -> {
+            syncContent.attributes.put(key.toString(), value);
+        });
+        registrations.forEach((key, value) -> {
+            syncContent.registrations.put(key.toString(), value);
+        });
+
+        var json = gson.toJson(syncContent);
+        if (BetterCombatMod.config.weapon_registry_logging) {
+            LOGGER.info("Weapon Attribute assignments loaded: " + json);
+        }
+        for (int i = 0; i < json.length(); i += CHUNK_SIZE) {
+            chunks.add(json.substring(i, Math.min(json.length(), i + CHUNK_SIZE)));
         }
 
         encodedRegistrations = new Packets.WeaponRegistrySync(chunks);
         var buffer = Platform.createByteBuffer();
         encodedRegistrations.write(buffer);
         LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes()
-                + " bytes (in " + chunks.size() + " string chunks with the size of "  + chunkSize + ")");
+                + " bytes (in " + chunks.size() + " string chunks with the size of "  + CHUNK_SIZE + ")");
     }
 
     public static void decodeRegistry(Packets.WeaponRegistrySync syncPacket) {
@@ -161,14 +180,18 @@ public class WeaponRegistry {
         if (BetterCombatMod.config.weapon_registry_logging) {
             LOGGER.info("Weapon Attribute registry received: " + json);
         }
-        var gson = new Gson();
-        Type mapType = new TypeToken<Map<String, WeaponAttributes>>() {}.getType();
-        Map<String, WeaponAttributes> readRegistrations = gson.fromJson(json, mapType);
-        Map<Identifier, WeaponAttributes> newRegistrations = new HashMap();
-        readRegistrations.forEach((key, value) -> {
-            newRegistrations.put(Identifier.of(key), value);
+        LOGGER.info("Weapon Attribute registry received (pretty printed): ");
+        LOGGER.info(json);
+
+        SyncFormat sync = gson.fromJson(json, SyncFormat.class);
+        containers.clear();
+        sync.attributes.forEach((key, value) -> {
+            containers.put(Identifier.of(key), value);
         });
-        registrations = newRegistrations;
+        registrations.clear();
+        sync.registrations.forEach((key, value) -> {
+            registrations.put(Identifier.of(key), value);
+        });
     }
 
     public static Packets.WeaponRegistrySync getEncodedRegistry() {
