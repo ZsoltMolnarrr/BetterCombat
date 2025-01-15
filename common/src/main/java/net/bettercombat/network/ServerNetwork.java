@@ -90,7 +90,7 @@ public class ServerNetwork {
 
                 double damageBaseMultiplier = 0.0;
                 double range = 18.0;
-
+                boolean isDualWielding = PlayerAttackHelper.isDualWielding(player);
 
                 if (attributes != null && attack != null) {
                     range = PlayerAttackHelper.getRange(player, hand.itemStack());
