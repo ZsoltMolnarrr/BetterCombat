@@ -117,12 +117,13 @@ public class Packets {
         }
     }
 
-    public record WeaponRegistrySync(List<String> chunks) implements CustomPayload {
+    public record WeaponRegistrySync(boolean compressed, List<String> chunks) implements CustomPayload {
         public static Identifier ID = Identifier.of(BetterCombatMod.ID, "weapon_registry");
         public static final CustomPayload.Id<WeaponRegistrySync> PACKET_ID = new CustomPayload.Id<>(ID);
         public static final PacketCodec<PacketByteBuf, WeaponRegistrySync> CODEC = PacketCodec.of(WeaponRegistrySync::write, WeaponRegistrySync::read);
 
         public void write(PacketByteBuf buffer) {
+            buffer.writeBoolean(compressed);
             buffer.writeInt(chunks.size());
             for (var chunk: chunks) {
                 buffer.writeString(chunk);
@@ -130,12 +131,13 @@ public class Packets {
         }
 
         public static WeaponRegistrySync read(PacketByteBuf buffer) {
+            var compressed = buffer.readBoolean();
             var chunkCount = buffer.readInt();
             var chunks = new ArrayList<String>();
             for (int i = 0; i < chunkCount; ++i) {
                 chunks.add(buffer.readString());
             }
-            return new WeaponRegistrySync(chunks);
+            return new WeaponRegistrySync(compressed, chunks);
         }
 
         @Override

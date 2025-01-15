@@ -37,7 +37,7 @@ public class FabricServerNetwork {
                     throw new AssertionError("Weapon registry is empty!");
                 }
                 // System.out.println("Starting WeaponRegistrySyncTask, chunks: " + WeaponRegistry.getEncodedRegistry().chunks().size());
-                handler.addTask(new WeaponRegistrySyncTask(WeaponRegistry.getEncodedRegistry().chunks()));
+                handler.addTask(new WeaponRegistrySyncTask(WeaponRegistry.getEncodedRegistry()));
             } else {
                 handler.disconnect(Text.literal("Network configuration task not supported: " + WeaponRegistrySyncTask.name));
             }
@@ -84,7 +84,7 @@ public class FabricServerNetwork {
         }
     }
 
-    public record WeaponRegistrySyncTask(List<String> encodedRegistry) implements ServerPlayerConfigurationTask {
+    public record WeaponRegistrySyncTask(WeaponRegistry.Encoded encodedRegistry) implements ServerPlayerConfigurationTask {
         public static final String name = BetterCombatMod.ID + ":" + "weapon_registry";
         public static final Key KEY = new Key(name);
 
@@ -95,7 +95,7 @@ public class FabricServerNetwork {
 
         @Override
         public void sendPacket(Consumer<Packet<?>> sender) {
-            var packet = new Packets.WeaponRegistrySync(encodedRegistry);
+            var packet = new Packets.WeaponRegistrySync(encodedRegistry.compressed(), encodedRegistry.chunks());
             sender.accept(ServerConfigurationNetworking.createS2CPacket(packet));
         }
     }

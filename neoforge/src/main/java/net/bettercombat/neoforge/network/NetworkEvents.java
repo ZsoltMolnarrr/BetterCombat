@@ -107,7 +107,8 @@ public class NetworkEvents {
 
         @Override
         public void run(Consumer<CustomPayload> sender) {
-            var packet = new Packets.WeaponRegistrySync(WeaponRegistry.getEncodedRegistry().chunks());
+            var encodded = WeaponRegistry.getEncodedRegistry();
+            var packet = new Packets.WeaponRegistrySync(encodded.compressed(), encodded.chunks());
             sender.accept(packet);
         }
     }

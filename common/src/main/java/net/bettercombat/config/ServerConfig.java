@@ -102,6 +102,8 @@ public class ServerConfig implements ConfigData {
     public boolean fallback_compatibility_enabled = true;
     @Comment("Allow printing the content of weapon attributes registry")
     public boolean weapon_registry_logging = false;
+    @Comment("Compress the weapon attributes registry for transmission")
+    public boolean weapon_registry_compression = true;
 
     public float getUpswingMultiplier() {
         return Math.max(0.2F, Math.min(1, upswing_multiplier));
