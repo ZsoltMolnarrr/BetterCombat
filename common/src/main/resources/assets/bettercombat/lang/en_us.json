@@ -40,5 +40,7 @@
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Debug hitbox",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Show weapon hitbox when entity hitboxes are displayed",
   "text.autoconfig.bettercombat.option.client.firstPersonAnimations" : "First-person player animations",
-  "text.autoconfig.bettercombat.option.client.firstPersonAnimations.@Tooltip" : "Attack player animations to be shown. Only recommended to change if custom camera mods in use."
+  "text.autoconfig.bettercombat.option.client.firstPersonAnimations.@Tooltip" : "Attack player animations to be shown. Only recommended to change if custom camera mods in use.",
+  "text.autoconfig.bettercombat.option.client.legAnimationThreshold" : "Disable leg animations",
+  "text.autoconfig.bettercombat.option.client.legAnimationThreshold.@Tooltip" : "EXPERIMENTAL: Disable leg animations while running over this speed"
 }

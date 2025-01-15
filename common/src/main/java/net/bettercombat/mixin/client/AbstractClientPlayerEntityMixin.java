@@ -281,6 +281,20 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         if (isMounting()) {
             StateCollectionHelper.configure(animation.rightLeg, false, false);
             StateCollectionHelper.configure(animation.leftLeg, false, false);
+        } else {
+            var legAnimationThreshold = BetterCombatClientMod.config.legAnimationThreshold;
+            if (BetterCombatClientMod.config.legAnimationThreshold > 0) {
+                var moving = this.isSprinting() || this.isWalking();
+//                var horizontalSpeed = this.getVelocity().horizontalLength();
+//                System.out.println("Horizontal speed: " + horizontalSpeed);
+                if (moving
+                        // && horizontalSpeed > legAnimationThreshold
+                        && this.getVelocity().horizontalLengthSquared() > (legAnimationThreshold * legAnimationThreshold)
+                ) {
+                    StateCollectionHelper.configure(animation.rightLeg, false, false);
+                    StateCollectionHelper.configure(animation.leftLeg, false, false);
+                }
+            }
         }
     }
 
