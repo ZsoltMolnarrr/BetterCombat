@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class WeaponAttributesHelper {
     public static WeaponAttributes override(WeaponAttributes a, WeaponAttributes b) {
         var attackRange = b.attackRange() > 0 ? b.attackRange() : a.attackRange();
-        var rangeBonus = b.rangeBonus() > 0 ? b.rangeBonus() : a.rangeBonus();
+        var rangeBonus = b.rangeBonus() != 0 ? b.rangeBonus() : a.rangeBonus();
         var pose = b.pose() != null ? b.pose() : a.pose();
         var off_hand_pose = b.offHandPose() != null ? b.offHandPose() : a.offHandPose();
         var isTwoHanded = b.two_handed() != null ? b.two_handed() : a.two_handed();

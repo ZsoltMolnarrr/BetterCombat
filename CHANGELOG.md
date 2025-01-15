@@ -1,3 +1,7 @@
+# 2.1.1
+
+- Fix subzero attack range bonuses
+
 # 2.1.0
 
 Functional Changes:
