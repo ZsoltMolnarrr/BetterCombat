@@ -3,6 +3,7 @@
 - Improved compatibility with Entity Interaction Range attribute
   - Better Combat weapon attribute range is now only applied when a weapon has no modifier for vanilla range
   - Added function to reformat `Entity Interaction Range` to `Attack Range` on weapon tooltips
+- Knockback reduction for fast attacks is now stronger (configurable)
 
 # 2.1.1
 

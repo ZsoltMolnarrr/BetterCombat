@@ -54,8 +54,13 @@ public class ServerConfig implements ConfigData {
     public boolean movement_speed_applied_smoothly = true;
     @Comment("Determines whether or not to apply movement speed reduction while attacking mounted")
     public boolean movement_speed_effected_while_mounting = false;
-    @Comment("Attacks faster than a vanilla sword will do smaller knockback, proportionally.")
+    @Comment("Attacks faster than a vanilla threshold will do smaller knockback, proportionally.")
     public boolean knockback_reduced_for_fast_attacks = true;
+    @Comment("Attack cooldown in ticks, below which knockback will be reduced")
+    public float knockback_reduction_threshold = 12.5F;
+    @Comment("Knockback reduction curve. Options: LINEAR, SQUARE, HALF_SQUARE")
+    public Curve knockback_reduction_curve = Curve.HALF_SQUARE;
+    public enum Curve { LINEAR, SQUARE, HALF_SQUARE }
     @Comment("Combo is reset after idling `combo_reset_rate * weapon_cooldown`")
     public float combo_reset_rate = 3F;
     @Comment("Multiplier for `attack_range`, during target lookup on both sides. " +

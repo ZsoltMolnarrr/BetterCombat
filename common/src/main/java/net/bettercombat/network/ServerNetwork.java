@@ -132,14 +132,21 @@ public class ServerNetwork {
                 }
 
                 var attackCooldown = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
-                var knockbackMultiplier = BetterCombatMod.config.knockback_reduced_for_fast_attacks
-                        ? MathHelper.clamp(attackCooldown / 12.5F, 0.1F, 1F)
-                        : 1F;
+                var knockbackMultiplier = 1F;
+                if (BetterCombatMod.config.knockback_reduced_for_fast_attacks)  {
+                    knockbackMultiplier = MathHelper.clamp(attackCooldown / BetterCombatMod.config.knockback_reduction_threshold, 0.1F, 1F);
+                    switch (BetterCombatMod.config.knockback_reduction_curve) {
+                        case SQUARE -> { knockbackMultiplier *= knockbackMultiplier; }
+                        case HALF_SQUARE -> { knockbackMultiplier = (knockbackMultiplier * knockbackMultiplier + knockbackMultiplier) * 0.5F; }
+                        default -> {}
+                    }
+                    // System.out.println("Attack cooldown: " + attackCooldown + " Knockback multiplier: " + knockbackMultiplier);
+                }
+
                 var lastAttackedTicks = ((LivingEntityAccessor) player).getLastAttackedTicks();
                 if (!useVanillaPacket) {
                     player.setSneaking(request.isSneaking());
                 }
-
 
                 var validationRangeSquared = range * range * BetterCombatMod.config.target_search_range_multiplier;
                 for (int entityId : request.entityIds()) {
