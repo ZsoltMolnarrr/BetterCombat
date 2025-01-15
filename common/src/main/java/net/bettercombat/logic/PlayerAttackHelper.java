@@ -205,4 +205,25 @@ public class PlayerAttackHelper {
             player.getAttributes().addTemporaryModifiers(modifiersMap);
         }
     }
+
+    public static Pose poseForPlayer(PlayerEntity player) {
+        var mainHandStack = player.getMainHandStack();
+        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
+        String mainPose;
+        if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
+            mainPose = mainHandAttributes.pose();
+        } else {
+            mainPose = "";
+        }
+        var offHandStack = player.getOffHandStack();
+        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
+        String offPose;
+        if (PlayerAttackHelper.isDualWielding(mainHandAttributes, offHandAttributes)
+                && offHandAttributes != null && offHandAttributes.pose() != null) {
+            offPose = offHandAttributes.pose();
+        } else {
+            offPose = "";
+        }
+        return new Pose(mainPose, offPose);
+    }
 }

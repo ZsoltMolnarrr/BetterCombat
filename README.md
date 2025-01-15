@@ -60,7 +60,17 @@ To change assignments, edit: `config/bettercombat/fallback_compatibility.json` f
 
 (Note: Fallback compatibility can only assign attributes to non-attributed weapons, it cannot override data file based assignments.)
 
-### NBT compatibility
+### Item metadata compatibility
+
+#### 1.21.0 and later
+
+Weapon attributes can be referenced in item data component. For example:
+
+```
+/give @p minecraft:wooden_sword[bettercombat:preset_id="bettercombat:claymore"]
+```
+
+#### Old versions
 
 ⚠️ This feature does not work correctly in multiplayer, currently.
 

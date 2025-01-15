@@ -56,21 +56,9 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         if (player.getWorld().isClient()) {
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
         } else {
-            var mainHandStack = player.getMainHandStack();
-            var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
-            if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
-                player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, mainHandAttributes.pose());
-            } else {
-                player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, "");
-            }
-            var offHandStack = player.getOffHandStack();
-            var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
-            if (PlayerAttackHelper.isDualWielding(mainHandAttributes, offHandAttributes)
-                    && offHandAttributes != null && offHandAttributes.pose() != null) {
-                player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, offHandAttributes.pose());
-            } else {
-                player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, "");
-            }
+            var pose = PlayerAttackHelper.poseForPlayer(player);
+            player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, pose.base());
+            player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, pose.offHand());
         }
         updateDualWieldingSpeedBoost();
     }

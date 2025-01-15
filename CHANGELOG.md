@@ -1,6 +1,10 @@
 # 2.1.0
 
-- Idle animation handling moved to server side logic 
+- Improve idle animation handling with server side logic
+- Add support for weapon attributes resolved from item data component. For example:
+ 
+`/give @p minecraft:wooden_sword[bettercombat:preset_id="bettercombat:claymore"]`
+
 
 # 2.0.4
 
