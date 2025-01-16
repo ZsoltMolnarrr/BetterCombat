@@ -10,6 +10,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +140,17 @@ public class Packets {
             }
             return new WeaponRegistrySync(compressed, chunks);
         }
+
+        @Override
+        public Id<? extends CustomPayload> getId() {
+            return PACKET_ID;
+        }
+    }
+
+    public record C2S_BlockHit(BlockPos pos) implements CustomPayload {
+        public static Identifier ID = Identifier.of(BetterCombatMod.ID, "block_hit");
+        public static final CustomPayload.Id<C2S_BlockHit> PACKET_ID = new CustomPayload.Id<>(ID);
+        public static final PacketCodec<PacketByteBuf, C2S_BlockHit> CODEC = BlockPos.PACKET_CODEC.xmap(C2S_BlockHit::new, C2S_BlockHit::pos).cast();
 
         @Override
         public Id<? extends CustomPayload> getId() {

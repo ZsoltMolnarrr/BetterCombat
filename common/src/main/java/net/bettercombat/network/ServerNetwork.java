@@ -209,4 +209,19 @@ public class ServerNetwork {
             });
         });
     }
+
+    public static void handleBlockHit(Packets.C2S_BlockHit packet, MinecraftServer server, ServerPlayerEntity player) {
+        var world = player.getWorld();
+        if (world == null) {
+            return;
+        }
+        var block = world.getBlockState(packet.pos());
+        if (block == null || block.isAir()) {
+            return;
+        }
+        var soundGroup = block.getSoundGroup();
+        if (soundGroup != null) {
+            world.playSound(null, packet.pos().getX(), packet.pos().getY(), packet.pos().getZ(), soundGroup.getHitSound(), player.getSoundCategory(), 1.0F, 1.0F);
+        }
+    }
 }

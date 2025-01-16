@@ -4,6 +4,7 @@
   - Better Combat weapon attribute range is now only applied when a weapon has no modifier for vanilla range
   - Added function to reformat `Entity Interaction Range` to `Attack Range` on weapon tooltips
 - Knockback reduction for fast attacks is now stronger (configurable)
+- Added block hit sound upon swinging at blocks
 
 # 2.1.1
 

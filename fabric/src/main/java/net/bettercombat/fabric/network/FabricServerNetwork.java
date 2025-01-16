@@ -58,6 +58,7 @@ public class FabricServerNetwork {
         PayloadTypeRegistry.playS2C().register(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC);
         PayloadTypeRegistry.playC2S().register(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC);
         PayloadTypeRegistry.playC2S().register(Packets.C2S_AttackRequest.PACKET_ID, Packets.C2S_AttackRequest.CODEC);
+        PayloadTypeRegistry.playC2S().register(Packets.C2S_BlockHit.PACKET_ID, Packets.C2S_BlockHit.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.PACKET_ID, (packet, context) -> {
             ServerNetwork.handleAttackAnimation(packet, context.server(), context.player());
@@ -65,6 +66,10 @@ public class FabricServerNetwork {
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.C2S_AttackRequest.PACKET_ID, (packet, context) -> {
             ServerNetwork.handleAttackRequest(packet, context.server(), context.player(), context.player().networkHandler);
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(Packets.C2S_BlockHit.PACKET_ID, (packet, context) -> {
+            ServerNetwork.handleBlockHit(packet, context.server(), context.player());
         });
     }
 

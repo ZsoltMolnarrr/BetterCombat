@@ -48,6 +48,12 @@ public class NetworkEvents {
             ServerNetwork.handleAttackRequest(packet, server, player, vanillaHandler);
         });
 
+        registrar.playToServer(Packets.C2S_BlockHit.PACKET_ID, Packets.C2S_BlockHit.CODEC, (packet, context) -> {
+            var player = (ServerPlayerEntity)context.player();
+            var server = player.server;
+            ServerNetwork.handleBlockHit(packet, server, player);
+        });
+
         // Shared play stage
 
         registrar.playBidirectional(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC, (packet, context) -> {

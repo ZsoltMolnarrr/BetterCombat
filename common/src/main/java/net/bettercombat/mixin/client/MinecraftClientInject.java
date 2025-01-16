@@ -57,6 +57,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @Shadow @Final public InGameHud inGameHud;
 
+    @Shadow @Nullable public HitResult crosshairTarget;
+
     private MinecraftClient thisClient() {
         return (MinecraftClient)((Object)this);
     }
@@ -345,6 +347,13 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         updateTargetsInReach(targets);
         if(targets.size() == 0) {
             PlatformClient.onEmptyLeftClick(player);
+
+            if (crosshairTarget.getType() == BLOCK) {
+                var blockHitResult = (BlockHitResult) crosshairTarget;
+                var pos = blockHitResult.getBlockPos();
+                var packet = new Packets.C2S_BlockHit(pos);
+                Platform.networkC2S_Send(packet);
+            }
         }
 
         // Mimic logic of:
