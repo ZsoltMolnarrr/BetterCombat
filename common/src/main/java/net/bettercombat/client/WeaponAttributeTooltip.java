@@ -58,6 +58,7 @@ public class WeaponAttributeTooltip {
                 range = PlayerAttackHelper.getStaticRange(player, itemStack);
             }
             if (BetterCombatClientMod.config.isTooltipAttackRangeEnabled
+                    && attributes.attacks() != null && attributes.attacks().length > 0
                     && range > 0) {
                 var rangeLine = attackRangeLine(range);
                 int index = lastGreenAttributeIndex != null ? lastGreenAttributeIndex : lastAttributeLine;
