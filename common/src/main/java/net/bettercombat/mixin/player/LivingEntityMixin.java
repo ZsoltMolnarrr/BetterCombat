@@ -1,4 +1,4 @@
-package net.bettercombat.mixin;
+package net.bettercombat.mixin.player;
 
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;

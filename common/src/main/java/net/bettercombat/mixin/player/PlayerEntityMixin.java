@@ -1,4 +1,4 @@
-package net.bettercombat.mixin;
+package net.bettercombat.mixin.player;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

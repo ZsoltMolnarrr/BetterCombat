@@ -56,7 +56,7 @@ public class ColliderDebugRenderer {
             return;
         }
         var cursorTarget = extendedClient.getCursorTarget();
-        var range = PlayerAttackHelper.getRange(player, hand.itemStack());
+        var range = PlayerAttackHelper.getRangeForItem(player, hand.itemStack());
         var target = TargetFinder.findAttackTargetResult(
                 player,
                 cursorTarget,

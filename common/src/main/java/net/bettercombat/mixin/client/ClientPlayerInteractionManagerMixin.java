@@ -2,7 +2,7 @@ package net.bettercombat.mixin.client;
 
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.logic.PlayerAttackHelper;
-import net.bettercombat.mixin.LivingEntityAccessor;
+import net.bettercombat.mixin.player.LivingEntityAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import org.spongepowered.asm.mixin.Final;

@@ -9,7 +9,7 @@ import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.TargetHelper;
 import net.bettercombat.logic.knockback.ConfigurableKnockback;
-import net.bettercombat.mixin.LivingEntityAccessor;
+import net.bettercombat.mixin.player.LivingEntityAccessor;
 import net.bettercombat.utils.AttributeModifierHelper;
 import net.bettercombat.utils.MathHelper;
 import net.bettercombat.utils.SoundHelper;
@@ -93,7 +93,7 @@ public class ServerNetwork {
                 boolean isDualWielding = PlayerAttackHelper.isDualWielding(player);
 
                 if (attributes != null && attack != null) {
-                    range = PlayerAttackHelper.getRange(player, hand.itemStack());
+                    range = PlayerAttackHelper.getRangeForItem(player, hand.itemStack());
 
                     double comboMultiplier = attack.damageMultiplier() - 1;
                     damageBaseMultiplier += comboMultiplier;

@@ -1,5 +1,6 @@
 package net.bettercombat.mixin;
 
+import net.bettercombat.mixin.player.PlayerEntityAccessor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;

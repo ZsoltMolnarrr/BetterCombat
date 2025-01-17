@@ -1,7 +1,7 @@
 package net.bettercombat.neoforge;
 
 import net.bettercombat.BetterCombatMod;
-import net.bettercombat.mixin.PlayerEntityAccessor;
+import net.bettercombat.mixin.player.PlayerEntityAccessor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

@@ -1,4 +1,4 @@
-package net.bettercombat.mixin;
+package net.bettercombat.mixin.player;
 
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
