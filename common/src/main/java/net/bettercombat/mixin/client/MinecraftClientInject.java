@@ -203,6 +203,21 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if(!BetterCombatClient.config.isSwingThruGrassEnabled) {
             return false;
         }
+
+        var hand = getCurrentHand();
+        if (hand == null) return true;
+        var attack = hand.attack();
+        var cursorTarget = getCursorTarget();
+
+        List<Entity> targets = TargetFinder.findAttackTargets(
+                player,
+                cursorTarget,
+                attack,
+                hand.attributes().attackRange());
+
+        // allows for players to break "grass" with a weapon when there are no targets in range
+        if (targets.isEmpty()) return false;
+
         var regex = BetterCombatClient.config.swingThruGrassBlacklist;
         if (regex == null || regex.isEmpty()) {
             return true;
