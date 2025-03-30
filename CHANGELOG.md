@@ -1,3 +1,7 @@
+# 2.1.4
+
+- Fix corrupted japanese translation
+
 # 2.1.3
 
 - Improved compatibility with Entity Interaction Range attribute (`PlayerEntity.getEntityInteractionRange` returns a value with weapon attributes range bonus applied)
