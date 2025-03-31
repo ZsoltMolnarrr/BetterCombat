@@ -1,5 +1,6 @@
 package net.bettercombat.client.animation.modifier;
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier;
 import dev.kosmx.playerAnim.core.util.Vec3f;
@@ -8,7 +9,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class HarshAdjustmentModifier extends AdjustmentModifier {
-    public HarshAdjustmentModifier(Function<String, Optional<PartModifier>> source) {
+    public HarshAdjustmentModifier(Function<PartKey, Optional<PartModifier>> source) {
         super(source);
     }
 

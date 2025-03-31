@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudInject {
-    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
+    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE"))
     private void pre_renderCrosshair(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         if (BetterCombatClientMod.config.isHighlightCrosshairEnabled) {
             setShaderForHighlighting();

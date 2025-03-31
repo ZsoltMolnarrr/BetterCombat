@@ -1,6 +1,7 @@
 package net.bettercombat.mixin.client;
 
 import com.mojang.authlib.GameProfile;
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
@@ -80,7 +81,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 || player.isSwimming()
                 || player.isUsingItem()
                 || player.isClimbing()
-                || player.isFallFlying()
+                // || player.isFallFlying()
                 || Platform.isCastingSpell(player)
                 || CrossbowItem.isCharged(mainHandStack)) {
             mainHandBodyPose.setPose(null, isLeftHanded);
@@ -184,39 +185,22 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             if (FirstPersonMode.isFirstPersonPass()) {
                 var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
-                switch (partName) {
-                    case "body" -> {
-                        rotationX -= pitch;
-                        if (pitch < 0) {
-                            var offset = Math.abs(Math.sin(pitch));
-                            offsetY += offset * 0.5;
-                            offsetZ -= offset;
-                        }
+                if (partName == PartKey.BODY) {
+                    rotationX -= pitch;
+                    if (pitch < 0) {
+                        var offset = Math.abs(Math.sin(pitch));
+                        offsetY += offset * 0.5;
+                        offsetZ -= offset;
                     }
-//                    case "rightArm", "leftArm" -> {
-//                        rotationX = pitch;
-//                    }
-                    default -> {
-                        return Optional.empty();
-                    }
-                }
+                // else if (isArm(partName)) rotationX = pitch;
+                } else return Optional.empty();
             } else {
                 var pitch = player.getPitch();
                 pitch = (float) Math.toRadians(pitch);
-                switch (partName) {
-                    case "body" -> {
-                        rotationX -= pitch * 0.75F;
-                    }
-                    case "rightArm", "leftArm" -> {
-                        rotationX += pitch * 0.25F;
-                    }
-                    case "rightLeg", "leftLeg" -> {
-                        rotationX -= pitch * 0.75;
-                    }
-                    default -> {
-                        return Optional.empty();
-                    }
-                }
+                if (partName == PartKey.BODY) rotationX -= pitch * 0.75F;
+                else if (isArm(partName)) rotationX += pitch * 0.25F;
+                else if (isLeg(partName)) rotationX -= pitch * 0.75;
+                else return Optional.empty();
             }
 
             return Optional.of(new AdjustmentModifier.PartModifier(
@@ -224,6 +208,14 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                     new Vec3f(offsetX, offsetY, offsetZ))
             );
         });
+    }
+
+    private boolean isArm(PartKey partName) {
+        return partName == PartKey.RIGHT_ARM || partName == PartKey.LEFT_ARM;
+    }
+
+    private boolean isLeg(PartKey partName) {
+        return partName == PartKey.RIGHT_LEG || partName == PartKey.LEFT_LEG;
     }
 
     private AdjustmentModifier createPoseAdjustment() {
@@ -237,16 +229,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             float offsetZ = 0;
 
             if (!FirstPersonMode.isFirstPersonPass()) {
-                switch (partName) {
-                    case "rightArm", "leftArm" -> {
-                        if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isInSneakingPose()) {
-                            offsetY += 3;
-                        }
+                if (isArm(partName)) {
+                    if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isInSneakingPose()) {
+                        offsetY += 3;
                     }
-                    default -> {
-                        return Optional.empty();
-                    }
-                }
+                } else return Optional.empty();
             }
 
             return Optional.of(new AdjustmentModifier.PartModifier(
@@ -261,8 +248,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         switch (pose) {
             case STANDING -> {
             }
-            case FALL_FLYING -> {
-            }
+            // case FALL_FLYING -> {
+            // }
             case SLEEPING -> {
             }
             case SWIMMING -> {
@@ -277,6 +264,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             }
             case DYING -> {
             }
+			default -> {}
         }
         if (isMounting()) {
             StateCollectionHelper.configure(animation.rightLeg, false, false);

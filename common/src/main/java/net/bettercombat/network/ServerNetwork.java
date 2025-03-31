@@ -107,7 +107,7 @@ public class ServerNetwork {
                         double multiplier = 0
                                 - (BetterCombatMod.config.reworked_sweeping_maximum_damage_penalty / BetterCombatMod.config.reworked_sweeping_extra_target_count)
                                 * Math.min(BetterCombatMod.config.reworked_sweeping_extra_target_count, request.entityIds().length - 1);
-                        var sweepRatio = player.getAttributeValue(EntityAttributes.PLAYER_SWEEPING_DAMAGE_RATIO);
+                        var sweepRatio = player.getAttributeValue(EntityAttributes.SWEEPING_DAMAGE_RATIO);
 
                         damageBaseMultiplier += multiplier + (BetterCombatMod.config.reworked_sweeping_maximum_damage_penalty * sweepRatio);
 
@@ -124,9 +124,9 @@ public class ServerNetwork {
 
                 Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> damageModifier = null;
                 if (damageBaseMultiplier != 0) {
-                    AttributeModifierHelper.fromModifier(EntityAttributes.GENERIC_ATTACK_DAMAGE, null);
+                    AttributeModifierHelper.fromModifier(EntityAttributes.ATTACK_DAMAGE, null);
                     damageModifier = AttributeModifierHelper.fromModifier(
-                            EntityAttributes.GENERIC_ATTACK_DAMAGE,
+                            EntityAttributes.ATTACK_DAMAGE,
                             new EntityAttributeModifier(TEMPORARY_ATTACK, damageBaseMultiplier, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE));
                     player.getAttributes().addTemporaryModifiers(damageModifier);
                 }
