@@ -81,7 +81,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 || player.isSwimming()
                 || player.isUsingItem()
                 || player.isClimbing()
-                // || player.isFallFlying()
+                || player.isGliding()
                 || Platform.isCastingSpell(player)
                 || CrossbowItem.isCharged(mainHandStack)) {
             mainHandBodyPose.setPose(null, isLeftHanded);
@@ -248,8 +248,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         switch (pose) {
             case STANDING -> {
             }
-            // case FALL_FLYING -> {
-            // }
+            case GLIDING -> {
+            }
             case SLEEPING -> {
             }
             case SWIMMING -> {
