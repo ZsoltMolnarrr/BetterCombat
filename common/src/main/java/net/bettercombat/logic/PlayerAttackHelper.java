@@ -236,8 +236,16 @@ public class PlayerAttackHelper {
     }
 
     public static double getRangeForItem(PlayerEntity player, ItemStack stack) {
-        var interactionRangeValue = player.getAttributeValue(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE);
-        return getRangeWithItem(stack, interactionRangeValue);
+        double interactionRangeValueBase = player.getAttributeBaseValue(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE);
+        double interactionRangeValueActual = player.getAttributeValue(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE);
+        if(interactionRangeValueActual > interactionRangeValueBase) {
+            double overflow = interactionRangeValueActual - interactionRangeValueBase;
+            overflow *= BetterCombatMod.config.interactionRangeMultiplier;
+            return interactionRangeValueBase + overflow;
+        } else {
+            //if actual reach is equal to or shorter than base reach
+            return interactionRangeValueActual;
+        }
     }
 
     public static double getRangeWithWeapon(PlayerEntity player, double interactionRangeValue) {

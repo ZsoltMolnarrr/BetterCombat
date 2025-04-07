@@ -113,4 +113,7 @@ public class ServerConfig implements ConfigData {
     public float getUpswingMultiplier() {
         return Math.max(0.2F, Math.min(1, upswing_multiplier));
     }
+    
+    @Comment("Interaction range beyond vanilla reach is multiplied by this value before being added to attack reach")
+    public float interactionRangeMultiplier = 1;
 }
