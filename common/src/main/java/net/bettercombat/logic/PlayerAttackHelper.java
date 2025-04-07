@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class PlayerAttackHelper {
     public static float getDualWieldingAttackDamageMultiplier(PlayerEntity player, AttackHand hand) {
@@ -241,10 +242,10 @@ public class PlayerAttackHelper {
         if(interactionRangeValueActual > interactionRangeValueBase) {
             double overflow = interactionRangeValueActual - interactionRangeValueBase;
             overflow *= BetterCombatMod.config.interactionRangeMultiplier;
-            return interactionRangeValueBase + overflow;
+            return getRangeWithItem(stack,interactionRangeValueBase + overflow);
         } else {
             //if actual reach is equal to or shorter than base reach
-            return interactionRangeValueActual;
+            return getRangeWithItem(stack, interactionRangeValueActual);
         }
     }
 
