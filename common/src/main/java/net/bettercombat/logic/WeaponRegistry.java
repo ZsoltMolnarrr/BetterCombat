@@ -103,12 +103,13 @@ public class WeaponRegistry {
         for (var entry : containers.entrySet()) {
             var id = entry.getKey();
             var container = entry.getValue();
-            var resolvedAttributes = resolveAttributes(id, container);
-            if (resolvedAttributes != null) {
-                resolvedContainers.put(id, new AttributesContainer(null, resolvedAttributes));
-            } else {
-                resolvedContainers.put(id, container);
+            if (container.parent() != null) {
+                var resolvedAttributes = resolveAttributes(id, container);
+                if (resolvedAttributes != null) {
+                    container = new AttributesContainer(null, resolvedAttributes);
+                }
             }
+            resolvedContainers.put(id, container);
         }
 
         WeaponRegistry.containers = resolvedContainers;
