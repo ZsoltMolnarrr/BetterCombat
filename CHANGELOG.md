@@ -1,3 +1,7 @@
+# 2.1.5
+
+- Fix unresolved (compact) weapon attribute containers, referencing them would cause a crash #478
+
 # 2.1.4
 
 - Fix corrupted japanese translation

@@ -75,7 +75,6 @@ public class WeaponRegistry {
     }
 
     private static void loadContainers(ResourceManager resourceManager) {
-        var gson = new Gson();
         Map<Identifier, AttributesContainer> containers = new HashMap();
         // Reading all attribute files
         for (var entry : resourceManager.findResources("weapon_attributes", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
@@ -89,12 +88,30 @@ public class WeaponRegistry {
                         .toString().replace("weapon_attributes/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
                 containers.put(Identifier.of(id), container);
+                System.out.println("Loaded container: " + id);
             } catch (Exception e) {
                 System.err.println("Failed to parse: " + identifier);
                 e.printStackTrace();
             }
         }
+
+        // Do not remove this
         WeaponRegistry.containers = containers;
+        // The following container resolution will use these containers
+
+        Map<Identifier, AttributesContainer> resolvedContainers = new HashMap();
+        for (var entry : containers.entrySet()) {
+            var id = entry.getKey();
+            var container = entry.getValue();
+            var resolvedAttributes = resolveAttributes(id, container);
+            if (resolvedAttributes != null) {
+                resolvedContainers.put(id, new AttributesContainer(null, resolvedAttributes));
+            } else {
+                resolvedContainers.put(id, container);
+            }
+        }
+
+        WeaponRegistry.containers = resolvedContainers;
     }
 
     public static WeaponAttributes resolveAttributes(Identifier itemId, AttributesContainer container) {
