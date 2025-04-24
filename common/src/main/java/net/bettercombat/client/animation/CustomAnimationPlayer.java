@@ -14,6 +14,10 @@ public class CustomAnimationPlayer extends KeyframeAnimationPlayer {
         super(emote, t, false);
     }
 
+    public float getTickDelta() {
+        return tickDelta;
+    }
+
     public boolean isWindingDown(float tickDelta) {
         int windDownStart = getData().endTick + ((getData().stopTick - getData().endTick) / 4);
         return ((getTick() + tickDelta) > (windDownStart + 0.5F)); // + 0.5 for smoother transition

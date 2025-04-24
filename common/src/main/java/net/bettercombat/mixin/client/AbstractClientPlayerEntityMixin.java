@@ -171,9 +171,9 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         }
     }
 
-    private AdjustmentModifier createAttackAdjustment() {
+    private AdjustmentModifierV2 createAttackAdjustment() {
         var player = (PlayerEntity)this;
-        return new AdjustmentModifier((partName) -> {
+        return new AdjustmentModifierV2((partName) -> {
             // System.out.println("Player pitch: " + player.getPitch());
             float rotationX = 0;
             float rotationY = 0;
@@ -203,7 +203,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 else return Optional.empty();
             }
 
-            return Optional.of(new AdjustmentModifier.PartModifier(
+            return Optional.of(new AdjustmentModifierV2.PartModifier(
                     new Vec3f(rotationX, rotationY, rotationZ),
                     new Vec3f(offsetX, offsetY, offsetZ))
             );
