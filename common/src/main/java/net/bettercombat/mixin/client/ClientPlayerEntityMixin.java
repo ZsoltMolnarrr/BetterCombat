@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin {
-    @Inject(method = "tickMovement", at = @At(value = "INVOKE", shift = At.Shift.AFTER))
+    @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/input/Input;tick()V", shift = At.Shift.AFTER))
     private void tickMovement_ModifyInput(CallbackInfo ci) {
         var config = BetterCombatMod.config;
         var multiplier = Math.min(Math.max(config.movement_speed_while_attacking, 0.0), 1.0);
