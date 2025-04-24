@@ -15,6 +15,8 @@
   "text.autoconfig.bettercombat.option.client.isMiningWithWeaponsEnabled.@Tooltip" : "Allow mining with weapons",
   "text.autoconfig.bettercombat.option.client.isSwingThruGrassEnabled" : "Swing through grass",
   "text.autoconfig.bettercombat.option.client.isSwingThruGrassEnabled.@Tooltip" : "Attack instead of mining zero hardness blocks with weapons",
+  "text.autoconfig.bettercombat.option.client.isSwingThruGrassSmart" : "Smart swing through grass",
+  "text.autoconfig.bettercombat.option.client.isSwingThruGrassSmart.@Tooltip" : "Only swing through grass if there are enemies in attack range",
   "text.autoconfig.bettercombat.option.client.isHighlightCrosshairEnabled" : "Highlight crosshair",
   "text.autoconfig.bettercombat.option.client.isHighlightCrosshairEnabled.@Tooltip" : "Highlights the crosshair if enemies are close enough to strike.\nWARNING! Enabling this might reduce frame rate significantly.",
   "text.autoconfig.bettercombat.option.client.hudHighlightColor" : "Highlight color",
