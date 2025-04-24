@@ -5,8 +5,8 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.Keybindings;
 import net.bettercombat.config.ClientConfigWrapper;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.util.Identifier;
+// import net.minecraft.client.item.ModelPredicateProviderRegistry;
+// import net.minecraft.util.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
@@ -27,9 +27,9 @@ public class NeoForgeClientMod {
         BetterCombatClientMod.init();
         BetterCombatClientMod.loadAnimation();
 
-        ModelPredicateProviderRegistry.registerGeneric(Identifier.of(BetterCombatMod.ID, "loaded"), (stack, world, entity, seed) -> {
-            return 1.0F;
-        });
+        // ModelPredicateProviderRegistry.registerGeneric(Identifier.of(BetterCombatMod.ID, "loaded"), (stack, world, entity, seed) -> {
+        //     return 1.0F;
+        // });
 
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> {
             return (IConfigScreenFactory) (modContainer, parent) -> AutoConfig.getConfigScreen(ClientConfigWrapper.class, parent).get();

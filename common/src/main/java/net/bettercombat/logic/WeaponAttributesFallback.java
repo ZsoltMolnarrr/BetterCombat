@@ -4,8 +4,6 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.utils.PatternMatching;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.Item;
@@ -24,7 +22,7 @@ public class WeaponAttributesFallback {
                 continue;
             }
             FallbackConfig.CompatibilitySpecifier[] specifiers = null;
-            if (hasAttributeModifier(item, EntityAttributes.GENERIC_ATTACK_DAMAGE)) {
+            if (hasAttributeModifier(item, EntityAttributes.ATTACK_DAMAGE)) {
                 specifiers = config.fallback_compatibility;
             } else if (item instanceof RangedWeaponItem) {
                 specifiers = config.ranged_weapons;

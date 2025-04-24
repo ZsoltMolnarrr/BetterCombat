@@ -133,7 +133,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
                 this.dualWieldingAttributeMap = HashMultimap.create();
                 double multiplier = BetterCombatMod.config.dual_wielding_attack_speed_multiplier - 1;
                 dualWieldingAttributeMap.put(
-                        EntityAttributes.GENERIC_ATTACK_SPEED,
+                        EntityAttributes.ATTACK_SPEED,
                         new EntityAttributeModifier(
                                 dualWieldingSpeedModifierId,
                                 multiplier,

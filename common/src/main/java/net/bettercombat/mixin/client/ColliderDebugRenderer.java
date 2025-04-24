@@ -8,6 +8,8 @@ import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderLoader.LoadException;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.debug.DebugRenderer;
@@ -26,7 +28,7 @@ import java.util.stream.Collectors;
 @Mixin(DebugRenderer.class)
 public class ColliderDebugRenderer {
     @Inject(method = "render",at = @At("TAIL"))
-    public void renderColliderDebug(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
+    public void renderColliderDebug(MatrixStack matrices, Frustum frustum, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) throws LoadException {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!((MinecraftClientAccessor) client).getEntityRenderDispatcher().shouldRenderHitboxes()) {
             return;
@@ -77,9 +79,9 @@ public class ColliderDebugRenderer {
         drawOutline(matrices, obb, collidingObbs, collides);
     }
 
-    private void drawOutline(MatrixStack matrixStack, OrientedBoundingBox obb, List<OrientedBoundingBox> otherObbs, boolean collides) {
+    private void drawOutline(MatrixStack matrixStack, OrientedBoundingBox obb, List<OrientedBoundingBox> otherObbs, boolean collides) throws LoadException {
         RenderSystem.enableDepthTest();
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(MinecraftClient.getInstance().getShaderLoader().getProgramToLoad(ShaderProgramKeys.POSITION_COLOR));
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
         RenderSystem.disableBlend();

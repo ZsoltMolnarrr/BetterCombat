@@ -232,11 +232,11 @@ public class PlayerAttackHelper {
 
     public static double getStaticRange(PlayerEntity player, ItemStack stack) {
         var attributes = WeaponRegistry.getAttributes(stack);
-        return combineAttackRange(attributes, player.getAttributeBaseValue(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE));
+        return combineAttackRange(attributes, player.getAttributeBaseValue(EntityAttributes.ENTITY_INTERACTION_RANGE));
     }
 
     public static double getRangeForItem(PlayerEntity player, ItemStack stack) {
-        var interactionRangeValue = player.getAttributeValue(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE);
+        var interactionRangeValue = player.getAttributeValue(EntityAttributes.ENTITY_INTERACTION_RANGE);
         return getRangeWithItem(stack, interactionRangeValue);
     }
 

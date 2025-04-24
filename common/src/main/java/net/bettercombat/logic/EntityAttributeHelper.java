@@ -9,7 +9,7 @@ public class EntityAttributeHelper {
         var attributeModifiers = stack.get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
         if (attributeModifiers != null) {
             for(var modifier: attributeModifiers.modifiers()) {
-                if (modifier.attribute().value().equals(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE.value())) {
+                if (modifier.attribute().value().equals(EntityAttributes.ENTITY_INTERACTION_RANGE.value())) {
                     return true;
                 }
             }
@@ -22,7 +22,7 @@ public class EntityAttributeHelper {
         if (attributeModifiers != null) {
             int count = 0;
             for(var modifier: attributeModifiers.modifiers()) {
-                if (modifier.attribute().value().equals(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE.value())) {
+                if (modifier.attribute().value().equals(EntityAttributes.ENTITY_INTERACTION_RANGE.value())) {
                     count += 1;
                 }
             }
