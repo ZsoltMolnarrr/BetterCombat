@@ -1,3 +1,9 @@
+# 2.1.5
+
+- Add smart Swing Thru Grass client config (disabled by default), to destroy blocks when no targets in range
+- Fix unresolved (compact) weapon attribute containers, referencing them would cause a crash #478
+- Fix weapon attributes with zero attacks (resulting due to conditions) crashing #472 
+
 # 2.1.4
 
 - Fix corrupted japanese translation

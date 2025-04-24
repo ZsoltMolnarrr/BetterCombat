@@ -9,6 +9,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -49,6 +50,7 @@ public class PlayerAttackHelper {
         return Math.max(player.getAttackCooldownProgressPerTick(), BetterCombatMod.config.attack_interval_cap);
     }
 
+    @Nullable
     public static AttackHand getCurrentAttack(PlayerEntity player, int comboCount) {
         if (isDualWielding(player)) {
             boolean isOffHand = shouldAttackWithOffHand(player,comboCount);
@@ -59,6 +61,9 @@ public class PlayerAttackHelper {
             if (attributes != null && attributes.attacks() != null) {
                 int handSpecificComboCount = ((isOffHand && comboCount > 0) ? (comboCount - 1) : (comboCount)) / 2;
                 var attackSelection = selectAttack(handSpecificComboCount, attributes, player, isOffHand);
+                if (attackSelection == null) {
+                    return null;
+                }
                 var attack = attackSelection.attack;
                 var combo = attackSelection.comboState;
                 return new AttackHand(attack, combo, isOffHand, attributes, itemStack);
@@ -68,6 +73,9 @@ public class PlayerAttackHelper {
             WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
             if (attributes != null && attributes.attacks() != null) {
                 var attackSelection = selectAttack(comboCount, attributes, player, false);
+                if (attackSelection == null) {
+                    return null;
+                }
                 var attack = attackSelection.attack;
                 var combo = attackSelection.comboState;
                 return new AttackHand(attack, combo, false, attributes, itemStack);
@@ -78,6 +86,7 @@ public class PlayerAttackHelper {
 
     private record AttackSelection(WeaponAttributes.Attack attack, ComboState comboState) { }
 
+    @Nullable
     private static AttackSelection selectAttack(int comboCount, WeaponAttributes attributes, PlayerEntity player, boolean isOffHandAttack) {
         var attacks = attributes.attacks();
         attacks = Arrays.stream(attacks)
@@ -89,6 +98,9 @@ public class PlayerAttackHelper {
                 .toArray(WeaponAttributes.Attack[]::new);
         if (comboCount < 0) {
             comboCount = 0;
+        }
+        if (attacks.length == 0) {
+            return null;
         }
         int index = comboCount % attacks.length;
         return new AttackSelection(attacks[index], new ComboState(index + 1, attacks.length));

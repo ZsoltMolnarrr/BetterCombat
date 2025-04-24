@@ -167,6 +167,10 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if(!BetterCombatClientMod.config.isSwingThruGrassEnabled) {
             return false;
         }
+        if (BetterCombatClientMod.config.isSwingThruGrassSmart
+                && !this.hasTargetsInReach()) {
+            return false;
+        }
         var regex = BetterCombatClientMod.config.swingThruGrassBlacklist;
         if (regex == null || regex.isEmpty()) {
             return true;
