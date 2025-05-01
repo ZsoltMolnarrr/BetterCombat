@@ -1,3 +1,7 @@
+# 2.1.6
+
+- Update translations
+
 # 2.1.5
 
 - Add smart Swing Thru Grass client config (disabled by default), to destroy blocks when no targets in range
