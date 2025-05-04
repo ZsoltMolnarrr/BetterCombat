@@ -163,6 +163,12 @@ public class ServerNetwork {
                             || (entity instanceof ArmorStandEntity && ((ArmorStandEntity) entity).isMarker())) {
                         continue;
                     }
+
+                    var isDirectHit = entityId == request.cursorTarget();
+                    if (!TargetHelper.isHitAllowed(isDirectHit, TargetHelper.getRelation(player, entity))) {
+                        continue;
+                    }
+
                     if (entity instanceof LivingEntity livingEntity) {
                         if (BetterCombatMod.config.allow_fast_attacks) {
                             livingEntity.timeUntilRegen = 0;

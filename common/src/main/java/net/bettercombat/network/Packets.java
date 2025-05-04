@@ -11,26 +11,32 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Packets {
-    public record C2S_AttackRequest(int comboCount, boolean isSneaking, int selectedSlot, int[] entityIds) implements CustomPayload {
+    public record C2S_AttackRequest(int comboCount, boolean isSneaking, int selectedSlot, int cursorTarget, int[] entityIds) implements CustomPayload {
         public static Identifier ID = Identifier.of(BetterCombatMod.ID, "c2s_request_attack");
         public static final CustomPayload.Id<C2S_AttackRequest> PACKET_ID = new CustomPayload.Id<>(ID);
         public static final PacketCodec<RegistryByteBuf, C2S_AttackRequest> CODEC = PacketCodec.of(C2S_AttackRequest::write, C2S_AttackRequest::read);
 
-        public C2S_AttackRequest(int comboCount, boolean isSneaking, int selectedSlot, List<Entity> entities) {
-            this(comboCount, isSneaking, selectedSlot, convertEntityList(entities));
+        public C2S_AttackRequest(int comboCount, boolean isSneaking, int selectedSlot, @Nullable Entity cursorTarget, List<Entity> entities) {
+            this(comboCount, isSneaking, selectedSlot, convertEntity(cursorTarget), convertEntityList(entities));
         }
 
         private static int[] convertEntityList(List<Entity> entities) {
             int[] ids = new int[entities.size()];
             for(int i = 0; i < entities.size(); i++) {
-                ids[i] = entities.get(i).getId();
+                var entity = entities.get(i);
+                ids[i] = entity.getId();
             }
             return ids;
+        }
+        private static int convertEntity(@Nullable Entity entity) {
+            if (entity == null) { return -1; }
+            return entity.getId();
         }
 
         public static boolean UseVanillaPacket = true;
@@ -38,6 +44,7 @@ public class Packets {
             buffer.writeInt(comboCount);
             buffer.writeBoolean(isSneaking);
             buffer.writeInt(selectedSlot);
+            buffer.writeInt(cursorTarget);
             buffer.writeIntArray(entityIds);
         }
 
@@ -45,8 +52,9 @@ public class Packets {
             int comboCount = buffer.readInt();
             boolean isSneaking = buffer.readBoolean();
             int selectedSlot = buffer.readInt();
+            int cursorTarget = buffer.readInt();
             int[] ids = buffer.readIntArray();
-            return new C2S_AttackRequest(comboCount, isSneaking, selectedSlot, ids);
+            return new C2S_AttackRequest(comboCount, isSneaking, selectedSlot, cursorTarget, ids);
         }
 
         @Override
