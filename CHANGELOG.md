@@ -12,6 +12,9 @@ Implications of new defaults:
 - When not using teams, pets of other players do not receive damage from cleaving
 - When using teams, disabling friendly fire (`/team modify my_team friendlyFire false`) will prevent all kinds of damage against teammates and pets of teammates
 
+Other changes:
+- Smart swing thru grass is now enabled by default
+
 # 2.1.6
 
 - Update translations

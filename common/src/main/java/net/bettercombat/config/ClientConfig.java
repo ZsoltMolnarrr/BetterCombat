@@ -13,7 +13,7 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean isSwingThruGrassEnabled = true;
     @ConfigEntry.Gui.Tooltip
-    public boolean isSwingThruGrassSmart = false;
+    public boolean isSwingThruGrassSmart = true;
     @ConfigEntry.Gui.Tooltip
     public boolean isAttackInsteadOfMineWhenEnemiesCloseEnabled = true;
     @ConfigEntry.Gui.Tooltip
