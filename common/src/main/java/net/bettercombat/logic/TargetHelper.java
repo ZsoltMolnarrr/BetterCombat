@@ -1,9 +1,6 @@
 package net.bettercombat.logic;
 
-import dev.ftb.mods.ftbteams.api.FTBTeamsAPI;
-import dev.ftb.mods.ftbteams.api.TeamManager;
 import net.bettercombat.BetterCombatMod;
-import net.bettercombat.Platform;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Tameable;
