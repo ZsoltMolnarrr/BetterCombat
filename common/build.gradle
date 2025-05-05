@@ -15,6 +15,17 @@ repositories {
             includeGroup 'maven.modrinth'
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = "https://maven.ftb.dev/releases"
+            }
+        }
+        filter {
+            includeGroup"dev.latvian.mods"
+            includeGroup"dev.ftb.mods"
+        }
+    }
 }
 
 dependencies {
@@ -34,4 +45,7 @@ dependencies {
 
     modCompileOnly("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive false }
     modCompileOnly("maven.modrinth:first-person-model:${project.fpm_version}")
+
+    modCompileOnly("dev.ftb.mods:ftb-teams:${project.ftb_teams_version}")
+    modCompileOnly("dev.ftb.mods:ftb-library:${project.ftb_library_version}")
 }

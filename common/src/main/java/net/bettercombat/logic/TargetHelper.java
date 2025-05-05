@@ -1,6 +1,9 @@
 package net.bettercombat.logic;
 
+import dev.ftb.mods.ftbteams.api.FTBTeamsAPI;
+import dev.ftb.mods.ftbteams.api.TeamManager;
 import net.bettercombat.BetterCombatMod;
+import net.bettercombat.Platform;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Tameable;
@@ -47,7 +50,22 @@ public class TargetHelper {
         }
         var attackerTeam = attacker.getScoreboardTeam();
         var targetTeam = target.getScoreboardTeam();
+
         if (attackerTeam == null || targetTeam == null) {
+            // --- FTB TEAMS ---
+            if (Platform.isModLoaded("ftbteams") && target instanceof PlayerEntity targetPlayer) {
+                boolean managerAvailable = attacker.getWorld().isClient ?
+                        FTBTeamsAPI.api().isClientManagerLoaded() :
+                        FTBTeamsAPI.api().isManagerLoaded();
+                if (managerAvailable) {
+                    TeamManager manager = FTBTeamsAPI.api().getManager();
+                    if (manager.arePlayersInSameTeam(attacker.getUuid(), targetPlayer.getUuid())) {
+                        return Relation.FRIENDLY;
+                    }
+                }
+            }
+            // --- END FTB TEAMS ---
+
             var targetTypeEntry = Registries.ENTITY_TYPE.getEntry(target.getType());
             var id = targetTypeEntry.getKey().get().getValue();
             var mappedRelation = config.player_relations.get(id.toString());
