@@ -1,4 +1,8 @@
-# 2.2.0
+# 2.2.1
+
+- Friend or Foe logic now supports FTB Teams membership
+
+# 2.2.1
 
 WARNING: Make sure server and clients use the same version of the mod! (Clients with Better Combat 2.1.X will not function properly on servers with Better Combat 2.2.X)
 

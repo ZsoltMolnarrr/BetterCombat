@@ -15,9 +15,11 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TargetHelper {
@@ -48,47 +50,34 @@ public class TargetHelper {
         if (target instanceof AbstractDecorationEntity) {
             return Relation.NEUTRAL;
         }
-        var attackerTeam = attacker.getScoreboardTeam();
-        var targetTeam = target.getScoreboardTeam();
 
-        if (attackerTeam == null || targetTeam == null) {
-            // --- FTB TEAMS ---
-            if (Platform.isModLoaded("ftbteams") && target instanceof PlayerEntity targetPlayer) {
-                boolean managerAvailable = attacker.getWorld().isClient ?
-                        FTBTeamsAPI.api().isClientManagerLoaded() :
-                        FTBTeamsAPI.api().isManagerLoaded();
-                if (managerAvailable) {
-                    TeamManager manager = FTBTeamsAPI.api().getManager();
-                    if (manager.arePlayersInSameTeam(attacker.getUuid(), targetPlayer.getUuid())) {
-                        return Relation.FRIENDLY;
-                    }
-                }
+        for (var matcher: TEAM_MATCHERS.values()) {
+            var relation = matcher.getRelation(attacker, target);
+            if (relation != null) {
+                return relation.areTeammates()
+                        ? (relation.friendlyFireAllowed() ? config.player_relation_to_teammates : Relation.FRIENDLY)  // FRIENDLY for friendly fire off, to protect team mate pets
+                        : Relation.HOSTILE;
             }
-            // --- END FTB TEAMS ---
-
-            var targetTypeEntry = Registries.ENTITY_TYPE.getEntry(target.getType());
-            var id = targetTypeEntry.getKey().get().getValue();
-            var mappedRelation = config.player_relations.get(id.toString());
-            if (mappedRelation != null) {
-                return mappedRelation;
-            }
-            for (var entry: getRelationTagsCache().entrySet()) {
-                if (targetTypeEntry.isIn(entry.getKey())) {
-                    return entry.getValue();
-                }
-            }
-            if (target instanceof PassiveEntity) {
-                return Relation.coalesce(config.player_relation_to_passives, Relation.HOSTILE);
-            }
-            if (target instanceof HostileEntity) {
-                return Relation.coalesce(config.player_relation_to_hostiles, Relation.HOSTILE);
-            }
-            return Relation.coalesce(config.player_relation_to_other, Relation.HOSTILE);
-        } else {
-            return attacker.isTeammate(target)
-                    ? ( (attackerTeam.isFriendlyFireAllowed()) ? config.player_relation_to_teammates : Relation.FRIENDLY ) // FRIENDLY for friendly fire off, to protect team mate pets
-                    : Relation.HOSTILE;
         }
+
+        var targetTypeEntry = Registries.ENTITY_TYPE.getEntry(target.getType());
+        var id = targetTypeEntry.getKey().get().getValue();
+        var mappedRelation = config.player_relations.get(id.toString());
+        if (mappedRelation != null) {
+            return mappedRelation;
+        }
+        for (var entry: getRelationTagsCache().entrySet()) {
+            if (targetTypeEntry.isIn(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        if (target instanceof PassiveEntity) {
+            return Relation.coalesce(config.player_relation_to_passives, Relation.HOSTILE);
+        }
+        if (target instanceof HostileEntity) {
+            return Relation.coalesce(config.player_relation_to_hostiles, Relation.HOSTILE);
+        }
+        return Relation.coalesce(config.player_relation_to_other, Relation.HOSTILE);
     }
     private static Map<TagKey<EntityType<?>>, Relation> RELATION_TAG_CACHE = null;
     private static Map<TagKey<EntityType<?>>, Relation> getRelationTagsCache() {
@@ -102,6 +91,24 @@ public class TargetHelper {
             }
         }
         return RELATION_TAG_CACHE;
+    }
+
+    public record TeamRelation(boolean areTeammates, boolean friendlyFireAllowed) { }
+    public interface TeamMatcher { @Nullable TeamRelation getRelation(Entity attacker, Entity target); }
+    private static final Map<String, TeamMatcher> TEAM_MATCHERS = new LinkedHashMap<>();
+    public static void registerTeamMatcher(String name, TeamMatcher matcher) {
+        TEAM_MATCHERS.put(name, matcher);
+    }
+    static {
+        registerTeamMatcher("vanilla", (entity1, entity2) -> {
+            var team1 = entity1.getScoreboardTeam();
+            var team2 = entity2.getScoreboardTeam();
+            if (team1 == null || team2 == null) {
+                return null;
+            }
+            var friendlyFire = team1.isFriendlyFireAllowed();
+            return new TeamRelation(entity1.isTeammate(entity2), friendlyFire);
+        });
     }
 
     public static boolean isAttackableMount(Entity entity) {

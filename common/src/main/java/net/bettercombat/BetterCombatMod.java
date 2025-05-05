@@ -5,6 +5,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.bettercombat.api.client.AttackRangeExtensions;
+import net.bettercombat.compat.CompatFeatures;
 import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.config.ServerConfigWrapper;
@@ -35,6 +36,8 @@ public class BetterCombatMod {
         AttackRangeExtensions.register( context -> {
             return new AttackRangeExtensions.Modifier(context.player().getScale(), AttackRangeExtensions.Operation.MULTIPLY);
         });
+
+        CompatFeatures.init();
     }
 
     public static ServerConfig getConfig() {
