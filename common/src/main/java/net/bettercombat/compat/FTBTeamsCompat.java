@@ -11,14 +11,23 @@ public class FTBTeamsCompat {
         if (FabricLoader.getInstance().isModLoaded("ftbteams")) {
             TargetHelper.registerTeamMatcher("ftb", (attack, target) -> {
                 if (attack instanceof PlayerEntity attackerPlayer && target instanceof PlayerEntity targetPlayer) {
-                    boolean managerAvailable = attackerPlayer.getWorld().isClient ?
-                            FTBTeamsAPI.api().isClientManagerLoaded() :
-                            FTBTeamsAPI.api().isManagerLoaded();
-                    if (managerAvailable) {
-                        TeamManager manager = FTBTeamsAPI.api().getManager();
-                        if (manager.arePlayersInSameTeam(attackerPlayer.getUuid(), targetPlayer.getUuid())) {
-                            var friendlyFire = false;
-                            return new TargetHelper.TeamRelation(true, friendlyFire);
+                    if (attackerPlayer.getWorld().isClient) {
+//                        var managerAvailable = FTBTeamsAPI.api().isClientManagerLoaded();
+//                        if (managerAvailable) {
+//                            var manager = FTBTeamsAPI.api().getClientManager();
+//                            if (manager.arePlayersInSameTeam(attackerPlayer.getUuid(), targetPlayer.getUuid())) {
+//                                var friendlyFire = false;
+//                                return new EntityRelations.TeamRelation(true, friendlyFire);
+//                            }
+//                        }
+                    } else {
+                        var managerAvailable = FTBTeamsAPI.api().isManagerLoaded();
+                        if (managerAvailable) {
+                            var manager = FTBTeamsAPI.api().getManager();
+                            if (manager.arePlayersInSameTeam(attackerPlayer.getUuid(), targetPlayer.getUuid())) {
+                                var friendlyFire = false;
+                                return new TargetHelper.TeamRelation(true, friendlyFire);
+                            }
                         }
                     }
                 }
