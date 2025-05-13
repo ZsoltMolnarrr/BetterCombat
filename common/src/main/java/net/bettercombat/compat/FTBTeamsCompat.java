@@ -1,7 +1,6 @@
 package net.bettercombat.compat;
 
 import dev.ftb.mods.ftbteams.api.FTBTeamsAPI;
-import dev.ftb.mods.ftbteams.api.TeamManager;
 import net.bettercombat.logic.TargetHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
