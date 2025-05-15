@@ -1,3 +1,7 @@
+# 2.2.3
+
+- Improve FTB Teams support, thanks to Muon #115
+
 # 2.2.2
 
 - Friend or Foe logic now supports FTB Teams membership
