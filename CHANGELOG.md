@@ -1,3 +1,7 @@
+# 2.2.4
+
+- Fix crash on NeoForge alongside FTBTeams
+
 # 2.2.3
 
 - Improve FTB Teams support, thanks to Muon #115

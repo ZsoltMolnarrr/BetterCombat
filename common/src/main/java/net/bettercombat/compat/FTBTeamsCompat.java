@@ -2,15 +2,15 @@ package net.bettercombat.compat;
 
 import dev.ftb.mods.ftbteams.api.FTBTeamsAPI;
 import dev.ftb.mods.ftbteams.api.client.KnownClientPlayer;
+import net.bettercombat.Platform;
 import net.bettercombat.logic.TargetHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.Optional;
 
 public class FTBTeamsCompat {
     public static void init() {
-        if (FabricLoader.getInstance().isModLoaded("ftbteams")) {
+        if (Platform.isModLoaded("ftbteams")) {
             TargetHelper.registerTeamMatcher("ftb", (attack, target) -> {
                 if (attack instanceof PlayerEntity attackerPlayer && target instanceof PlayerEntity targetPlayer) {
                     if (attackerPlayer.getWorld().isClient()) {
