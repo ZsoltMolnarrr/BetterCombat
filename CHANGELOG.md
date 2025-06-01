@@ -1,3 +1,7 @@
+# 2.2.5
+
+- Fix damage done with daggers #495 
+
 # 2.2.4
 
 - Fix crash on NeoForge alongside FTBTeams
