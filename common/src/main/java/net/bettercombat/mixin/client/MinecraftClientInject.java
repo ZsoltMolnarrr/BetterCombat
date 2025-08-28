@@ -29,6 +29,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -242,6 +243,9 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         }
 
         // Starting upswing
+        player.handSwingTicks = -1;
+        player.handSwinging = true;
+        player.preferredHand = hand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
         player.stopUsingItem();
 
         lastAttacked = 0;
