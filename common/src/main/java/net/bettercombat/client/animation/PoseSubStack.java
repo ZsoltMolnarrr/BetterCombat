@@ -64,7 +64,7 @@ public class PoseSubStack {
             var animation = copy.build();
             this.mirror.setEnabled(mirror);
             var player = new KeyframeAnimationPlayer(animation, 0);
-            player.setFirstPersonMode(FirstPersonMode.NONE);
+            player.setFirstPersonMode(FirstPersonMode.DISABLED);
             this.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE),
                     player);
