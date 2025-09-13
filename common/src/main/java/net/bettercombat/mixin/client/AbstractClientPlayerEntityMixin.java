@@ -57,7 +57,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
-        var stack = ((IAnimatedPlayer) this).getAnimationStack();
+        var stack = ((IAnimatedPlayer) this).playerAnimator$getAnimationStack();
         stack.addAnimLayer(1, offHandItemPose.base);
         stack.addAnimLayer(2, offHandBodyPose.base);
         stack.addAnimLayer(3, mainHandItemPose.base);

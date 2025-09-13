@@ -1,5 +1,6 @@
 package net.bettercombat.client.animation;
 
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import org.jetbrains.annotations.NotNull;
@@ -22,11 +23,11 @@ public class CustomAnimationPlayer extends KeyframeAnimationPlayer {
         return ((getTick() + tickDelta) > (windDownStart + 0.5F)); // + 0.5 for smoother transition
     }
 
-//    @Override
-//    public @NotNull FirstPersonMode getFirstPersonMode(float tickDelta) {
-//        if (isWindingDown(tickDelta)) {
-//            return FirstPersonMode.DISABLED;
-//        }
-//        return super.getFirstPersonMode(tickDelta);
-//    }
+    @Override
+    public @NotNull FirstPersonMode getFirstPersonMode(float tickDelta) {
+        if (isWindingDown(tickDelta)) {
+            return FirstPersonMode.DISABLED;
+        }
+        return super.getFirstPersonMode(tickDelta);
+    }
 }
