@@ -228,7 +228,7 @@ When no parent is specified, the value for `"attributes"` key must be a full jso
 
 Check out the existing [weapon presets](common/src/main/resources/data/bettercombat/weapon_attributes) to see practical examples of building from scratch.
 
-Check out the available [attack animations](common/src/main/resources/assets/bettercombat/attack_animations), bundled with Better Combat. 
+Check out the available [attack animations](common/src/main/resources/assets/bettercombat/player_animations), bundled with Better Combat. 
 
 If you need more details, the java documentation of [WeaponAttributes](common/src/main/java/net/bettercombat/api/WeaponAttributes.java) covers all the specifics.
 
@@ -283,7 +283,7 @@ Check out the [Animation guide](animations/README.md) for details.
 
 Add the created animation to the following location
 
-```resources/assets/my-mod-id/attack_animations/big_sword_slash.json```
+```resources/assets/my-mod-id/player_animations/big_sword_slash.json```
 
 ### Using the animation
 

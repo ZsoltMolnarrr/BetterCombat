@@ -1,3 +1,40 @@
+# 2.2.5
+
+- Fix damage done with daggers #495 
+
+# 2.2.4
+
+- Fix crash on NeoForge alongside FTBTeams
+
+# 2.2.3
+
+- Improve FTB Teams support, thanks to Muon #115
+
+# 2.2.2
+
+- Friend or Foe logic now supports FTB Teams membership
+
+# 2.2.1
+
+WARNING: Make sure server and clients use the same version of the mod! (Clients with Better Combat 2.1.X will not function properly on servers with Better Combat 2.2.X)
+
+Improve Friend or Foe logic:
+- Configurable relation to owned (tamed) pets
+- Configurable relation to teammates (new default is NEUTRAL)
+- Add entity type tag based relations (server config > `player_relation_tags`)
+- Add serverside checking of entity relations
+
+Implications of new defaults:
+- When not using teams, pets of other players do not receive damage from cleaving
+- When using teams, disabling friendly fire (`/team modify my_team friendlyFire false`) will prevent all kinds of damage against teammates and pets of teammates
+
+Other changes:
+- Smart swing thru grass is now enabled by default
+
+# 2.1.6
+
+- Update translations
+
 # 2.1.5
 
 - Add smart Swing Thru Grass client config (disabled by default), to destroy blocks when no targets in range

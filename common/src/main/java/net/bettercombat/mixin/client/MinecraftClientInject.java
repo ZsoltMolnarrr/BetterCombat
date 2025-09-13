@@ -362,7 +362,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         // Mimic logic of:
         // ClientPlayerInteractionManager.attackEntity(PlayerEntity player, Entity target)
-        var packet = new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), player.getInventory().selectedSlot, targets);
+        var packet = new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), player.getInventory().selectedSlot, cursorTarget, targets);
         Platform.networkC2S_Send(packet);
         for (var target: targets) {
             player.attack(target);

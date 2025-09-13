@@ -20,9 +20,10 @@ import java.util.stream.Collectors;
 
 public class TargetFinder {
     public static class TargetResult {
+        public Entity cursorTarget;
         public List<Entity> entities;
         public OrientedBoundingBox obb;
-        public TargetResult(List<Entity> entities, OrientedBoundingBox obb) {
+        public TargetResult(Entity cursorTarget, List<Entity> entities, OrientedBoundingBox obb) {
             this.entities = entities;
             this.obb = obb;
         }
@@ -51,7 +52,7 @@ public class TargetFinder {
         entities = radialFilter.filter(entities);
 //        long elapsedTime = System.nanoTime() - startTime;
 //        System.out.println("TargetResult findAttackTargetResult (ms): " + ((double)elapsedTime) / 1000000.0);
-        return new TargetResult(entities, obb);
+        return new TargetResult(cursorTarget, entities, obb);
     }
 
     private static double applyAttackRangeModifiers(PlayerEntity player, double attackRange) {
@@ -91,10 +92,10 @@ public class TargetFinder {
                 .getOtherEntities(player, box, entity ->  !entity.isSpectator() && entity.canHit())
                 .stream()
                 .filter(entity -> entity != player
-                        && entity != cursorTarget
                         && entity.isAttackable()
-                        && (!entity.equals(player.getVehicle()) || TargetHelper.isAttackableMount(entity))
-                        && TargetHelper.getRelation(player, entity) == TargetHelper.Relation.HOSTILE)
+                        && entity != cursorTarget
+                        && TargetHelper.isHitAllowed(false, TargetHelper.getRelation(player, entity)) // isDirect: false due to not being the cursor target
+                        && (!entity.equals(player.getVehicle()) || TargetHelper.isAttackableMount(entity)))
                 .collect(Collectors.toList());
         if (cursorTarget != null && cursorTarget.isAttackable()) {
             entities.add(cursorTarget);

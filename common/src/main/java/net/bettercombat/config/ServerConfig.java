@@ -95,7 +95,13 @@ public class ServerConfig implements ConfigData {
         put("minecraft:iron_golem", TargetHelper.Relation.NEUTRAL);
         put("guardvillagers:guard", TargetHelper.Relation.NEUTRAL);
     }};
-
+    public LinkedHashMap<String, TargetHelper.Relation> player_relation_tags = new LinkedHashMap<>() {{
+        put("minecraft:undead", TargetHelper.Relation.HOSTILE);
+    }};
+    @Comment("Relation to self, and self owned pets (tamed entities), changing this to `FRIENDLY` will make it impossible to hit pets with weapons")
+    public TargetHelper.Relation player_relation_to_self_and_pets = TargetHelper.Relation.NEUTRAL;
+    @Comment("Relation to teammates (entities in the same team), changing this to `FRIENDLY` will automatically disable friendly fire for all teams")
+    public TargetHelper.Relation player_relation_to_teammates = TargetHelper.Relation.NEUTRAL;
     @Comment("Relation to unspecified entities those are instance of PassiveEntity(Yarn)")
     public TargetHelper.Relation player_relation_to_passives = TargetHelper.Relation.HOSTILE;
     @Comment("Relation to unspecified entities those are instance of HostileEntity(Yarn)")
