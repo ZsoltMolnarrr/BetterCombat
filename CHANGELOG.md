@@ -1,3 +1,8 @@
+# 2.2.6
+
+- Update toolchain
+- Fix mixin errors on NeoForge
+
 # 2.2.5
 
 - Support Minecraft 1.21.4

@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'com.gradleup.shadow'
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.github.breadmoirai.github-release" version "2.4.1"
     id "com.modrinth.minotaur" version "2.+"
@@ -78,7 +78,7 @@ shadowJar {
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
 }
 
 if(project.hasProperty('release_type')) {

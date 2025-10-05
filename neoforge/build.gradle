@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'com.gradleup.shadow'
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.github.breadmoirai.github-release" version "2.4.1"
     id "com.modrinth.minotaur" version "2.+"
@@ -50,7 +50,9 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
-    shadowBundle(common("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
+
+    forgeRuntimeLibrary("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
+    include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${project.player_anim_version}")
     modApi("me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}")
@@ -67,11 +69,10 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = 'dev-shadow'
-    relocate 'net.tinyconfig', 'net.bettercombat.tinyconfig'
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
 }
 
 if(project.hasProperty('release_type')) {

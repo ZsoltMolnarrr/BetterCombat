@@ -11,7 +11,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public class ServerPlayNetworkHandlerMixin {
-    @Redirect(method = "onPlayerAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"))
+    @Redirect(method = "onPlayerAction",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"),
+            require = 0) // NeoForge (handled in event listener)
     public ItemStack getStackInHand(ServerPlayerEntity instance, Hand hand) {
         var player = instance;
         ItemStack result = null;
