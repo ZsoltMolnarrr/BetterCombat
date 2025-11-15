@@ -28,6 +28,8 @@
       {
         "hitbox": "VERTICAL_PLANE",
         "damage_multiplier": 1.25,
+        "movement_speed_multiplier": 0,
+        "range_multiplier": 2,
         "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slam",

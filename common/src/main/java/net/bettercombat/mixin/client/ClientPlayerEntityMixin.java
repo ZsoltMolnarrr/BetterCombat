@@ -15,7 +15,12 @@ public class ClientPlayerEntityMixin {
     @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/input/Input;tick(ZF)V", shift = At.Shift.AFTER))
     private void tickMovement_ModifyInput(CallbackInfo ci) {
         var config = BetterCombatMod.config;
+        var client = (MinecraftClient_BetterCombat) MinecraftClient.getInstance();
         var multiplier = Math.min(Math.max(config.movement_speed_while_attacking, 0.0), 1.0);
+        var attack = client.getCurrentAttack();
+        if (attack != null) {
+            multiplier *= attack.movementSpeedMultiplier();
+        }
 //        System.out.println("Multiplier " + multiplier);
         if (multiplier == 1) {
             return;
@@ -24,7 +29,7 @@ public class ClientPlayerEntityMixin {
         if (clientPlayer.hasVehicle() && !config.movement_speed_effected_while_mounting) {
             return;
         }
-        var client = (MinecraftClient_BetterCombat) MinecraftClient.getInstance();
+
         var swingProgress = client.getSwingProgress();
         if (swingProgress < 0.98) {
             if (config.movement_speed_applied_smoothly) {

@@ -134,6 +134,22 @@ public final class WeaponAttributes {
         private double damage_multiplier = 1;
 
         /**
+         * Multiplier for movement speed during the attack.
+         * Example values:
+         *   for 20% faster movement speed during the attack, use the value `1.2`
+         *   for 20% slower movement speed during the attack, use the value `0.8`
+         */
+        private float movement_speed_multiplier = 1.0f;
+
+        /**
+         * Multiplier for attack range for this attack.
+         * Example values:
+         *   for 20% longer attack range during the attack, use the value `1.2`
+         *   for 20% shorter attack range during the attack, use the value `0.8`
+         */
+        private float range_multiplier = 1.0f;
+
+        /**
          * Determines the angle (measured in degrees) of the attack's hitbox, centered to the player's look vector.
          * Targeted entities outside of this 3D slice are not hit.
          * If set to `0`, no angle check is done.
@@ -186,6 +202,8 @@ public final class WeaponAttributes {
                 Condition[] conditions,
                 HitBoxShape hitbox,
                 double damage_multiplier,
+                float movement_speed_multiplier,
+                float range_multiplier,
                 double angle,
                 double upswing,
                 String animation,
@@ -195,11 +213,17 @@ public final class WeaponAttributes {
             this.conditions = conditions;
             this.hitbox = hitbox;
             this.damage_multiplier = damage_multiplier;
+            this.movement_speed_multiplier = movement_speed_multiplier;
+            this.range_multiplier = range_multiplier;
             this.angle = angle;
             this.upswing = upswing;
             this.animation = animation;
             this.swing_sound = swing_sound;
             this.impact_sound = impact_sound;
+        }
+
+        public static Attack empty() {
+            return new Attack(null, null, 0, 0, 0, 0, 0, null, null, null);
         }
 
         @Nullable
@@ -213,6 +237,14 @@ public final class WeaponAttributes {
 
         public double damageMultiplier() {
             return damage_multiplier;
+        }
+
+        public float movementSpeedMultiplier() {
+            return movement_speed_multiplier;
+        }
+
+        public float rangeMultiplier() {
+            return range_multiplier;
         }
 
         public double angle() {
@@ -242,6 +274,8 @@ public final class WeaponAttributes {
             var that = (Attack) obj;
             return Objects.equals(this.hitbox, that.hitbox) &&
                     Double.doubleToLongBits(this.damage_multiplier) == Double.doubleToLongBits(that.damage_multiplier) &&
+                    Double.doubleToLongBits(this.movement_speed_multiplier) == Double.doubleToLongBits(that.movement_speed_multiplier) &&
+                    Double.doubleToLongBits(this.range_multiplier) == Double.doubleToLongBits(that.range_multiplier) &&
                     Double.doubleToLongBits(this.angle) == Double.doubleToLongBits(that.angle) &&
                     Double.doubleToLongBits(this.upswing) == Double.doubleToLongBits(that.upswing) &&
                     Objects.equals(this.animation, that.animation) &&
