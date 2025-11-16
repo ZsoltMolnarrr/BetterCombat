@@ -298,6 +298,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             if (hand != null) {
                 WeaponAttributes attributes = WeaponRegistry.getAttributes(hand.itemStack());
                 var range = PlayerAttackHelper.getRangeForItem(player, hand.itemStack());
+                range *= hand.attack().rangeMultiplier();
                 if (attributes != null && attributes.attacks() != null) {
                     targets = TargetFinder.findAttackTargets(
                             player,
@@ -366,6 +367,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         var cursorTarget = getCursorTarget();
         var range = PlayerAttackHelper.getRangeForItem(player, hand.itemStack());
+        range *= hand.attack().rangeMultiplier();
         List<Entity> targets = TargetFinder.findAttackTargets(
                 player,
                 cursorTarget,

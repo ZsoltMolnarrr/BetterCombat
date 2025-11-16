@@ -1,3 +1,9 @@
+# 2.3.0
+
+- Add new attack specific fields
+  - `range_multiplier` - Multiplies the base attack range for a specific weapon swing (1.0 = no change)
+  - `movement_speed_multiplier` - Multiplies movement speed while for a specific weapon swing (1.0 = no change)
+
 # 2.2.5
 
 - Fix damage done with daggers #495 
