@@ -2,6 +2,7 @@ package net.bettercombat.fabric;
 
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.fabric.network.FabricServerNetwork;
+import net.bettercombat.particle.BetterCombatParticles;
 import net.bettercombat.utils.SoundHelper;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -18,5 +19,6 @@ public class FabricMod implements ModInitializer {
         SoundHelper.registerSounds();
 
         FabricServerNetwork.init();
+        BetterCombatParticles.register();
     }
 }

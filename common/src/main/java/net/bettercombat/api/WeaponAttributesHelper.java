@@ -3,17 +3,9 @@ package net.bettercombat.api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import net.bettercombat.logic.ItemStackNBTWeaponAttributes;
-import net.bettercombat.logic.WeaponRegistry;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 
 import java.io.InvalidObjectException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -43,7 +35,8 @@ public class WeaponAttributesHelper {
                         override.upswing() != 0 ? override.upswing() : base.upswing(),
                         override.animation() != null ? override.animation() : base.animation(),
                         override.swingSound() != null ? override.swingSound() : base.swingSound(),
-                        override.impactSound() != null ? override.impactSound() : base.impactSound());
+                        override.impactSound() != null ? override.impactSound() : base.impactSound(),
+                        (override.trailParticles() != null && !override.trailParticles().isEmpty()) ? override.trailParticles() : base.trailParticles());
                 overrideAttacks.add(attack);
             }
             attacks = overrideAttacks.toArray(new WeaponAttributes.Attack[0]);

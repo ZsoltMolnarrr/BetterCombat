@@ -43,7 +43,7 @@ public class ServerNetwork {
         if (world == null || world.isClient) {
             return;
         }
-        final var forwardPacket = new Packets.AttackAnimation(player.getId(), packet.animatedHand(), packet.animationName(), packet.length(), packet.upswing());
+        final var forwardPacket = new Packets.AttackAnimation(player.getId(), packet.animatedHand(), packet.animationName(), packet.length(), packet.upswing(), packet.particles());
         try {
             //send info back for Replaymod Compat
             if (Platform.networkS2C_CanSend(player, Packets.AttackAnimation.ID)) {

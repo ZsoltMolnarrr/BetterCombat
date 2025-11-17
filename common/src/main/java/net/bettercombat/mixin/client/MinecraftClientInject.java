@@ -12,6 +12,7 @@ import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.Keybindings;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
+import net.bettercombat.client.particle.ParticleUtil;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.logic.*;
 import net.bettercombat.network.Packets;
@@ -242,7 +243,17 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         boolean isOffHand = attackHand.isOffHand();
         var animatedHand = AnimatedHand.from(isOffHand, attributes.isTwoHanded());
         ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
-        var packet = new Packets.AttackAnimation(player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate);
+
+
+        var particles = attackHand.attack().trailParticles();
+//        var range = PlayerAttackHelper.getRangeForItem(player, attackHand.itemStack());
+//        range *= attackHand.attack().rangeMultiplier();
+//        ParticleUtil.spawnParticles(player, attackHand, new Packets.SwingParticles(particles), (float)range, false, "FFFFFF");
+
+        var packet = new Packets.AttackAnimation(
+                player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate,
+                new Packets.SwingParticles(particles)
+        );
         Platform.networkC2S_Send(packet);
         BetterCombatClientEvents.ATTACK_START.invoke(handler -> {
             handler.onPlayerAttackStart(player, attackHand);
@@ -396,6 +407,9 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         BetterCombatClientEvents.ATTACK_HIT.invoke(handler -> {
             handler.onPlayerAttackStart(player, hand, targets, cursorTarget);
         });
+
+        var particles = hand.attack().trailParticles();
+        ParticleUtil.spawnParticles(player, hand, new Packets.SwingParticles(particles), (float)range, false, "FFFFFF");
 
         setComboCount(getComboCount() + 1);
         if (!hand.isOffHand()) {

@@ -2,12 +2,18 @@ package net.bettercombat.api;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Represents how a weapon behaves when player performs attack with it.
  */
 public final class WeaponAttributes {
+
+    public static class ParticleAppearance {
+        private long color_rgba = 0xFFFFFFFF;
+        private boolean glows = false;
+    }
 
     public static WeaponAttributes empty() {
         return new WeaponAttributes(0, 0, null, null, false, null, null);
@@ -87,6 +93,9 @@ public final class WeaponAttributes {
     @Nullable
     private final Attack[] attacks;
 
+    @Nullable
+    private ParticleAppearance trail_appearance;
+
     public WeaponAttributes(
             double attack_range,
             double range_bonus,
@@ -94,7 +103,8 @@ public final class WeaponAttributes {
             @Nullable String off_hand_pose,
             Boolean isTwoHanded,
             String category,
-            Attack[] attacks) {
+            Attack[] attacks,
+            ParticleAppearance trail_appearance) {
         this.attack_range = attack_range;
         this.range_bonus = range_bonus;
         this.pose = pose;
@@ -193,6 +203,11 @@ public final class WeaponAttributes {
          */
         private Sound impact_sound = null;
 
+        private List<SwingParticle> trail_particles = List.of();
+        public static class SwingParticle { public SwingParticle() { }
+            private String id = null;
+        }
+
         /**
          * This empty initializer is needed for GSON, to support parsing over default values
          */
@@ -208,7 +223,8 @@ public final class WeaponAttributes {
                 double upswing,
                 String animation,
                 Sound swing_sound,
-                Sound impact_sound
+                Sound impact_sound,
+                List<SwingParticle> trail_particles
         ) {
             this.conditions = conditions;
             this.hitbox = hitbox;
@@ -220,10 +236,11 @@ public final class WeaponAttributes {
             this.animation = animation;
             this.swing_sound = swing_sound;
             this.impact_sound = impact_sound;
+            this.trail_particles = trail_particles;
         }
 
         public static Attack empty() {
-            return new Attack(null, null, 0, 0, 0, 0, 0, null, null, null);
+            return new Attack(null, null, 0, 0, 0, 0, 0, null, null, null, List.of());
         }
 
         @Nullable
@@ -261,6 +278,10 @@ public final class WeaponAttributes {
 
         public Sound swingSound() {
             return swing_sound;
+        }
+
+        public List<SwingParticle> trailParticles() {
+            return trail_particles;
         }
 
         public Sound impactSound() {
