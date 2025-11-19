@@ -54,15 +54,11 @@ public class SlashParticle extends SpriteBillboardParticle {
     }
 
     public float getAlpha() {
-//        if (this.color.equals("remove")) {
-//            return this.alpha = 0.0F;
-//        } else {
-//            return this.light ? (this.alpha = BetterCombatParticleMods.config.light_particle_alpha) : (this.alpha = BetterCombatParticleMods.config.particle_alpha);
-//        }
-
-        // FIXME
-
-        return 1F;
+        if (this.color.equals("remove")) {
+            return this.alpha = 0.0F;
+        } else {
+            return this.light ? (this.alpha = 0.8F) : (this.alpha = 0.4F);
+        }
     }
 
     protected int getBrightness(float tint) {
@@ -123,29 +119,6 @@ public class SlashParticle extends SpriteBillboardParticle {
         vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z()).texture(maxU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
     }
 
-//    @Environment(EnvType.CLIENT)
-//    public static class Provider implements ParticleFactory<SlashParticleEffect> {
-//        private final SpriteProvider spriteProvider;
-//        private final BetterCombatParticles.StaticParams params;
-//
-//        public Provider(SpriteProvider spriteProvider, BetterCombatParticles.StaticParams params) {
-//            this.spriteProvider = spriteProvider;
-//            this.params = params;
-//        }
-//
-////        public Particle createParticle(SlashParticleEffect settings, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-////            var particle = new SlashParticle(clientWorld, d, e, f, settings.getScale(), settings.getPitch(), settings.getYaw(), settings.getLocalYaw(), settings.getRoll(), settings.getLight(), settings.getColorHex(), this.spriteProvider);
-////            particle.setColor(1,1,1);
-////            return particle;
-////        }
-//
-//        public Particle createParticle(ParticleType<SlashParticleEffect> settings, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-//            var particle = new SlashParticle(clientWorld, d, e, f, 1F, 0, 0, 0, 0, settings.getLight(), settings.getColorHex(), this.spriteProvider);
-//            particle.setColor(1,1,1);
-//            return particle;
-//        }
-//    }
-
     @Environment(EnvType.CLIENT)
     public static class Provider implements ParticleFactory<SlashParticleEffect> {
         private final SpriteProvider spriteProvider;
@@ -157,7 +130,11 @@ public class SlashParticle extends SpriteBillboardParticle {
         }
 
         public Particle createParticle(SlashParticleEffect settings, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-            return new SlashParticle(clientWorld, d, e, f, settings.getScale(), settings.getPitch(), settings.getYaw(), settings.getLocalYaw(), settings.getRoll(), settings.getLight(), settings.getColorHex(), this.spriteProvider);
+            var particle = new SlashParticle(clientWorld, d, e, f, settings.getScale(), settings.getPitch(), settings.getYaw(), settings.getLocalYaw(), settings.getRoll(), settings.getLight(), settings.getColorHex(), this.spriteProvider);
+            if (!settings.getColorHex().equals("FFFFFF")) {
+                particle.setColor(0.5F, 0.5F, 0.5F);
+            }
+            return particle;
         }
     }
 }

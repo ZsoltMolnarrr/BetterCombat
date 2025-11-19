@@ -64,7 +64,7 @@ public class SlashParticleEffect implements ParticleEffect {
 
     public static MapCodec<SlashParticleEffect> createCodec(ParticleType<SlashParticleEffect> particleType) {
         return RecordCodecBuilder.mapCodec((instance) -> {
-            return instance.group(Codec.FLOAT.fieldOf("scale").forGetter(SlashParticleEffect::getScale), Codec.FLOAT.fieldOf("pitch").forGetter(SlashParticleEffect::getPitch), Codec.FLOAT.fieldOf("yaw").forGetter(SlashParticleEffect::getYaw), Codec.FLOAT.fieldOf("localYaw").forGetter(SlashParticleEffect::getLocalYaw), Codec.FLOAT.fieldOf("roll").forGetter(SlashParticleEffect::getRoll), Codec.BOOL.fieldOf("light").forGetter(SlashParticleEffect::getLight), Codec.STRING.fieldOf("colorHex").forGetter(SlashParticleEffect::getColorHex)).apply(instance, (scale, pitch, yaw, localYaw, roll, light, colorHex) -> {
+            return instance.group(Codec.FLOAT.fieldOf("scale").forGetter(SlashParticleEffect::getScale), Codec.FLOAT.fieldOf("pitch").forGetter(SlashParticleEffect::getPitch), Codec.FLOAT.fieldOf("yaw").forGetter(SlashParticleEffect::getYaw), Codec.FLOAT.fieldOf("local_yaw").forGetter(SlashParticleEffect::getLocalYaw), Codec.FLOAT.fieldOf("roll").forGetter(SlashParticleEffect::getRoll), Codec.BOOL.fieldOf("light").forGetter(SlashParticleEffect::getLight), Codec.STRING.fieldOf("colorHex").forGetter(SlashParticleEffect::getColorHex)).apply(instance, (scale, pitch, yaw, localYaw, roll, light, colorHex) -> {
                 return new SlashParticleEffect(particleType, scale, pitch, yaw, localYaw, roll, light, colorHex);
             });
         });

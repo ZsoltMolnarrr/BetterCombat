@@ -1,5 +1,6 @@
 package net.bettercombat.api;
 
+import net.bettercombat.api.trail.ParticleSettings;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public final class WeaponAttributes {
     }
 
     public static WeaponAttributes empty() {
-        return new WeaponAttributes(0, 0, null, null, false, null, null);
+        return new WeaponAttributes(0, 0, null, null, false, null, null, null);
     }
 
     /**
@@ -112,6 +113,7 @@ public final class WeaponAttributes {
         this.two_handed = isTwoHanded;
         this.category = category;
         this.attacks = attacks;
+        this.trail_appearance = trail_appearance;
     }
 
     /**
@@ -203,10 +205,7 @@ public final class WeaponAttributes {
          */
         private Sound impact_sound = null;
 
-        private List<SwingParticle> trail_particles = List.of();
-        public static class SwingParticle { public SwingParticle() { }
-            private String id = null;
-        }
+        private List<ParticleSettings> trail_particles = List.of();
 
         /**
          * This empty initializer is needed for GSON, to support parsing over default values
@@ -224,7 +223,7 @@ public final class WeaponAttributes {
                 String animation,
                 Sound swing_sound,
                 Sound impact_sound,
-                List<SwingParticle> trail_particles
+                List<ParticleSettings> trail_particles
         ) {
             this.conditions = conditions;
             this.hitbox = hitbox;
@@ -280,7 +279,7 @@ public final class WeaponAttributes {
             return swing_sound;
         }
 
-        public List<SwingParticle> trailParticles() {
+        public List<ParticleSettings> trailParticles() {
             return trail_particles;
         }
 

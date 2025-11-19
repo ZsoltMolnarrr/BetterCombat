@@ -36,11 +36,5 @@ public class FabricClientMod implements ClientModInitializer {
                     entry.particleType(), (provider) -> new SlashParticle.Provider(provider, entry.params())
             );
         }
-
-//        for (var variant: SpellEngineParticles.MagicParticles.all) {
-//            ParticleFactoryRegistry.getInstance().register(
-//                    variant.entry().particleType(), (provider) -> new SpellUniversalParticle.MagicVariant(provider, variant)
-//            );
-//        }
     }
 }

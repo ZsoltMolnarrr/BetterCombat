@@ -13,6 +13,7 @@ import net.bettercombat.client.Keybindings;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.client.particle.ParticleUtil;
+import net.bettercombat.client.particle.TrailParticles;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.logic.*;
 import net.bettercombat.network.Packets;
@@ -409,7 +410,10 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         });
 
         var particles = hand.attack().trailParticles();
-        ParticleUtil.spawnParticles(player, hand, new Packets.SwingParticles(particles), (float)range, false, "FFFFFF");
+        if (particles == null || particles.isEmpty()) {
+            particles = TrailParticles.animationBasedParticles.get(attack.animation());
+        }
+        ParticleUtil.spawnParticles(player, hand, particles, (float)range, false, "FFFFFF");
 
         setComboCount(getComboCount() + 1);
         if (!hand.isOffHand()) {
