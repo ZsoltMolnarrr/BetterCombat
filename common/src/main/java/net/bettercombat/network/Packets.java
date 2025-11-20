@@ -2,8 +2,8 @@ package net.bettercombat.network;
 
 import com.google.gson.Gson;
 import net.bettercombat.BetterCombatMod;
-import net.bettercombat.api.WeaponAttributes;
-import net.bettercombat.api.trail.ParticleSettings;
+import net.bettercombat.api.fx.ParticleSettings;
+import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.logic.AnimatedHand;
 import net.minecraft.entity.Entity;
@@ -65,8 +65,8 @@ public class Packets {
         }
     }
 
-    public record SwingParticles(List<ParticleSettings> particles) {
-        public static final SwingParticles EMPTY = new SwingParticles(List.of());
+    public record SwingParticles(List<ParticleSettings> particles, TrailAppearance appearance) {
+        public static final SwingParticles EMPTY = new SwingParticles(List.of(), new TrailAppearance());
     }
     public record AttackAnimation(int playerId, AnimatedHand animatedHand, String animationName, float length, float upswing, SwingParticles particles) implements CustomPayload {
         public static Identifier ID = Identifier.of(BetterCombatMod.ID, "attack_animation");

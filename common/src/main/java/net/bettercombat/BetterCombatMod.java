@@ -5,10 +5,12 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.bettercombat.api.client.AttackRangeExtensions;
+import net.bettercombat.client.particle.TrailParticles;
 import net.bettercombat.compat.CompatFeatures;
 import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.config.ServerConfigWrapper;
+import net.bettercombat.config.TrailConfig;
 import net.bettercombat.logic.WeaponAttributesFallback;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.server.MinecraftServer;
@@ -26,8 +28,15 @@ public class BetterCombatMod {
             .setDirectory(ID)
             .sanitize(true)
             .build();
+    public static ConfigManager<TrailConfig> trailConfig = new ConfigManager<>
+            ("weapon_trails", TrailParticles.defaults())
+            .builder()
+            .setDirectory(ID)
+            .sanitize(true)
+            .build();
 
     public static void init() {
+        trailConfig.refresh();
         AutoConfig.register(ServerConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
         // Intuitive way to load a config :)
         config = AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig().server;

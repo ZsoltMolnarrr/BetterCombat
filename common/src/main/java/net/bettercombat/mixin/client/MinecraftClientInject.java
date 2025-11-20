@@ -13,7 +13,6 @@ import net.bettercombat.client.Keybindings;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.client.particle.ParticleUtil;
-import net.bettercombat.client.particle.TrailParticles;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.logic.*;
 import net.bettercombat.network.Packets;
@@ -253,7 +252,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         var packet = new Packets.AttackAnimation(
                 player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate,
-                new Packets.SwingParticles(particles)
+                Packets.SwingParticles.EMPTY // FIXME
         );
         Platform.networkC2S_Send(packet);
         BetterCombatClientEvents.ATTACK_START.invoke(handler -> {
@@ -411,9 +410,10 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         var particles = hand.attack().trailParticles();
         if (particles == null || particles.isEmpty()) {
-            particles = TrailParticles.animationBasedParticles.get(attack.animation());
+            particles = BetterCombatMod.trailConfig.value.animation_based.get(attack.animation());
         }
-        ParticleUtil.spawnParticles(player, hand, particles, (float)range, false, "FFFFFF");
+        var appearance = BetterCombatMod.trailConfig.value.default_appearance;
+        ParticleUtil.spawnParticles(player, hand, particles, (float)PlayerAttackHelper.getStaticRange(player, hand.itemStack()), appearance);
 
         setComboCount(getComboCount() + 1);
         if (!hand.isOffHand()) {

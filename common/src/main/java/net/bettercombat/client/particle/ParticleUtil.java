@@ -1,8 +1,8 @@
 package net.bettercombat.client.particle;
 
-import malfu.bc_particle.particle.ModParticles;
 import net.bettercombat.api.AttackHand;
-import net.bettercombat.api.trail.ParticleSettings;
+import net.bettercombat.api.fx.ParticleSettings;
+import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.particle.SlashParticleEffect;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -10,10 +10,11 @@ import net.minecraft.util.math.Vec3d;
 import java.util.List;
 
 public class ParticleUtil {
-    public static void spawnParticles(ClientPlayerEntity player, AttackHand hand, List<ParticleSettings> settingsList, float weaponRange, boolean light, String colorHex) {
+    public static void spawnParticles(ClientPlayerEntity player, AttackHand hand, List<ParticleSettings> settingsList, float weaponRange, TrailAppearance appearance) {
         if (settingsList.isEmpty()) {
             return;
         }
+        weaponRange -= -0.25F;
         for (var settings: settingsList)  {
 
             var id = settings.particle_type();
@@ -25,9 +26,6 @@ public class ParticleUtil {
             var offsetX = settings.x_addition();
             var offsetY = settings.y_addition();
             var offsetZ = settings.z_addition();
-            var pitchOffset = settings.pitch_addition();
-            var yawOffset = settings.local_yaw();
-            var rollOffset = settings.roll_set();
 
             boolean isOffhand = hand.isOffHand();
             float offhandRoll = isOffhand ? 180.0F : 0.0F;
@@ -39,7 +37,7 @@ public class ParticleUtil {
             double baseX = player.getX();
             double baseY = player.getEyeY() - 0.25 + (double)offsetY;
             double baseZ = player.getZ();
-            Vec3d finalPosition = (new Vec3d(baseX, baseY, baseZ)).add(forward.multiply((double)offsetZ)).add(right.multiply((double)(offsetX * offhandFlip)));
+            Vec3d finalPosition = (new Vec3d(baseX, baseY, baseZ)).add(forward.multiply(offsetZ)).add(right.multiply((offsetX * offhandFlip)));
             Vec3d stabFinalPosition = (new Vec3d(finalPosition.getX(), finalPosition.getY(), finalPosition.getZ())).add(forward.multiply((double)weaponRange - 1.5));
             double x = finalPosition.getX();
             double y = finalPosition.getY();
@@ -55,28 +53,28 @@ public class ParticleUtil {
                 for (var layeredParticle: trail.particles()) {
 
                     player.getWorld().addParticle(new SlashParticleEffect(
-                            layeredParticle.top(), weaponRange,
+                            layeredParticle.bottom(), weaponRange,
                             player.getPitch() + settings.pitch_addition(), player.getYaw(),
                             settings.local_yaw() * offhandFlip,
-                            (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip, light, colorHex),
+                            (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip, appearance.glows, appearance.primary_color_rgba),
                             posX, posY, posZ, 0.0, 0.0, 0.0);
 
 
                     player.getWorld().addParticle(new SlashParticleEffect(
-                                    layeredParticle.bottom(), weaponRange,
+                                    layeredParticle.top(), weaponRange,
                                     player.getPitch() + settings.pitch_addition(), player.getYaw(),
                                     settings.local_yaw() * offhandFlip,
-                                    (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip, light, colorHex),
+                                    (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip, appearance.glows, appearance.secondary_color_rgba),
                             posX, posY, posZ, 0.0, 0.0, 0.0);
 
 
 //                    player.getWorld().addParticle(new SlashParticleEffect(layeredParticle.top(), weaponRange,
-//                            pitch + pitchOffset, yaw, yawOffset * offhandFlip, (rollOffset + trail.rollOffset() + offhandRoll) * offhandFlip,
+//                            pitch + pitchOffset, yaw, yawOffset * offhandFlip, (rollOffset + fx.rollOffset() + offhandRoll) * offhandFlip,
 //                                    light, colorHex),
 //                            posX, posY, posZ,
 //                            0.0, 0.0, 0.0);
 //                    player.getWorld().addParticle(new SlashParticleEffect(layeredParticle.bottom(), weaponRange,
-//                                    pitch + pitchOffset, yaw, yawOffset * offhandFlip, (rollOffset + trail.rollOffset() + offhandRoll) * offhandFlip,
+//                                    pitch + pitchOffset, yaw, yawOffset * offhandFlip, (rollOffset + fx.rollOffset() + offhandRoll) * offhandFlip,
 //                                    light, "999999"),
 //                            posX, posY, posZ,
 //                            0.0, 0.0, 0.0);

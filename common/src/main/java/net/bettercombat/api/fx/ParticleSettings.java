@@ -1,4 +1,4 @@
-package net.bettercombat.api.trail;
+package net.bettercombat.api.fx;
 
 public record ParticleSettings(
         String particle_type,

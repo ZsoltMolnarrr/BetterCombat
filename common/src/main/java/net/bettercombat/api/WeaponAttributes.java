@@ -1,6 +1,7 @@
 package net.bettercombat.api;
 
-import net.bettercombat.api.trail.ParticleSettings;
+import net.bettercombat.api.fx.TrailAppearance;
+import net.bettercombat.api.fx.ParticleSettings;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -10,11 +11,6 @@ import java.util.Objects;
  * Represents how a weapon behaves when player performs attack with it.
  */
 public final class WeaponAttributes {
-
-    public static class ParticleAppearance {
-        private long color_rgba = 0xFFFFFFFF;
-        private boolean glows = false;
-    }
 
     public static WeaponAttributes empty() {
         return new WeaponAttributes(0, 0, null, null, false, null, null, null);
@@ -95,7 +91,7 @@ public final class WeaponAttributes {
     private final Attack[] attacks;
 
     @Nullable
-    private ParticleAppearance trail_appearance;
+    private TrailAppearance trail_appearance;
 
     public WeaponAttributes(
             double attack_range,
@@ -105,7 +101,7 @@ public final class WeaponAttributes {
             Boolean isTwoHanded,
             String category,
             Attack[] attacks,
-            ParticleAppearance trail_appearance) {
+            TrailAppearance trail_appearance) {
         this.attack_range = attack_range;
         this.range_bonus = range_bonus;
         this.pose = pose;

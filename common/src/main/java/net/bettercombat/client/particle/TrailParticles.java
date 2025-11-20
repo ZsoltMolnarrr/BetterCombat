@@ -1,13 +1,14 @@
 package net.bettercombat.client.particle;
 
 import net.bettercombat.BetterCombatMod;
-import net.bettercombat.api.trail.ParticleSettings;
+import net.bettercombat.api.fx.ParticleSettings;
+import net.bettercombat.api.fx.TrailAppearance;
+import net.bettercombat.config.TrailConfig;
 import net.bettercombat.particle.BetterCombatParticles;
 import net.bettercombat.particle.SlashParticleEffect;
 import net.minecraft.particle.ParticleType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,13 +38,13 @@ public class TrailParticles {
                                     BetterCombatParticles.topstab.particleType(),
                                     BetterCombatParticles.botstab.particleType()
                             )
-                    ), -45F),
+                    ), -45F, true),
                     new Entry(List.of(
                             new LayeredParticle(
                                     BetterCombatParticles.topstab.particleType(),
                                     BetterCombatParticles.botstab.particleType()
                             )
-                    ), 45F)
+                    ), 45F, true)
             ),
             "slash45", List.of(
                     new Entry(List.of(
@@ -87,8 +88,8 @@ public class TrailParticles {
             )
     );
 
-    public static HashMap<String, List<ParticleSettings>> defaults() {
-        HashMap<String, List<ParticleSettings>> map = new HashMap<>();
+    public static TrailConfig defaults() {
+        LinkedHashMap<String, List<ParticleSettings>> map = new LinkedHashMap<>();
 
         // bettercombat:one_handed_slash_horizontal_right
         map.put(NAMESPACE + ":one_handed_slash_horizontal_right", List.of(
@@ -111,8 +112,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         0.0F,
-                        180.0F,
-                        0.0F
+                        0.0F,
+                        180.0F
                 )
         ));
 
@@ -124,8 +125,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         0.0F,
-                        75.0F,
-                        0.0F
+                        0.0F,
+                        75.0F
                 )
         ));
 
@@ -137,8 +138,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         0.0F,
-                        -0.10F,
-                        0.0F
+                        0.0F,
+                        -0.10F
                 )
         ));
 
@@ -150,8 +151,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         45.0F,
-                        -85.0F,
-                        0.0F
+                        0.0F,
+                        -85.0F
                 )
         ));
 
@@ -202,8 +203,8 @@ public class TrailParticles {
                         -0.15F,
                         0.0F,
                         0.0F,
-                        -120.0F,
-                        0.0F
+                        0.0F,
+                        -120.0F
                 ),
                 new ParticleSettings(
                         "slash180",
@@ -211,8 +212,8 @@ public class TrailParticles {
                         -0.15F,
                         0.0F,
                         0.0F,
-                        -60.0F,
-                        0.0F
+                        0.0F,
+                        -60.0F
                 )
         ));
 
@@ -224,8 +225,8 @@ public class TrailParticles {
                         -0.15F,
                         0.0F,
                         0.0F,
-                        240.0F,
-                        0.0F
+                        0.0F,
+                        240.0F
                 ),
                 new ParticleSettings(
                         "slash180",
@@ -233,8 +234,8 @@ public class TrailParticles {
                         -0.15F,
                         0.0F,
                         0.0F,
-                        300.0F,
-                        0.0F
+                        0.0F,
+                        300.0F
                 )
         ));
 
@@ -294,8 +295,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         0.0F,
-                        -5.0F,
-                        0.0F
+                        0.0F,
+                        -5.0F
                 )
         ));
 
@@ -307,8 +308,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         0.0F,
-                        180.0F,
-                        0.0F
+                        0.0F,
+                        180.0F
                 )
         ));
 
@@ -333,8 +334,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         0.0F,
-                        180.0F,
-                        0.0F
+                        0.0F,
+                        180.0F
                 )
         ));
 
@@ -346,8 +347,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         0.0F,
-                        180.0F,
-                        0.0F
+                        0.0F,
+                        180.0F
                 )
         ));
 
@@ -359,8 +360,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         45.0F,
-                        -80.0F,
-                        0.0F
+                        0.0F,
+                        -80.0F
                 )
         ));
 
@@ -372,8 +373,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         45.0F,
-                        -100.0F,
-                        0.0F
+                        0.0F,
+                        -100.0F
                 )
         ));
 
@@ -385,8 +386,8 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         45.0F,
-                        -86.0F,
-                        0.0F
+                        0.0F,
+                        -86.0F
                 )
         ));
 
@@ -398,13 +399,13 @@ public class TrailParticles {
                         -0.1F,
                         0.0F,
                         45.0F,
-                        -86.0F,
-                        0.0F
+                        0.0F,
+                        -86.0F
                 )
         ));
 
-        return map;
-    }
+        var trailAppearance = new TrailAppearance("FFFFFF", "999999", false);
 
-    public static HashMap<String, List<ParticleSettings>> animationBasedParticles = defaults();
+        return new TrailConfig(trailAppearance, map);
+    }
 }
