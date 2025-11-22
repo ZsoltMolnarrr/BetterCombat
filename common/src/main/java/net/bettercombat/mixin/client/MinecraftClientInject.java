@@ -408,11 +408,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             handler.onPlayerAttackStart(player, hand, targets, cursorTarget);
         });
 
-        var particles = hand.attack().trailParticles();
-        if (particles == null || particles.isEmpty()) {
-            particles = BetterCombatMod.trailConfig.value.animation_based.get(attack.animation());
-        }
-        var appearance = BetterCombatMod.trailConfig.value.default_appearance;
+        var particles = ParticleUtil.trailParticlesFromAttack(hand);
+        var appearance = ParticleUtil.appearanceFromItemStack(hand.itemStack());
         ParticleUtil.spawnParticles(player, hand, particles, (float)PlayerAttackHelper.getStaticRange(player, hand.itemStack()), appearance);
 
         setComboCount(getComboCount() + 1);

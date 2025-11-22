@@ -1,6 +1,8 @@
 package net.bettercombat.client.particle;
 
 import net.bettercombat.BetterCombatMod;
+import net.bettercombat.api.fx.Color;
+import net.bettercombat.api.fx.ConditionalTrailAppearance;
 import net.bettercombat.api.fx.ParticleSettings;
 import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.config.TrailConfig;
@@ -404,7 +406,19 @@ public class TrailParticles {
                 )
         ));
 
-        var trailAppearance = new TrailAppearance("FFFFFF", "999999", false);
+        var defaultTrail = new TrailAppearance(
+                new TrailAppearance.Part(Color.WHITE.alpha(0.8F).toRGBA(), false),
+                new TrailAppearance.Part(Color.from(0x999999).alpha(0.4F).toRGBA(), false)
+        );
+        var enchantedTrail = new TrailAppearance(
+                new TrailAppearance.Part(Color.from(0x00CEFF).alpha(0.8F).toRGBA(), true),
+                new TrailAppearance.Part(Color.from(0x005AFF).alpha(0.4F).toRGBA(), true)
+        );
+
+        // Create conditional trail appearance with default and enchanted variants
+        var conditionalAppearances = new LinkedHashMap<String, TrailAppearance>();
+        conditionalAppearances.put("is_enchanted", enchantedTrail);
+        var trailAppearance = new ConditionalTrailAppearance(defaultTrail, conditionalAppearances);
 
         return new TrailConfig(trailAppearance, map);
     }

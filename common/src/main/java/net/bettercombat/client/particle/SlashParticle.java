@@ -1,5 +1,6 @@
 package net.bettercombat.client.particle;
 
+import net.bettercombat.api.fx.Color;
 import net.bettercombat.particle.BetterCombatParticles;
 import net.bettercombat.particle.SlashParticleEffect;
 import net.fabricmc.api.EnvType;
@@ -57,7 +58,7 @@ public class SlashParticle extends SpriteBillboardParticle {
         if (this.color.equals("remove")) {
             return this.alpha = 0.0F;
         } else {
-            return this.light ? (this.alpha = 0.8F) : (this.alpha = 0.4F);
+            return this.light ? (this.alpha = 0.4F) : (this.alpha = 0.4F);
         }
     }
 
@@ -131,9 +132,8 @@ public class SlashParticle extends SpriteBillboardParticle {
 
         public Particle createParticle(SlashParticleEffect settings, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
             var particle = new SlashParticle(clientWorld, d, e, f, settings.getScale(), settings.getPitch(), settings.getYaw(), settings.getLocalYaw(), settings.getRoll(), settings.getLight(), settings.getColorHex(), this.spriteProvider);
-            if (!settings.getColorHex().equals("FFFFFF")) {
-                particle.setColor(0.5F, 0.5F, 0.5F);
-            }
+            var color = Color.fromStringRGB(settings.getColorHex());
+            particle.setColor(color.red(), color.green(), color.blue());
             return particle;
         }
     }

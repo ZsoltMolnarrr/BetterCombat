@@ -1,5 +1,6 @@
 package net.bettercombat.api;
 
+import net.bettercombat.api.fx.ConditionalTrailAppearance;
 import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.api.fx.ParticleSettings;
 import org.jetbrains.annotations.Nullable;
@@ -91,7 +92,7 @@ public final class WeaponAttributes {
     private final Attack[] attacks;
 
     @Nullable
-    private TrailAppearance trail_appearance;
+    private ConditionalTrailAppearance trail_appearance;
 
     public WeaponAttributes(
             double attack_range,
@@ -101,7 +102,7 @@ public final class WeaponAttributes {
             Boolean isTwoHanded,
             String category,
             Attack[] attacks,
-            TrailAppearance trail_appearance) {
+            ConditionalTrailAppearance trail_appearance) {
         this.attack_range = attack_range;
         this.range_bonus = range_bonus;
         this.pose = pose;
@@ -492,6 +493,11 @@ public final class WeaponAttributes {
 
     public Attack[] attacks() {
         return attacks;
+    }
+
+    @Nullable
+    public ConditionalTrailAppearance trailAppearance() {
+        return trail_appearance;
     }
 
     @Override

@@ -41,7 +41,8 @@ public class WeaponAttributesHelper {
             }
             attacks = overrideAttacks.toArray(new WeaponAttributes.Attack[0]);
         }
-        return new WeaponAttributes(attackRange, rangeBonus, pose, off_hand_pose, isTwoHanded, category, attacks, null); //FIXME: Trail appearance
+        var trailAppearance = b.trailAppearance() != null ? b.trailAppearance() : a.trailAppearance();
+        return new WeaponAttributes(attackRange, rangeBonus, pose, off_hand_pose, isTwoHanded, category, attacks, trailAppearance);
     }
 
     public static void validate(WeaponAttributes attributes) throws Exception {

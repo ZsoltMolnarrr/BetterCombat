@@ -1,10 +1,14 @@
 package net.bettercombat.client.particle;
 
+import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.AttackHand;
+import net.bettercombat.api.fx.Color;
 import net.bettercombat.api.fx.ParticleSettings;
 import net.bettercombat.api.fx.TrailAppearance;
+import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.particle.SlashParticleEffect;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
@@ -52,11 +56,14 @@ public class ParticleUtil {
                 var posZ = trail.stabPosition() ? zStab : z;
                 for (var layeredParticle: trail.particles()) {
 
+                    var primaryColorDebug = Color.fromRGBA(appearance.primary.color_rgba()).toStringRGB();
+                    var secondaryColorDebug = Color.fromRGBA(appearance.secondary.color_rgba()).toStringRGB();
                     player.getWorld().addParticle(new SlashParticleEffect(
                             layeredParticle.bottom(), weaponRange,
                             player.getPitch() + settings.pitch_addition(), player.getYaw(),
                             settings.local_yaw() * offhandFlip,
-                            (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip, appearance.glows, appearance.primary_color_rgba),
+                            (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip,
+                                    appearance.primary.glows(), Color.fromRGBA(appearance.primary.color_rgba()).toStringRGB()),
                             posX, posY, posZ, 0.0, 0.0, 0.0);
 
 
@@ -64,20 +71,9 @@ public class ParticleUtil {
                                     layeredParticle.top(), weaponRange,
                                     player.getPitch() + settings.pitch_addition(), player.getYaw(),
                                     settings.local_yaw() * offhandFlip,
-                                    (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip, appearance.glows, appearance.secondary_color_rgba),
+                                    (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip,
+                                    appearance.secondary.glows(), Color.fromRGBA(appearance.secondary.color_rgba()).toStringRGB()),
                             posX, posY, posZ, 0.0, 0.0, 0.0);
-
-
-//                    player.getWorld().addParticle(new SlashParticleEffect(layeredParticle.top(), weaponRange,
-//                            pitch + pitchOffset, yaw, yawOffset * offhandFlip, (rollOffset + fx.rollOffset() + offhandRoll) * offhandFlip,
-//                                    light, colorHex),
-//                            posX, posY, posZ,
-//                            0.0, 0.0, 0.0);
-//                    player.getWorld().addParticle(new SlashParticleEffect(layeredParticle.bottom(), weaponRange,
-//                                    pitch + pitchOffset, yaw, yawOffset * offhandFlip, (rollOffset + fx.rollOffset() + offhandRoll) * offhandFlip,
-//                                    light, "999999"),
-//                            posX, posY, posZ,
-//                            0.0, 0.0, 0.0);
                 }
             }
 
@@ -109,6 +105,28 @@ public class ParticleUtil {
 //                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.BOTSLASH360, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHex), x, y, z, 0.0, 0.0, 0.0);
 //                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.TOPSLASH360, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHexSec), x, y, z, 0.0, 0.0, 0.0);
 //            }
+        }
+    }
+
+    public static List<ParticleSettings> trailParticlesFromAttack(AttackHand attackHand) {
+        if (!attackHand.attack().trailParticles().isEmpty()) {
+            return attackHand.attack().trailParticles();
+        }
+        var config = BetterCombatMod.trailConfig.value;
+        var animationSpecific = config.animation_based.get(attackHand.attack().animation());
+        if (animationSpecific != null) {
+            return animationSpecific;
+        }
+        return List.of();
+    }
+
+    public static TrailAppearance appearanceFromItemStack(ItemStack stack) {
+        var defaults = BetterCombatMod.trailConfig.value.trail_appearance;
+        var weaponAttributes = WeaponRegistry.getAttributes(stack);
+        if (weaponAttributes != null && weaponAttributes.trailAppearance() != null) {
+            return defaults.merge(weaponAttributes.trailAppearance()).resolve(stack);
+        } else {
+            return defaults.resolve(stack);
         }
     }
 }
