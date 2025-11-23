@@ -407,12 +407,12 @@ public class TrailParticles {
         ));
 
         var defaultTrail = new TrailAppearance(
-                new TrailAppearance.Part(Color.WHITE.alpha(0.8F).toRGBA(), false),
+                new TrailAppearance.Part(Color.WHITE.alpha(0.6F).toRGBA(), false),
                 new TrailAppearance.Part(Color.from(0x999999).alpha(0.4F).toRGBA(), false)
         );
         var enchantedTrail = new TrailAppearance(
-                new TrailAppearance.Part(Color.from(0x00CEFF).alpha(0.8F).toRGBA(), true),
-                new TrailAppearance.Part(Color.from(0x005AFF).alpha(0.4F).toRGBA(), true)
+                new TrailAppearance.Part(Color.from(0x66d9ff).alpha(0.6F).toRGBA(), true),
+                new TrailAppearance.Part(Color.from(0x99e6ff).alpha(0.3F).toRGBA(), true)
         );
 
         // Create conditional trail appearance with default and enchanted variants

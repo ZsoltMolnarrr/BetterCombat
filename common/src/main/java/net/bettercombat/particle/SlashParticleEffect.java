@@ -5,7 +5,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 
@@ -17,9 +16,9 @@ public class SlashParticleEffect implements ParticleEffect {
     private final float roll;
     private final float scale;
     private final boolean light;
-    private final String colorHex;
+    private final long color_rgba;
 
-    public SlashParticleEffect(ParticleType<SlashParticleEffect> type, float scale, float pitch, float yaw, float localYaw, float roll, boolean light, String colorHex) {
+    public SlashParticleEffect(ParticleType<SlashParticleEffect> type, float scale, float pitch, float yaw, float localYaw, float roll, boolean light, long color_rgba) {
         this.type = type;
         this.scale = scale;
         this.pitch = pitch;
@@ -27,7 +26,7 @@ public class SlashParticleEffect implements ParticleEffect {
         this.localYaw = localYaw;
         this.roll = roll;
         this.light = light;
-        this.colorHex = colorHex;
+        this.color_rgba = color_rgba;
     }
 
     public ParticleType<SlashParticleEffect> getType() {
@@ -58,14 +57,22 @@ public class SlashParticleEffect implements ParticleEffect {
         return this.light;
     }
 
-    public String getColorHex() {
-        return this.colorHex;
+    public long getColorRGBA() {
+        return this.color_rgba;
     }
 
     public static MapCodec<SlashParticleEffect> createCodec(ParticleType<SlashParticleEffect> particleType) {
         return RecordCodecBuilder.mapCodec((instance) -> {
-            return instance.group(Codec.FLOAT.fieldOf("scale").forGetter(SlashParticleEffect::getScale), Codec.FLOAT.fieldOf("pitch").forGetter(SlashParticleEffect::getPitch), Codec.FLOAT.fieldOf("yaw").forGetter(SlashParticleEffect::getYaw), Codec.FLOAT.fieldOf("local_yaw").forGetter(SlashParticleEffect::getLocalYaw), Codec.FLOAT.fieldOf("roll").forGetter(SlashParticleEffect::getRoll), Codec.BOOL.fieldOf("light").forGetter(SlashParticleEffect::getLight), Codec.STRING.fieldOf("colorHex").forGetter(SlashParticleEffect::getColorHex)).apply(instance, (scale, pitch, yaw, localYaw, roll, light, colorHex) -> {
-                return new SlashParticleEffect(particleType, scale, pitch, yaw, localYaw, roll, light, colorHex);
+            return instance.group(
+                    Codec.FLOAT.fieldOf("scale").forGetter(SlashParticleEffect::getScale),
+                    Codec.FLOAT.fieldOf("pitch").forGetter(SlashParticleEffect::getPitch),
+                    Codec.FLOAT.fieldOf("yaw").forGetter(SlashParticleEffect::getYaw),
+                    Codec.FLOAT.fieldOf("local_yaw").forGetter(SlashParticleEffect::getLocalYaw),
+                    Codec.FLOAT.fieldOf("roll").forGetter(SlashParticleEffect::getRoll),
+                    Codec.BOOL.fieldOf("light").forGetter(SlashParticleEffect::getLight),
+                    Codec.LONG.fieldOf("color_rgba").forGetter(SlashParticleEffect::getColorRGBA)
+            ).apply(instance, (scale, pitch, yaw, localYaw, roll, light, color_rgba) -> {
+                return new SlashParticleEffect(particleType, scale, pitch, yaw, localYaw, roll, light, color_rgba);
             });
         });
     }
@@ -79,8 +86,8 @@ public class SlashParticleEffect implements ParticleEffect {
                 float localYaw = buf.readFloat();
                 float roll = buf.readFloat();
                 boolean light = buf.readBoolean();
-                String colorHex = (String)PacketCodecs.STRING.decode(buf);
-                return new SlashParticleEffect(particleType, scale, pitch, yaw, localYaw, roll, light, colorHex);
+                long color_rgba = buf.readLong();
+                return new SlashParticleEffect(particleType, scale, pitch, yaw, localYaw, roll, light, color_rgba);
             }
 
             public void encode(RegistryByteBuf buf, SlashParticleEffect effect) {
@@ -90,7 +97,7 @@ public class SlashParticleEffect implements ParticleEffect {
                 buf.writeFloat(effect.getLocalYaw());
                 buf.writeFloat(effect.getRoll());
                 buf.writeBoolean(effect.getLight());
-                PacketCodecs.STRING.encode(buf, effect.getColorHex());
+                buf.writeLong(effect.getColorRGBA());
             }
         };
     }

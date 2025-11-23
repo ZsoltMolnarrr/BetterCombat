@@ -2,9 +2,9 @@ package net.bettercombat.client.particle;
 
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.AttackHand;
-import net.bettercombat.api.fx.Color;
 import net.bettercombat.api.fx.ParticleSettings;
 import net.bettercombat.api.fx.TrailAppearance;
+import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.particle.SlashParticleEffect;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -15,6 +15,9 @@ import java.util.List;
 
 public class ParticleUtil {
     public static void spawnParticles(ClientPlayerEntity player, AttackHand hand, List<ParticleSettings> settingsList, float weaponRange, TrailAppearance appearance) {
+        if (!BetterCombatClientMod.config.isShowingWeaponTrails) {
+            return;
+        }
         if (settingsList.isEmpty()) {
             return;
         }
@@ -55,56 +58,23 @@ public class ParticleUtil {
                 var posY = trail.stabPosition() ? yStab : y;
                 var posZ = trail.stabPosition() ? zStab : z;
                 for (var layeredParticle: trail.particles()) {
-
-                    var primaryColorDebug = Color.fromRGBA(appearance.primary.color_rgba()).toStringRGB();
-                    var secondaryColorDebug = Color.fromRGBA(appearance.secondary.color_rgba()).toStringRGB();
                     player.getWorld().addParticle(new SlashParticleEffect(
                             layeredParticle.bottom(), weaponRange,
                             player.getPitch() + settings.pitch_addition(), player.getYaw(),
                             settings.local_yaw() * offhandFlip,
                             (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip,
-                                    appearance.primary.glows(), Color.fromRGBA(appearance.primary.color_rgba()).toStringRGB()),
+                            appearance.primary.glows(), appearance.primary.color_rgba()),
                             posX, posY, posZ, 0.0, 0.0, 0.0);
 
-
                     player.getWorld().addParticle(new SlashParticleEffect(
-                                    layeredParticle.top(), weaponRange,
-                                    player.getPitch() + settings.pitch_addition(), player.getYaw(),
-                                    settings.local_yaw() * offhandFlip,
-                                    (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip,
-                                    appearance.secondary.glows(), Color.fromRGBA(appearance.secondary.color_rgba()).toStringRGB()),
+                            layeredParticle.top(), weaponRange,
+                            player.getPitch() + settings.pitch_addition(), player.getYaw(),
+                            settings.local_yaw() * offhandFlip,
+                            (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip,
+                            appearance.secondary.glows(), appearance.secondary.color_rgba()),
                             posX, posY, posZ, 0.0, 0.0, 0.0);
                 }
             }
-
-
-//            switch (settings.particle_type()) {
-//                case "stab":
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.BOTSTAB, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() - 45.0F + offhandRoll) * offhandFlip, light, colorHex), xStab, yStab, zStab, 0.0, 0.0, 0.0);
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.BOTSTAB, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + 45.0F + offhandRoll) * offhandFlip, light, colorHex), xStab, yStab, zStab, 0.0, 0.0, 0.0);
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.TOPSTAB, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() - 45.0F + offhandRoll) * offhandFlip, light, colorHexSec), xStab, yStab, zStab, 0.0, 0.0, 0.0);
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.TOPSTAB, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + 45.0F + offhandRoll) * offhandFlip, light, colorHexSec), xStab, yStab, zStab, 0.0, 0.0, 0.0);
-//                    break;
-//                case "slash45":
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.BOTSLASH45, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHex), x, y, z, 0.0, 0.0, 0.0);
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.TOPSLASH45, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHexSec), x, y, z, 0.0, 0.0, 0.0);
-//                    break;
-//                case "slash90":
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.BOTSLASH90, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHex), x, y, z, 0.0, 0.0, 0.0);
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.TOPSLASH90, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHexSec), x, y, z, 0.0, 0.0, 0.0);
-//                    break;
-//                case "slash180":
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.BOTSLASH180, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHex), x, y, z, 0.0, 0.0, 0.0);
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.TOPSLASH180, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHexSec), x, y, z, 0.0, 0.0, 0.0);
-//                    break;
-//                case "slash270":
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.BOTSLASH270, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHex), x, y, z, 0.0, 0.0, 0.0);
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.TOPSLASH270, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHexSec), x, y, z, 0.0, 0.0, 0.0);
-//                    break;
-//                case "slash360":
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.BOTSLASH360, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHex), x, y, z, 0.0, 0.0, 0.0);
-//                    player.getWorld().addParticle(new SlashParticleEffect(ModParticles.TOPSLASH360, weaponRange, player.getPitch() + settings.pitch_addition(), player.getYaw(), settings.local_yaw() * offhandFlip, (settings.roll_set() + offhandRoll) * offhandFlip, light, colorHexSec), x, y, z, 0.0, 0.0, 0.0);
-//            }
         }
     }
 

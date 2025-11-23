@@ -19,7 +19,7 @@ import org.joml.Vector4f;
 @Environment(EnvType.CLIENT)
 public class SlashParticle extends SpriteBillboardParticle {
     private final SpriteProvider spriteProvider;
-    private final String color;
+    private final long color_rgba;
     public final float modelOffset;
     private final float pitch;
     private final float yaw;
@@ -27,16 +27,21 @@ public class SlashParticle extends SpriteBillboardParticle {
     private final float roll;
     private final boolean light;
 
-    public SlashParticle(ClientWorld world, double x, double y, double z, float scale, float pitch, float yaw, float localYaw, float roll, boolean light, String colorHex, SpriteProvider spriteProvider) {
+    public SlashParticle(ClientWorld world, double x, double y, double z, float scale, float pitch, float yaw, float localYaw, float roll, boolean light, long color_rgba, SpriteProvider spriteProvider) {
         super(world, x, y, z, 0.0, 0.0, 0.0);
         this.spriteProvider = spriteProvider;
-        this.color = colorHex;
+        this.color_rgba = color_rgba;
         this.light = light;
         this.pitch = pitch;
         this.yaw = yaw;
         this.roll = roll;
         this.localYaw = localYaw;
-        this.alpha = this.getAlpha();
+
+        // Set color from RGBA long
+        var color = Color.fromRGBA(color_rgba);
+        this.setColor(color.red(), color.green(), color.blue());
+        this.alpha = color.alpha();
+
         this.maxAge = 6;
         this.modelOffset = this.setModelOffset();
         this.scale = scale;
@@ -51,14 +56,6 @@ public class SlashParticle extends SpriteBillboardParticle {
             this.markDead();
         } else {
             this.setSpriteForAge(this.spriteProvider);
-        }
-    }
-
-    public float getAlpha() {
-        if (this.color.equals("remove")) {
-            return this.alpha = 0.0F;
-        } else {
-            return this.light ? (this.alpha = 0.4F) : (this.alpha = 0.4F);
         }
     }
 
@@ -131,10 +128,7 @@ public class SlashParticle extends SpriteBillboardParticle {
         }
 
         public Particle createParticle(SlashParticleEffect settings, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-            var particle = new SlashParticle(clientWorld, d, e, f, settings.getScale(), settings.getPitch(), settings.getYaw(), settings.getLocalYaw(), settings.getRoll(), settings.getLight(), settings.getColorHex(), this.spriteProvider);
-            var color = Color.fromStringRGB(settings.getColorHex());
-            particle.setColor(color.red(), color.green(), color.blue());
-            return particle;
+            return new SlashParticle(clientWorld, d, e, f, settings.getScale(), settings.getPitch(), settings.getYaw(), settings.getLocalYaw(), settings.getRoll(), settings.getLight(), settings.getColorRGBA(), this.spriteProvider);
         }
     }
 }
