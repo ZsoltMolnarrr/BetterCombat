@@ -1,6 +1,6 @@
 package net.bettercombat.api.fx;
 
-public record ParticleSettings(
+public record ParticlePlacement(
         String particle_type,
         float x_addition,
         float y_addition,
@@ -8,9 +8,9 @@ public record ParticleSettings(
         float local_yaw,
         float pitch_addition,
         float roll_set) {
-    public static final ParticleSettings DEFAULT = new ParticleSettings("none", 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+    public static final ParticlePlacement DEFAULT = new ParticlePlacement("none", 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 
-    public ParticleSettings(String particle_type, float x_addition, float y_addition, float z_addition, float local_yaw, float pitch_addition, float roll_set) {
+    public ParticlePlacement(String particle_type, float x_addition, float y_addition, float z_addition, float local_yaw, float pitch_addition, float roll_set) {
         this.particle_type = particle_type;
         this.x_addition = x_addition;
         this.y_addition = y_addition;

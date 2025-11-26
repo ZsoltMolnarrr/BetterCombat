@@ -3,7 +3,7 @@ package net.bettercombat.client.particle;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.fx.Color;
 import net.bettercombat.api.fx.ConditionalTrailAppearance;
-import net.bettercombat.api.fx.ParticleSettings;
+import net.bettercombat.api.fx.ParticlePlacement;
 import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.config.TrailConfig;
 import net.bettercombat.particle.BetterCombatParticles;
@@ -91,11 +91,11 @@ public class TrailParticles {
     );
 
     public static TrailConfig defaults() {
-        LinkedHashMap<String, List<ParticleSettings>> map = new LinkedHashMap<>();
+        LinkedHashMap<String, List<ParticlePlacement>> map = new LinkedHashMap<>();
 
         // bettercombat:one_handed_slash_horizontal_right
         map.put(NAMESPACE + ":one_handed_slash_horizontal_right", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash90",
                         0.0F,
                         -0.1F,
@@ -108,7 +108,7 @@ public class TrailParticles {
 
         // bettercombat:one_handed_slash_horizontal_left
         map.put(NAMESPACE + ":one_handed_slash_horizontal_left", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash90",
                         0.0F,
                         -0.1F,
@@ -121,7 +121,7 @@ public class TrailParticles {
 
         // bettercombat:one_handed_uppercut_right
         map.put(NAMESPACE + ":one_handed_uppercut_right", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash90",
                         0.0F,
                         -0.1F,
@@ -134,7 +134,7 @@ public class TrailParticles {
 
         // bettercombat:one_handed_swipe_horizontal_right
         map.put(NAMESPACE + ":one_handed_swipe_horizontal_right", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash90",
                         0.0F,
                         -0.1F,
@@ -147,7 +147,7 @@ public class TrailParticles {
 
         // bettercombat:one_handed_slam
         map.put(NAMESPACE + ":one_handed_slam", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         0.05F,
                         -0.1F,
@@ -160,7 +160,7 @@ public class TrailParticles {
 
         // bettercombat:one_handed_stab
         map.put(NAMESPACE + ":one_handed_stab", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "stab",
                         0.0F,
                         -0.13F,
@@ -173,7 +173,7 @@ public class TrailParticles {
 
         // bettercombat:one_handed_stab_mounted
         map.put(NAMESPACE + ":one_handed_stab_mounted", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "stab",
                         0.0F,
                         0.15F,
@@ -186,7 +186,7 @@ public class TrailParticles {
 
         // bettercombat:one_handed_punch
         map.put(NAMESPACE + ":one_handed_punch", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "stab",
                         0.0F,
                         -0.1F,
@@ -199,7 +199,7 @@ public class TrailParticles {
 
         // bettercombat:dual_handed_slash_cross
         map.put(NAMESPACE + ":dual_handed_slash_cross", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         0.2F,
                         -0.15F,
@@ -208,7 +208,7 @@ public class TrailParticles {
                         0.0F,
                         -120.0F
                 ),
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         -0.2F,
                         -0.15F,
@@ -221,7 +221,7 @@ public class TrailParticles {
 
         // bettercombat:dual_handed_slash_uncross
         map.put(NAMESPACE + ":dual_handed_slash_uncross", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         0.2F,
                         -0.15F,
@@ -230,7 +230,7 @@ public class TrailParticles {
                         0.0F,
                         240.0F
                 ),
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         -0.2F,
                         -0.15F,
@@ -243,7 +243,7 @@ public class TrailParticles {
 
         // bettercombat:dual_handed_stab
         map.put(NAMESPACE + ":dual_handed_stab", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "stab",
                         0.4F,
                         -0.3F,
@@ -252,7 +252,7 @@ public class TrailParticles {
                         0.0F,
                         0.0F
                 ),
-                new ParticleSettings(
+                new ParticlePlacement(
                         "stab",
                         -0.4F,
                         -0.3F,
@@ -265,7 +265,7 @@ public class TrailParticles {
 
         // bettercombat:two_handed_stab_left
         map.put(NAMESPACE + ":two_handed_stab_left", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "stab",
                         0.0F,
                         -0.15F,
@@ -278,7 +278,7 @@ public class TrailParticles {
 
         // bettercombat:two_handed_stab_right
         map.put(NAMESPACE + ":two_handed_stab_right", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "stab",
                         0.0F,
                         -0.15F,
@@ -291,7 +291,7 @@ public class TrailParticles {
 
         // bettercombat:two_handed_slash_horizontal_right
         map.put(NAMESPACE + ":two_handed_slash_horizontal_right", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         0.0F,
                         -0.1F,
@@ -304,7 +304,7 @@ public class TrailParticles {
 
         // bettercombat:two_handed_slash_horizontal_left
         map.put(NAMESPACE + ":two_handed_slash_horizontal_left", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         0.0F,
                         -0.1F,
@@ -317,7 +317,7 @@ public class TrailParticles {
 
         // bettercombat:one_handed_slash_switch_blade_right
         map.put(NAMESPACE + ":one_handed_slash_switch_blade_right", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         0.0F,
                         -0.1F,
@@ -330,7 +330,7 @@ public class TrailParticles {
 
         // bettercombat:one_handed_slash_switch_blade_left
         map.put(NAMESPACE + ":one_handed_slash_switch_blade_left", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         0.0F,
                         -0.1F,
@@ -343,7 +343,7 @@ public class TrailParticles {
 
         // bettercombat:two_handed_spin
         map.put(NAMESPACE + ":two_handed_spin", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash360",
                         0.0F,
                         -0.1F,
@@ -356,7 +356,7 @@ public class TrailParticles {
 
         // bettercombat:two_handed_slash_vertical_right
         map.put(NAMESPACE + ":two_handed_slash_vertical_right", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash90",
                         0.0F,
                         -0.1F,
@@ -369,7 +369,7 @@ public class TrailParticles {
 
         // bettercombat:two_handed_slash_vertical_left
         map.put(NAMESPACE + ":two_handed_slash_vertical_left", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash90",
                         0.0F,
                         -0.1F,
@@ -382,7 +382,7 @@ public class TrailParticles {
 
         // bettercombat:two_handed_slam
         map.put(NAMESPACE + ":two_handed_slam", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         0.1F,
                         -0.1F,
@@ -395,7 +395,7 @@ public class TrailParticles {
 
         // bettercombat:two_handed_slam_heavy
         map.put(NAMESPACE + ":two_handed_slam_heavy", List.of(
-                new ParticleSettings(
+                new ParticlePlacement(
                         "slash180",
                         0.1F,
                         -0.1F,

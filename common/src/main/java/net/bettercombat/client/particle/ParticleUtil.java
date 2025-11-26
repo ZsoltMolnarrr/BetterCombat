@@ -2,7 +2,7 @@ package net.bettercombat.client.particle;
 
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.AttackHand;
-import net.bettercombat.api.fx.ParticleSettings;
+import net.bettercombat.api.fx.ParticlePlacement;
 import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.logic.WeaponRegistry;
@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import java.util.List;
 
 public class ParticleUtil {
-    public static void spawnParticles(ClientPlayerEntity player, AttackHand hand, List<ParticleSettings> settingsList, float weaponRange, TrailAppearance appearance) {
+    public static void spawnParticles(ClientPlayerEntity player, AttackHand hand, List<ParticlePlacement> settingsList, float weaponRange, TrailAppearance appearance) {
         if (!BetterCombatClientMod.config.isShowingWeaponTrails) {
             return;
         }
@@ -78,7 +78,7 @@ public class ParticleUtil {
         }
     }
 
-    public static List<ParticleSettings> trailParticlesFromAttack(AttackHand attackHand) {
+    public static List<ParticlePlacement> trailParticlesFromAttack(AttackHand attackHand) {
         if (!attackHand.attack().trailParticles().isEmpty()) {
             return attackHand.attack().trailParticles();
         }

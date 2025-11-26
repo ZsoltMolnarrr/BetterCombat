@@ -1,8 +1,7 @@
 package net.bettercombat.api;
 
 import net.bettercombat.api.fx.ConditionalTrailAppearance;
-import net.bettercombat.api.fx.TrailAppearance;
-import net.bettercombat.api.fx.ParticleSettings;
+import net.bettercombat.api.fx.ParticlePlacement;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -202,7 +201,7 @@ public final class WeaponAttributes {
          */
         private Sound impact_sound = null;
 
-        private List<ParticleSettings> trail_particles = List.of();
+        private List<ParticlePlacement> trail_particles = List.of();
 
         /**
          * This empty initializer is needed for GSON, to support parsing over default values
@@ -220,7 +219,7 @@ public final class WeaponAttributes {
                 String animation,
                 Sound swing_sound,
                 Sound impact_sound,
-                List<ParticleSettings> trail_particles
+                List<ParticlePlacement> trail_particles
         ) {
             this.conditions = conditions;
             this.hitbox = hitbox;
@@ -276,7 +275,7 @@ public final class WeaponAttributes {
             return swing_sound;
         }
 
-        public List<ParticleSettings> trailParticles() {
+        public List<ParticlePlacement> trailParticles() {
             return trail_particles;
         }
 
