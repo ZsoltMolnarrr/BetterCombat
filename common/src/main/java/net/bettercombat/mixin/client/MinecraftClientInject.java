@@ -12,7 +12,7 @@ import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.Keybindings;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.collision.TargetFinder;
-import net.bettercombat.client.particle.ParticleUtil;
+import net.bettercombat.client.particle.SlashParticleUtil;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.logic.*;
 import net.bettercombat.network.Packets;
@@ -244,15 +244,13 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         var animatedHand = AnimatedHand.from(isOffHand, attributes.isTwoHanded());
         ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
 
-
-        var particles = attackHand.attack().trailParticles();
-//        var range = PlayerAttackHelper.getRangeForItem(player, attackHand.itemStack());
-//        range *= attackHand.attack().rangeMultiplier();
-//        ParticleUtil.spawnParticles(player, attackHand, new Packets.SwingParticles(particles), (float)range, false, "FFFFFF");
-
+        var particles = SlashParticleUtil.trailParticlesFromAttack(attackHand);
+        var appearance = SlashParticleUtil.appearanceFromItemStack(attackHand.itemStack());
         var packet = new Packets.AttackAnimation(
                 player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate,
-                Packets.SwingParticles.EMPTY // FIXME
+                (float)PlayerAttackHelper.getStaticRange(player, attackHand.itemStack()),
+                upswingTicks,
+                new Packets.SwingParticles(particles, appearance)
         );
         Platform.networkC2S_Send(packet);
         BetterCombatClientEvents.ATTACK_START.invoke(handler -> {
@@ -408,9 +406,9 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
             handler.onPlayerAttackStart(player, hand, targets, cursorTarget);
         });
 
-        var particles = ParticleUtil.trailParticlesFromAttack(hand);
-        var appearance = ParticleUtil.appearanceFromItemStack(hand.itemStack());
-        ParticleUtil.spawnParticles(player, hand, particles, (float)PlayerAttackHelper.getStaticRange(player, hand.itemStack()), appearance);
+        var particles = SlashParticleUtil.trailParticlesFromAttack(hand);
+        var appearance = SlashParticleUtil.appearanceFromItemStack(hand.itemStack());
+        SlashParticleUtil.spawnParticles(player, hand.isOffHand(), (float)PlayerAttackHelper.getStaticRange(player, hand.itemStack()), particles, appearance);
 
         setComboCount(getComboCount() + 1);
         if (!hand.isOffHand()) {

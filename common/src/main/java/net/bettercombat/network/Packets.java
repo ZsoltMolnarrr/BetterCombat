@@ -68,14 +68,14 @@ public class Packets {
     public record SwingParticles(List<ParticlePlacement> particles, TrailAppearance appearance) {
         public static final SwingParticles EMPTY = new SwingParticles(List.of(), new TrailAppearance());
     }
-    public record AttackAnimation(int playerId, AnimatedHand animatedHand, String animationName, float length, float upswing, SwingParticles particles) implements CustomPayload {
+    public record AttackAnimation(int playerId, AnimatedHand animatedHand, String animationName, float length, float upswing, float weaponRange, int upswingTicks, SwingParticles particles) implements CustomPayload {
         public static Identifier ID = Identifier.of(BetterCombatMod.ID, "attack_animation");
         public static final CustomPayload.Id<AttackAnimation> PACKET_ID = new CustomPayload.Id<>(ID);
         public static final PacketCodec<RegistryByteBuf, AttackAnimation> CODEC = PacketCodec.of(AttackAnimation::write, AttackAnimation::read);
 
         private static final Gson gson = new Gson();
         public static String StopSymbol = "!STOP!";
-        public static AttackAnimation stop(int playerId, int length) { return new AttackAnimation(playerId, AnimatedHand.MAIN_HAND, StopSymbol, length, 0, SwingParticles.EMPTY); }
+        public static AttackAnimation stop(int playerId, int length) { return new AttackAnimation(playerId, AnimatedHand.MAIN_HAND, StopSymbol, length, 0, 0, 0, SwingParticles.EMPTY); }
 
         public void write(PacketByteBuf buffer) {
             buffer.writeInt(playerId);
@@ -83,6 +83,8 @@ public class Packets {
             buffer.writeString(animationName);
             buffer.writeFloat(length);
             buffer.writeFloat(upswing);
+            buffer.writeFloat(weaponRange);
+            buffer.writeInt(upswingTicks);
             // Write list of particles
             buffer.writeString(gson.toJson(particles));
         }
@@ -93,9 +95,11 @@ public class Packets {
             String animationName = buffer.readString();
             float length = buffer.readFloat();
             float upswing = buffer.readFloat();
+            float weaponRange = buffer.readFloat();
+            int upswingTicks = buffer.readInt();
             var json = buffer.readString();
             var particles = gson.fromJson(json, SwingParticles.class);
-            return new AttackAnimation(playerId, animatedHand, animationName, length, upswing, particles);
+            return new AttackAnimation(playerId, animatedHand, animationName, length, upswing, weaponRange, upswingTicks, particles);
         }
 
         @Override

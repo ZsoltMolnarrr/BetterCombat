@@ -3,6 +3,7 @@ package net.bettercombat.client;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
+import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.minecraft.client.MinecraftClient;
@@ -29,10 +30,18 @@ public class ClientNetwork {
             if (entity instanceof PlayerEntity player
                     // Avoid local playback, unless replay mod is loaded
                     && (player != client.player || Platform.isModLoaded("replaymod")) ) {
+                var animatable = (PlayerAttackAnimatable) entity;
                 if (packet.animationName().equals(Packets.AttackAnimation.StopSymbol)) {
-                    ((PlayerAttackAnimatable) entity).stopAttackAnimation(packet.length());
+                    animatable.stopAttackAnimation(packet.length());
                 } else {
-                    ((PlayerAttackAnimatable) entity).playAttackAnimation(packet.animationName(), packet.animatedHand(), packet.length(), packet.upswing());
+                    animatable.playAttackAnimation(packet.animationName(), packet.animatedHand(), packet.length(), packet.upswing());
+                    animatable.playAttackParticles(
+                            packet.animatedHand() == AnimatedHand.OFF_HAND,
+                            packet.weaponRange(),
+                            packet.upswingTicks(),
+                            packet.particles().particles(),
+                            packet.particles().appearance()
+                    );
                 }
             }
         });

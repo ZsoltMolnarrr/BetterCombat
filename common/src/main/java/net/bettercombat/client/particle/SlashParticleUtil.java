@@ -7,14 +7,30 @@ import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.particle.SlashParticleEffect;
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
 
-public class ParticleUtil {
-    public static void spawnParticles(ClientPlayerEntity player, AttackHand hand, List<ParticlePlacement> settingsList, float weaponRange, TrailAppearance appearance) {
+public class SlashParticleUtil {
+    public record SpawnArgs(
+            AbstractClientPlayerEntity player,
+            boolean isOffhand,
+            float weaponRange,
+            List<ParticlePlacement> settingsList,
+            TrailAppearance appearance
+    ) {}
+    public record ScheduledSpawnArgs(
+            SpawnArgs args,
+            int time
+    ) {}
+
+    public static void spawnParticles(SpawnArgs args) {
+        spawnParticles(args.player, args.isOffhand, args.weaponRange, args.settingsList, args.appearance);
+    }
+
+    public static void spawnParticles(AbstractClientPlayerEntity player, boolean isOffhand, float weaponRange, List<ParticlePlacement> settingsList, TrailAppearance appearance) {
         if (!BetterCombatClientMod.config.isShowingWeaponTrails) {
             return;
         }
@@ -34,7 +50,6 @@ public class ParticleUtil {
             var offsetY = settings.y_addition();
             var offsetZ = settings.z_addition();
 
-            boolean isOffhand = hand.isOffHand();
             float offhandRoll = isOffhand ? 180.0F : 0.0F;
             float offhandFlip = isOffhand ? -1.0F : 1.0F;
             float yaw = player.getYaw();

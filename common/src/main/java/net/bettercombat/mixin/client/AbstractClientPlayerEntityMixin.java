@@ -15,12 +15,15 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
+import net.bettercombat.api.fx.ParticlePlacement;
+import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
 import net.bettercombat.client.animation.modifier.HarshAdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 import net.bettercombat.client.compat.FirstPersonAnimationCompatibility;
+import net.bettercombat.client.particle.SlashParticleUtil;
 import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.mixin.player.LivingEntityAccessor;
@@ -34,6 +37,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -75,6 +79,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var hasActiveAttackAnimation = attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
         var mainHandStack = player.getMainHandStack();
         // No pose during special activities
+
+        if (scheduledParticles != null && scheduledParticles.time() == player.age) {
+            SlashParticleUtil.spawnParticles(scheduledParticles.args());
+            scheduledParticles = null;
+        }
 
         if (player.handSwinging // Official mapping name: `isHandBusy`
                 || player.isSwimming()
@@ -168,6 +177,24 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Nullable private SlashParticleUtil.ScheduledSpawnArgs scheduledParticles = null;
+
+    @Override
+    public void playAttackParticles(boolean isOffHand, float weaponRange, int delay, List<ParticlePlacement> particles, TrailAppearance appearance) {
+        var player = (AbstractClientPlayerEntity)(Object)this;
+        var spawn = new SlashParticleUtil.SpawnArgs(
+                player,
+                isOffHand,
+                weaponRange,
+                particles,
+                appearance
+        );
+        scheduledParticles = new SlashParticleUtil.ScheduledSpawnArgs(
+                spawn,
+                player.age + delay
+        );
     }
 
     private AdjustmentModifier createAttackAdjustment() {
@@ -316,6 +343,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Override
     public void stopAttackAnimation(float length) {
         IAnimation currentAnimation = attackAnimation.base.getAnimation();
+        scheduledParticles = null;
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
             var fadeOut = Math.round(length);
             attackAnimation.adjustmentModifier.fadeOut(fadeOut);
