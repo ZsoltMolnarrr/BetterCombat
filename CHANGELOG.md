@@ -1,5 +1,8 @@
 # 2.3.0
 
+- Add weapon trail particles, huge thanks to @Malfu, for developing the concept and providing the assets
+  - Defaults are configurable
+  - Supports weapon attribute specific configuration
 - Add new attack specific fields
   - `range_multiplier` - Multiplies the base attack range for a specific weapon swing (1.0 = no change)
   - `movement_speed_multiplier` - Multiplies movement speed while for a specific weapon swing (1.0 = no change)
