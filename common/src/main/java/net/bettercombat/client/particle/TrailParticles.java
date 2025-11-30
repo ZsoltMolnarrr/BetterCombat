@@ -148,7 +148,7 @@ public class TrailParticles {
         // bettercombat:one_handed_slam
         map.put(NAMESPACE + ":one_handed_slam", List.of(
                 new ParticlePlacement(
-                        "slash180",
+                        "slash90",
                         0.05F,
                         -0.1F,
                         0.0F,

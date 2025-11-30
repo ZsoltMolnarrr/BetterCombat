@@ -19,7 +19,6 @@ import org.joml.Vector4f;
 @Environment(EnvType.CLIENT)
 public class SlashParticle extends SpriteBillboardParticle {
     private final SpriteProvider spriteProvider;
-    private final long color_rgba;
     public final float modelOffset;
     private final float pitch;
     private final float yaw;
@@ -30,7 +29,6 @@ public class SlashParticle extends SpriteBillboardParticle {
     public SlashParticle(ClientWorld world, double x, double y, double z, float scale, float pitch, float yaw, float localYaw, float roll, boolean light, long color_rgba, SpriteProvider spriteProvider) {
         super(world, x, y, z, 0.0, 0.0, 0.0);
         this.spriteProvider = spriteProvider;
-        this.color_rgba = color_rgba;
         this.light = light;
         this.pitch = pitch;
         this.yaw = yaw;
