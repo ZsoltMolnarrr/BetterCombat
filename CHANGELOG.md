@@ -1,6 +1,7 @@
 # 1.9.0
 
 - Adjust API requirement to support Forge and NeoForge simultaneously #414
+- Backport weapon registry compression #516
 
 # 1.8.6
 

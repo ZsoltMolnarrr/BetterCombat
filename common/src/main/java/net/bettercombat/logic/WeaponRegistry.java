@@ -8,6 +8,7 @@ import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttributesContainer;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.WeaponAttributesHelper;
+import net.bettercombat.utils.CompressionHelper;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -141,29 +142,56 @@ public class WeaponRegistry {
             LOGGER.info("Weapon Attribute registry loaded: " + json);
         }
 
+        // Check if compression is enabled
+        boolean compressionEnabled = BetterCombat.config.weapon_registry_compression;
+        int originalSize = json.length();
+
+        if (compressionEnabled) {
+            json = CompressionHelper.gzipCompress(json);
+        }
+
         List<String> chunks = new ArrayList<>();
         var chunkSize = 10000;
         for (int i = 0; i < json.length(); i += chunkSize) {
             chunks.add(json.substring(i, Math.min(json.length(), i + chunkSize)));
         }
 
+        // Write compression flag first
+        buffer.writeBoolean(compressionEnabled);
         buffer.writeInt(chunks.size());
         for (var chunk: chunks) {
             buffer.writeString(chunk);
         }
 
-        LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes()
-                + " bytes (in " + chunks.size() + " string chunks with the size of "  + chunkSize + ")");
+        if (compressionEnabled) {
+            LOGGER.info("Encoded Weapon Attribute registry size: " + originalSize + " bytes (uncompressed), "
+                    + json.length() + " bytes (compressed), compression ratio: "
+                    + String.format("%.1f%%", (1.0 - (double)json.length() / originalSize) * 100)
+                    + " (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
+        } else {
+            LOGGER.info("Encoded Weapon Attribute registry size (with package overhead): " + buffer.readableBytes()
+                    + " bytes (in " + chunks.size() + " string chunks with the size of " + chunkSize + ")");
+        }
         encodedRegistrations = buffer;
     }
 
     public static void decodeRegistry(PacketByteBuf buffer) {
+        // Read compression flag first
+        boolean compressed = buffer.readBoolean();
         var chunkCount = buffer.readInt();
         String json = "";
         for (int i = 0; i < chunkCount; ++i) {
             json = json.concat(buffer.readString());
         }
-        LOGGER.info("Decoded Weapon Attribute registry in " + chunkCount + " string chunks");
+
+        // Decompress if needed
+        if (compressed) {
+            json = CompressionHelper.gzipDecompress(json);
+            LOGGER.info("Decoded and decompressed Weapon Attribute registry in " + chunkCount + " string chunks");
+        } else {
+            LOGGER.info("Decoded Weapon Attribute registry in " + chunkCount + " string chunks");
+        }
+
         if (BetterCombat.config.weapon_registry_logging) {
             LOGGER.info("Weapon Attribute registry received: " + json);
         }
