@@ -1,3 +1,7 @@
+# 1.9.0
+
+- Adjust API requirement to support Forge and NeoForge simultaneously #414
+
 # 1.8.6
 
 - Fix fallback compat causing some crashes
