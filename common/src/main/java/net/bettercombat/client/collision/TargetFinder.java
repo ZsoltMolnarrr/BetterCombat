@@ -3,8 +3,6 @@ package net.bettercombat.client.collision;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.WeaponAttributes.Attack;
 import net.bettercombat.api.client.AttackRangeExtensions;
-import net.bettercombat.compatibility.CompatibilityFlags;
-import net.bettercombat.compatibility.PehkuiHelper;
 import net.bettercombat.logic.TargetHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;

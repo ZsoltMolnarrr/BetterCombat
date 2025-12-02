@@ -19,7 +19,7 @@ import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
 import net.bettercombat.client.animation.modifier.HarshAdjustmentModifier;
 import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
-import net.bettercombat.compatibility.CompatibilityFlags;
+import net.bettercombat.client.compat.FirstPersonAnimationCompatibility;
 import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
@@ -149,9 +149,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
             var player = new CustomAnimationPlayer(copy.build(), 0);
             player.setFirstPersonMode(
-                    CompatibilityFlags.firstPersonRender() ?
-                    FirstPersonMode.THIRD_PERSON_MODEL :
-                    FirstPersonMode.NONE);
+                    FirstPersonAnimationCompatibility.firstPersonMode()
+            );
             player.setFirstPersonConfiguration(firstPersonConfig(animatedHand));
             attackAnimation.base.replaceAnimationWithFade(
                     AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),

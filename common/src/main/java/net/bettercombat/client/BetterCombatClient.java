@@ -7,6 +7,7 @@ import net.bettercombat.BetterCombat;
 import net.bettercombat.Platform;
 import net.bettercombat.PlatformClient;
 import net.bettercombat.client.animation.AnimationRegistry;
+import net.bettercombat.compatibility.CompatibilityFlags;
 import net.bettercombat.config.ClientConfig;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.fabricmc.api.ClientModInitializer;
@@ -26,6 +27,8 @@ public class BetterCombatClient implements ClientModInitializer {
         AutoConfig.register(ClientConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
         // Intuitive way to load a config :)
         config = AutoConfig.getConfigHolder(ClientConfigWrapper.class).getConfig().client;
+
+        CompatibilityFlags.initialize();
 
         ClientNetwork.initializeHandlers();
         WeaponAttributeTooltip.initialize();

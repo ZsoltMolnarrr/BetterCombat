@@ -36,4 +36,6 @@ public class ClientConfig implements ConfigData {
     public String swingThruGrassBlacklist = "farmersdelight";
     @ConfigEntry.Gui.Tooltip
     public String mineWithWeaponBlacklist = "";
+    @ConfigEntry.Gui.Tooltip
+    public TriStateAuto firstPersonAnimations = TriStateAuto.AUTO;
 }

@@ -36,5 +36,7 @@
   "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist" : "Mine with weapon blacklist",
   "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist.@Tooltip" : "Weapons with an ID that matches this regex will never be used to harvest blocks",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Debug hitbox",
-  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Show weapon hitbox when entity hitboxes are displayed"
+  "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Show weapon hitbox when entity hitboxes are displayed",
+  "text.autoconfig.bettercombat.option.client.firstPersonAnimations" : "First-person player animations",
+  "text.autoconfig.bettercombat.option.client.firstPersonAnimations.@Tooltip" : "Attack player animations to be shown. Only recommended to change if custom camera mods in use."
 }
