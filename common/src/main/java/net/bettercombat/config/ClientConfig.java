@@ -22,11 +22,13 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public int hudHighlightColor = 0xFF0000;
     @ConfigEntry.Gui.Tooltip
+    public boolean isShowingWeaponTrails = true;
+    @ConfigEntry.Gui.Tooltip
     public boolean isShowingArmsInFirstPerson = false;
     @ConfigEntry.Gui.Tooltip
     public boolean isShowingOtherHandFirstPerson = true;
     @ConfigEntry.Gui.Tooltip
-    public boolean isSweepingParticleEnabled = true;
+    public boolean isSweepingParticleEnabled = false;
     @ConfigEntry.Gui.Tooltip
     public boolean isTooltipAttackRangeEnabled = true;
     @ConfigEntry.Gui.Tooltip

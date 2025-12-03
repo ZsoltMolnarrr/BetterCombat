@@ -8,7 +8,7 @@ modId = "bettercombat"
 version = "${version}"
 displayName = "Better Combat"
 authors = "Daedelus"
-credits="KosmX, Gecko"
+credits="Malfu, KosmX, Gecko"
 description = '''
 Easy, spectacular and fun melee combat system from Minecraft Dungeons.
 '''

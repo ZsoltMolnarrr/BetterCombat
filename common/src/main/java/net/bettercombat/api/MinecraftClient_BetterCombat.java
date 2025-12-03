@@ -29,5 +29,14 @@ public interface MinecraftClient_BetterCombat {
     default boolean isWeaponSwingInProgress() {
         return getSwingProgress() < 1F;
     }
+    @Nullable AttackHand getCurrentAttackHand();
+    default WeaponAttributes.Attack getCurrentAttack() {
+        var attackHand = getCurrentAttackHand();
+        if (attackHand == null) {
+            return null;
+        }
+        return attackHand.attack();
+    }
+
     void cancelUpswing();
 }
