@@ -21,6 +21,8 @@
   "text.autoconfig.bettercombat.option.client.isHighlightCrosshairEnabled.@Tooltip": "Resalta la mira si los enemigos están lo suficientemente cerca para atacar.\n¡ADVERTENCIA! Activarlo puede reducir mucho los FPS.",
   "text.autoconfig.bettercombat.option.client.hudHighlightColor": "Color de resaltado",
   "text.autoconfig.bettercombat.option.client.hudHighlightColor.@Tooltip": "Color que se aplica a los elementos del HUD si es necesario.",
+  "text.autoconfig.bettercombat.option.client.isShowingWeaponTrails": "Mostrar estelas de armas al atacar",
+  "text.autoconfig.bettercombat.option.client.isShowingWeaponTrails.@Tooltip": "Renderiza partículas de estela de arma en los ataques desde todas las perspectivas",
   "text.autoconfig.bettercombat.option.client.isShowingArmsInFirstPerson": "Mostrar brazos en primera persona",
   "text.autoconfig.bettercombat.option.client.isShowingArmsInFirstPerson.@Tooltip": "Renderizar brazos para las animaciones de ataque en vista en primera persona",
   "text.autoconfig.bettercombat.option.client.isShowingOtherHandFirstPerson": "Mostrar mano inactiva en primera persona",
