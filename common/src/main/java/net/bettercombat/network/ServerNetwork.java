@@ -22,7 +22,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.SwordItem;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
@@ -81,7 +80,7 @@ public class ServerNetwork {
             LOGGER.error("Combo count: " + request.comboCount() + " is dual wielding: " + PlayerAttackHelper.isDualWielding(player));
             LOGGER.error("Main-hand stack: " + player.getMainHandStack());
             LOGGER.error("Off-hand stack: " + player.getOffHandStack());
-            LOGGER.error("Selected slot server: " + player.getInventory().selectedSlot + " | client: " + request.selectedSlot());
+            LOGGER.error("Selected slot server: " + player.getInventory().getSelectedSlot() + " | client: " + request.selectedSlot());
             return;
         }
         final var attack = hand.attack();
@@ -115,8 +114,7 @@ public class ServerNetwork {
 
                         damageBaseMultiplier += multiplier + (BetterCombatMod.config.reworked_sweeping_maximum_damage_penalty * sweepRatio);
 
-                        boolean playEffects = !BetterCombatMod.config.reworked_sweeping_sound_and_particles_only_for_swords
-                                || (hand.itemStack().getItem() instanceof SwordItem);
+                        boolean playEffects = !BetterCombatMod.config.reworked_sweeping_sound_and_particles_only_for_swords;
                         if (BetterCombatMod.config.reworked_sweeping_plays_sound && playEffects) {
                             world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0f, 1.0f);
                         }
@@ -159,7 +157,7 @@ public class ServerNetwork {
                     Entity entity = world.getEntityById(entityId);
                     if (entity == null) {
                         isBossPart = true;
-                        entity = world.getDragonPart(entityId); // Get LivingEntity or DragonPart
+                        entity = world.getEntityOrDragonPart(entityId); // Get LivingEntity or DragonPart
                     }
 
                     if (entity == null

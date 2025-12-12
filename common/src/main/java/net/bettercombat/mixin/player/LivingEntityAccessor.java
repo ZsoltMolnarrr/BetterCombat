@@ -11,6 +11,6 @@ public interface LivingEntityAccessor {
     int getLastAttackedTicks();
     @Accessor("lastAttackedTicks")
     void setLastAttackedTicks(int lastAttackedTicks);
-    @Invoker("turnHead")
-    float invokeTurnHead(float bodyRotation, float headRotation);
+//    @Invoker("turnHead")
+//    float invokeTurnHead(float bodyRotation, float headRotation);
 }
