@@ -79,7 +79,8 @@ public class SlashParticle extends SpriteBillboardParticle {
         return 0.0F;
     }
 
-    public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
+    @Override
+    public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
         Vec3d cameraPos = camera.getPos();
         float x = (float)(this.prevPosX - cameraPos.getX());
         float y = (float)(this.prevPosY - cameraPos.getY());
