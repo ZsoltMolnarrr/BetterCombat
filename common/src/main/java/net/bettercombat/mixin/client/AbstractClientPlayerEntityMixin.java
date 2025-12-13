@@ -7,6 +7,7 @@ import com.zigythebird.playeranimcore.animation.ExtraAnimationData;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
+import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.api.fx.ParticlePlacement;
 import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.client.BetterCombatClientMod;
@@ -15,7 +16,9 @@ import net.bettercombat.client.animation.*;
 import net.bettercombat.client.animation.TransmissionSpeedModifier;
 import net.bettercombat.client.particle.SlashParticleUtil;
 import net.bettercombat.logic.AnimatedHand;
+import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.mixin.player.LivingEntityAccessor;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.world.ClientWorld;
@@ -27,6 +30,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -35,11 +39,11 @@ import java.util.List;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
-     private AttackAnimationStack attackAnimation;
-//    private final PoseSubStack mainHandBodyPose = new PoseSubStack(createPoseAdjustment(), true, true);
-//    private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
-//    private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
-//    private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
+    private AttackAnimationStack attackAnimation;
+    private PoseAnimationStack mainHandBodyPose;
+    private PoseAnimationStack mainHandItemPose;
+    private PoseAnimationStack offHandBodyPose;
+    private PoseAnimationStack offHandItemPose;
 
     public AbstractClientPlayerEntityMixin(World world, GameProfile profile) {
         super(world, profile);
@@ -48,19 +52,13 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Inject(method = "<init>", at = @At("TAIL"))
     private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
         var player = (AbstractClientPlayerEntity) ((Object) this);
-        attackAnimation = (AttackAnimationStack) PlayerAnimationAccess.getPlayerAnimationLayer(player, AttackAnimationStack.ID);
-//        var manager = PlayerAnimationAccess.getPlayerAnimManager(player);
-//        manager.addAnimLayer(2000, attackAnimation.base);
 
-//        var stack = ((IAnimatedPlayer) this).playerAnimator$getAnimationStack();
-//        stack.addAnimLayer(1, offHandItemPose.base);
-//        stack.addAnimLayer(2, offHandBodyPose.base);
-//        stack.addAnimLayer(3, mainHandItemPose.base);
-//        stack.addAnimLayer(4, mainHandBodyPose.base);
-//        stack.addAnimLayer(2000, attackAnimation.base);
-//
-//        mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
-//        offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
+        // Initialize attack animation
+        attackAnimation = (AttackAnimationStack) PlayerAnimationAccess.getPlayerAnimationLayer(player, AttackAnimationStack.ID);
+        mainHandBodyPose = (PoseAnimationStack) PlayerAnimationAccess.getPlayerAnimationLayer(player, PoseAnimationStack.MAIN_HAND_BODY_ID);
+        mainHandItemPose = (PoseAnimationStack) PlayerAnimationAccess.getPlayerAnimationLayer(player, PoseAnimationStack.MAIN_HAND_ITEM_ID);
+        offHandBodyPose = (PoseAnimationStack) PlayerAnimationAccess.getPlayerAnimationLayer(player, PoseAnimationStack.OFF_HAND_BODY_ID);
+        offHandItemPose = (PoseAnimationStack) PlayerAnimationAccess.getPlayerAnimationLayer(player, PoseAnimationStack.OFF_HAND_ITEM_ID);
     }
 
     @Override
@@ -84,53 +82,57 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 || player.isGliding()
                 || Platform.isCastingSpell(player)
                 || CrossbowItem.isCharged(mainHandStack)) {
-//            mainHandBodyPose.setPose(null, isLeftHanded);
-//            mainHandItemPose.setPose(null, isLeftHanded);
-//            offHandBodyPose.setPose(null, isLeftHanded);
-//            offHandItemPose.setPose(null, isLeftHanded);
+            // Clear all poses during special activities
+            mainHandBodyPose.setPose(null, isLeftHanded);
+            mainHandItemPose.setPose(null, isLeftHanded);
+            offHandBodyPose.setPose(null, isLeftHanded);
+            offHandItemPose.setPose(null, isLeftHanded);
             return;
         }
-//
-//        // Restore auto body rotation upon swing - Fix issue #11
-//
+
+        // Restore auto body rotation upon swing - Fix issue #11
         if (hasActiveAttackAnimation) {
             ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw());
         }
-//
-//        // Pose
-//
-//        var betterCombatPlayer = (EntityPlayer_BetterCombat)player;
-//
-//        KeyframeAnimation newMainHandPose = null;
-//        KeyframeAnimation newOffHandPose = null;
-//        if (MinecraftClient.getInstance().player == player) { // Logic on local player too for improved responsiveness
-//            var pose = PlayerAttackHelper.poseForPlayer(player);
-//            if (!pose.base().isEmpty()) {
-//                newMainHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(pose.base()));
-//            }
-//            if (!pose.offHand().isEmpty()) {
-//                newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(pose.offHand()));
-//            }
-//        } else {
-//            if (betterCombatPlayer.getMainHandIdleAnimation() != null && !betterCombatPlayer.getMainHandIdleAnimation().isEmpty()) {
-//                newMainHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getMainHandIdleAnimation()));
-//            }
-//            if (betterCombatPlayer.getOffHandIdleAnimation() != null && !betterCombatPlayer.getOffHandIdleAnimation().isEmpty()) {
-//                newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getOffHandIdleAnimation()));
-//            }
-//        }
-//
-//        mainHandItemPose.setPose(newMainHandPose, isLeftHanded);
-//        offHandItemPose.setPose(newOffHandPose, isLeftHanded);
-//
-//        if (!PlayerAttackHelper.isTwoHandedWielding(player)) {
-//            if (this.isWalking() || this.isSneaking()) {
-//                newMainHandPose = null;
-//                newOffHandPose = null;
-//            }
-//        }
-//        mainHandBodyPose.setPose(newMainHandPose, isLeftHanded);
-//        offHandBodyPose.setPose(newOffHandPose, isLeftHanded);
+
+        // Pose animations
+        var betterCombatPlayer = (EntityPlayer_BetterCombat)player;
+
+        String newMainHandPoseId = null;
+        String newOffHandPoseId = null;
+
+        if (MinecraftClient.getInstance().player == player) {
+            // Logic on local player too for improved responsiveness
+            var pose = PlayerAttackHelper.poseForPlayer(player);
+            if (!pose.base().isEmpty()) {
+                newMainHandPoseId = pose.base();
+            }
+            if (!pose.offHand().isEmpty()) {
+                newOffHandPoseId = pose.offHand();
+            }
+        } else {
+            // For other players, use synced animation IDs
+            if (betterCombatPlayer.getMainHandIdleAnimation() != null && !betterCombatPlayer.getMainHandIdleAnimation().isEmpty()) {
+                newMainHandPoseId = betterCombatPlayer.getMainHandIdleAnimation();
+            }
+            if (betterCombatPlayer.getOffHandIdleAnimation() != null && !betterCombatPlayer.getOffHandIdleAnimation().isEmpty()) {
+                newOffHandPoseId = betterCombatPlayer.getOffHandIdleAnimation();
+            }
+        }
+
+        // Update item poses (always active when pose is set)
+        mainHandItemPose.setPose(newMainHandPoseId, isLeftHanded);
+        offHandItemPose.setPose(newOffHandPoseId, isLeftHanded);
+
+        // Update body poses (disabled during walking/sneaking for non-two-handed weapons)
+        if (!PlayerAttackHelper.isTwoHandedWielding(player)) {
+            if (this.isWalking() || this.isSneaking()) {
+                newMainHandPoseId = null;
+                newOffHandPoseId = null;
+            }
+        }
+        mainHandBodyPose.setPose(newMainHandPoseId, isLeftHanded);
+        offHandBodyPose.setPose(newOffHandPoseId, isLeftHanded);
     }
 
     @Override
@@ -170,37 +172,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                     ));
 
             controller.triggerAnimation(animation);
-
-//            KeyframeAnimation animation = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(name));
-//            var copy = animation.mutableCopy();
-//            updateAnimationByCurrentActivity(copy);
-//            copy.torso.fullyEnablePart(true);
-//            copy.head.pitch.setEnabled(false);
-//            var speed = ((float)animation.endTick) / length;
-//            var mirror = animatedHand.isOffHand();
-//            if(isLeftHanded()) {
-//                mirror = !mirror;
-//            }
-//
-//            var fadeIn = copy.beginTick;
-//            float upswingSpeed = speed / BetterCombatMod.config.getUpswingMultiplier();
-//            float downwindSpeed = (float) (speed *
-//                    MathHelper.lerp(Math.max(BetterCombatMod.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
-//                    (1F - upswing),                     // Use this value at config `0.5`
-//                    upswing / (1F - upswing)));         // Use this value at config `1.0`
-//            attackAnimation.speed.set(upswingSpeed,
-//                    List.of(
-//                            new TransmissionSpeedModifier.Gear(length * upswing, downwindSpeed),
-//                            new TransmissionSpeedModifier.Gear(length, speed)
-//                    ));
-//            attackAnimation.mirror.setEnabled(mirror);
-//
-//            var player = new CustomAnimationPlayer(copy.build(), 0);
-//            player.setFirstPersonMode(FirstPersonAnimationCompatibility.firstPersonMode());
-//            player.setFirstPersonConfiguration(firstPersonConfig(animatedHand));
-//            attackAnimation.base.replaceAnimationWithFade(
-//                    AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
-//                    player);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -231,31 +202,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private boolean isLeg(String partName) {
         return partName == EntityModelPartNames.RIGHT_LEG || partName == EntityModelPartNames.LEFT_LEG;
     }
-//
-//    private AdjustmentModifier createPoseAdjustment() {
-//        var player = (PlayerEntity)this;
-//        return new HarshAdjustmentModifier((partName) -> {
-//            float rotationX = 0;
-//            float rotationY = 0;
-//            float rotationZ = 0;
-//            float offsetX = 0;
-//            float offsetY = 0;
-//            float offsetZ = 0;
-//
-//            if (!FirstPersonMode.isFirstPersonPass()) {
-//                if (isArm(partName)) {
-//                    if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isInSneakingPose()) {
-//                        offsetY += 3;
-//                    }
-//                } else return Optional.empty();
-//            }
-//
-//            return Optional.of(new AdjustmentModifier.PartModifier(
-//                    new Vec3f(rotationX, rotationY, rotationZ),
-//                    new Vec3f(offsetX, offsetY, offsetZ))
-//            );
-//        });
-//    }
+
 //
 //    private void updateAnimationByCurrentActivity(KeyframeAnimation.AnimationBuilder animation) {
 //        var pose = getPose();

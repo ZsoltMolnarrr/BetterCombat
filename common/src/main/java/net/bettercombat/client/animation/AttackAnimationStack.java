@@ -93,9 +93,9 @@ public class AttackAnimationStack extends PlayerAnimationController {
         });
     }
     private boolean isArm(String partName) {
-        return partName == EntityModelPartNames.RIGHT_ARM || partName == EntityModelPartNames.LEFT_ARM;
+        return partName.equals(EntityModelPartNames.RIGHT_ARM) || partName.equals(EntityModelPartNames.LEFT_ARM);
     }
     private boolean isLeg(String partName) {
-        return partName == EntityModelPartNames.RIGHT_LEG || partName == EntityModelPartNames.LEFT_LEG;
+        return partName.equals(EntityModelPartNames.RIGHT_LEG) || partName.equals(EntityModelPartNames.LEFT_LEG);
     }
 }
