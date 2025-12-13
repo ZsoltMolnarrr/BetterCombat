@@ -37,7 +37,7 @@
     "fabricloader": ">=0.14.0",
     "fabric-api": "*",
     "cloth-config": ">=11.0.0",
-    "playeranimator": ">=1.9.0"
+    "player_animation_library": "*"
   },
   "breaks": {
   },

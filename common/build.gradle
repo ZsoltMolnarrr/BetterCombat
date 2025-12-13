@@ -3,7 +3,11 @@ architectury {
 }
 
 repositories {
-    maven { url 'https://maven.kosmx.dev/' }
+    mavenCentral()
+    maven {
+        name = "RedlanceMinecraft"
+        url = "https://repo.redlance.org/public"
+    }
     maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.fabricmc.net/' }
     maven { url 'https://jitpack.io' }
@@ -39,7 +43,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
+    modApi "com.zigythebird.playeranim:PlayerAnimationLibFabric:${project.player_anim_version}"
     // modImplementation(files("../fabric/run/mods/dev/player-animation-lib-fabric-${project.player_anim_version}.jar"))
     implementation ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 

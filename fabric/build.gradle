@@ -28,7 +28,11 @@ configurations {
 }
 
 repositories {
-    maven { url 'https://maven.kosmx.dev/' }
+    mavenCentral()
+    maven {
+        name = "RedlanceMinecraft"
+        url = "https://repo.redlance.org/public"
+    }
     maven { url 'https://jitpack.io' }
     maven { url 'https://maven.shedaniel.me' }
     maven { url 'https://maven.terraformersmc.com' }
@@ -59,8 +63,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
-    // modImplementation(files("../fabric/run/mods/dev/player-animation-lib-fabric-${project.player_anim_version}.jar"))
+    modImplementation "com.zigythebird.playeranim:PlayerAnimationLibFabric:${project.player_anim_version}"
     modCompileOnly("maven.modrinth:spell-engine:${project.spell_engine_version}")
 }
 

@@ -29,7 +29,7 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.bettercombat]]
-modId="playeranimator"
+modId="player_animation_library"
 type = "required"
 versionRange="[1,)"
 ordering="AFTER"
