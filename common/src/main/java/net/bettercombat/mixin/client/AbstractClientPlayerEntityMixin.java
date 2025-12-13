@@ -20,7 +20,6 @@ import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.mixin.player.LivingEntityAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.CrossbowItem;
@@ -184,59 +183,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 player.age + delay
         );
     }
-
-    private boolean isArm(String partName) {
-        return partName == EntityModelPartNames.RIGHT_ARM || partName == EntityModelPartNames.LEFT_ARM;
-    }
-
-    private boolean isLeg(String partName) {
-        return partName == EntityModelPartNames.RIGHT_LEG || partName == EntityModelPartNames.LEFT_LEG;
-    }
-
-//
-//    private void updateAnimationByCurrentActivity(KeyframeAnimation.AnimationBuilder animation) {
-//        var pose = getPose();
-//        switch (pose) {
-//            case STANDING -> {
-//            }
-//            case GLIDING -> {
-//            }
-//            case SLEEPING -> {
-//            }
-//            case SWIMMING -> {
-//                StateCollectionHelper.configure(animation.rightLeg, false, false);
-//                StateCollectionHelper.configure(animation.leftLeg, false, false);
-//            }
-//            case SPIN_ATTACK -> {
-//            }
-//            case CROUCHING -> {
-//            }
-//            case LONG_JUMPING -> {
-//            }
-//            case DYING -> {
-//            }
-//			default -> {}
-//        }
-//        if (isMounting()) {
-//            StateCollectionHelper.configure(animation.rightLeg, false, false);
-//            StateCollectionHelper.configure(animation.leftLeg, false, false);
-//        } else {
-//            var legAnimationThreshold = BetterCombatClientMod.config.legAnimationThreshold;
-//            if (BetterCombatClientMod.config.legAnimationThreshold > 0) {
-//                var moving = this.isSprinting() || this.isWalking();
-////                var horizontalSpeed = this.getVelocity().horizontalLength();
-////                System.out.println("Horizontal speed: " + horizontalSpeed);
-//                if (moving
-//                        // && horizontalSpeed > legAnimationThreshold
-//                        && this.getVelocity().horizontalLengthSquared() > (legAnimationThreshold * legAnimationThreshold)
-//                ) {
-//                    StateCollectionHelper.configure(animation.rightLeg, false, false);
-//                    StateCollectionHelper.configure(animation.leftLeg, false, false);
-//                }
-//            }
-//        }
-//    }
-
 
     private boolean isWalking() {
         return !this.isDead() && (this.isSwimming() || this.getVelocity().horizontalLength() > 0.03);

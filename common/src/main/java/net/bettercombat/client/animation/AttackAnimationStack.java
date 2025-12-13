@@ -102,7 +102,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
 
             if (FirstPersonMode.isFirstPersonPass()) {
                 pitch = (float) Math.toRadians(pitch);
-                if (partName == EntityModelPartNames.BODY) {
+                if (partName.equals(EntityModelPartNames.BODY)) {
                     rotationX += pitch;
                     if (pitch < 0) {
                         var offset = Math.abs(Math.sin(pitch));
@@ -113,7 +113,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
                 } else return Optional.empty();
             } else {
                 pitch = (float) Math.toRadians(pitch);
-                if (partName == EntityModelPartNames.BODY) rotationX += pitch * 0.75F;
+                if (partName.equals(EntityModelPartNames.BODY)) rotationX += pitch * 0.75F;
                 else if (isArm(partName)) rotationX += pitch * 0.25F;
                 else if (isLeg(partName)) rotationX -= pitch * 0.75;
                 else return Optional.empty();

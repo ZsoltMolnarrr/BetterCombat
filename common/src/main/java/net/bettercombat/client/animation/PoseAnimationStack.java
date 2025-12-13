@@ -96,7 +96,7 @@ public class PoseAnimationStack extends PlayerAnimationController {
             if (!FirstPersonMode.isFirstPersonPass()) {
                 if (isArm(partName)) {
                     if (player.isInSneakingPose()) {
-                        offsetY += 3;
+                        offsetY -= 3;
                     }
                 } else {
                     return Optional.empty();
