@@ -6,6 +6,7 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
+import net.bettercombat.logic.InventoryUtil;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
@@ -90,30 +91,31 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
 
     // FEATURE: Two-handed wielding
 
-    @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
-    public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
-        var mainHandHasTwoHanded = false;
-        var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
-        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
-        if (mainHandAttributes != null && mainHandAttributes.isTwoHanded()) {
-            mainHandHasTwoHanded = true;
-        }
-
-        var offHandHasTwoHanded = false;
-        var offHandStack = ((PlayerEntityAccessor)this).getInventory().offHand.get(0);
-        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
-        if(offHandAttributes != null && offHandAttributes.isTwoHanded()) {
-            offHandHasTwoHanded = true;
-        }
-
-        if (slot == OFFHAND) {
-            if (mainHandHasTwoHanded || offHandHasTwoHanded) {
-                cir.setReturnValue(ItemStack.EMPTY);
-                cir.cancel();
-                return;
-            }
-        }
-    }
+//    @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
+//    public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
+//        var player = ((PlayerEntity) ((Object)this));
+//        var mainHandHasTwoHanded = false;
+//        var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
+//        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
+//        if (mainHandAttributes != null && mainHandAttributes.isTwoHanded()) {
+//            mainHandHasTwoHanded = true;
+//        }
+//
+//        var offHandHasTwoHanded = false;
+//        var offHandStack = InventoryUtil.getOffHandSlotStack(player);
+//        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
+//        if(offHandAttributes != null && offHandAttributes.isTwoHanded()) {
+//            offHandHasTwoHanded = true;
+//        }
+//
+//        if (slot == OFFHAND) {
+//            if (mainHandHasTwoHanded || offHandHasTwoHanded) {
+//                cir.setReturnValue(ItemStack.EMPTY);
+//                cir.cancel();
+//                return;
+//            }
+//        }
+//    }
 
     // FEATURE: Dual wielding
 

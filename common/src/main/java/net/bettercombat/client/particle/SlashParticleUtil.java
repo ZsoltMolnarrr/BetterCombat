@@ -73,7 +73,7 @@ public class SlashParticleUtil {
                 var posY = trail.stabPosition() ? yStab : y;
                 var posZ = trail.stabPosition() ? zStab : z;
                 for (var layeredParticle: trail.particles()) {
-                    player.getWorld().addParticle(new SlashParticleEffect(
+                    player.getWorld().addParticleClient(new SlashParticleEffect(
                             layeredParticle.bottom(), weaponRange,
                             player.getPitch() + settings.pitch_addition(), player.getYaw(),
                             settings.local_yaw() * offhandFlip,
@@ -81,7 +81,7 @@ public class SlashParticleUtil {
                             appearance.primary.glows(), appearance.primary.color_rgba()),
                             posX, posY, posZ, 0.0, 0.0, 0.0);
 
-                    player.getWorld().addParticle(new SlashParticleEffect(
+                    player.getWorld().addParticleClient(new SlashParticleEffect(
                             layeredParticle.top(), weaponRange,
                             player.getPitch() + settings.pitch_addition(), player.getYaw(),
                             settings.local_yaw() * offhandFlip,

@@ -1,5 +1,6 @@
 package net.bettercombat.mixin;
 
+import net.bettercombat.logic.InventoryUtil;
 import net.bettercombat.mixin.player.PlayerEntityAccessor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -19,10 +20,10 @@ public class ServerPlayNetworkHandlerMixin {
         ItemStack result = null;
         switch (hand) {
             case MAIN_HAND -> {
-                result = ((PlayerEntityAccessor)player).getInventory().getMainHandStack();
+                result = ((PlayerEntityAccessor)player).getInventory().getSelectedStack();
             }
             case OFF_HAND -> {
-                result = ((PlayerEntityAccessor)player).getInventory().offHand.get(0);
+                result = InventoryUtil.getOffHandSlotStack(player);
             }
         }
         return result;

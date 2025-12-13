@@ -20,19 +20,19 @@ import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public class ItemStackTooltipMixin {
-    @Inject(method = "appendAttributeModifierTooltip", at = @At("HEAD"), cancellable = true)
-    private void appendAttributeModifierTooltip_BetterCombat_Range(Consumer<Text> textConsumer, PlayerEntity player,
-                                                                   RegistryEntry<EntityAttribute> attribute, EntityAttributeModifier modifier, CallbackInfo ci) {
-        if (BetterCombatClientMod.config.isTooltipAttackRangeReformat
-                && attribute.value() == EntityAttributes.ENTITY_INTERACTION_RANGE.value()
-                && player != null) { // Even vanilla code checks for this
-            var itemStack = (ItemStack) (Object) this;
-            if (WeaponRegistry.getAttributes(itemStack) != null                     // Only for weapons
-                    && EntityAttributeHelper.rangeModifierCount(itemStack) == 1) {  // Only if there is exactly one range modifier
-                ci.cancel();
-                var value = modifier.value() + player.getAttributeBaseValue(EntityAttributes.ENTITY_INTERACTION_RANGE);
-                textConsumer.accept(WeaponAttributeTooltip.attackRangeLine(value));
-            }
-        }
-    }
+//    @Inject(method = "appendAttributeModifierTooltip", at = @At("HEAD"), cancellable = true)
+//    private void appendAttributeModifierTooltip_BetterCombat_Range(Consumer<Text> textConsumer, PlayerEntity player,
+//                                                                   RegistryEntry<EntityAttribute> attribute, EntityAttributeModifier modifier, CallbackInfo ci) {
+//        if (BetterCombatClientMod.config.isTooltipAttackRangeReformat
+//                && attribute.value() == EntityAttributes.ENTITY_INTERACTION_RANGE.value()
+//                && player != null) { // Even vanilla code checks for this
+//            var itemStack = (ItemStack) (Object) this;
+//            if (WeaponRegistry.getAttributes(itemStack) != null                     // Only for weapons
+//                    && EntityAttributeHelper.rangeModifierCount(itemStack) == 1) {  // Only if there is exactly one range modifier
+//                ci.cancel();
+//                var value = modifier.value() + player.getAttributeBaseValue(EntityAttributes.ENTITY_INTERACTION_RANGE);
+//                textConsumer.accept(WeaponAttributeTooltip.attackRangeLine(value));
+//            }
+//        }
+//    }
 }

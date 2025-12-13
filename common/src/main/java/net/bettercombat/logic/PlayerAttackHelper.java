@@ -183,16 +183,16 @@ public class PlayerAttackHelper {
         synchronized (player) {
             var inventory = player.getInventory();
             var mainHandStack = player.getMainHandStack();
-            var offHandStack = inventory.offHand.get(0);
+            var offHandStack = InventoryUtil.getOffHandSlotStack(player);
 
             setAttributesForOffHandAttack(player, true);
-            inventory.main.set(inventory.selectedSlot, offHandStack);
-            inventory.offHand.set(0, offHandStack);
+            inventory.setSelectedStack(offHandStack);
+            InventoryUtil.setOffHandSlotStack(player, mainHandStack);
 
             runnable.run();
 
-            inventory.main.set(inventory.selectedSlot, mainHandStack);
-            inventory.offHand.set(0, offHandStack);
+            inventory.setSelectedStack(mainHandStack);
+            InventoryUtil.setOffHandSlotStack(player, offHandStack);
             setAttributesForOffHandAttack(player, false);
         }
     }

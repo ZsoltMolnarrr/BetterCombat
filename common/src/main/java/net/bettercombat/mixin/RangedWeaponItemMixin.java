@@ -2,6 +2,7 @@ package net.bettercombat.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.bettercombat.logic.InventoryUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -37,7 +38,7 @@ public class RangedWeaponItemMixin {
     ) {
         var originalResult = original.call(entity, hand); // Always call original first to allow others' side effects
         if (entity instanceof PlayerEntity player) {
-            return player.getInventory().offHand.get(0);
+            return InventoryUtil.getOffHandSlotStack(player);
         } else {
             return originalResult;
         }

@@ -47,9 +47,9 @@ public class SlashParticle extends SpriteBillboardParticle {
     }
 
     public void tick() {
-        this.prevPosX = this.x;
-        this.prevPosY = this.y;
-        this.prevPosZ = this.z;
+        this.lastX = this.x;
+        this.lastY = this.y;
+        this.lastZ = this.z;
         if (this.age++ >= this.maxAge) {
             this.markDead();
         } else {
@@ -82,9 +82,9 @@ public class SlashParticle extends SpriteBillboardParticle {
     @Override
     public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
         Vec3d cameraPos = camera.getPos();
-        float x = (float)(this.prevPosX - cameraPos.getX());
-        float y = (float)(this.prevPosY - cameraPos.getY());
-        float z = (float)(this.prevPosZ - cameraPos.getZ());
+        float x = (float)(this.lastX - cameraPos.getX());
+        float y = (float)(this.lastY - cameraPos.getY());
+        float z = (float)(this.lastZ - cameraPos.getZ());
         float size = this.getSize(tickDelta);
         float minU = this.getMinU();
         float maxU = this.getMaxU();

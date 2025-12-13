@@ -13,7 +13,8 @@
     "player.LivingEntityMixin",
     "player.PlayerEntityAccessor",
     "player.PlayerEntityMixin",
-    "player.PlayerEntityRangeMixin"
+    "player.PlayerEntityRangeMixin",
+    "player.PlayerInventoryAccessor"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
