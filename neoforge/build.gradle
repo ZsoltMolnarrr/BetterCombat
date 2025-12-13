@@ -99,7 +99,7 @@ if(project.hasProperty('release_type')) {
 
             relations {
                 requiredDependency 'cloth-config'
-                requiredDependency 'playeranimator'
+                requiredDependency 'player-animation-library'
             }
 
             mainArtifact(remapJar)
@@ -127,7 +127,7 @@ if(project.hasProperty('release_type')) {
             // The scope can be `required`, `optional`, `incompatible`, or `embedded`
             // The type can either be `project` or `version`
             required.project "cloth-config"
-            required.project "playeranimator"
+            required.project "player-animation-library"
         }
     }
 }
