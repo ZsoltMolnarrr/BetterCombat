@@ -30,7 +30,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -138,12 +137,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Override
     public void playAttackAnimation(String name, AnimatedHand animatedHand, float length, float upswing) {
         try {
-            // Print arguments
-            System.out.println("Playing attack animation: " + name +
-                    ", hand: " + animatedHand +
-                    ", length: " + length +
-                    ", upswing: " + upswing);
-
             var controller = attackAnimation;
             var animation = PlayerAnimResources.getAnimation(Identifier.of(name));
 
@@ -158,9 +151,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                     MathHelper.lerp(Math.max(BetterCombatMod.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
                             (1F - upswing),                     // Use this value at config `0.5`
                             upswing / (1F - upswing)));         // Use this value at config `1.0`
-
-            // Print resolved fields
-            System.out.println(" - Resolved  speed: " + speed + ", mirror: " + mirror);
 
             controller.activeFirstPersonConfig = firstPersonConfig(animatedHand);
             controller.speed.speed = speed;
@@ -252,27 +242,19 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         return !this.isDead() && (this.isSwimming() || this.getVelocity().horizontalLength() > 0.03);
     }
 
-    private boolean isMounting() {
-        return this.getVehicle() != null;
-    }
-
     public boolean isLeftHanded() {
         return this.getMainArm() == Arm.LEFT;
     }
 
     // PlayerAttackAnimatable
 
-//    @Override
-//    public void stopAttackAnimation(float length) {
-//        IAnimation currentAnimation = attackAnimation.base.getAnimation();
-//        scheduledParticles = null;
-//        if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
-//            var fadeOut = Math.round(length);
-//            attackAnimation.adjustmentModifier.fadeOut(fadeOut);
-//            attackAnimation.base.replaceAnimationWithFade(
-//                    AbstractFadeModifier.standardFadeIn(fadeOut, Ease.INOUTSINE), null);
-//        }
-//    }
+    @Override
+    public void stopAttackAnimation(float length) {
+        scheduledParticles = null;
+        if (attackAnimation.isActive()) {
+            attackAnimation.stop();
+        }
+    }
 
     // FirstPersonAnimator
 

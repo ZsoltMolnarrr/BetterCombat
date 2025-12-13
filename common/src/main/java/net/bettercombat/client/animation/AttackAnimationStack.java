@@ -10,9 +10,11 @@ import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import com.zigythebird.playeranimcore.math.Vec3f;
 import net.bettercombat.BetterCombatMod;
+import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.compat.FirstPersonAnimationCompatibility;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.util.Identifier;
 
 import java.util.Optional;
@@ -51,6 +53,37 @@ public class AttackAnimationStack extends PlayerAnimationController {
         this.setPostAnimationSetupConsumer((func) -> {
             func.apply("torso").setEnabled(true);
             func.apply("head").rotXEnabled = false;
+
+            // Disable leg animations based on player activity
+            var player = this.getPlayer();
+            var pose = player.getPose();
+            boolean disableLegs = false;
+
+            // Swimming: disable legs
+            if (pose == EntityPose.SWIMMING) {
+                disableLegs = true;
+            }
+
+            // Mounting/riding: disable legs
+            if (player.getVehicle() != null) {
+                disableLegs = true;
+            }
+
+            // Fast movement: optionally disable legs based on config
+            if (!disableLegs) {
+                var legAnimationThreshold = BetterCombatClientMod.config.legAnimationThreshold;
+                if (legAnimationThreshold > 0) {
+                    var moving = player.isSprinting() || isWalking(player);
+                    if (moving && player.getVelocity().horizontalLengthSquared() > (legAnimationThreshold * legAnimationThreshold)) {
+                        disableLegs = true;
+                    }
+                }
+            }
+
+            if (disableLegs) {
+                func.apply(EntityModelPartNames.RIGHT_LEG).setEnabled(false);
+                func.apply(EntityModelPartNames.LEFT_LEG).setEnabled(false);
+            }
         });
     }
 
@@ -97,5 +130,9 @@ public class AttackAnimationStack extends PlayerAnimationController {
     }
     private boolean isLeg(String partName) {
         return partName.equals(EntityModelPartNames.RIGHT_LEG) || partName.equals(EntityModelPartNames.LEFT_LEG);
+    }
+
+    private static boolean isWalking(AbstractClientPlayerEntity player) {
+        return !player.isDead() && (player.isSwimming() || player.getVelocity().horizontalLength() > 0.03);
     }
 }

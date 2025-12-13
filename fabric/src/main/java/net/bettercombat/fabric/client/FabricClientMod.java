@@ -15,6 +15,7 @@ public class FabricClientMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BetterCombatClientMod.init();
+        BetterCombatClientMod.setupAnimations();
         for (var keybinding : Keybindings.all) {
             KeyBindingHelper.registerKeyBinding(keybinding);
         }

@@ -21,7 +21,9 @@ public class BetterCombatClientMod {
         config = AutoConfig.getConfigHolder(ClientConfigWrapper.class).getConfig().client;
 
         CompatibilityFlags.initialize();
+    }
 
+    public static void setupAnimations() {
         // Attack animation (priority 2000 - highest)
         PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(AttackAnimationStack.ID, 2000,
                 player -> new AttackAnimationStack(player,
