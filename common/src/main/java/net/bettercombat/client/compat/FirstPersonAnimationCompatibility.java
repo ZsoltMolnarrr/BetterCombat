@@ -1,6 +1,6 @@
 package net.bettercombat.client.compat;
 
-import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
+import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import net.bettercombat.Platform;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.config.TriStateAuto;

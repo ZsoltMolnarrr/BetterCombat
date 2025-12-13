@@ -1,6 +1,7 @@
-package net.bettercombat.client.animation.modifier;
+package net.bettercombat.client.animation;
 
-import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
+import com.zigythebird.playeranimcore.animation.AnimationData;
+import com.zigythebird.playeranimcore.animation.layered.modifier.SpeedModifier;
 
 import java.util.List;
 
@@ -8,6 +9,11 @@ public class TransmissionSpeedModifier extends SpeedModifier {
     private float elapsed = 0;
 
     public List<Gear> gears = List.of();
+
+    public TransmissionSpeedModifier(float speed) {
+        super(speed);
+    }
+
     public record Gear(float time, float speed) {}
 
     public void set(float speed, List<Gear> gears) {
@@ -21,19 +27,20 @@ public class TransmissionSpeedModifier extends SpeedModifier {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void tick(AnimationData state) {
+        super.tick(state);
         this.elapsed += 1;
     }
 
     @Override
-    public void setupAnim(float tickDelta) {
+    public void setupAnim(AnimationData state) {
+        float tickDelta = state.getPartialTick();
         var time = elapsed(tickDelta);
         for (var gear: gears) {
             if (time > gear.time) {
                 speed = gear.speed();
             }
         }
-        super.setupAnim(tickDelta);
+        super.setupAnim(state);
     }
 }

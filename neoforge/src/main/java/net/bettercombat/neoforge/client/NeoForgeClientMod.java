@@ -36,7 +36,6 @@ public class NeoForgeClientMod {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event){
         BetterCombatClientMod.init();
-        BetterCombatClientMod.loadAnimation();
 
         // ModelPredicateProviderRegistry.registerGeneric(Identifier.of(BetterCombatMod.ID, "loaded"), (stack, world, entity, seed) -> {
         //     return 1.0F;

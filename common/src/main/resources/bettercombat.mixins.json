@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.bettercombat.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "DataComponentTypesMixin",
     "EnchantmentMixin",
@@ -29,7 +29,6 @@
   ],
   "server": [
   ],
-  "plugin": "net.bettercombat.mixin.BetterCombatMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }

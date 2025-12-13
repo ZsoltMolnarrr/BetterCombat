@@ -1,41 +1,28 @@
 package net.bettercombat.mixin.client;
 
 import com.mojang.authlib.GameProfile;
-import dev.kosmx.playerAnim.api.PartKey;
-import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
-import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
-import dev.kosmx.playerAnim.api.layered.IAnimation;
-import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
-import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
-import dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier;
-import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.core.util.Ease;
-import dev.kosmx.playerAnim.core.util.Vec3f;
-import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
+import com.zigythebird.playeranim.animation.PlayerAnimResources;
+import com.zigythebird.playeranim.api.PlayerAnimationAccess;
+import com.zigythebird.playeranimcore.animation.ExtraAnimationData;
+import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
-import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.api.fx.ParticlePlacement;
 import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
-import net.bettercombat.client.animation.modifier.HarshAdjustmentModifier;
-import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
-import net.bettercombat.client.compat.FirstPersonAnimationCompatibility;
+import net.bettercombat.client.animation.TransmissionSpeedModifier;
 import net.bettercombat.client.particle.SlashParticleUtil;
 import net.bettercombat.logic.AnimatedHand;
-import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.mixin.player.LivingEntityAccessor;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -45,15 +32,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
-import java.util.Optional;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
-    private final AttackAnimationSubStack attackAnimation = new AttackAnimationSubStack(createAttackAdjustment());
-    private final PoseSubStack mainHandBodyPose = new PoseSubStack(createPoseAdjustment(), true, true);
-    private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
-    private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
-    private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
+     private AttackAnimationStack attackAnimation;
+//    private final PoseSubStack mainHandBodyPose = new PoseSubStack(createPoseAdjustment(), true, true);
+//    private final PoseSubStack mainHandItemPose = new PoseSubStack(null, false, true);
+//    private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
+//    private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
 
     public AbstractClientPlayerEntityMixin(World world, GameProfile profile) {
         super(world, profile);
@@ -61,15 +47,20 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
-        var stack = ((IAnimatedPlayer) this).playerAnimator$getAnimationStack();
-        stack.addAnimLayer(1, offHandItemPose.base);
-        stack.addAnimLayer(2, offHandBodyPose.base);
-        stack.addAnimLayer(3, mainHandItemPose.base);
-        stack.addAnimLayer(4, mainHandBodyPose.base);
-        stack.addAnimLayer(2000, attackAnimation.base);
+        var player = (AbstractClientPlayerEntity) ((Object) this);
+        attackAnimation = (AttackAnimationStack) PlayerAnimationAccess.getPlayerAnimationLayer(player, AttackAnimationStack.ID);
+//        var manager = PlayerAnimationAccess.getPlayerAnimManager(player);
+//        manager.addAnimLayer(2000, attackAnimation.base);
 
-        mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
-        offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
+//        var stack = ((IAnimatedPlayer) this).playerAnimator$getAnimationStack();
+//        stack.addAnimLayer(1, offHandItemPose.base);
+//        stack.addAnimLayer(2, offHandBodyPose.base);
+//        stack.addAnimLayer(3, mainHandItemPose.base);
+//        stack.addAnimLayer(4, mainHandBodyPose.base);
+//        stack.addAnimLayer(2000, attackAnimation.base);
+//
+//        mainHandBodyPose.configure = this::updateAnimationByCurrentActivity;
+//        offHandBodyPose.configure = this::updateAnimationByCurrentActivity;
     }
 
     @Override
@@ -77,7 +68,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         var instance = (Object)this;
         var player = (PlayerEntity)instance;
         var isLeftHanded = isLeftHanded();
-        var hasActiveAttackAnimation = attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
+        var hasActiveAttackAnimation = attackAnimation.isActive(); // attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
         var mainHandStack = player.getMainHandStack();
         // No pose during special activities
 
@@ -93,88 +84,123 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                 || player.isGliding()
                 || Platform.isCastingSpell(player)
                 || CrossbowItem.isCharged(mainHandStack)) {
-            mainHandBodyPose.setPose(null, isLeftHanded);
-            mainHandItemPose.setPose(null, isLeftHanded);
-            offHandBodyPose.setPose(null, isLeftHanded);
-            offHandItemPose.setPose(null, isLeftHanded);
+//            mainHandBodyPose.setPose(null, isLeftHanded);
+//            mainHandItemPose.setPose(null, isLeftHanded);
+//            offHandBodyPose.setPose(null, isLeftHanded);
+//            offHandItemPose.setPose(null, isLeftHanded);
             return;
         }
-
-        // Restore auto body rotation upon swing - Fix issue #11
-
+//
+//        // Restore auto body rotation upon swing - Fix issue #11
+//
         if (hasActiveAttackAnimation) {
             ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw());
         }
-
-        // Pose
-
-        var betterCombatPlayer = (EntityPlayer_BetterCombat)player;
-
-        KeyframeAnimation newMainHandPose = null;
-        KeyframeAnimation newOffHandPose = null;
-        if (MinecraftClient.getInstance().player == player) { // Logic on local player too for improved responsiveness
-            var pose = PlayerAttackHelper.poseForPlayer(player);
-            if (!pose.base().isEmpty()) {
-                newMainHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(pose.base()));
-            }
-            if (!pose.offHand().isEmpty()) {
-                newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(pose.offHand()));
-            }
-        } else {
-            if (betterCombatPlayer.getMainHandIdleAnimation() != null && !betterCombatPlayer.getMainHandIdleAnimation().isEmpty()) {
-                newMainHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getMainHandIdleAnimation()));
-            }
-            if (betterCombatPlayer.getOffHandIdleAnimation() != null && !betterCombatPlayer.getOffHandIdleAnimation().isEmpty()) {
-                newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getOffHandIdleAnimation()));
-            }
-        }
-
-        mainHandItemPose.setPose(newMainHandPose, isLeftHanded);
-        offHandItemPose.setPose(newOffHandPose, isLeftHanded);
-
-        if (!PlayerAttackHelper.isTwoHandedWielding(player)) {
-            if (this.isWalking() || this.isSneaking()) {
-                newMainHandPose = null;
-                newOffHandPose = null;
-            }
-        }
-        mainHandBodyPose.setPose(newMainHandPose, isLeftHanded);
-        offHandBodyPose.setPose(newOffHandPose, isLeftHanded);
+//
+//        // Pose
+//
+//        var betterCombatPlayer = (EntityPlayer_BetterCombat)player;
+//
+//        KeyframeAnimation newMainHandPose = null;
+//        KeyframeAnimation newOffHandPose = null;
+//        if (MinecraftClient.getInstance().player == player) { // Logic on local player too for improved responsiveness
+//            var pose = PlayerAttackHelper.poseForPlayer(player);
+//            if (!pose.base().isEmpty()) {
+//                newMainHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(pose.base()));
+//            }
+//            if (!pose.offHand().isEmpty()) {
+//                newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(pose.offHand()));
+//            }
+//        } else {
+//            if (betterCombatPlayer.getMainHandIdleAnimation() != null && !betterCombatPlayer.getMainHandIdleAnimation().isEmpty()) {
+//                newMainHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getMainHandIdleAnimation()));
+//            }
+//            if (betterCombatPlayer.getOffHandIdleAnimation() != null && !betterCombatPlayer.getOffHandIdleAnimation().isEmpty()) {
+//                newOffHandPose = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(betterCombatPlayer.getOffHandIdleAnimation()));
+//            }
+//        }
+//
+//        mainHandItemPose.setPose(newMainHandPose, isLeftHanded);
+//        offHandItemPose.setPose(newOffHandPose, isLeftHanded);
+//
+//        if (!PlayerAttackHelper.isTwoHandedWielding(player)) {
+//            if (this.isWalking() || this.isSneaking()) {
+//                newMainHandPose = null;
+//                newOffHandPose = null;
+//            }
+//        }
+//        mainHandBodyPose.setPose(newMainHandPose, isLeftHanded);
+//        offHandBodyPose.setPose(newOffHandPose, isLeftHanded);
     }
 
     @Override
     public void playAttackAnimation(String name, AnimatedHand animatedHand, float length, float upswing) {
         try {
-            KeyframeAnimation animation = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(name));
-            var copy = animation.mutableCopy();
-            updateAnimationByCurrentActivity(copy);
-            copy.torso.fullyEnablePart(true);
-            copy.head.pitch.setEnabled(false);
-            var speed = ((float)animation.endTick) / length;
+            // Print arguments
+            System.out.println("Playing attack animation: " + name +
+                    ", hand: " + animatedHand +
+                    ", length: " + length +
+                    ", upswing: " + upswing);
+
+            var controller = attackAnimation;
+            var animation = PlayerAnimResources.getAnimation(Identifier.of(name));
+
+            var endTick = animation.data().<Float>get(ExtraAnimationData.END_TICK_KEY).orElse(animation.length());
+            var speed = endTick / length;
             var mirror = animatedHand.isOffHand();
             if(isLeftHanded()) {
                 mirror = !mirror;
             }
-
-            var fadeIn = copy.beginTick;
             float upswingSpeed = speed / BetterCombatMod.config.getUpswingMultiplier();
             float downwindSpeed = (float) (speed *
                     MathHelper.lerp(Math.max(BetterCombatMod.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
-                    (1F - upswing),                     // Use this value at config `0.5`
-                    upswing / (1F - upswing)));         // Use this value at config `1.0`
+                            (1F - upswing),                     // Use this value at config `0.5`
+                            upswing / (1F - upswing)));         // Use this value at config `1.0`
+
+            // Print resolved fields
+            System.out.println(" - Resolved  speed: " + speed + ", mirror: " + mirror);
+
+            controller.activeFirstPersonConfig = firstPersonConfig(animatedHand);
+            controller.speed.speed = speed;
+            controller.mirror.enabled = mirror;
             attackAnimation.speed.set(upswingSpeed,
                     List.of(
                             new TransmissionSpeedModifier.Gear(length * upswing, downwindSpeed),
                             new TransmissionSpeedModifier.Gear(length, speed)
                     ));
-            attackAnimation.mirror.setEnabled(mirror);
 
-            var player = new CustomAnimationPlayer(copy.build(), 0);
-            player.setFirstPersonMode(FirstPersonAnimationCompatibility.firstPersonMode());
-            player.setFirstPersonConfiguration(firstPersonConfig(animatedHand));
-            attackAnimation.base.replaceAnimationWithFade(
-                    AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
-                    player);
+            controller.triggerAnimation(animation);
+
+//            KeyframeAnimation animation = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(Identifier.of(name));
+//            var copy = animation.mutableCopy();
+//            updateAnimationByCurrentActivity(copy);
+//            copy.torso.fullyEnablePart(true);
+//            copy.head.pitch.setEnabled(false);
+//            var speed = ((float)animation.endTick) / length;
+//            var mirror = animatedHand.isOffHand();
+//            if(isLeftHanded()) {
+//                mirror = !mirror;
+//            }
+//
+//            var fadeIn = copy.beginTick;
+//            float upswingSpeed = speed / BetterCombatMod.config.getUpswingMultiplier();
+//            float downwindSpeed = (float) (speed *
+//                    MathHelper.lerp(Math.max(BetterCombatMod.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
+//                    (1F - upswing),                     // Use this value at config `0.5`
+//                    upswing / (1F - upswing)));         // Use this value at config `1.0`
+//            attackAnimation.speed.set(upswingSpeed,
+//                    List.of(
+//                            new TransmissionSpeedModifier.Gear(length * upswing, downwindSpeed),
+//                            new TransmissionSpeedModifier.Gear(length, speed)
+//                    ));
+//            attackAnimation.mirror.setEnabled(mirror);
+//
+//            var player = new CustomAnimationPlayer(copy.build(), 0);
+//            player.setFirstPersonMode(FirstPersonAnimationCompatibility.firstPersonMode());
+//            player.setFirstPersonConfiguration(firstPersonConfig(animatedHand));
+//            attackAnimation.base.replaceAnimationWithFade(
+//                    AbstractFadeModifier.standardFadeIn(fadeIn, Ease.INOUTSINE),
+//                    player);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -198,120 +224,81 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         );
     }
 
-    private AdjustmentModifierV2 createAttackAdjustment() {
-        var player = (PlayerEntity)this;
-        return new AdjustmentModifierV2((partName) -> {
-            // System.out.println("Player pitch: " + player.getPitch());
-            float rotationX = 0;
-            float rotationY = 0;
-            float rotationZ = 0;
-            float offsetX = 0;
-            float offsetY = 0;
-            float offsetZ = 0;
-
-            if (FirstPersonMode.isFirstPersonPass()) {
-                var pitch = player.getPitch();
-                pitch = (float) Math.toRadians(pitch);
-                if (partName == PartKey.BODY) {
-                    rotationX -= pitch;
-                    if (pitch < 0) {
-                        var offset = Math.abs(Math.sin(pitch));
-                        offsetY += offset * 0.5;
-                        offsetZ -= offset;
-                    }
-                // else if (isArm(partName)) rotationX = pitch;
-                } else return Optional.empty();
-            } else {
-                var pitch = player.getPitch();
-                pitch = (float) Math.toRadians(pitch);
-                if (partName == PartKey.BODY) rotationX -= pitch * 0.75F;
-                else if (isArm(partName)) rotationX += pitch * 0.25F;
-                else if (isLeg(partName)) rotationX -= pitch * 0.75;
-                else return Optional.empty();
-            }
-
-            return Optional.of(new AdjustmentModifierV2.PartModifier(
-                    new Vec3f(rotationX, rotationY, rotationZ),
-                    new Vec3f(offsetX, offsetY, offsetZ))
-            );
-        });
+    private boolean isArm(String partName) {
+        return partName == EntityModelPartNames.RIGHT_ARM || partName == EntityModelPartNames.LEFT_ARM;
     }
 
-    private boolean isArm(PartKey partName) {
-        return partName == PartKey.RIGHT_ARM || partName == PartKey.LEFT_ARM;
+    private boolean isLeg(String partName) {
+        return partName == EntityModelPartNames.RIGHT_LEG || partName == EntityModelPartNames.LEFT_LEG;
     }
-
-    private boolean isLeg(PartKey partName) {
-        return partName == PartKey.RIGHT_LEG || partName == PartKey.LEFT_LEG;
-    }
-
-    private AdjustmentModifier createPoseAdjustment() {
-        var player = (PlayerEntity)this;
-        return new HarshAdjustmentModifier((partName) -> {
-            float rotationX = 0;
-            float rotationY = 0;
-            float rotationZ = 0;
-            float offsetX = 0;
-            float offsetY = 0;
-            float offsetZ = 0;
-
-            if (!FirstPersonMode.isFirstPersonPass()) {
-                if (isArm(partName)) {
-                    if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isInSneakingPose()) {
-                        offsetY += 3;
-                    }
-                } else return Optional.empty();
-            }
-
-            return Optional.of(new AdjustmentModifier.PartModifier(
-                    new Vec3f(rotationX, rotationY, rotationZ),
-                    new Vec3f(offsetX, offsetY, offsetZ))
-            );
-        });
-    }
-
-    private void updateAnimationByCurrentActivity(KeyframeAnimation.AnimationBuilder animation) {
-        var pose = getPose();
-        switch (pose) {
-            case STANDING -> {
-            }
-            case GLIDING -> {
-            }
-            case SLEEPING -> {
-            }
-            case SWIMMING -> {
-                StateCollectionHelper.configure(animation.rightLeg, false, false);
-                StateCollectionHelper.configure(animation.leftLeg, false, false);
-            }
-            case SPIN_ATTACK -> {
-            }
-            case CROUCHING -> {
-            }
-            case LONG_JUMPING -> {
-            }
-            case DYING -> {
-            }
-			default -> {}
-        }
-        if (isMounting()) {
-            StateCollectionHelper.configure(animation.rightLeg, false, false);
-            StateCollectionHelper.configure(animation.leftLeg, false, false);
-        } else {
-            var legAnimationThreshold = BetterCombatClientMod.config.legAnimationThreshold;
-            if (BetterCombatClientMod.config.legAnimationThreshold > 0) {
-                var moving = this.isSprinting() || this.isWalking();
-//                var horizontalSpeed = this.getVelocity().horizontalLength();
-//                System.out.println("Horizontal speed: " + horizontalSpeed);
-                if (moving
-                        // && horizontalSpeed > legAnimationThreshold
-                        && this.getVelocity().horizontalLengthSquared() > (legAnimationThreshold * legAnimationThreshold)
-                ) {
-                    StateCollectionHelper.configure(animation.rightLeg, false, false);
-                    StateCollectionHelper.configure(animation.leftLeg, false, false);
-                }
-            }
-        }
-    }
+//
+//    private AdjustmentModifier createPoseAdjustment() {
+//        var player = (PlayerEntity)this;
+//        return new HarshAdjustmentModifier((partName) -> {
+//            float rotationX = 0;
+//            float rotationY = 0;
+//            float rotationZ = 0;
+//            float offsetX = 0;
+//            float offsetY = 0;
+//            float offsetZ = 0;
+//
+//            if (!FirstPersonMode.isFirstPersonPass()) {
+//                if (isArm(partName)) {
+//                    if (!mainHandItemPose.lastAnimationUsesBodyChannel && player.isInSneakingPose()) {
+//                        offsetY += 3;
+//                    }
+//                } else return Optional.empty();
+//            }
+//
+//            return Optional.of(new AdjustmentModifier.PartModifier(
+//                    new Vec3f(rotationX, rotationY, rotationZ),
+//                    new Vec3f(offsetX, offsetY, offsetZ))
+//            );
+//        });
+//    }
+//
+//    private void updateAnimationByCurrentActivity(KeyframeAnimation.AnimationBuilder animation) {
+//        var pose = getPose();
+//        switch (pose) {
+//            case STANDING -> {
+//            }
+//            case GLIDING -> {
+//            }
+//            case SLEEPING -> {
+//            }
+//            case SWIMMING -> {
+//                StateCollectionHelper.configure(animation.rightLeg, false, false);
+//                StateCollectionHelper.configure(animation.leftLeg, false, false);
+//            }
+//            case SPIN_ATTACK -> {
+//            }
+//            case CROUCHING -> {
+//            }
+//            case LONG_JUMPING -> {
+//            }
+//            case DYING -> {
+//            }
+//			default -> {}
+//        }
+//        if (isMounting()) {
+//            StateCollectionHelper.configure(animation.rightLeg, false, false);
+//            StateCollectionHelper.configure(animation.leftLeg, false, false);
+//        } else {
+//            var legAnimationThreshold = BetterCombatClientMod.config.legAnimationThreshold;
+//            if (BetterCombatClientMod.config.legAnimationThreshold > 0) {
+//                var moving = this.isSprinting() || this.isWalking();
+////                var horizontalSpeed = this.getVelocity().horizontalLength();
+////                System.out.println("Horizontal speed: " + horizontalSpeed);
+//                if (moving
+//                        // && horizontalSpeed > legAnimationThreshold
+//                        && this.getVelocity().horizontalLengthSquared() > (legAnimationThreshold * legAnimationThreshold)
+//                ) {
+//                    StateCollectionHelper.configure(animation.rightLeg, false, false);
+//                    StateCollectionHelper.configure(animation.leftLeg, false, false);
+//                }
+//            }
+//        }
+//    }
 
 
     private boolean isWalking() {
@@ -328,17 +315,17 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     // PlayerAttackAnimatable
 
-    @Override
-    public void stopAttackAnimation(float length) {
-        IAnimation currentAnimation = attackAnimation.base.getAnimation();
-        scheduledParticles = null;
-        if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
-            var fadeOut = Math.round(length);
-            attackAnimation.adjustmentModifier.fadeOut(fadeOut);
-            attackAnimation.base.replaceAnimationWithFade(
-                    AbstractFadeModifier.standardFadeIn(fadeOut, Ease.INOUTSINE), null);
-        }
-    }
+//    @Override
+//    public void stopAttackAnimation(float length) {
+//        IAnimation currentAnimation = attackAnimation.base.getAnimation();
+//        scheduledParticles = null;
+//        if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
+//            var fadeOut = Math.round(length);
+//            attackAnimation.adjustmentModifier.fadeOut(fadeOut);
+//            attackAnimation.base.replaceAnimationWithFade(
+//                    AbstractFadeModifier.standardFadeIn(fadeOut, Ease.INOUTSINE), null);
+//        }
+//    }
 
     // FirstPersonAnimator
 
