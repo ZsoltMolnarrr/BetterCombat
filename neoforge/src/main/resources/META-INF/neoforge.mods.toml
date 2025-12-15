@@ -17,7 +17,7 @@ logoFile = "logo.png"
 [[dependencies.bettercombat]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.6,)"
+versionRange = "[21.9,)"
 ordering = "NONE"
 side = "BOTH"
 
