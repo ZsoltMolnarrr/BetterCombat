@@ -70,4 +70,32 @@ public class Platform {
     public static void networkC2S_Send(CustomPayload payload) {
         throw new AssertionError();
     }
+
+    public interface PlayerAttachments {
+        public static final Identifier MAIN_HAND_IDLE_ANIMATION = Identifier.of("bettercombat", "main_hand_idle_animation");
+        public static final Identifier OFF_HAND_IDLE_ANIMATION = Identifier.of("bettercombat", "off_hand_idle_animation");
+
+        /**
+         * Gets the main hand idle animation string from the player's attachment.
+         * Returns empty string if not set.
+         */
+        String getMainHandIdleAnimation(PlayerEntity player);
+
+        /**
+         * Gets the off hand idle animation string from the player's attachment.
+         * Returns empty string if not set.
+         */
+        String getOffHandIdleAnimation(PlayerEntity player);
+
+        /**
+         * Sets the main hand idle animation string on the player's attachment.
+         */
+        void setMainHandIdleAnimation(PlayerEntity player, String animation);
+
+        /**
+         * Sets the off hand idle animation string on the player's attachment.
+         */
+        void setOffHandIdleAnimation(PlayerEntity player, String animation);
+    }
+    @ExpectPlatform public static PlayerAttachments playerAttachments() { throw new AssertionError(); }
 }

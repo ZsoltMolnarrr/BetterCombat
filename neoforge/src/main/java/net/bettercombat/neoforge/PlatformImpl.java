@@ -2,6 +2,7 @@ package net.bettercombat.neoforge;
 
 import io.netty.buffer.Unpooled;
 import net.bettercombat.Platform;
+import net.bettercombat.neoforge.attachment.NeoForgePlayerAttachments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.CustomPayload;
@@ -50,5 +51,31 @@ public class PlatformImpl {
 
     public static void networkC2S_Send(CustomPayload payload) {
         ClientPacketDistributor.sendToServer(payload);
+    }
+
+    public static class PlayerAttachmentsImpl implements Platform.PlayerAttachments {
+        @Override
+        public String getMainHandIdleAnimation(PlayerEntity player) {
+            return NeoForgePlayerAttachments.getMainHandIdleAnimation(player);
+        }
+
+        @Override
+        public String getOffHandIdleAnimation(PlayerEntity player) {
+            return NeoForgePlayerAttachments.getOffHandIdleAnimation(player);
+        }
+
+        @Override
+        public void setMainHandIdleAnimation(PlayerEntity player, String animation) {
+            NeoForgePlayerAttachments.setMainHandIdleAnimation(player, animation);
+        }
+
+        @Override
+        public void setOffHandIdleAnimation(PlayerEntity player, String animation) {
+            NeoForgePlayerAttachments.setOffHandIdleAnimation(player, animation);
+        }
+    }
+    private static final PlayerAttachmentsImpl attachments = new PlayerAttachmentsImpl();
+    public static Platform.PlayerAttachments playerAttachments() {
+        return attachments;
     }
 }

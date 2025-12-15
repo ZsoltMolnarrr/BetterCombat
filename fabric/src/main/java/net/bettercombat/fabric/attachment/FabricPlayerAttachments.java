@@ -1,6 +1,6 @@
 package net.bettercombat.fabric.attachment;
 
-import net.bettercombat.PlayerAttachments;
+import net.bettercombat.logic.PlayerAttachments;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;

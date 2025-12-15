@@ -1,6 +1,6 @@
 package net.bettercombat.neoforge.attachment;
 
-import net.bettercombat.PlayerAttachments;
+import net.bettercombat.logic.PlayerAttachments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.codec.PacketCodecs;
 import net.neoforged.neoforge.attachment.AttachmentType;

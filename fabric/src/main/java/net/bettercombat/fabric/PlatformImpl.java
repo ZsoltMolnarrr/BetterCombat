@@ -1,6 +1,7 @@
 package net.bettercombat.fabric;
 
 import net.bettercombat.Platform;
+import net.bettercombat.fabric.attachment.FabricPlayerAttachments;
 import net.bettercombat.fabric.client.SpellEngineCompatibility;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -54,5 +55,31 @@ public class PlatformImpl {
 
     public static void networkC2S_Send(CustomPayload payload) {
         ClientPlayNetworking.send(payload);
+    }
+
+    public static class PlayerAttachmentsImpl implements Platform.PlayerAttachments {
+        @Override
+        public String getMainHandIdleAnimation(PlayerEntity player) {
+            return FabricPlayerAttachments.getMainHandIdleAnimation(player);
+        }
+
+        @Override
+        public String getOffHandIdleAnimation(PlayerEntity player) {
+            return FabricPlayerAttachments.getOffHandIdleAnimation(player);
+        }
+
+        @Override
+        public void setMainHandIdleAnimation(PlayerEntity player, String animation) {
+            FabricPlayerAttachments.setMainHandIdleAnimation(player, animation);
+        }
+
+        @Override
+        public void setOffHandIdleAnimation(PlayerEntity player, String animation) {
+            FabricPlayerAttachments.setOffHandIdleAnimation(player, animation);
+        }
+    }
+    private static final PlayerAttachmentsImpl attachments = new PlayerAttachmentsImpl();
+    public static Platform.PlayerAttachments playerAttachments() {
+        return attachments;
     }
 }

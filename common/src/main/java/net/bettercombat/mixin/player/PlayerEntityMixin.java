@@ -3,15 +3,13 @@ package net.bettercombat.mixin.player;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.bettercombat.BetterCombatMod;
+import net.bettercombat.Platform;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
-import net.bettercombat.PlayerAttachments;
+import net.bettercombat.logic.PlayerAttachments;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
-import net.bettercombat.logic.InventoryUtil;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
-import net.bettercombat.logic.WeaponRegistry;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -24,9 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(value = PlayerEntity.class, priority = 899)
 public abstract class PlayerEntityMixin implements PlayerAttackProperties, EntityPlayer_BetterCombat {
@@ -47,18 +42,18 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
         } else {
             var pose = PlayerAttackHelper.poseForPlayer(player);
-            PlayerAttachments.setMainHandIdleAnimation(player, pose.base());
-            PlayerAttachments.setOffHandIdleAnimation(player, pose.offHand());
+            Platform.playerAttachments().setMainHandIdleAnimation(player, pose.base());
+            Platform.playerAttachments().setOffHandIdleAnimation(player, pose.offHand());
         }
         updateDualWieldingSpeedBoost();
     }
 
     public String getMainHandIdleAnimation() {
-        return PlayerAttachments.getMainHandIdleAnimation(((PlayerEntity) ((Object)this)));
+        return Platform.playerAttachments().getMainHandIdleAnimation(((PlayerEntity) ((Object)this)));
     }
 
     public String getOffHandIdleAnimation() {
-        return PlayerAttachments.getOffHandIdleAnimation(((PlayerEntity) ((Object)this)));
+        return Platform.playerAttachments().getOffHandIdleAnimation(((PlayerEntity) ((Object)this)));
     }
 
     // FEATURE: Disable sweeping for attributed weapons

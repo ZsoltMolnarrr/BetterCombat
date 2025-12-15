@@ -7,8 +7,6 @@ import net.bettercombat.client.WeaponAttributeTooltip;
 import net.bettercombat.client.misc.ItemStackViewerPlayer;
 import net.bettercombat.logic.EntityAttributeHelper;
 import net.bettercombat.logic.WeaponRegistry;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -17,11 +15,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import org.apache.commons.lang3.function.TriConsumer;
-import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -47,7 +41,9 @@ public class ItemStackTooltipMixin {
         }
     }
 
-    @WrapOperation(method = "method_57370", at = @At(value = "INVOKE", target = "Lnet/minecraft/component/type/AttributeModifiersComponent$Display;addTooltip(Ljava/util/function/Consumer;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/registry/entry/RegistryEntry;Lnet/minecraft/entity/attribute/EntityAttributeModifier;)V"))
+    @WrapOperation(method = "method_57370",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/component/type/AttributeModifiersComponent$Display;addTooltip(Ljava/util/function/Consumer;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/registry/entry/RegistryEntry;Lnet/minecraft/entity/attribute/EntityAttributeModifier;)V"),
+            require = 0)
     private static void wrapTooltip(AttributeModifiersComponent.Display instance,
                                     Consumer<Text> textConsumer,
                                     @Nullable PlayerEntity player,
