@@ -16,7 +16,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-@EventBusSubscriber(modid = BetterCombatMod.ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = BetterCombatMod.ID, value = Dist.CLIENT)
 public class NeoForgeClientMod {
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event){

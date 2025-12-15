@@ -16,7 +16,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.function.Consumer;
 
-@EventBusSubscriber(modid = BetterCombatMod.ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = BetterCombatMod.ID)
 public class NetworkEvents {
     @SubscribeEvent
     public static void register(final RegisterConfigurationTasksEvent event) {
@@ -43,14 +43,14 @@ public class NetworkEvents {
 
         registrar.playToServer(Packets.C2S_AttackRequest.PACKET_ID, Packets.C2S_AttackRequest.CODEC, (packet, context) -> {
             var player = (ServerPlayerEntity)context.player();
-            var server = player.server;
+            var server = player.getServer();
             var vanillaHandler = player.networkHandler;
             ServerNetwork.handleAttackRequest(packet, server, player, vanillaHandler);
         });
 
         registrar.playToServer(Packets.C2S_BlockHit.PACKET_ID, Packets.C2S_BlockHit.CODEC, (packet, context) -> {
             var player = (ServerPlayerEntity)context.player();
-            var server = player.server;
+            var server = player.getServer();
             ServerNetwork.handleBlockHit(packet, server, player);
         });
 
@@ -61,7 +61,7 @@ public class NetworkEvents {
                 ClientNetwork.handleAttackAnimation(packet);
             } else {
                 var player = (ServerPlayerEntity) context.player();
-                var server = player.server;
+                var server = player.getServer();
                 ServerNetwork.handleAttackAnimation(packet, server, player);
             }
         });

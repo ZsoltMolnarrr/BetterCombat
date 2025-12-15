@@ -7,7 +7,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
-@EventBusSubscriber(modid = BetterCombatMod.ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+@EventBusSubscriber(modid = BetterCombatMod.ID, value = Dist.CLIENT)
 public class NeoForgeClientEvents {
     @SubscribeEvent
     public static void onTooltip(ItemTooltipEvent event){
