@@ -1,6 +1,7 @@
 package net.bettercombat.fabric;
 
 import net.bettercombat.BetterCombatMod;
+import net.bettercombat.fabric.attachment.FabricPlayerAttachments;
 import net.bettercombat.fabric.network.FabricServerNetwork;
 import net.bettercombat.particle.BetterCombatParticles;
 import net.bettercombat.utils.SoundHelper;
@@ -11,6 +12,8 @@ public class FabricMod implements ModInitializer {
     @Override
     public void onInitialize() {
         BetterCombatMod.init();
+        
+        FabricPlayerAttachments.init();
 
         ServerLifecycleEvents.SERVER_STARTING.register((minecraftServer) -> {
             BetterCombatMod.loadWeaponAttributes(minecraftServer);
