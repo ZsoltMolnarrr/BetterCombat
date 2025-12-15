@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
+import net.bettercombat.PlayerAttachments;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.InventoryUtil;
 import net.bettercombat.logic.PlayerAttackHelper;
@@ -14,9 +15,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -40,15 +38,6 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         this.comboCount = comboCount;
     }
 
-    private static final TrackedData<String> BETTER_COMBAT_MAIN_IDLE_ANIMATION = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.STRING);
-    private static final TrackedData<String> BETTER_COMBAT_OFF_IDLE_ANIMATION = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.STRING);
-
-    @Inject(method = "initDataTracker", at = @At("TAIL"))
-    private void initDataTracker_TAIL_SpellEngine_SyncEffects(DataTracker.Builder builder, CallbackInfo ci) {
-        builder.add(BETTER_COMBAT_MAIN_IDLE_ANIMATION, "");
-        builder.add(BETTER_COMBAT_OFF_IDLE_ANIMATION, "");
-    }
-
     @Inject(method = "tick", at = @At("TAIL"))
     public void post_Tick(CallbackInfo ci) {
         var instance = (Object)this;
@@ -58,18 +47,18 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
         } else {
             var pose = PlayerAttackHelper.poseForPlayer(player);
-            player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, pose.base());
-            player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, pose.offHand());
+            PlayerAttachments.setMainHandIdleAnimation(player, pose.base());
+            PlayerAttachments.setOffHandIdleAnimation(player, pose.offHand());
         }
         updateDualWieldingSpeedBoost();
     }
 
     public String getMainHandIdleAnimation() {
-        return ((PlayerEntity) ((Object)this)).getDataTracker().get(BETTER_COMBAT_MAIN_IDLE_ANIMATION);
+        return PlayerAttachments.getMainHandIdleAnimation(((PlayerEntity) ((Object)this)));
     }
 
     public String getOffHandIdleAnimation() {
-        return ((PlayerEntity) ((Object)this)).getDataTracker().get(BETTER_COMBAT_OFF_IDLE_ANIMATION);
+        return PlayerAttachments.getOffHandIdleAnimation(((PlayerEntity) ((Object)this)));
     }
 
     // FEATURE: Disable sweeping for attributed weapons
