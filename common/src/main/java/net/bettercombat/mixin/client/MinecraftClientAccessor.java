@@ -1,7 +1,6 @@
 package net.bettercombat.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -11,6 +10,4 @@ public interface MinecraftClientAccessor {
     int getAttackCooldown();
     @Accessor("attackCooldown")
     void setAttackCooldown(int attackCooldown);
-    @Accessor
-    EntityRenderDispatcher getEntityRenderDispatcher();
 }

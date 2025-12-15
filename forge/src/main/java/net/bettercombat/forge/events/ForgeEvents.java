@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ForgeEvents {
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
-        if (!event.getEntity().getWorld().isClient())
+        if (!event.getEntity().getEntityWorld().isClient())
             ServerPlayConnectionEvents.onPlayerJoined.forEach((action) -> action.onPlayReady(
                 ((ServerPlayerEntity)event.getEntity()).networkHandler,
                 (id, data) -> ServerPlayNetworking.send((ServerPlayerEntity) event.getEntity(), id, data),

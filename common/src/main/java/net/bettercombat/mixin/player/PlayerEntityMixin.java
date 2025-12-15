@@ -38,7 +38,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         var instance = (Object)this;
         var player = ((PlayerEntity)instance);
 
-        if (player.getWorld().isClient()) {
+        if (player.getEntityWorld().isClient()) {
             ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
         } else {
             var pose = PlayerAttackHelper.poseForPlayer(player);

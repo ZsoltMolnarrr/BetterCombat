@@ -6,6 +6,7 @@ import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.collision.OrientedBoundingBox;
 import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.logic.PlayerAttackHelper;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderLoader.LoadException;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -26,9 +27,9 @@ import java.util.stream.Collectors;
 @Mixin(DebugRenderer.class)
 public class ColliderDebugRenderer {
     @Inject(method = "render",at = @At("TAIL"))
-    public void renderColliderDebug(MatrixStack matrices, Frustum frustum, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) throws LoadException {
+    public void renderColliderDebug(MatrixStack matrices, Frustum frustum, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, boolean lateDebug, CallbackInfo ci) throws LoadException {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (!((MinecraftClientAccessor) client).getEntityRenderDispatcher().shouldRenderHitboxes()) {
+        if (!SharedConstants.COLLISION) {
             return;
         }
         ClientPlayerEntity player = client.player;

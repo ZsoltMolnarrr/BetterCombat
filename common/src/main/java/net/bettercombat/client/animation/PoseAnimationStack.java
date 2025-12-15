@@ -9,6 +9,7 @@ import com.zigythebird.playeranimcore.math.Vec3f;
 import net.bettercombat.BetterCombatMod;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
+import net.minecraft.entity.PlayerLikeEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,7 @@ public class PoseAnimationStack extends PlayerAnimationController {
     private final boolean isBodyChannel;
     private PoseData lastPose;
 
-    public PoseAnimationStack(AbstractClientPlayerEntity player, AnimationStateHandler animationHandler, boolean isBodyChannel, boolean isMainHand) {
+    public PoseAnimationStack(PlayerLikeEntity player, AnimationStateHandler animationHandler, boolean isBodyChannel, boolean isMainHand) {
         super(player, animationHandler);
         this.isMainHand = isMainHand;
         this.isBodyChannel = isBodyChannel;
@@ -43,7 +44,7 @@ public class PoseAnimationStack extends PlayerAnimationController {
         // Configure first-person mode using compatibility layer
         this.firstPersonMode = (controller) -> FirstPersonMode.DISABLED;
 
-//        // Configure which body parts are enabled based on channel type
+        // Configure which body parts are enabled based on channel type
 //        this.setPostAnimationSetupConsumer((func) -> {
 //            if (isBodyChannel) {
 //                // Body channel: disable items, enable body parts
@@ -92,7 +93,7 @@ public class PoseAnimationStack extends PlayerAnimationController {
             float offsetX = 0;
             float offsetY = 0;
             float offsetZ = 0;
-            var player = this.getPlayer();
+            var player = this.getAvatar();
             if (!FirstPersonMode.isFirstPersonPass()) {
                 if (isArm(partName)) {
                     if (player.isInSneakingPose()) {

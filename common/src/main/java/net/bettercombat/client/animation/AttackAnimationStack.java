@@ -1,8 +1,6 @@
 package net.bettercombat.client.animation;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
-import com.zigythebird.playeranim.lib.mochafloats.MochaEngine;
-import com.zigythebird.playeranimcore.animation.AnimationController;
 import com.zigythebird.playeranimcore.animation.layered.ModifierLayer;
 import com.zigythebird.playeranimcore.animation.layered.modifier.AdjustmentModifier;
 import com.zigythebird.playeranimcore.animation.layered.modifier.MirrorModifier;
@@ -12,13 +10,12 @@ import com.zigythebird.playeranimcore.math.Vec3f;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.compat.FirstPersonAnimationCompatibility;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.PlayerLikeEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 public class AttackAnimationStack extends PlayerAnimationController {
 
@@ -28,13 +25,8 @@ public class AttackAnimationStack extends PlayerAnimationController {
     public final MirrorModifier mirror = new MirrorModifier();
     public final ModifierLayer base = new ModifierLayer(null);
 
-    public AttackAnimationStack(AbstractClientPlayerEntity player, AnimationStateHandler animationHandler) {
-        super(player, animationHandler);
-        postInit();
-    }
-
-    public AttackAnimationStack(AbstractClientPlayerEntity player, AnimationStateHandler animationHandler, Function<AnimationController, MochaEngine<AnimationController>> molangRuntime) {
-        super(player, animationHandler, molangRuntime);
+    public AttackAnimationStack(PlayerLikeEntity entity, AnimationStateHandler animationHandler) {
+        super(entity, animationHandler);
         postInit();
     }
 
@@ -55,7 +47,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
             func.apply("head").rotXEnabled = false;
 
             // Disable leg animations based on player activity
-            var player = this.getPlayer();
+            var player = this.getAvatar();
             var pose = player.getPose();
             boolean disableLegs = false;
 
@@ -89,7 +81,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
 
     private AdjustmentModifier createAttackAdjustment() {
         return new AdjustmentModifier((partName) -> {
-            var player = this.getPlayer();
+            var player = this.getAvatar();
             // System.out.println("Player pitch: " + player.getPitch());
             float rotationX = 0;
             float rotationY = 0;
@@ -132,7 +124,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
         return partName.equals(EntityModelPartNames.RIGHT_LEG) || partName.equals(EntityModelPartNames.LEFT_LEG);
     }
 
-    private static boolean isWalking(AbstractClientPlayerEntity player) {
+    private static boolean isWalking(PlayerLikeEntity player) {
         return !player.isDead() && (player.isSwimming() || player.getVelocity().horizontalLength() > 0.03);
     }
 }

@@ -88,7 +88,7 @@ public class TargetFinder {
     public static List<Entity> getInitialTargets(PlayerEntity player, Entity cursorTarget, double attackRange) {
         Box box = player.getBoundingBox().expand(attackRange * BetterCombatMod.config.target_search_range_multiplier + 1.0);
         List<Entity> entities = player
-                .getWorld()
+                .getEntityWorld()
                 .getOtherEntities(player, box, entity ->  !entity.isSpectator() && entity.canHit())
                 .stream()
                 .filter(entity -> entity != player
@@ -119,7 +119,7 @@ public class TargetFinder {
         public List<Entity> filter(List<Entity> entities) {
             return entities.stream()
                     .filter(entity -> obb.intersects(entity.getBoundingBox().expand(entity.getTargetingMargin()))
-                                || obb.contains(entity.getPos().add(0, entity.getHeight() / 2F, 0))
+                                || obb.contains(entity.getEntityPos().add(0, entity.getHeight() / 2F, 0))
                     )
                     .collect(Collectors.toList());
         }
@@ -144,7 +144,7 @@ public class TargetFinder {
                     .filter(entity -> {
                         var maxAngleDif = (attackAngle / 2.0);
                         Vec3d distanceVector = CollisionHelper.distanceVector(origin, entity.getBoundingBox());
-                        Vec3d positionVector = entity.getPos().add(0, entity.getHeight() / 2F, 0).subtract(origin);
+                        Vec3d positionVector = entity.getEntityPos().add(0, entity.getHeight() / 2F, 0).subtract(origin);
                         return distanceVector.length() <= attackRange
                                 && ((attackAngle == 0)
                                     || (CollisionHelper.angleBetween(positionVector, orientation) <= maxAngleDif

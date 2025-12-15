@@ -30,7 +30,7 @@ public class PlatformImpl {
     public static boolean isCastingSpell(PlayerEntity player) { return false; }
 
     public static Collection<ServerPlayerEntity> tracking(ServerPlayerEntity player) {
-        return (Collection<ServerPlayerEntity>) player.getWorld().getPlayers();
+        return (Collection<ServerPlayerEntity>) player.getEntityWorld().getPlayers();
     }
 
     public static PacketByteBuf createByteBuffer() {

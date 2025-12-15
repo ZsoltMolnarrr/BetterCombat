@@ -12,12 +12,14 @@ import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 @Environment(EnvType.CLIENT)
-public class SlashParticle extends SpriteBillboardParticle {
+public class SlashParticle extends BillboardParticle {
     private final SpriteProvider spriteProvider;
     public final float modelOffset;
     private final float pitch;
@@ -27,7 +29,8 @@ public class SlashParticle extends SpriteBillboardParticle {
     private final boolean light;
 
     public SlashParticle(ClientWorld world, double x, double y, double z, float scale, float pitch, float yaw, float localYaw, float roll, boolean light, long color_rgba, SpriteProvider spriteProvider) {
-        super(world, x, y, z, 0.0, 0.0, 0.0);
+        super(world, x, y, z, 0.0, 0.0, 0.0, spriteProvider.getFirst());
+        // super(world, x, y, z, 0.0, 0.0, 0.0);
         this.spriteProvider = spriteProvider;
         this.light = light;
         this.pitch = pitch;
@@ -43,7 +46,7 @@ public class SlashParticle extends SpriteBillboardParticle {
         this.maxAge = 6;
         this.modelOffset = this.setModelOffset();
         this.scale = scale;
-        this.setSpriteForAge(spriteProvider);
+        this.updateSprite(spriteProvider);
     }
 
     public void tick() {
@@ -53,7 +56,7 @@ public class SlashParticle extends SpriteBillboardParticle {
         if (this.age++ >= this.maxAge) {
             this.markDead();
         } else {
-            this.setSpriteForAge(this.spriteProvider);
+            this.updateSprite(this.spriteProvider);
         }
     }
 
@@ -66,13 +69,14 @@ public class SlashParticle extends SpriteBillboardParticle {
         }
     }
 
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
-    }
-
     public Particle scale(float scale) {
         this.scale = scale;
         return super.scale(scale);
+    }
+
+    @Override
+    protected RenderType getRenderType() {
+        return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
     }
 
     public float setModelOffset() {
@@ -80,7 +84,7 @@ public class SlashParticle extends SpriteBillboardParticle {
     }
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
+    public void render(BillboardParticleSubmittable submittable, Camera camera, float tickDelta) {
         Vec3d cameraPos = camera.getPos();
         float x = (float)(this.lastX - cameraPos.getX());
         float y = (float)(this.lastY - cameraPos.getY());
@@ -106,14 +110,14 @@ public class SlashParticle extends SpriteBillboardParticle {
             corner.add(x, y, z, 0.0F);
         }
 
-        vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z()).texture(maxU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-        vertexConsumer.vertex(corners[1].x(), corners[1].y(), corners[1].z()).texture(maxU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-        vertexConsumer.vertex(corners[2].x(), corners[2].y(), corners[2].z()).texture(minU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-        vertexConsumer.vertex(corners[3].x(), corners[3].y(), corners[3].z()).texture(minU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-        vertexConsumer.vertex(corners[3].x(), corners[3].y(), corners[3].z()).texture(minU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-        vertexConsumer.vertex(corners[2].x(), corners[2].y(), corners[2].z()).texture(minU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-        vertexConsumer.vertex(corners[1].x(), corners[1].y(), corners[1].z()).texture(maxU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-        vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z()).texture(maxU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
+//        vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z()).texture(maxU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
+//        vertexConsumer.vertex(corners[1].x(), corners[1].y(), corners[1].z()).texture(maxU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
+//        vertexConsumer.vertex(corners[2].x(), corners[2].y(), corners[2].z()).texture(minU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
+//        vertexConsumer.vertex(corners[3].x(), corners[3].y(), corners[3].z()).texture(minU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
+//        vertexConsumer.vertex(corners[3].x(), corners[3].y(), corners[3].z()).texture(minU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
+//        vertexConsumer.vertex(corners[2].x(), corners[2].y(), corners[2].z()).texture(minU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
+//        vertexConsumer.vertex(corners[1].x(), corners[1].y(), corners[1].z()).texture(maxU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
+//        vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z()).texture(maxU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
     }
 
     @Environment(EnvType.CLIENT)
@@ -126,8 +130,9 @@ public class SlashParticle extends SpriteBillboardParticle {
             this.params = params;
         }
 
-        public Particle createParticle(SlashParticleEffect settings, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-            return new SlashParticle(clientWorld, d, e, f, settings.getScale(), settings.getPitch(), settings.getYaw(), settings.getLocalYaw(), settings.getRoll(), settings.getLight(), settings.getColorRGBA(), this.spriteProvider);
+        @Override
+        public @Nullable Particle createParticle(SlashParticleEffect settings, ClientWorld clientWorld, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random) {
+            return new SlashParticle(clientWorld, x, y, z, settings.getScale(), settings.getPitch(), settings.getYaw(), settings.getLocalYaw(), settings.getRoll(), settings.getLight(), settings.getColorRGBA(), this.spriteProvider);
         }
     }
 }
