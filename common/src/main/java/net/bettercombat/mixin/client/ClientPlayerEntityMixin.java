@@ -2,17 +2,21 @@ package net.bettercombat.mixin.client;
 
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
+import net.bettercombat.client.misc.ItemStackViewerPlayer;
 import net.bettercombat.utils.MathHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class ClientPlayerEntityMixin {
+public abstract class ClientPlayerEntityMixin implements ItemStackViewerPlayer {
     @Shadow protected abstract boolean isCamera();
 
     @Inject(method = "tickMovementInput", at = @At(value = "TAIL"))
@@ -52,5 +56,14 @@ public abstract class ClientPlayerEntityMixin {
             clientPlayer.forwardSpeed *= multiplier;
             clientPlayer.sidewaysSpeed *= multiplier;
         }
+    }
+
+    // MARK: ItemStackViewerPlayer
+    @Unique private ItemStack bettercombat$viewedItemStack = null;
+    public void betterCombat_setViewedItemStack(@Nullable ItemStack itemStack) {
+        bettercombat$viewedItemStack = itemStack;
+    }
+    public ItemStack betterCombat_getViewedItemStack() {
+        return bettercombat$viewedItemStack;
     }
 }
