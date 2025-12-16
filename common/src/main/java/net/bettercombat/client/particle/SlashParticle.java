@@ -11,10 +11,12 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -30,7 +32,6 @@ public class SlashParticle extends BillboardParticle {
 
     public SlashParticle(ClientWorld world, double x, double y, double z, float scale, float pitch, float yaw, float localYaw, float roll, boolean light, long color_rgba, SpriteProvider spriteProvider) {
         super(world, x, y, z, 0.0, 0.0, 0.0, spriteProvider.getFirst());
-        // super(world, x, y, z, 0.0, 0.0, 0.0);
         this.spriteProvider = spriteProvider;
         this.light = light;
         this.pitch = pitch;
@@ -83,41 +84,61 @@ public class SlashParticle extends BillboardParticle {
         return 0.0F;
     }
 
-    @Override
     public void render(BillboardParticleSubmittable submittable, Camera camera, float tickDelta) {
         Vec3d cameraPos = camera.getPos();
+
         float x = (float)(this.lastX - cameraPos.getX());
         float y = (float)(this.lastY - cameraPos.getY());
         float z = (float)(this.lastZ - cameraPos.getZ());
+
         float size = this.getSize(tickDelta);
+
+        // Create quaternion rotation
+        Quaternionf rotation = new Quaternionf();
+
+        // Readjust rotation here to match the particle data or config
+        Matrix4f rotationMatrix = new Matrix4f();
+        rotationMatrix.identity();
+        rotationMatrix.rotateY((float)Math.toRadians(-this.yaw));
+        rotationMatrix.rotateX((float)Math.toRadians(this.pitch+90));
+        rotationMatrix.rotateY((float)Math.toRadians(this.roll));
+        rotationMatrix.rotateZ((float)Math.toRadians(this.localYaw));
+
+        // Convert matrix to quaternion
+        rotation.setFromNormalized(rotationMatrix);
+
+        // Extract quaternion components for the render method
+        float rotationX = rotation.x;
+        float rotationY = rotation.y;
+        float rotationZ = rotation.z;
+        float rotationW = rotation.w;
+
+        // Calculate UV coordinates
         float minU = this.getMinU();
         float maxU = this.getMaxU();
         float minV = this.getMinV();
         float maxV = this.getMaxV();
-        Matrix4f rotationMatrix = new Matrix4f();
-        rotationMatrix.identity();
-        rotationMatrix.rotate((float)Math.toRadians((double)(-this.yaw)), new Vector3f(0.0F, 1.0F, 0.0F));
-        rotationMatrix.rotate((float)Math.toRadians((double)this.pitch), new Vector3f(1.0F, 0.0F, 0.0F));
-        rotationMatrix.rotate((float)Math.toRadians((double)this.roll), new Vector3f(0.0F, 0.0F, 1.0F));
-        rotationMatrix.rotate((float)Math.toRadians((double)(-this.localYaw)), new Vector3f(0.0F, 1.0F, 0.0F));
-        Vector4f[] corners = new Vector4f[]{new Vector4f(-size, this.modelOffset, -size, 1.0F), new Vector4f(-size, this.modelOffset, size, 1.0F), new Vector4f(size, this.modelOffset, size, 1.0F), new Vector4f(size, this.modelOffset, -size, 1.0F)};
-        Vector4f[] var15 = corners;
-        int var16 = corners.length;
 
-        for(int var17 = 0; var17 < var16; ++var17) {
-            Vector4f corner = var15[var17];
-            rotationMatrix.transform(corner);
-            corner.add(x, y, z, 0.0F);
-        }
+        // Apply vertical offset, add extra offset here if this method as helper
+        y += (this.modelOffset);
 
-//        vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z()).texture(maxU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-//        vertexConsumer.vertex(corners[1].x(), corners[1].y(), corners[1].z()).texture(maxU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-//        vertexConsumer.vertex(corners[2].x(), corners[2].y(), corners[2].z()).texture(minU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-//        vertexConsumer.vertex(corners[3].x(), corners[3].y(), corners[3].z()).texture(minU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-//        vertexConsumer.vertex(corners[3].x(), corners[3].y(), corners[3].z()).texture(minU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-//        vertexConsumer.vertex(corners[2].x(), corners[2].y(), corners[2].z()).texture(minU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-//        vertexConsumer.vertex(corners[1].x(), corners[1].y(), corners[1].z()).texture(maxU, minV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
-//        vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z()).texture(maxU, maxV).color(this.red, this.green, this.blue, this.alpha).light(this.getBrightness(tickDelta));
+        int color = ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue);
+        int brightness = this.getBrightness(tickDelta);
+
+        // Front face render
+        submittable.render(this.getRenderType(), x, y, z, rotationX, rotationY, rotationZ, rotationW, size, maxU, minU, minV, maxV, color, brightness);
+
+        // For the back face, we need to rotate 180 degrees around Y
+        Quaternionf backRotation = new Quaternionf().rotateY((float)Math.PI);
+        rotation.mul(backRotation);
+        // Extract updated quaternion components
+        rotationX = rotation.x;
+        rotationY = rotation.y;
+        rotationZ = rotation.z;
+        rotationW = rotation.w;
+
+        // Back face render after rotation
+        submittable.render(this.getRenderType(),x, y, z, rotationX, rotationY, rotationZ, rotationW, size, minU, maxU, minV, maxV, color, brightness);
     }
 
     @Environment(EnvType.CLIENT)
