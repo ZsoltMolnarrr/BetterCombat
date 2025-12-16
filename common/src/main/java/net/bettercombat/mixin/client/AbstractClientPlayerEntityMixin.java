@@ -151,7 +151,11 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                             (1F - upswing),                     // Use this value at config `0.5`
                             upswing / (1F - upswing)));         // Use this value at config `1.0`
 
-            controller.activeFirstPersonConfig = firstPersonConfig(animatedHand);
+            var fistPersonConfig = firstPersonConfig(animatedHand);
+            if (animatedHand == AnimatedHand.OFF_HAND) {
+                fistPersonConfig = FirstPersonHelper.mirrored(fistPersonConfig);
+            }
+            controller.activeFirstPersonConfig = fistPersonConfig;
             controller.speed.speed = speed;
             controller.mirror.enabled = mirror;
             attackAnimation.speed.set(upswingSpeed,
