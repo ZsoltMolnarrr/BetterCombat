@@ -43,8 +43,9 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modApi "com.zigythebird.playeranim:PlayerAnimationLibFabric:${project.player_anim_version}"
-    // modImplementation(files("../fabric/run/mods/dev/player-animation-lib-fabric-${project.player_anim_version}.jar"))
+    modApi("com.zigythebird.playeranim:PlayerAnimationLibCommon:${project.player_anim_version}")
+    implementation("com.zigythebird.playeranim:PlayerAnimationLibCore:${project.player_anim_version}")
+
     implementation ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
     modCompileOnly("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive false }
