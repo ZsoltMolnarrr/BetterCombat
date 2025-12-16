@@ -48,7 +48,6 @@ dependencies {
 
     implementation ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
-    modCompileOnly("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive false }
     modCompileOnly("maven.modrinth:first-person-model:${project.fpm_version}")
 
     modCompileOnly("dev.ftb.mods:ftb-teams:${project.ftb_teams_version}")
