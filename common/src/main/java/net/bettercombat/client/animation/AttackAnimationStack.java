@@ -1,8 +1,6 @@
 package net.bettercombat.client.animation;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
-import com.zigythebird.playeranim.lib.mochafloats.MochaEngine;
-import com.zigythebird.playeranimcore.animation.AnimationController;
 import com.zigythebird.playeranimcore.animation.layered.ModifierLayer;
 import com.zigythebird.playeranimcore.animation.layered.modifier.AdjustmentModifier;
 import com.zigythebird.playeranimcore.animation.layered.modifier.MirrorModifier;
@@ -18,7 +16,6 @@ import net.minecraft.entity.EntityPose;
 import net.minecraft.util.Identifier;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 public class AttackAnimationStack extends PlayerAnimationController {
 
@@ -30,11 +27,6 @@ public class AttackAnimationStack extends PlayerAnimationController {
 
     public AttackAnimationStack(AbstractClientPlayerEntity player, AnimationStateHandler animationHandler) {
         super(player, animationHandler);
-        postInit();
-    }
-
-    public AttackAnimationStack(AbstractClientPlayerEntity player, AnimationStateHandler animationHandler, Function<AnimationController, MochaEngine<AnimationController>> molangRuntime) {
-        super(player, animationHandler, molangRuntime);
         postInit();
     }
 
