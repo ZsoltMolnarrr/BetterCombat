@@ -75,6 +75,7 @@ public class WeaponRegistry {
     }
 
     private static void loadContainers(ResourceManager resourceManager) {
+        var logging = BetterCombatMod.config.weapon_registry_logging;
         Map<Identifier, AttributesContainer> containers = new HashMap();
         // Reading all attribute files
         for (var entry : resourceManager.findResources("weapon_attributes", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
@@ -88,7 +89,9 @@ public class WeaponRegistry {
                         .toString().replace("weapon_attributes/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
                 containers.put(Identifier.of(id), container);
-                System.out.println("Loaded container: " + id);
+                if (logging) {
+                    System.out.println("Loaded container: " + id);
+                }
             } catch (Exception e) {
                 System.err.println("Failed to parse: " + identifier);
                 e.printStackTrace();
