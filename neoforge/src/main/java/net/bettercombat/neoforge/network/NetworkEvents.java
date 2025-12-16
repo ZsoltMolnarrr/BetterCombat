@@ -57,13 +57,11 @@ public class NetworkEvents {
         // Shared play stage
 
         registrar.playBidirectional(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC, (packet, context) -> {
-            if (context.flow().isClientbound()) {
-                ClientNetwork.handleAttackAnimation(packet);
-            } else {
-                var player = (ServerPlayerEntity) context.player();
-                var server = player.getServer();
-                ServerNetwork.handleAttackAnimation(packet, server, player);
-            }
+            var player = (ServerPlayerEntity) context.player();
+            var server = player.getServer();
+            ServerNetwork.handleAttackAnimation(packet, server, player);
+        }, (packet, context) -> {
+            ClientNetwork.handleAttackAnimation(packet);
         });
 
         // Client config stage
