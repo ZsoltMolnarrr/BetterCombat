@@ -43,27 +43,25 @@ public class NetworkEvents {
 
         registrar.playToServer(Packets.C2S_AttackRequest.PACKET_ID, Packets.C2S_AttackRequest.CODEC, (packet, context) -> {
             var player = (ServerPlayerEntity)context.player();
-            var server = player.getServer();
+            var server = player.getEntityWorld().getServer();
             var vanillaHandler = player.networkHandler;
             ServerNetwork.handleAttackRequest(packet, server, player, vanillaHandler);
         });
 
         registrar.playToServer(Packets.C2S_BlockHit.PACKET_ID, Packets.C2S_BlockHit.CODEC, (packet, context) -> {
             var player = (ServerPlayerEntity)context.player();
-            var server = player.getServer();
+            var server = player.getEntityWorld().getServer();
             ServerNetwork.handleBlockHit(packet, server, player);
         });
 
         // Shared play stage
 
         registrar.playBidirectional(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC, (packet, context) -> {
-            if (context.flow().isClientbound()) {
-                ClientNetwork.handleAttackAnimation(packet);
-            } else {
-                var player = (ServerPlayerEntity) context.player();
-                var server = player.getServer();
-                ServerNetwork.handleAttackAnimation(packet, server, player);
-            }
+            var player = (ServerPlayerEntity) context.player();
+            var server = player.getEntityWorld().getServer();
+            ServerNetwork.handleAttackAnimation(packet, server, player);
+        }, (packet, context) -> {
+            ClientNetwork.handleAttackAnimation(packet);
         });
 
         // Client config stage
