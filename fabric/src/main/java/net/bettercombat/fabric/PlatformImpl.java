@@ -1,7 +1,7 @@
 package net.bettercombat.fabric;
 
 import net.bettercombat.Platform;
-import net.bettercombat.fabric.client.SpellEngineCompatibility;
+import net.bettercombat.client.compat.SpellEngineCompatibility;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
