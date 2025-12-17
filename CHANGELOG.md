@@ -1,6 +1,7 @@
 # 2.3.1
 
 - Fix unnecessary verbose logging
+- Fix particle mirroring for left-handedness #543 
 
 # 2.3.0
 
