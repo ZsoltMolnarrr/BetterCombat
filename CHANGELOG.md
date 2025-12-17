@@ -1,3 +1,7 @@
+# 2.3.1
+
+- Fix unnecessary verbose logging
+
 # 2.3.0
 
 - Add weapon trail particles, huge thanks to @Malfu, for developing the concept and providing the assets
