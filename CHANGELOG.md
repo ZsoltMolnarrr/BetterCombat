@@ -1,3 +1,7 @@
+# 3.0.0
+
+- Support Minecraft 1.21.6, 1.21.7, 1.21.8
+
 # 2.3.1
 
 - Fix unnecessary verbose logging
