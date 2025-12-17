@@ -5,6 +5,8 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
 }
 
+def platform = project.name;
+
 architectury {
     platformSetupLoomIde()
     neoForge()
@@ -60,6 +62,7 @@ dependencies {
 
     modImplementation("com.zigythebird.playeranim:PlayerAnimationLibNeo:${project.player_anim_version}")
     modApi("me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}")
+    include(modImplementation("maven.modrinth:tiny-config:${project.tiny_config_version}-${platform}"))
 }
 
 processResources {
