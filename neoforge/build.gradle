@@ -5,6 +5,8 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
 }
 
+def platform = project.name;
+
 architectury {
     platformSetupLoomIde()
     neoForge()
@@ -50,10 +52,10 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
-    shadowBundle(common("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
 
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${project.player_anim_version}")
     modApi("me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}")
+    include(modImplementation("maven.modrinth:tiny-config:${project.tiny_config_version}-${platform}"))
 }
 
 processResources {
@@ -67,7 +69,6 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = 'dev-shadow'
-    relocate 'net.tinyconfig', 'net.bettercombat.tinyconfig'
 }
 
 remapJar {

@@ -5,6 +5,8 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
 }
 
+def platform = project.name;
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -50,7 +52,7 @@ dependencies {
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 
-    shadowBundle(implementation ("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
+    include(modImplementation("maven.modrinth:tiny-config:${project.tiny_config_version}-${platform}"))
 
     modImplementation("com.terraformersmc:modmenu:${project.mod_menu_version}") { transitive false }
 
