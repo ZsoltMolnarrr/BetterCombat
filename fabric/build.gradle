@@ -65,7 +65,6 @@ dependencies {
     }
 
     modImplementation "com.zigythebird.playeranim:PlayerAnimationLibFabric:${project.player_anim_version}"
-    modCompileOnly("maven.modrinth:spell-engine:${project.spell_engine_version}")
 }
 
 processResources {
