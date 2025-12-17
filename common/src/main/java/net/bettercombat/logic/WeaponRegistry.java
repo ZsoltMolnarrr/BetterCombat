@@ -75,8 +75,8 @@ public class WeaponRegistry {
     }
 
     private static void loadContainers(ResourceManager resourceManager) {
-        var logging = BetterCombatMod.config.weapon_registry_logging;
         Map<Identifier, AttributesContainer> containers = new HashMap();
+        var logging = BetterCombatMod.config.weapon_registry_logging;
         // Reading all attribute files
         for (var entry : resourceManager.findResources("weapon_attributes", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
             var identifier = entry.getKey();
