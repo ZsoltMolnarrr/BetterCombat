@@ -58,6 +58,7 @@ dependencies {
     forgeRuntimeLibrary("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
     include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
 
+    forgeRuntimeLibrary "org.javassist:javassist:3.30.2-GA"
     modImplementation("com.zigythebird.playeranim:PlayerAnimationLibNeo:${project.player_anim_version}")
     modApi("me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}")
 }

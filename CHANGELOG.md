@@ -1,3 +1,12 @@
+# 3.0.0
+
+- Support Minecraft 1.21.6, 1.21.7, 1.21.8
+
+# 2.3.1
+
+- Fix unnecessary verbose logging
+- Fix particle mirroring for left-handedness #543 
+
 # 2.3.0
 
 - Add weapon trail particles, huge thanks to @Malfu, for developing the concept and providing the assets

@@ -9,6 +9,7 @@ import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.particle.SlashParticleEffect;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Arm;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
@@ -37,6 +38,11 @@ public class SlashParticleUtil {
         if (settingsList.isEmpty()) {
             return;
         }
+        var isLeftHanded = player.getMainArm() == Arm.LEFT;
+        var mirror = isOffhand;
+        if (isLeftHanded) {
+            mirror = !mirror;
+        }
         weaponRange -= -0.25F;
         for (var settings: settingsList)  {
 
@@ -50,8 +56,8 @@ public class SlashParticleUtil {
             var offsetY = settings.y_addition();
             var offsetZ = settings.z_addition();
 
-            float offhandRoll = isOffhand ? 180.0F : 0.0F;
-            float offhandFlip = isOffhand ? -1.0F : 1.0F;
+            float offhandRoll = mirror ? 180.0F : 0.0F;
+            float offhandFlip = mirror ? -1.0F : 1.0F;
             float yaw = player.getYaw();
             float pitch = player.getPitch();
             Vec3d right = Vec3d.fromPolar(0.0F, yaw + 90.0F).normalize();
