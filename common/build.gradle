@@ -48,6 +48,7 @@ dependencies {
     modImplementation("maven.modrinth:tiny-config:${project.tiny_config_version}-fabric")
 
     modCompileOnly("maven.modrinth:first-person-model:${project.fpm_version}")
+    modCompileOnly("maven.modrinth:spell-engine:${project.spell_engine_version}-fabric")
     modCompileOnly("dev.ftb.mods:ftb-teams:${project.ftb_teams_version}")
     modCompileOnly("dev.ftb.mods:ftb-library:${project.ftb_library_version}")
 }

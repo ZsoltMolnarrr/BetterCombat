@@ -13,6 +13,7 @@ import net.minecraft.util.math.Vec3d;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.bettercombat.client.compat.SpellEngineCompatibility;
 
 import java.util.Collection;
 
@@ -27,7 +28,9 @@ public class PlatformImpl {
         return ModList.get().isLoaded(modid);
     }
 
-    public static boolean isCastingSpell(PlayerEntity player) { return false; }
+    public static boolean isCastingSpell(PlayerEntity player) {
+        return SpellEngineCompatibility.isCastingSpell(player);
+    }
 
     public static Collection<ServerPlayerEntity> tracking(ServerPlayerEntity player) {
         return (Collection<ServerPlayerEntity>) player.getEntityWorld().getPlayers();

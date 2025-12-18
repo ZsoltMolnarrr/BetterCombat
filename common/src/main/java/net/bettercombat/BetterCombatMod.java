@@ -14,7 +14,7 @@ import net.bettercombat.config.TrailConfig;
 import net.bettercombat.logic.WeaponAttributesFallback;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.server.MinecraftServer;
-import net.tinyconfig.ConfigManager;
+import net.tiny_config.ConfigManager;
 import org.slf4j.Logger;
 
 public class BetterCombatMod {
