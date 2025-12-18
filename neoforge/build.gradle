@@ -57,7 +57,7 @@ dependencies {
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
 
-    forgeRuntimeLibrary "org.javassist:javassist:3.30.2-GA"
+    //forgeRuntimeLibrary "org.javassist:javassist:3.30.2-GA"
     modImplementation("com.zigythebird.playeranim:PlayerAnimationLibNeo:${project.player_anim_version}")
     modApi("me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}")
     include(modImplementation("maven.modrinth:tiny-config:${project.tiny_config_version}-${platform}"))
