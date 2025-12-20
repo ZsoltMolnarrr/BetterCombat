@@ -17,7 +17,7 @@ logoFile = "logo.png"
 [[dependencies.bettercombat]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.9,)"
+versionRange = "[21.11,)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -31,14 +31,14 @@ side = "BOTH"
 [[dependencies.bettercombat]]
 modId="player_animation_library"
 type = "required"
-versionRange="[1,)"
+versionRange="[${player_anim_version},)"
 ordering="AFTER"
 side="BOTH"
 
 [[dependencies.bettercombat]]
 modId="cloth_config"
 type = "required"
-versionRange="[15.0.0,)"
+versionRange="[21.11.0,)"
 ordering="AFTER"
 side="BOTH"
 
