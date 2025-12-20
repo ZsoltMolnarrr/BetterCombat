@@ -89,12 +89,12 @@ public class PoseAnimationStack extends PlayerAnimationController {
     }
 
     private AdjustmentModifier createPoseAdjustment() {
-        return new AdjustmentModifier((partName) -> {
+        return new AdjustmentModifier((partName, data) -> {
             float offsetX = 0;
             float offsetY = 0;
             float offsetZ = 0;
             var player = this.getAvatar();
-            if (!false /* FIXME: FirstPersonMode.isFirstPersonPass() */) {
+            if (!data.isFirstPersonPass()) {
                 if (isArm(partName)) {
                     if (player.isInSneakingPose()) {
                         offsetY -= 3;

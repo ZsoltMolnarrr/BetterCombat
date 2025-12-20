@@ -80,7 +80,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
     }
 
     private AdjustmentModifier createAttackAdjustment() {
-        return new AdjustmentModifier((partName) -> {
+        return new AdjustmentModifier((partName, data) -> {
             var player = this.getAvatar();
             // System.out.println("Player pitch: " + player.getPitch());
             float rotationX = 0;
@@ -92,7 +92,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
 
             var pitch = player.getPitch();
 
-            if (false /* FIXME: FirstPersonMode.isFirstPersonPass() */) {
+            if (data.isFirstPersonPass()) {
                 pitch = (float) Math.toRadians(pitch);
                 if (partName.equals(EntityModelPartNames.BODY)) {
                     rotationX += pitch;
