@@ -7,10 +7,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(LivingEntity.class)
 public interface LivingEntityAccessor {
-    @Accessor
-    int getLastAttackedTicks();
-    @Accessor("lastAttackedTicks")
-    void setLastAttackedTicks(int lastAttackedTicks);
+    @Accessor("ticksSinceLastAttack")
+    int betterCombat_getTicksSinceLastAttack();
+    @Accessor("ticksSinceLastAttack")
+    void betterCombat_setTicksSinceLastAttack(int lastAttackedTicks);
     @Invoker("turnHead")
     void invokeTurnHead(float bodyRotation);
 }

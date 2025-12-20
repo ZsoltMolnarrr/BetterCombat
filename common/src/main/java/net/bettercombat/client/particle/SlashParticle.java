@@ -85,7 +85,7 @@ public class SlashParticle extends BillboardParticle {
     }
 
     public void render(BillboardParticleSubmittable submittable, Camera camera, float tickDelta) {
-        Vec3d cameraPos = camera.getPos();
+        Vec3d cameraPos = camera.getCameraPos();
 
         float x = (float)(this.lastX - cameraPos.getX());
         float y = (float)(this.lastY - cameraPos.getY());

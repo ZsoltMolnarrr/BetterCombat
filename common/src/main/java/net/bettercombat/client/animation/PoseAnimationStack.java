@@ -94,7 +94,7 @@ public class PoseAnimationStack extends PlayerAnimationController {
             float offsetY = 0;
             float offsetZ = 0;
             var player = this.getAvatar();
-            if (!FirstPersonMode.isFirstPersonPass()) {
+            if (!false /* FIXME: FirstPersonMode.isFirstPersonPass() */) {
                 if (isArm(partName)) {
                     if (player.isInSneakingPose()) {
                         offsetY -= 3;

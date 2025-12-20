@@ -92,7 +92,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
 
             var pitch = player.getPitch();
 
-            if (FirstPersonMode.isFirstPersonPass()) {
+            if (false /* FIXME: FirstPersonMode.isFirstPersonPass() */) {
                 pitch = (float) Math.toRadians(pitch);
                 if (partName.equals(EntityModelPartNames.BODY)) {
                     rotationX += pitch;

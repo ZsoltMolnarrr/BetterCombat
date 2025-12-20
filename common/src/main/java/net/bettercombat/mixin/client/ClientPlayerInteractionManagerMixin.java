@@ -18,7 +18,7 @@ public class ClientPlayerInteractionManagerMixin {
 
     @Inject(method = "cancelBlockBreaking", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/network/ClientPlayerEntity;resetLastAttackedTicks()V",
+            target = "Lnet/minecraft/client/network/ClientPlayerEntity;resetTicksSince()V",
             shift = At.Shift.AFTER))
     public void cancelBlockBreaking_FixAttackCD(CallbackInfo ci) {
         try {
@@ -26,7 +26,7 @@ public class ClientPlayerInteractionManagerMixin {
             var cooldownLength = PlayerAttackHelper.getAttackCooldownTicksCapped(player); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
             float typicalUpswing = 0.5F;
             int reducedCooldown = Math.round(cooldownLength * typicalUpswing * BetterCombatMod.config.upswing_multiplier);
-            ((LivingEntityAccessor)player).setLastAttackedTicks(reducedCooldown);
+            ((LivingEntityAccessor)player).betterCombat_setTicksSinceLastAttack(reducedCooldown);
         } catch (Exception ignored) { } // We may get random exceptions when trying to access weapon cooldown
     }
 }

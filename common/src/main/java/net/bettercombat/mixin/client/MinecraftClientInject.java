@@ -356,7 +356,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     private void performAttack() {
         if (Keybindings.feintKeyBinding.isPressed()) {
-            player.resetLastAttackedTicks();
+            player.resetTicksSinceLastAttack();
             cancelWeaponSwing();
             return;
         }
@@ -401,7 +401,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         for (var target: targets) {
             player.attack(target);
         }
-        player.resetLastAttackedTicks();
+        player.resetTicksSinceLastAttack();
         BetterCombatClientEvents.ATTACK_HIT.invoke(handler -> {
             handler.onPlayerAttackStart(player, hand, targets, cursorTarget);
         });

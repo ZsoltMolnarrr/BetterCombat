@@ -118,9 +118,9 @@ public class ServerNetwork {
                         if (BetterCombatMod.config.reworked_sweeping_plays_sound && playEffects) {
                             world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0f, 1.0f);
                         }
-                        if (BetterCombatMod.config.reworked_sweeping_emits_particles && playEffects) {
-                            player.spawnSweepAttackParticles();
-                        }
+//                        if (BetterCombatMod.config.reworked_sweeping_emits_particles && playEffects) {
+//                            player.spawnSweepAttackParticles();
+//                        }
                     }
                 }
 
@@ -145,7 +145,7 @@ public class ServerNetwork {
                     // System.out.println("Attack cooldown: " + attackCooldown + " Knockback multiplier: " + knockbackMultiplier);
                 }
 
-                var lastAttackedTicks = ((LivingEntityAccessor) player).getLastAttackedTicks();
+                var lastAttackedTicks = ((LivingEntityAccessor) player).betterCombat_getTicksSinceLastAttack();
                 if (!useVanillaPacket) {
                     player.setSneaking(request.isSneaking());
                 }
@@ -179,7 +179,7 @@ public class ServerNetwork {
                             ((ConfigurableKnockback) livingEntity).setKnockbackMultiplier_BetterCombat(knockbackMultiplier);
                         }
                     }
-                    ((LivingEntityAccessor) player).setLastAttackedTicks(lastAttackedTicks);
+                    ((LivingEntityAccessor) player).betterCombat_setTicksSinceLastAttack(lastAttackedTicks);
                     // System.out.println("Server - Attacking hand: " + (hand.isOffHand() ? "offhand" : "mainhand") + " CD: " + player.getAttackCooldownProgress(0));
                     if (!isBossPart && useVanillaPacket) {
                         // System.out.println("HIT - A entity: " + entity.getEntityName() + " id: " + entity.getId() + " class: " + entity.getClass());

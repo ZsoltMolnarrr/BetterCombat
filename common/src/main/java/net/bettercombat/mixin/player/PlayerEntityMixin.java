@@ -2,6 +2,7 @@ package net.bettercombat.mixin.player;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
 import net.bettercombat.api.AttackHand;
@@ -14,6 +15,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Hand;
@@ -22,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = PlayerEntity.class, priority = 899)
 public abstract class PlayerEntityMixin implements PlayerAttackProperties, EntityPlayer_BetterCombat {
@@ -73,33 +76,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         return value;
     }
 
-    // FEATURE: Two-handed wielding
-
-//    @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
-//    public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
-//        var player = ((PlayerEntity) ((Object)this));
-//        var mainHandHasTwoHanded = false;
-//        var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
-//        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
-//        if (mainHandAttributes != null && mainHandAttributes.isTwoHanded()) {
-//            mainHandHasTwoHanded = true;
-//        }
-//
-//        var offHandHasTwoHanded = false;
-//        var offHandStack = InventoryUtil.getOffHandSlotStack(player);
-//        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
-//        if(offHandAttributes != null && offHandAttributes.isTwoHanded()) {
-//            offHandHasTwoHanded = true;
-//        }
-//
-//        if (slot == OFFHAND) {
-//            if (mainHandHasTwoHanded || offHandHasTwoHanded) {
-//                cir.setReturnValue(ItemStack.EMPTY);
-//                cir.cancel();
-//                return;
-//            }
-//        }
-//    }
+    // FEATURE: Two-handed wielding - Moved into `LivingEntityMixin`
 
     // FEATURE: Dual wielding
 
@@ -136,68 +113,85 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         }
     }
 
-    @ModifyArg(method = "attack", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"),
-            index = 0)
-    public Hand getHand(Hand hand) {
-        var player = ((PlayerEntity) ((Object)this) );
-        var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
-        if (currentHand != null) {
-            return currentHand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        } else {
-            return Hand.MAIN_HAND;
-        }
-    }
-
-    private AttackHand lastAttack;
-
-    @Redirect(method = "attack", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;"))
-    public ItemStack getMainHandStack_Redirect(PlayerEntity instance) {
-        // DUAL WIELDING LOGIC
-        // Here we return the off-hand stack as fake main-hand, purpose:
-        // - Getting enchants
-        // - Getting itemstack to be damaged
-        if (comboCount < 0) {
-            // Vanilla behaviour
-            return instance.getMainHandStack();
-        }
-        var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
-        if (hand == null) {
-            var isOffHand = PlayerAttackHelper.shouldAttackWithOffHand(instance, comboCount);
-            if (isOffHand) {
-                return ItemStack.EMPTY;
-            } else {
-                return instance.getMainHandStack();
+    @Inject(at = @At("HEAD"), method = "canUseSweepAttack", cancellable = true)
+    public void canUseSweepAttack_HEAD(boolean cooldownPassed, boolean criticalHit, boolean knockback, CallbackInfoReturnable<Boolean> cir) {
+        if (!BetterCombatMod.config.allow_vanilla_sweeping) {
+            var player = ((PlayerEntity) ((Object)this));
+            var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
+            if (currentHand != null) {
+                cir.setReturnValue(false);
+                cir.cancel();
             }
         }
-        lastAttack = hand;
-        return hand.itemStack();
     }
 
-    @Redirect(method = "attack", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;setStackInHand(Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V"))
-    public void setStackInHand_Redirect(PlayerEntity instance, Hand handArg, ItemStack itemStack) {
-        // DUAL WIELDING LOGIC
-        // In case item got destroyed due to durability loss
-        // We empty the correct hand
-        if (comboCount < 0) {
-            // Vanilla behaviour
-            instance.setStackInHand(handArg, itemStack);
-        }
-        // `handArg` argument is always `MAIN`, we can ignore it
-        AttackHand hand = lastAttack;
-        if (hand == null) {
-            hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
-        }
-        if (hand == null) {
-            instance.setStackInHand(handArg, itemStack);
-            return;
-        }
-        var redirectedHand = hand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        instance.setStackInHand(redirectedHand, itemStack);
-    }
+//    private AttackHand lastAttack;
+
+//    @Redirect(method = "attack", at = @At(value = "INVOKE",
+//            target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;"))
+//    public ItemStack getMainHandStack_Redirect(PlayerEntity instance) {
+//        // DUAL WIELDING LOGIC
+//        // Here we return the off-hand stack as fake main-hand, purpose:
+//        // - Getting enchants
+//        // - Getting itemstack to be damaged
+//        if (comboCount < 0) {
+//            // Vanilla behaviour
+//            return instance.getMainHandStack();
+//        }
+//        var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+//        if (hand == null) {
+//            var isOffHand = PlayerAttackHelper.shouldAttackWithOffHand(instance, comboCount);
+//            if (isOffHand) {
+//                return ItemStack.EMPTY;
+//            } else {
+//                return instance.getMainHandStack();
+//            }
+//        }
+//        lastAttack = hand;
+//        return hand.itemStack();
+//    }
+//
+//    @Redirect(method = "attack", at = @At(value = "INVOKE",
+//            target = "Lnet/minecraft/entity/player/PlayerEntity;setStackInHand(Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V"))
+//    public void setStackInHand_Redirect(PlayerEntity instance, Hand handArg, ItemStack itemStack) {
+//        // DUAL WIELDING LOGIC
+//        // In case item got destroyed due to durability loss
+//        // We empty the correct hand
+//        if (comboCount < 0) {
+//            // Vanilla behaviour
+//            instance.setStackInHand(handArg, itemStack);
+//        }
+//        // `handArg` argument is always `MAIN`, we can ignore it
+//        AttackHand hand = lastAttack;
+//        if (hand == null) {
+//            hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+//        }
+//        if (hand == null) {
+//            instance.setStackInHand(handArg, itemStack);
+//            return;
+//        }
+//        var redirectedHand = hand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
+//        instance.setStackInHand(redirectedHand, itemStack);
+//    }
+
+
+    // FIXME: We may need this
+
+//    @Inject(at = @At("HEAD"), method = "getWeaponStack", cancellable = true)
+//    private void getWeaponStack_HEAD(CallbackInfoReturnable<ItemStack> cir) {
+//        // DUAL WIELDING LOGIC
+//        // Here we return the off-hand stack as fake main-hand, purpose:
+//        // - Getting enchants
+//        // - Getting itemstack to be damaged
+//
+//        var player = ((PlayerEntity) ((Object)this));
+//        var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
+//        if (currentHand != null) {
+//            cir.setReturnValue(currentHand.itemStack());
+//            cir.cancel();
+//        }
+//    }
+
 
     // SECTION: BetterCombatPlayer
 
