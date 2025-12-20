@@ -12,6 +12,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.debug.EntityHitboxDebugRenderer;
 import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.debug.DebugDataStore;
 import net.minecraft.world.debug.gizmo.GizmoDrawing;
 import org.spongepowered.asm.mixin.Mixin;
@@ -58,20 +59,35 @@ public class EntityHitboxDebugRendererMixin {
                 range);
         boolean collides = target.entities.size() > 0;
 
-        // Draw the attack OBB
-        var obb = target.obb.copy().updateVertex();
+        // Calculate interpolation offset for smooth rendering
+        // The OBB is calculated based on tick-based position, but we need to render at interpolated position
+        Vec3d playerPos = player.getEntityPos();
+        Vec3d interpolatedPos = player.getLerpedPos(tickProgress);
+        Vec3d interpolationOffset = interpolatedPos.subtract(playerPos);
+
+        // Draw the attack OBB with interpolation
+        var obb = target.obb.copy();
+        obb.center = obb.center.add(interpolationOffset);
+        obb.updateVertex();
+
         int obbColor = collides
                 ? ColorHelper.fromFloats(1.0F, 1.0F, 0.0F, 0.0F)  // Red with full alpha
                 : ColorHelper.fromFloats(1.0F, 0.0F, 1.0F, 0.0F); // Green with full alpha
 
         drawOBB(obb, obbColor);
 
-        // Draw colliding entity boxes
+        // Draw colliding entity boxes with interpolation
         int entityColor = ColorHelper.fromFloats(1.0F, 1.0F, 0.0F, 0.0F); // Red with full alpha
         for (var entity : target.entities) {
+            Vec3d entityPos = entity.getEntityPos();
+            Vec3d entityInterpolatedPos = entity.getLerpedPos(tickProgress);
+            Vec3d entityInterpolationOffset = entityInterpolatedPos.subtract(entityPos);
+
             var entityObb = new OrientedBoundingBox(entity.getBoundingBox())
-                    .scale(0.95)
-                    .updateVertex();
+                    .scale(0.95);
+            entityObb.center = entityObb.center.add(entityInterpolationOffset);
+            entityObb.updateVertex();
+
             drawOBB(entityObb, entityColor);
         }
     }

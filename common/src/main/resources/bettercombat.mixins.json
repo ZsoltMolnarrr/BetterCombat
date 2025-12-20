@@ -21,7 +21,6 @@
     "client.ClientPlayerEntityMixin",
     "client.ClientPlayerInteractionManagerMixin",
     "client.ClientPlayNetworkHandlerMixin",
-    "client.ColliderDebugRenderer",
     "client.EntityHitboxDebugRendererMixin",
     "client.InGameHudInject",
     "client.ItemStackTooltipMixin",
