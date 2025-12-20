@@ -1,6 +1,6 @@
 package net.bettercombat.neoforge.client;
 
-import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfigClient;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.Keybindings;
@@ -44,7 +44,7 @@ public class NeoForgeClientMod {
         // });
 
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> {
-            return (IConfigScreenFactory) (modContainer, parent) -> AutoConfig.getConfigScreen(ClientConfigWrapper.class, parent).get();
+            return (IConfigScreenFactory) (modContainer, parent) -> AutoConfigClient.getConfigScreen(ClientConfigWrapper.class, parent).get();
         });
     }
 }
