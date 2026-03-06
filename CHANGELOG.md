@@ -1,6 +1,7 @@
 # 2.3.2
 
-- Fix being unable to attack after dying during the windup phase of an attack, #548
+- Fixed being unable to attack after dying during the windup phase of an attack, #548
+- Fixed crashing on invalid particle config #568
 - Improved Friend or Foe logic on FTB Teams membership, thanks to LeDok #571
 
 # 2.3.1
