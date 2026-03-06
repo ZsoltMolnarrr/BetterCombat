@@ -20,9 +20,9 @@ on:
         type: choice
         description: Release type
         options: 
-        - alpha
-        - beta
         - release
+        - beta
+        - alpha
 
 permissions:
   contents: read
