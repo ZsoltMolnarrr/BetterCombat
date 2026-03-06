@@ -1,5 +1,6 @@
 # 2.3.2
 
+- Adjusted windup time and animation for vanilla Mace, to be more instant-like
 - Fixed being unable to attack after dying during the windup phase of an attack, #548
 - Fixed crashing on invalid particle config #568
 - Added mine with weapons whitelist config #574
