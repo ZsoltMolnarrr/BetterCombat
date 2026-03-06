@@ -1,3 +1,7 @@
+# 2.3.2
+
+- Fix being unable to attack after dying during the windup phase of an attack, #548
+
 # 2.3.1
 
 - Fix unnecessary verbose logging

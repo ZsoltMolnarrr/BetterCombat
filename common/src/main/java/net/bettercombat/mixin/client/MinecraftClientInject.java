@@ -329,8 +329,13 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         lastAttacked += 1;
 
         if (ongoingSwing != null) {
-            if (ongoingSwing.ticksLeft(currentTime()) <= 0) {
+            var time = currentTime();
+            var swing = ongoingSwing; // Store in local for further checks
+            if (swing.ticksLeft(time) <= 0) {
                 ongoingSwing = null;
+            }
+            if (!player.isAlive() || !swing.isValid(time)) {
+                cancelWeaponSwing();
             }
         }
         cancelSwingIfNeeded();

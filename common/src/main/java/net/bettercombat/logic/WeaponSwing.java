@@ -12,4 +12,7 @@ public record WeaponSwing(AttackHand attackHand, int startedAt, int upswingTicks
     public int durationTicks() {
         return Math.round(duration);
     }
+    public boolean isValid(int time) {
+        return time >= startedAt && time <= startedAt + (durationTicks() + 1); // +1 for padding
+    }
 }
