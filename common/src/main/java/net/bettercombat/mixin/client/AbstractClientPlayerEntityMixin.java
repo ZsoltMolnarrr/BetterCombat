@@ -156,9 +156,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             }
 
             var fadeIn = copy.beginTick;
-//            float upswingSpeed = (speed / BetterCombatMod.config.getUpswingMultiplier())
-//                    / (Math.max(upswing * 2, 0.001F));
-            float upswingSpeed = speed / Math.max(upswing * 2, 0.001F);
+            var trueUpswingRatio = upswing / BetterCombatMod.config.getUpswingMultiplier();
+            float upswingSpeed = speed / trueUpswingRatio;
             float downwindSpeed = (float) (speed *
                     MathHelper.lerp(Math.max(BetterCombatMod.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
                     (1F - upswing),                     // Use this value at config `0.5`
