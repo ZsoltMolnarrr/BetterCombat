@@ -134,7 +134,16 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     private boolean isTargetingMineableBlock() {
         if (!BetterCombatClientMod.config.isMiningWithWeaponsEnabled) {
-            return false;
+            var whitelist = BetterCombatClientMod.config.mineWithWeaponWhitelist;
+            if (whitelist == null || whitelist.isEmpty()) {
+                return false;
+            }
+            var itemStack = player.getMainHandStack();
+            var id = Registries.ITEM.getId(itemStack.getItem()).toString();
+            if (!PatternMatching.matches(id, whitelist)) {
+                return false;
+            }
+            // Weapon is whitelisted — fall through to continue checks
         }
         var regex = BetterCombatClientMod.config.mineWithWeaponBlacklist;
         if (regex != null && !regex.isEmpty()) {
