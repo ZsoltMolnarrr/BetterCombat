@@ -6,6 +6,7 @@
 - Fixed crashing on invalid particle config #568
 - Added mine with weapons whitelist config #574
 - Improved Friend or Foe logic on FTB Teams membership, thanks to LeDok #571
+- Copper golems are now considered neutral
 
 # 3.0.0
 
