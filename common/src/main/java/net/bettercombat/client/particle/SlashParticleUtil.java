@@ -104,9 +104,12 @@ public class SlashParticleUtil {
             return attackHand.attack().trailParticles();
         }
         var config = BetterCombatMod.trailConfig.value;
-        var animationSpecific = config.animation_based.get(attackHand.attack().animation());
-        if (animationSpecific != null) {
-            return animationSpecific;
+        var animations = config.animation_based;
+        if (animations != null) {
+            var animationSpecific = animations.get(attackHand.attack().animation());
+            if (animationSpecific != null) {
+                return animationSpecific;
+            }
         }
         return List.of();
     }
