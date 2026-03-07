@@ -43,6 +43,8 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public String mineWithWeaponBlacklist = "";
     @ConfigEntry.Gui.Tooltip
+    public String mineWithWeaponWhitelist = "";
+    @ConfigEntry.Gui.Tooltip
     public TriStateAuto firstPersonAnimations = TriStateAuto.AUTO;
     @ConfigEntry.Gui.Tooltip
     public float legAnimationThreshold = 0;

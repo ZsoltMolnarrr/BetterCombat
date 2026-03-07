@@ -1,3 +1,13 @@
+# 3.0.1
+
+- Adjusted windup time and animation for vanilla Mace, to be more instant-like
+- Adjusted windup time for vanilla axes
+- Fixed being unable to attack after dying during the windup phase of an attack, #548
+- Fixed crashing on invalid particle config #568
+- Added mine with weapons whitelist config #574
+- Improved Friend or Foe logic on FTB Teams membership, thanks to LeDok #571
+- Copper golems are now considered neutral
+
 # 3.0.0
 
 - Support Minecraft 1.21.11

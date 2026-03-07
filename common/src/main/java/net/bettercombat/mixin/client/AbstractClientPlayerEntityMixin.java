@@ -145,7 +145,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             if(isLeftHanded()) {
                 mirror = !mirror;
             }
-            float upswingSpeed = speed / BetterCombatMod.config.getUpswingMultiplier();
+            var trueUpswingRatio = upswing / BetterCombatMod.config.getUpswingMultiplier();
+            float upswingSpeed = speed / trueUpswingRatio;
             float downwindSpeed = (float) (speed *
                     MathHelper.lerp(Math.max(BetterCombatMod.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
                             (1F - upswing),                     // Use this value at config `0.5`

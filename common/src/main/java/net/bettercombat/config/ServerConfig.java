@@ -93,6 +93,7 @@ public class ServerConfig implements ConfigData {
         put("minecraft:player", TargetHelper.Relation.NEUTRAL);
         put("minecraft:villager", TargetHelper.Relation.NEUTRAL);
         put("minecraft:iron_golem", TargetHelper.Relation.NEUTRAL);
+        put("minecraft:copper_golem", TargetHelper.Relation.NEUTRAL);
         put("guardvillagers:guard", TargetHelper.Relation.NEUTRAL);
     }};
     public LinkedHashMap<String, TargetHelper.Relation> player_relation_tags = new LinkedHashMap<>() {{

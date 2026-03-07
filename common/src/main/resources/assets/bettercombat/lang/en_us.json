@@ -42,6 +42,8 @@
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip" : "Weapons with an ID that matches this regex will never swing thru grass",
   "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist" : "Mine with weapon blacklist",
   "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist.@Tooltip" : "Weapons with an ID that matches this regex will never be used to harvest blocks",
+  "text.autoconfig.bettercombat.option.client.mineWithWeaponWhitelist" : "Mine with weapon whitelist",
+  "text.autoconfig.bettercombat.option.client.mineWithWeaponWhitelist.@Tooltip" : "Weapons with an ID that matches this regex can always mine blocks, even when 'Mine with weapons' is disabled",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled" : "Debug hitbox",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip" : "Show weapon hitbox when entity hitboxes are displayed",
   "text.autoconfig.bettercombat.option.client.firstPersonAnimations" : "First-person player animations",
