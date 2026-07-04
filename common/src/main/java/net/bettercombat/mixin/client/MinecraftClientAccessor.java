@@ -10,4 +10,6 @@ public interface MinecraftClientAccessor {
     int getAttackCooldown();
     @Accessor("attackCooldown")
     void setAttackCooldown(int attackCooldown);
+    @Accessor("itemUseCooldown")
+    void setItemUseCooldown(int itemUseCooldown);
 }
