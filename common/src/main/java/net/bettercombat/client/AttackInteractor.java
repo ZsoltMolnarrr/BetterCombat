@@ -398,8 +398,9 @@ public class AttackInteractor {
         if(targets.size() == 0) {
             PlatformClient.onEmptyLeftClick(player);
 
-            if (client.crosshairTarget.getType() == BLOCK) {
-                var blockHitResult = (BlockHitResult) client.crosshairTarget;
+            var crosshairTarget = client.crosshairTarget;
+            if (crosshairTarget != null && crosshairTarget.getType() == BLOCK) {
+                var blockHitResult = (BlockHitResult) crosshairTarget;
                 var pos = blockHitResult.getBlockPos();
                 var packet = new Packets.C2S_BlockHit(pos);
                 Platform.networkC2S_Send(packet);
