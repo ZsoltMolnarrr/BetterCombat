@@ -59,6 +59,19 @@ public class AttackInteractor {
 
     public void onDisconnected() {
         BetterCombatClientMod.ENABLED = false;
+        reset();
+    }
+
+    private void reset() {
+        isHoldingAttackInput = false;
+        isHarvesting = false;
+        upswingStack = null;
+        lastAttacedWithItemStack = null;
+        ongoingSwing = null;
+        lastAttacked = 1000;
+        lastSwingDuration = 0;
+        comboReset = 0;
+        targetsInReach = null;
     }
 
     /**
