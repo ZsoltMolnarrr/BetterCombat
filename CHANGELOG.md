@@ -1,3 +1,8 @@
+# 3.0.2
+
+- Refactor attack mechanic attachment (Interactor)
+- Add support for Lunge enchantment #557
+
 # 3.0.1
 
 - Adjusted windup time and animation for vanilla Mace, to be more instant-like
