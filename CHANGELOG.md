@@ -1,3 +1,7 @@
+# 2.4.0
+
+- Added TrailAppearanceOverride API
+
 # 2.3.2
 
 - Adjusted windup time and animation for vanilla Mace, to be more instant-like

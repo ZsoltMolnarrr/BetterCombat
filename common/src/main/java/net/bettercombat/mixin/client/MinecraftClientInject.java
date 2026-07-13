@@ -254,7 +254,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
 
         var particles = SlashParticleUtil.trailParticlesFromAttack(attackHand);
-        var appearance = SlashParticleUtil.appearanceFromItemStack(attackHand.itemStack());
+        var appearance = SlashParticleUtil.appearanceFor(player, attackHand.itemStack());
         var packet = new Packets.AttackAnimation(
                 player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate,
                 (float)PlayerAttackHelper.getStaticRange(player, attackHand.itemStack()),
@@ -421,7 +421,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         });
 
         var particles = SlashParticleUtil.trailParticlesFromAttack(hand);
-        var appearance = SlashParticleUtil.appearanceFromItemStack(hand.itemStack());
+        var appearance = SlashParticleUtil.appearanceFor(player, hand.itemStack());
         SlashParticleUtil.spawnParticles(player, hand.isOffHand(), (float)PlayerAttackHelper.getStaticRange(player, hand.itemStack()), particles, appearance);
 
         setComboCount(getComboCount() + 1);
