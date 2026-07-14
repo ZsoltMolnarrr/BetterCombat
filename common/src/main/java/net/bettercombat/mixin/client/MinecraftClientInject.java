@@ -5,6 +5,7 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
 import net.bettercombat.PlatformClient;
 import net.bettercombat.api.AttackHand;
+import net.bettercombat.api.CombatFlags;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.client.BetterCombatClientEvents;
@@ -77,6 +78,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
     private void pre_doAttack(CallbackInfoReturnable<Boolean> info) {
         if (!BetterCombatClientMod.ENABLED) { return; }
+        if (CombatFlags.isAttackDisabled(player)) { return; }
 
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
@@ -95,6 +97,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
     private void pre_handleBlockBreaking(boolean bl, CallbackInfo ci) {
         if (!BetterCombatClientMod.ENABLED) { return; }
+        if (CombatFlags.isAttackDisabled(player)) { return; }
 
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
@@ -123,6 +126,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
     private void pre_doItemUse(CallbackInfo ci) {
         if (!BetterCombatClientMod.ENABLED) { return; }
+        if (CombatFlags.isAttackDisabled(player)) { return; }
 
         var hand = getCurrentHand();
         if (hand == null) { return; }
@@ -336,6 +340,14 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         }
         targetsInReach = null;
         lastAttacked += 1;
+
+        if (CombatFlags.isAttackDisabled(player)) {
+            // Cancel any in-flight swing, so vanilla input resumes cleanly
+            if (ongoingSwing != null) {
+                cancelWeaponSwing();
+            }
+            return;
+        }
 
         if (ongoingSwing != null) {
             var time = currentTime();

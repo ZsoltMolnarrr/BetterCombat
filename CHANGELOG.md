@@ -1,6 +1,9 @@
 # 2.4.0
 
 - Added TrailAppearanceOverride API
+- Added CombatFlags API allowing to disable Better Combat on a per-player basis #600
+  - Supports disabling via java API call
+  - Supports disabling via entity tag command: `/tag @p add bettercombat_disabled`
 
 # 2.3.2
 
