@@ -4,7 +4,7 @@ import net.bettercombat.Platform;
 import net.bettercombat.fabric.attachment.FabricPlayerAttachments;
 import net.bettercombat.client.compat.SpellEngineCompatibility;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.FriendlyByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -33,7 +33,7 @@ public class PlatformImpl {
     }
 
     public static FriendlyByteBuf createByteBuffer() {
-        return PacketByteBufs.create();
+        return FriendlyByteBufs.create();
     }
 
     public static Collection<ServerPlayer> tracking(ServerPlayer player) {

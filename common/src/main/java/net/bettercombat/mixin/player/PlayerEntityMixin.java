@@ -54,7 +54,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
     // Tags have no change event, and NBT loading bypasses addCommandTag/removeCommandTag,
     // so the tag is polled every tick. Diffing self-heals join, NBT load and respawn.
     private void updateCombatFlagsFromCommandTags(Player player) {
-        var tagged = player.getTags().contains(CombatFlags.DISABLED_TAG);
+        var tagged = player.entityTags().contains(CombatFlags.DISABLED_TAG);
         var flags = getCombatFlags();
         var mirrored = (flags & CombatFlags.TAG_DISABLED) != 0;
         if (tagged != mirrored) {

@@ -8,8 +8,8 @@ import net.bettercombat.particle.BetterCombatParticles;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 
 public class FabricClientMod implements ClientModInitializer {
     @Override
@@ -17,7 +17,7 @@ public class FabricClientMod implements ClientModInitializer {
         BetterCombatClientMod.init();
         BetterCombatClientMod.setupAnimations();
         for (var keybinding : Keybindings.all) {
-            KeyBindingHelper.registerKeyBinding(keybinding);
+            KeyMappingHelper.registerKeyMapping(keybinding);
         }
         ItemTooltipCallback.EVENT.register((itemStack, context, type, lines) -> {
             WeaponAttributeTooltip.modifyTooltip(itemStack, lines);
@@ -27,7 +27,7 @@ public class FabricClientMod implements ClientModInitializer {
         // });
         FabricClientNetwork.init();
         for (var entry: BetterCombatParticles.ENTRIES) {
-            ParticleFactoryRegistry.getInstance().register(
+            ParticleProviderRegistry.getInstance().register(
                     entry.particleType(), (provider) -> new SlashParticle.Provider(provider, entry.params())
             );
         }

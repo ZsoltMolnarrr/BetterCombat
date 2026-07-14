@@ -41,7 +41,8 @@ public class ItemStackTooltipMixin {
         }
     }
 
-    @WrapOperation(method = "method_57370",
+    // 26.1+ is unobfuscated, so the tooltip lambda finally has a stable source name
+    @WrapOperation(method = "lambda$addAttributeTooltips$0",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/ItemAttributeModifiers$Display;apply(Ljava/util/function/Consumer;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)V"),
             require = 0)
     private static void wrapTooltip(ItemAttributeModifiers.Display instance,

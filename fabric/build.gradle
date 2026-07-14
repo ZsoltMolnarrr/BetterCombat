@@ -48,23 +48,23 @@ repositories {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+    implementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+    implementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
-    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    common(project(path: ':common')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 
-    include(modImplementation("maven.modrinth:tiny-config:${project.tiny_config_version}-${platform}"))
+    include(implementation("maven.modrinth:tiny-config:${project.tiny_config_version}-${platform}"))
 
-    modImplementation("com.terraformersmc:modmenu:${project.mod_menu_version}") { transitive false }
+    implementation("com.terraformersmc:modmenu:${project.mod_menu_version}") { transitive false }
 
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+    api("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modImplementation "com.zigythebird.playeranim:PlayerAnimationLibFabric:${project.player_anim_version}"
+    implementation "com.zigythebird.playeranim:PlayerAnimationLibFabric:${project.player_anim_version}"
 }
 
 processResources {
@@ -79,14 +79,17 @@ processResources {
     }
 }
 
-shadowJar {
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
+// 26.1+ is unobfuscated: no remapJar, the shadow jar is the final artifact.
+jar {
+    archiveClassifier = 'raw'
 }
 
-remapJar {
-    inputFile.set shadowJar.archiveFile
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = null
 }
+
+assemble.dependsOn shadowJar
 
 if(project.hasProperty('release_type')) {
     tasks.register("publishMod") {
@@ -112,9 +115,9 @@ if(project.hasProperty('release_type')) {
                 requiredDependency 'player-animation-library'
             }
 
-            mainArtifact(remapJar)
+            mainArtifact(shadowJar)
             afterEvaluate {
-                uploadTask.dependsOn(remapJar)
+                uploadTask.dependsOn(shadowJar)
             }
             options {
                 forgeGradleIntegration = false
@@ -129,7 +132,7 @@ if(project.hasProperty('release_type')) {
         versionName = "${project.version}"
         versionNumber = "${project.version}-fabric" // You don't need to set this manually. Will fail if Modrinth has this version already
         versionType = release_type // This is the default -- can also be `beta` or `alpha`
-        uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+        uploadFile = shadowJar
         gameVersions = ["${rootProject.minecraft_version}"] // Must be an array, even with only one version
         loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
         dependencies { // A special DSL for creating dependencies

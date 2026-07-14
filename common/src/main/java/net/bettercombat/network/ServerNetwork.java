@@ -16,7 +16,7 @@ import net.bettercombat.utils.MathHelper;
 import net.bettercombat.utils.SoundHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundInteractPacket;
+import net.minecraft.network.protocol.game.ServerboundAttackPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -188,8 +188,9 @@ public class ServerNetwork {
                     // System.out.println("Server - Attacking hand: " + (hand.isOffHand() ? "offhand" : "mainhand") + " CD: " + player.getAttackCooldownProgress(0));
                     if (!isBossPart && useVanillaPacket) {
                         // System.out.println("HIT - A entity: " + entity.getEntityName() + " id: " + entity.getId() + " class: " + entity.getClass());
-                        ServerboundInteractPacket vanillaAttackPacket = ServerboundInteractPacket.createAttackPacket(entity, request.isSneaking());
-                        handler.handleInteract(vanillaAttackPacket);
+                        // 26.1: attacks were split out of ServerboundInteractPacket into a dedicated packet
+                        ServerboundAttackPacket vanillaAttackPacket = new ServerboundAttackPacket(entity.getId());
+                        handler.handleAttack(vanillaAttackPacket);
                         attackedAnyEntity = true;
                     } else {
                         // System.out.println("HIT - B entity: " + entity.getEntityName() + " id: " + entity.getId() + " class: " + entity.getClass());
@@ -214,7 +215,7 @@ public class ServerNetwork {
                 if (!attackedAnyEntity) {
                     // Vanilla `PiercingWeaponComponent.stab` fires attack enchantment effects (such as Lunge)
                     // even when nothing is hit. Swings with targets get this via `PlayerEntity.attack`.
-                    player.lungeForwardMaybe();
+                    player.postPiercingAttack();
                 }
 
                 if (!useVanillaPacket) {

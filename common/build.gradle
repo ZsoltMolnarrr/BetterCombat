@@ -36,19 +36,21 @@ dependencies {
     // We depend on Fabric Loader here to use the Fabric @Environment annotations,
     // which get remapped to the correct annotations on each platform.
     // Do NOT use other classes from Fabric Loader.
-    modImplementation "net.fabricmc:fabric-loader:$project.fabric_loader_version"
+    implementation "net.fabricmc:fabric-loader:$project.fabric_loader_version"
     // compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixin_extras_version}"))
 
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+    api("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modApi("com.zigythebird.playeranim:PlayerAnimationLibCommon:${project.player_anim_version}")
+    api("com.zigythebird.playeranim:PlayerAnimationLibCommon:${project.player_anim_version}")
     implementation("com.zigythebird.playeranim:PlayerAnimationLibCore:${project.player_anim_version}")
-    modImplementation("maven.modrinth:tiny-config:${project.tiny_config_version}-fabric")
+    implementation("maven.modrinth:tiny-config:${project.tiny_config_version}-fabric")
 
-    modCompileOnly("maven.modrinth:first-person-model:${project.fpm_version}")
-    modCompileOnly("maven.modrinth:spell-engine:${project.spell_engine_version}-fabric")
-    modCompileOnly("dev.ftb.mods:ftb-teams:${project.ftb_teams_version}")
-    modCompileOnly("dev.ftb.mods:ftb-library:${project.ftb_library_version}")
+    // TODO: Restore compile-only compat dependencies once 26.1 builds are published
+    // (pre-26.1 jars are intermediary-mapped, unusable without remapping)
+    //compileOnly("maven.modrinth:first-person-model:${project.fpm_version}")
+    //compileOnly("maven.modrinth:spell-engine:${project.spell_engine_version}-fabric")
+    //compileOnly("dev.ftb.mods:ftb-teams:${project.ftb_teams_version}")
+    //compileOnly("dev.ftb.mods:ftb-library:${project.ftb_library_version}")
 }

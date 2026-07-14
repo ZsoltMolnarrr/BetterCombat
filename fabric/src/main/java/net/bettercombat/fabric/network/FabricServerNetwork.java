@@ -13,9 +13,9 @@ import java.util.function.Consumer;
 public class FabricServerNetwork {
     public static void init() {
         // Config stage
-        PayloadTypeRegistry.configurationS2C().register(Packets.ConfigSync.PACKET_ID, Packets.ConfigSync.CODEC);
-        PayloadTypeRegistry.configurationS2C().register(Packets.WeaponRegistrySync.PACKET_ID, Packets.WeaponRegistrySync.CODEC);
-        PayloadTypeRegistry.configurationC2S().register(Packets.Ack.PACKET_ID, Packets.Ack.CODEC);
+        PayloadTypeRegistry.clientboundConfiguration().register(Packets.ConfigSync.PACKET_ID, Packets.ConfigSync.CODEC);
+        PayloadTypeRegistry.clientboundConfiguration().register(Packets.WeaponRegistrySync.PACKET_ID, Packets.WeaponRegistrySync.CODEC);
+        PayloadTypeRegistry.serverboundConfiguration().register(Packets.Ack.PACKET_ID, Packets.Ack.CODEC);
 
         ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
             // This if block is required! Otherwise the client gets stuck in connection screen
@@ -44,19 +44,19 @@ public class FabricServerNetwork {
         ServerConfigurationNetworking.registerGlobalReceiver(Packets.Ack.PACKET_ID, (packet, context) -> {
             // Warning: if you do not call completeTask, the client gets stuck!
             if (packet.code().equals(ConfigurationTask.name)) {
-                context.networkHandler().completeTask(ConfigurationTask.KEY);
+                context.packetListener().completeTask(ConfigurationTask.KEY);
             }
             if (packet.code().equals(WeaponRegistrySyncTask.name)) {
-                context.networkHandler().completeTask(WeaponRegistrySyncTask.KEY);
+                context.packetListener().completeTask(WeaponRegistrySyncTask.KEY);
             }
         });
 
         // Play stage
-        PayloadTypeRegistry.playS2C().register(Packets.AttackSound.PACKET_ID, Packets.AttackSound.CODEC);
-        PayloadTypeRegistry.playS2C().register(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC);
-        PayloadTypeRegistry.playC2S().register(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC);
-        PayloadTypeRegistry.playC2S().register(Packets.C2S_AttackRequest.PACKET_ID, Packets.C2S_AttackRequest.CODEC);
-        PayloadTypeRegistry.playC2S().register(Packets.C2S_BlockHit.PACKET_ID, Packets.C2S_BlockHit.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Packets.AttackSound.PACKET_ID, Packets.AttackSound.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(Packets.C2S_AttackRequest.PACKET_ID, Packets.C2S_AttackRequest.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(Packets.C2S_BlockHit.PACKET_ID, Packets.C2S_BlockHit.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.AttackAnimation.PACKET_ID, (packet, context) -> {
             ServerNetwork.handleAttackAnimation(packet, context.server(), context.player());
@@ -83,7 +83,7 @@ public class FabricServerNetwork {
         @Override
         public void start(Consumer<Packet<?>> sender) {
             var packet = new Packets.ConfigSync(this.configString);
-            sender.accept(ServerConfigurationNetworking.createS2CPacket(packet));
+            sender.accept(ServerConfigurationNetworking.createClientboundPacket(packet));
         }
     }
 
@@ -99,7 +99,7 @@ public class FabricServerNetwork {
         @Override
         public void start(Consumer<Packet<?>> sender) {
             var packet = new Packets.WeaponRegistrySync(encodedRegistry.compressed(), encodedRegistry.chunks());
-            sender.accept(ServerConfigurationNetworking.createS2CPacket(packet));
+            sender.accept(ServerConfigurationNetworking.createClientboundPacket(packet));
         }
     }
 }
