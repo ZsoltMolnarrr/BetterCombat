@@ -12,11 +12,11 @@ import net.bettercombat.api.WeaponAttributesHelper;
 import net.bettercombat.api.component.BetterCombatDataComponents;
 import net.bettercombat.network.Packets;
 import net.bettercombat.utils.CompressionHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
@@ -56,7 +56,7 @@ public class WeaponRegistry {
             }
         }
         Item item = itemStack.getItem();
-        Identifier id = Registries.ITEM.getId(item);
+        Identifier id = BuiltInRegistries.ITEM.getKey(item);
         return WeaponRegistry.getAttributes(id);
     }
 
@@ -67,7 +67,7 @@ public class WeaponRegistry {
 
         // Resolving parents
         containers.forEach( (itemId, container) -> {
-            if (!Registries.ITEM.containsId(itemId)) {
+            if (!BuiltInRegistries.ITEM.containsKey(itemId)) {
                 return;
             }
             resolveAndRegisterAttributes(itemId, container);
@@ -78,17 +78,17 @@ public class WeaponRegistry {
         Map<Identifier, AttributesContainer> containers = new HashMap();
         var logging = BetterCombatMod.config.weapon_registry_logging;
         // Reading all attribute files
-        for (var entry : resourceManager.findResources("weapon_attributes", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
+        for (var entry : resourceManager.listResources("weapon_attributes", fileName -> fileName.getPath().endsWith(".json")).entrySet()) {
             var identifier = entry.getKey();
             var resource = entry.getValue();
             try {
                 // System.out.println("Checking resource: " + identifier);
-                JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
+                JsonReader reader = new JsonReader(new InputStreamReader(resource.open()));
                 AttributesContainer container = WeaponAttributesHelper.decode(reader);
                 var id = identifier
                         .toString().replace("weapon_attributes/", "");
                 id = id.substring(0, id.lastIndexOf('.'));
-                containers.put(Identifier.of(id), container);
+                containers.put(Identifier.parse(id), container);
                 if (logging) {
                     System.out.println("Loaded container: " + id);
                 }
@@ -125,7 +125,7 @@ public class WeaponRegistry {
             while (current != null) {
                 resolutionChain.add(0, current.attributes());
                 if (current.parent() != null) {
-                    current = containers.get(Identifier.of(current.parent()));
+                    current = containers.get(Identifier.parse(current.parent()));
                 } else {
                     current = null;
                 }
@@ -216,11 +216,11 @@ public class WeaponRegistry {
         SyncFormat sync = gson.fromJson(json, SyncFormat.class);
         containers.clear();
         sync.attributes.forEach((key, value) -> {
-            containers.put(Identifier.of(key), value);
+            containers.put(Identifier.parse(key), value);
         });
         registrations.clear();
         sync.registrations.forEach((key, value) -> {
-            registrations.put(Identifier.of(key), value);
+            registrations.put(Identifier.parse(key), value);
         });
     }
 

@@ -1,30 +1,29 @@
 package net.bettercombat.client;
 
 import net.bettercombat.BetterCombatMod;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
+import com.mojang.blaze3d.platform.InputConstants;
 import java.util.List;
 
 public class Keybindings {
-    public static KeyBinding feintKeyBinding;
-    public static KeyBinding toggleMineKeyBinding;
-    public static List<KeyBinding> all;
+    public static KeyMapping feintKeyBinding;
+    public static KeyMapping toggleMineKeyBinding;
+    public static List<KeyMapping> all;
 
-    private static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(Identifier.of(BetterCombatMod.ID, "main"));
+    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(BetterCombatMod.ID, "main"));
 
     static {
-        feintKeyBinding = new KeyBinding(
+        feintKeyBinding = new KeyMapping(
                 "keybinds.bettercombat.feint",
-                InputUtil.Type.KEYSYM,
-                InputUtil.UNKNOWN_KEY.getCode(),
+                InputConstants.Type.KEYSYM,
+                InputConstants.UNKNOWN.getValue(),
                 CATEGORY);
 
-        toggleMineKeyBinding = new KeyBinding(
+        toggleMineKeyBinding = new KeyMapping(
                 "keybinds.bettercombat.toggle_mine_with_weapons",
-                InputUtil.Type.KEYSYM,
-                InputUtil.UNKNOWN_KEY.getCode(),
+                InputConstants.Type.KEYSYM,
+                InputConstants.UNKNOWN.getValue(),
                 CATEGORY);
 
         all = List.of(feintKeyBinding, toggleMineKeyBinding);

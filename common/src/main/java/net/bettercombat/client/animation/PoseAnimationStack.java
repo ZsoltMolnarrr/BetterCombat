@@ -7,19 +7,18 @@ import com.zigythebird.playeranimcore.animation.layered.modifier.MirrorModifier;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import com.zigythebird.playeranimcore.math.Vec3f;
 import net.bettercombat.BetterCombatMod;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
-import net.minecraft.entity.PlayerLikeEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.geom.PartNames;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Avatar;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public class PoseAnimationStack extends PlayerAnimationController {
-    public static final Identifier MAIN_HAND_BODY_ID = Identifier.of(BetterCombatMod.ID, "pose_main_hand_body");
-    public static final Identifier MAIN_HAND_ITEM_ID = Identifier.of(BetterCombatMod.ID, "pose_main_hand_item");
-    public static final Identifier OFF_HAND_BODY_ID = Identifier.of(BetterCombatMod.ID, "pose_off_hand_body");
-    public static final Identifier OFF_HAND_ITEM_ID = Identifier.of(BetterCombatMod.ID, "pose_off_hand_item");
+    public static final Identifier MAIN_HAND_BODY_ID = Identifier.fromNamespaceAndPath(BetterCombatMod.ID, "pose_main_hand_body");
+    public static final Identifier MAIN_HAND_ITEM_ID = Identifier.fromNamespaceAndPath(BetterCombatMod.ID, "pose_main_hand_item");
+    public static final Identifier OFF_HAND_BODY_ID = Identifier.fromNamespaceAndPath(BetterCombatMod.ID, "pose_off_hand_body");
+    public static final Identifier OFF_HAND_ITEM_ID = Identifier.fromNamespaceAndPath(BetterCombatMod.ID, "pose_off_hand_item");
 
     public final MirrorModifier mirror = new MirrorModifier();
     public boolean lastAnimationUsesBodyChannel = false;
@@ -27,7 +26,7 @@ public class PoseAnimationStack extends PlayerAnimationController {
     private final boolean isBodyChannel;
     private PoseData lastPose;
 
-    public PoseAnimationStack(PlayerLikeEntity player, AnimationStateHandler animationHandler, boolean isBodyChannel, boolean isMainHand) {
+    public PoseAnimationStack(Avatar player, AnimationStateHandler animationHandler, boolean isBodyChannel, boolean isMainHand) {
         super(player, animationHandler);
         this.isMainHand = isMainHand;
         this.isBodyChannel = isBodyChannel;
@@ -80,7 +79,7 @@ public class PoseAnimationStack extends PlayerAnimationController {
             this.stopTriggeredAnimation();
             lastAnimationUsesBodyChannel = false;
         } else {
-            var animation = PlayerAnimResources.getAnimation(Identifier.of(animationId));
+            var animation = PlayerAnimResources.getAnimation(Identifier.parse(animationId));
             this.mirror.enabled = mirror;
             this.triggerAnimation(animation);
         }
@@ -96,7 +95,7 @@ public class PoseAnimationStack extends PlayerAnimationController {
             var player = this.getAvatar();
             if (!data.isFirstPersonPass()) {
                 if (isArm(partName)) {
-                    if (player.isInSneakingPose()) {
+                    if (player.isCrouching()) {
                         offsetY -= 3;
                     }
                 } else {
@@ -112,6 +111,6 @@ public class PoseAnimationStack extends PlayerAnimationController {
     }
 
     private static boolean isArm(String partName) {
-        return partName.equals(EntityModelPartNames.RIGHT_ARM) || partName.equals(EntityModelPartNames.LEFT_ARM);
+        return partName.equals(PartNames.RIGHT_ARM) || partName.equals(PartNames.LEFT_ARM);
     }
 }

@@ -8,14 +8,13 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import java.util.Collection;
 
 import static net.bettercombat.Platform.Type.FABRIC;
@@ -29,62 +28,62 @@ public class PlatformImpl {
         return FabricLoader.getInstance().isModLoaded(modid);
     }
 
-    public static boolean isCastingSpell(PlayerEntity player) {
+    public static boolean isCastingSpell(Player player) {
         return SpellEngineCompatibility.isCastingSpell(player);
     }
 
-    public static PacketByteBuf createByteBuffer() {
+    public static FriendlyByteBuf createByteBuffer() {
         return PacketByteBufs.create();
     }
 
-    public static Collection<ServerPlayerEntity> tracking(ServerPlayerEntity player) {
+    public static Collection<ServerPlayer> tracking(ServerPlayer player) {
         return PlayerLookup.tracking(player);
     }
 
-    public static Collection<ServerPlayerEntity> around(ServerWorld world, Vec3d origin, double distance) {
+    public static Collection<ServerPlayer> around(ServerLevel world, Vec3 origin, double distance) {
         return PlayerLookup.around(world, origin, distance);
     }
 
-    public static boolean networkS2C_CanSend(ServerPlayerEntity player, Identifier packetId) {
+    public static boolean networkS2C_CanSend(ServerPlayer player, Identifier packetId) {
         return ServerPlayNetworking.canSend(player, packetId);
     }
 
-    public static void networkS2C_Send(ServerPlayerEntity player, CustomPayload payload) {
+    public static void networkS2C_Send(ServerPlayer player, CustomPacketPayload payload) {
         ServerPlayNetworking.send(player, payload);
     }
 
-    public static void networkC2S_Send(CustomPayload payload) {
+    public static void networkC2S_Send(CustomPacketPayload payload) {
         ClientPlayNetworking.send(payload);
     }
 
     public static class PlayerAttachmentsImpl implements Platform.PlayerAttachments {
         @Override
-        public String getMainHandIdleAnimation(PlayerEntity player) {
+        public String getMainHandIdleAnimation(Player player) {
             return FabricPlayerAttachments.getMainHandIdleAnimation(player);
         }
 
         @Override
-        public String getOffHandIdleAnimation(PlayerEntity player) {
+        public String getOffHandIdleAnimation(Player player) {
             return FabricPlayerAttachments.getOffHandIdleAnimation(player);
         }
 
         @Override
-        public void setMainHandIdleAnimation(PlayerEntity player, String animation) {
+        public void setMainHandIdleAnimation(Player player, String animation) {
             FabricPlayerAttachments.setMainHandIdleAnimation(player, animation);
         }
 
         @Override
-        public void setOffHandIdleAnimation(PlayerEntity player, String animation) {
+        public void setOffHandIdleAnimation(Player player, String animation) {
             FabricPlayerAttachments.setOffHandIdleAnimation(player, animation);
         }
 
         @Override
-        public byte getCombatFlags(PlayerEntity player) {
+        public byte getCombatFlags(Player player) {
             return FabricPlayerAttachments.getCombatFlags(player);
         }
 
         @Override
-        public void setCombatFlags(PlayerEntity player, byte flags) {
+        public void setCombatFlags(Player player, byte flags) {
             FabricPlayerAttachments.setCombatFlags(player, flags);
         }
     }

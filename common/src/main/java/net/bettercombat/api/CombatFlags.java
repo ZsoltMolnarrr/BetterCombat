@@ -1,7 +1,7 @@
 package net.bettercombat.api;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Per-player runtime flags controlling Better Combat behavior.
@@ -35,22 +35,22 @@ public final class CombatFlags {
      */
     public static final int API_DISABLED = 0b10;
 
-    public static byte get(PlayerEntity player) {
+    public static byte get(Player player) {
         return ((EntityPlayer_BetterCombat) player).getCombatFlags();
     }
 
-    public static void set(ServerPlayerEntity player, byte flags) {
+    public static void set(ServerPlayer player, byte flags) {
         ((EntityPlayer_BetterCombat) player).setCombatFlags(flags);
     }
 
     /**
      * The player uses fully vanilla combat while disabled by the tag, a mod, or both.
      */
-    public static boolean isAttackDisabled(PlayerEntity player) {
+    public static boolean isAttackDisabled(Player player) {
         return (get(player) & (TAG_DISABLED | API_DISABLED)) != 0;
     }
 
-    public static void setAttacksDisabled(ServerPlayerEntity player, boolean disabled) {
+    public static void setAttacksDisabled(ServerPlayer player, boolean disabled) {
         var flags = get(player);
         set(player, (byte) (disabled ? (flags | API_DISABLED) : (flags & ~API_DISABLED)));
     }

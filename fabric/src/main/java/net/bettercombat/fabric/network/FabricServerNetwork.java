@@ -5,10 +5,8 @@ import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.bettercombat.network.ServerNetwork;
 import net.fabricmc.fabric.api.networking.v1.*;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.server.network.ServerPlayerConfigurationTask;
-import net.minecraft.text.Text;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -27,7 +25,7 @@ public class FabricServerNetwork {
                 var configJson = Packets.ConfigSync.serialize(BetterCombatMod.getConfig());
                 handler.addTask(new ConfigurationTask(configJson));
             } else {
-                handler.disconnect(Text.literal("Network configuration task not supported: " + ConfigurationTask.name));
+                handler.disconnect(Component.literal("Network configuration task not supported: " + ConfigurationTask.name));
             }
         });
 
@@ -39,7 +37,7 @@ public class FabricServerNetwork {
                 // System.out.println("Starting WeaponRegistrySyncTask, chunks: " + WeaponRegistry.getEncodedRegistry().chunks().size());
                 handler.addTask(new WeaponRegistrySyncTask(WeaponRegistry.getEncodedRegistry()));
             } else {
-                handler.disconnect(Text.literal("Network configuration task not supported: " + WeaponRegistrySyncTask.name));
+                handler.disconnect(Component.literal("Network configuration task not supported: " + WeaponRegistrySyncTask.name));
             }
         });
 
@@ -65,7 +63,7 @@ public class FabricServerNetwork {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.C2S_AttackRequest.PACKET_ID, (packet, context) -> {
-            ServerNetwork.handleAttackRequest(packet, context.server(), context.player(), context.player().networkHandler);
+            ServerNetwork.handleAttackRequest(packet, context.server(), context.player(), context.player().connection);
         });
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.C2S_BlockHit.PACKET_ID, (packet, context) -> {
@@ -73,33 +71,33 @@ public class FabricServerNetwork {
         });
     }
 
-    public record ConfigurationTask(String configString) implements ServerPlayerConfigurationTask {
+    public record ConfigurationTask(String configString) implements net.minecraft.server.network.ConfigurationTask {
         public static final String name = BetterCombatMod.ID + ":" + "config";
-        public static final Key KEY = new Key(name);
+        public static final Type KEY = new Type(name);
 
         @Override
-        public Key getKey() {
+        public Type type() {
             return KEY;
         }
 
         @Override
-        public void sendPacket(Consumer<Packet<?>> sender) {
+        public void start(Consumer<Packet<?>> sender) {
             var packet = new Packets.ConfigSync(this.configString);
             sender.accept(ServerConfigurationNetworking.createS2CPacket(packet));
         }
     }
 
-    public record WeaponRegistrySyncTask(WeaponRegistry.Encoded encodedRegistry) implements ServerPlayerConfigurationTask {
+    public record WeaponRegistrySyncTask(WeaponRegistry.Encoded encodedRegistry) implements net.minecraft.server.network.ConfigurationTask {
         public static final String name = BetterCombatMod.ID + ":" + "weapon_registry";
-        public static final Key KEY = new Key(name);
+        public static final Type KEY = new Type(name);
 
         @Override
-        public Key getKey() {
+        public Type type() {
             return KEY;
         }
 
         @Override
-        public void sendPacket(Consumer<Packet<?>> sender) {
+        public void start(Consumer<Packet<?>> sender) {
             var packet = new Packets.WeaponRegistrySync(encodedRegistry.compressed(), encodedRegistry.chunks());
             sender.accept(ServerConfigurationNetworking.createS2CPacket(packet));
         }

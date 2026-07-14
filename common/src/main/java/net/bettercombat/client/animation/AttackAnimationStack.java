@@ -10,22 +10,21 @@ import com.zigythebird.playeranimcore.math.Vec3f;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.client.compat.FirstPersonAnimationCompatibility;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.PlayerLikeEntity;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.model.geom.PartNames;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Avatar;
+import net.minecraft.world.entity.Pose;
 import java.util.Optional;
 
 public class AttackAnimationStack extends PlayerAnimationController {
 
-    public static final Identifier ID = Identifier.of(BetterCombatMod.ID, "attack");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath(BetterCombatMod.ID, "attack");
 
     public final TransmissionSpeedModifier speed = new TransmissionSpeedModifier(1F);
     public final MirrorModifier mirror = new MirrorModifier();
     public final ModifierLayer base = new ModifierLayer(null);
 
-    public AttackAnimationStack(PlayerLikeEntity entity, AnimationStateHandler animationHandler) {
+    public AttackAnimationStack(Avatar entity, AnimationStateHandler animationHandler) {
         super(entity, animationHandler);
         postInit();
     }
@@ -52,7 +51,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
             boolean disableLegs = false;
 
             // Swimming: disable legs
-            if (pose == EntityPose.SWIMMING) {
+            if (pose == Pose.SWIMMING) {
                 disableLegs = true;
             }
 
@@ -66,15 +65,15 @@ public class AttackAnimationStack extends PlayerAnimationController {
                 var legAnimationThreshold = BetterCombatClientMod.config.legAnimationThreshold;
                 if (legAnimationThreshold > 0) {
                     var moving = player.isSprinting() || isWalking(player);
-                    if (moving && player.getVelocity().horizontalLengthSquared() > (legAnimationThreshold * legAnimationThreshold)) {
+                    if (moving && player.getDeltaMovement().horizontalDistanceSqr() > (legAnimationThreshold * legAnimationThreshold)) {
                         disableLegs = true;
                     }
                 }
             }
 
             if (disableLegs) {
-                func.apply(EntityModelPartNames.RIGHT_LEG).setEnabled(false);
-                func.apply(EntityModelPartNames.LEFT_LEG).setEnabled(false);
+                func.apply(PartNames.RIGHT_LEG).setEnabled(false);
+                func.apply(PartNames.LEFT_LEG).setEnabled(false);
             }
         });
     }
@@ -90,11 +89,11 @@ public class AttackAnimationStack extends PlayerAnimationController {
             float offsetY = 0;
             float offsetZ = 0;
 
-            var pitch = player.getPitch();
+            var pitch = player.getXRot();
 
             if (data.isFirstPersonPass()) {
                 pitch = (float) Math.toRadians(pitch);
-                if (partName.equals(EntityModelPartNames.BODY)) {
+                if (partName.equals(PartNames.BODY)) {
                     rotationX += pitch;
                     if (pitch < 0) {
                         var offset = Math.abs(Math.sin(pitch));
@@ -105,7 +104,7 @@ public class AttackAnimationStack extends PlayerAnimationController {
                 } else return Optional.empty();
             } else {
                 pitch = (float) Math.toRadians(pitch);
-                if (partName.equals(EntityModelPartNames.BODY)) rotationX += pitch * 0.75F;
+                if (partName.equals(PartNames.BODY)) rotationX += pitch * 0.75F;
                 else if (isArm(partName)) rotationX += pitch * 0.25F;
                 else if (isLeg(partName)) rotationX -= pitch * 0.75;
                 else return Optional.empty();
@@ -118,13 +117,13 @@ public class AttackAnimationStack extends PlayerAnimationController {
         });
     }
     private boolean isArm(String partName) {
-        return partName.equals(EntityModelPartNames.RIGHT_ARM) || partName.equals(EntityModelPartNames.LEFT_ARM);
+        return partName.equals(PartNames.RIGHT_ARM) || partName.equals(PartNames.LEFT_ARM);
     }
     private boolean isLeg(String partName) {
-        return partName.equals(EntityModelPartNames.RIGHT_LEG) || partName.equals(EntityModelPartNames.LEFT_LEG);
+        return partName.equals(PartNames.RIGHT_LEG) || partName.equals(PartNames.LEFT_LEG);
     }
 
-    private static boolean isWalking(PlayerLikeEntity player) {
-        return !player.isDead() && (player.isSwimming() || player.getVelocity().horizontalLength() > 0.03);
+    private static boolean isWalking(Avatar player) {
+        return !player.isDeadOrDying() && (player.isSwimming() || player.getDeltaMovement().horizontalDistance() > 0.03);
     }
 }

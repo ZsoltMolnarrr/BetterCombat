@@ -1,7 +1,7 @@
 package net.bettercombat.client.collision;
 
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
@@ -22,51 +22,51 @@ public class OrientedBoundingBox {
     // DEFINITIVE PROPERTIES
 
     // Center position of the cuboid
-    public Vec3d center;
+    public Vec3 center;
 
     // Extent defines the half size in all directions
-    public Vec3d extent;
+    public Vec3 extent;
 
     // Orthogonal basis vectors define orientation
-    public Vec3d axisX;
-    public Vec3d axisY;
-    public Vec3d axisZ;
+    public Vec3 axisX;
+    public Vec3 axisY;
+    public Vec3 axisZ;
 
     // DERIVED PROPERTIES
-    public Vec3d scaledAxisX;
-    public Vec3d scaledAxisY;
-    public Vec3d scaledAxisZ;
+    public Vec3 scaledAxisX;
+    public Vec3 scaledAxisY;
+    public Vec3 scaledAxisZ;
     public Matrix3f rotation = new Matrix3f();
-    public Vec3d vertex1;
-    public Vec3d vertex2;
-    public Vec3d vertex3;
-    public Vec3d vertex4;
-    public Vec3d vertex5;
-    public Vec3d vertex6;
-    public Vec3d vertex7;
-    public Vec3d vertex8;
-    public Vec3d[] vertices;
+    public Vec3 vertex1;
+    public Vec3 vertex2;
+    public Vec3 vertex3;
+    public Vec3 vertex4;
+    public Vec3 vertex5;
+    public Vec3 vertex6;
+    public Vec3 vertex7;
+    public Vec3 vertex8;
+    public Vec3[] vertices;
 
     // 1. CONSTRUCT
 
-    public OrientedBoundingBox(Vec3d center, double width, double height, double depth, float yaw, float pitch) {
+    public OrientedBoundingBox(Vec3 center, double width, double height, double depth, float yaw, float pitch) {
         this.center = center;
-        this.extent = new Vec3d(width/2.0, height/2.0, depth/2.0);
-        this.axisZ = Vec3d.fromPolar(yaw, pitch).normalize();
-        this.axisY = Vec3d.fromPolar(yaw + 90, pitch).negate().normalize();
-        this.axisX = axisZ.crossProduct(axisY);
+        this.extent = new Vec3(width/2.0, height/2.0, depth/2.0);
+        this.axisZ = Vec3.directionFromRotation(yaw, pitch).normalize();
+        this.axisY = Vec3.directionFromRotation(yaw + 90, pitch).reverse().normalize();
+        this.axisX = axisZ.cross(axisY);
     }
 
-    public OrientedBoundingBox(Vec3d center, Vec3d size, float yaw, float pitch) {
+    public OrientedBoundingBox(Vec3 center, Vec3 size, float yaw, float pitch) {
         this(center,size.x, size.y, size.z, yaw, pitch);
     }
 
-    public OrientedBoundingBox(Box box) {
-        this.center = new Vec3d((box.maxX + box.minX) / 2.0, (box.maxY + box.minY) / 2.0, (box.maxZ + box.minZ) / 2.0);
-        this.extent = new Vec3d(Math.abs(box.maxX - box.minX) / 2.0, Math.abs(box.maxY - box.minY) / 2.0, Math.abs(box.maxZ - box.minZ) / 2.0);
-        this.axisX = new Vec3d(1, 0, 0);
-        this.axisY = new Vec3d(0, 1, 0);
-        this.axisZ = new Vec3d(0, 0, 1);
+    public OrientedBoundingBox(AABB box) {
+        this.center = new Vec3((box.maxX + box.minX) / 2.0, (box.maxY + box.minY) / 2.0, (box.maxZ + box.minZ) / 2.0);
+        this.extent = new Vec3(Math.abs(box.maxX - box.minX) / 2.0, Math.abs(box.maxY - box.minY) / 2.0, Math.abs(box.maxZ - box.minZ) / 2.0);
+        this.axisX = new Vec3(1, 0, 0);
+        this.axisY = new Vec3(0, 1, 0);
+        this.axisZ = new Vec3(0, 0, 1);
     }
 
     public OrientedBoundingBox(OrientedBoundingBox obb) {
@@ -84,27 +84,27 @@ public class OrientedBoundingBox {
     // 2. CONFIGURE
 
     public OrientedBoundingBox offsetAlongAxisX(double offset) {
-        this.center = this.center.add(axisX.multiply(offset));
+        this.center = this.center.add(axisX.scale(offset));
         return this;
     }
 
     public OrientedBoundingBox offsetAlongAxisY(double offset) {
-        this.center = this.center.add(axisY.multiply(offset));
+        this.center = this.center.add(axisY.scale(offset));
         return this;
     }
 
     public OrientedBoundingBox offsetAlongAxisZ(double offset) {
-        this.center = this.center.add(axisZ.multiply(offset));
+        this.center = this.center.add(axisZ.scale(offset));
         return this;
     }
 
-    public OrientedBoundingBox offset(Vec3d offset) {
+    public OrientedBoundingBox offset(Vec3 offset) {
         this.center = this.center.add(offset);
         return this;
     }
 
     public OrientedBoundingBox scale(double scale) {
-        this.extent = this.extent.multiply(scale);
+        this.extent = this.extent.scale(scale);
         return this;
     }
 
@@ -121,9 +121,9 @@ public class OrientedBoundingBox {
         rotation.set(2,1, (float) axisZ.y);
         rotation.set(2,2, (float) axisZ.z);
 
-        scaledAxisX = axisX.multiply(extent.x);
-        scaledAxisY = axisY.multiply(extent.y);
-        scaledAxisZ = axisZ.multiply(extent.z);
+        scaledAxisX = axisX.scale(extent.x);
+        scaledAxisY = axisY.scale(extent.y);
+        scaledAxisZ = axisZ.scale(extent.z);
 
         vertex1 = center.subtract(scaledAxisZ).subtract(scaledAxisX).subtract(scaledAxisY);
         vertex2 = center.subtract(scaledAxisZ).add(scaledAxisX).subtract(scaledAxisY);
@@ -134,7 +134,7 @@ public class OrientedBoundingBox {
         vertex7 = center.add(scaledAxisZ).add(scaledAxisX).add(scaledAxisY);
         vertex8 = center.add(scaledAxisZ).subtract(scaledAxisX).add(scaledAxisY);
 
-        vertices = new Vec3d[]{
+        vertices = new Vec3[]{
                 vertex1,
                 vertex2,
                 vertex3,
@@ -150,7 +150,7 @@ public class OrientedBoundingBox {
 
     // 4. CHECK INTERSECTIONS
 
-    public boolean contains(Vec3d point) {
+    public boolean contains(Vec3 point) {
         var distance = point.subtract(center).toVector3f();
         distance.mulTranspose(rotation);
         return Math.abs(distance.x()) < extent.x &&
@@ -158,7 +158,7 @@ public class OrientedBoundingBox {
                 Math.abs(distance.z()) < extent.z;
     }
 
-    public boolean intersects(Box boundingBox) {
+    public boolean intersects(AABB boundingBox) {
         var otherOBB = new OrientedBoundingBox(boundingBox).updateVertex();
         return Intersects(this, otherOBB);
     }
@@ -186,33 +186,33 @@ public class OrientedBoundingBox {
         if (Separated(a.vertices, b.vertices, b.scaledAxisZ))
             return false;
 
-        if (Separated(a.vertices, b.vertices, a.scaledAxisX.crossProduct(b.scaledAxisX)))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisX.cross(b.scaledAxisX)))
             return false;
-        if (Separated(a.vertices, b.vertices, a.scaledAxisX.crossProduct(b.scaledAxisY)))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisX.cross(b.scaledAxisY)))
             return false;
-        if (Separated(a.vertices, b.vertices, a.scaledAxisX.crossProduct(b.scaledAxisZ)))
-            return false;
-
-        if (Separated(a.vertices, b.vertices, a.scaledAxisY.crossProduct(b.scaledAxisX)))
-            return false;
-        if (Separated(a.vertices, b.vertices, a.scaledAxisY.crossProduct(b.scaledAxisY)))
-            return false;
-        if (Separated(a.vertices, b.vertices, a.scaledAxisY.crossProduct(b.scaledAxisZ)))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisX.cross(b.scaledAxisZ)))
             return false;
 
-        if (Separated(a.vertices, b.vertices, a.scaledAxisZ.crossProduct(b.scaledAxisX)))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisY.cross(b.scaledAxisX)))
             return false;
-        if (Separated(a.vertices, b.vertices, a.scaledAxisZ.crossProduct(b.scaledAxisY)))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisY.cross(b.scaledAxisY)))
             return false;
-        if (Separated(a.vertices, b.vertices, a.scaledAxisZ.crossProduct(b.scaledAxisZ)))
+        if (Separated(a.vertices, b.vertices, a.scaledAxisY.cross(b.scaledAxisZ)))
+            return false;
+
+        if (Separated(a.vertices, b.vertices, a.scaledAxisZ.cross(b.scaledAxisX)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.scaledAxisZ.cross(b.scaledAxisY)))
+            return false;
+        if (Separated(a.vertices, b.vertices, a.scaledAxisZ.cross(b.scaledAxisZ)))
             return false;
 
         return true;
     }
 
-    private static boolean Separated(Vec3d[] vertsA, Vec3d[] vertsB, Vec3d axis)  {
+    private static boolean Separated(Vec3[] vertsA, Vec3[] vertsB, Vec3 axis)  {
         // Handles the crossProduct product = {0,0,0} case
-        if (axis.equals(Vec3d.ZERO))
+        if (axis.equals(Vec3.ZERO))
             return false;
 
         var aMin = Double.POSITIVE_INFINITY;
@@ -223,10 +223,10 @@ public class OrientedBoundingBox {
         // Define two intervals, a and b. Calculate their min and max values
         for (var i = 0; i < 8; i++)
         {
-            var aDist = vertsA[i].dotProduct(axis);
+            var aDist = vertsA[i].dot(axis);
             aMin = (aDist < aMin) ? aDist : aMin;
             aMax = (aDist > aMax) ? aDist : aMax;
-            var bDist = vertsB[i].dotProduct(axis);
+            var bDist = vertsB[i].dot(axis);
             bMin = (bDist < bMin) ? bDist : bMin;
             bMax = (bDist > bMax) ? bDist : bMax;
         }

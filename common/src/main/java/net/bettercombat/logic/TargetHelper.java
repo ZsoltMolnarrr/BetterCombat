@@ -1,17 +1,17 @@
 package net.bettercombat.logic;
 
 import net.bettercombat.BetterCombatMod;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.Tameable;
-import net.minecraft.entity.decoration.AbstractDecorationEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -33,18 +33,18 @@ public class TargetHelper {
         }
     }
 
-    public static Relation getRelation(PlayerEntity attacker, Entity target) {
+    public static Relation getRelation(Player attacker, Entity target) {
         var config = BetterCombatMod.config;
         if (attacker == target) {
             return config.player_relation_to_self_and_pets; // Relation.NEUTRAL by default, to allow direct hits on pets
         }
-        if (target instanceof Tameable tameable) {
+        if (target instanceof OwnableEntity tameable) {
             var owner = tameable.getOwner();
             if (owner != null) {
                 return getRelation(attacker, owner);
             }
         }
-        if (target instanceof AbstractDecorationEntity) {
+        if (target instanceof HangingEntity) {
             return Relation.NEUTRAL;
         }
 
@@ -57,21 +57,21 @@ public class TargetHelper {
             }
         }
 
-        var targetTypeEntry = Registries.ENTITY_TYPE.getEntry(target.getType());
-        var id = targetTypeEntry.getKey().get().getValue();
+        var targetTypeEntry = BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(target.getType());
+        var id = targetTypeEntry.unwrapKey().get().identifier();
         var mappedRelation = config.player_relations.get(id.toString());
         if (mappedRelation != null) {
             return mappedRelation;
         }
         for (var entry: getRelationTagsCache().entrySet()) {
-            if (targetTypeEntry.isIn(entry.getKey())) {
+            if (targetTypeEntry.is(entry.getKey())) {
                 return entry.getValue();
             }
         }
-        if (target instanceof PassiveEntity) {
+        if (target instanceof AgeableMob) {
             return Relation.coalesce(config.player_relation_to_passives, Relation.HOSTILE);
         }
-        if (target instanceof HostileEntity) {
+        if (target instanceof Monster) {
             return Relation.coalesce(config.player_relation_to_hostiles, Relation.HOSTILE);
         }
         return Relation.coalesce(config.player_relation_to_other, Relation.HOSTILE);
@@ -83,7 +83,7 @@ public class TargetHelper {
             for (var entrySet: BetterCombatMod.config.player_relation_tags.entrySet()) {
                 var tagString = entrySet.getKey();
                 var relation = entrySet.getValue();
-                var tag = TagKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(tagString));
+                var tag = TagKey.create(Registries.ENTITY_TYPE, Identifier.parse(tagString));
                 RELATION_TAG_CACHE.put(tag, relation);
             }
         }
@@ -98,18 +98,18 @@ public class TargetHelper {
     }
     static {
         registerTeamMatcher("vanilla", (entity1, entity2) -> {
-            var team1 = entity1.getScoreboardTeam();
-            var team2 = entity2.getScoreboardTeam();
+            var team1 = entity1.getTeam();
+            var team2 = entity2.getTeam();
             if (team1 == null || team2 == null) {
                 return null;
             }
-            var friendlyFire = team1.isFriendlyFireAllowed();
-            return new TeamRelation(entity1.isTeammate(entity2), friendlyFire);
+            var friendlyFire = team1.isAllowFriendlyFire();
+            return new TeamRelation(entity1.isAlliedTo(entity2), friendlyFire);
         });
     }
 
     public static boolean isAttackableMount(Entity entity) {
-        if (entity instanceof HostileEntity || isEntityHostileVehicle(entity.getName().getString())) {
+        if (entity instanceof Monster || isEntityHostileVehicle(entity.getName().getString())) {
             return true;
         }
         return BetterCombatMod.config.allow_attacking_mount;

@@ -11,22 +11,20 @@ import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.api.fx.ParticlePlacement;
 import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.client.BetterCombatClientMod;
-import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.client.animation.*;
-import net.bettercombat.client.animation.TransmissionSpeedModifier;
 import net.bettercombat.client.particle.SlashParticleUtil;
 import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.mixin.player.LivingEntityAccessor;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.util.Arm;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,21 +33,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity implements PlayerAttackAnimatable {
+@Mixin(AbstractClientPlayer.class)
+public abstract class AbstractClientPlayerEntityMixin extends Player implements PlayerAttackAnimatable {
     private AttackAnimationStack attackAnimation;
     private PoseAnimationStack mainHandBodyPose;
     private PoseAnimationStack mainHandItemPose;
     private PoseAnimationStack offHandBodyPose;
     private PoseAnimationStack offHandItemPose;
 
-    public AbstractClientPlayerEntityMixin(World world, GameProfile profile) {
+    public AbstractClientPlayerEntityMixin(Level world, GameProfile profile) {
         super(world, profile);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void postInit(ClientWorld world, GameProfile profile, CallbackInfo ci) {
-        var player = (AbstractClientPlayerEntity) ((Object) this);
+    private void postInit(ClientLevel world, GameProfile profile, CallbackInfo ci) {
+        var player = (AbstractClientPlayer) ((Object) this);
 
         // Initialize attack animation
         attackAnimation = (AttackAnimationStack) PlayerAnimationAccess.getPlayerAnimationLayer(player, AttackAnimationStack.ID);
@@ -62,22 +60,22 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     @Override
     public void updateAnimationsOnTick() {
         var instance = (Object)this;
-        var player = (PlayerEntity)instance;
+        var player = (Player)instance;
         var isLeftHanded = isLeftHanded();
         var hasActiveAttackAnimation = attackAnimation.isActive(); // attackAnimation.base.getAnimation() != null && attackAnimation.base.getAnimation().isActive();
-        var mainHandStack = player.getMainHandStack();
+        var mainHandStack = player.getMainHandItem();
         // No pose during special activities
 
-        if (scheduledParticles != null && scheduledParticles.time() == player.age) {
+        if (scheduledParticles != null && scheduledParticles.time() == player.tickCount) {
             SlashParticleUtil.spawnParticles(scheduledParticles.args());
             scheduledParticles = null;
         }
 
-        if (player.handSwinging // Official mapping name: `isHandBusy`
+        if (player.swinging // Official mapping name: `isHandBusy`
                 || player.isSwimming()
                 || player.isUsingItem()
-                || player.isClimbing()
-                || player.isGliding()
+                || player.onClimbable()
+                || player.isFallFlying()
                 || Platform.isCastingSpell(player)
                 || CrossbowItem.isCharged(mainHandStack)) {
             // Clear all poses during special activities
@@ -90,7 +88,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         // Restore auto body rotation upon swing - Fix issue #11
         if (hasActiveAttackAnimation) {
-            ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw());
+            ((LivingEntityAccessor)player).invokeTurnHead(player.getYHeadRot());
         }
 
         // Pose animations
@@ -99,7 +97,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         String newMainHandPoseId = null;
         String newOffHandPoseId = null;
 
-        if (MinecraftClient.getInstance().player == player) {
+        if (Minecraft.getInstance().player == player) {
             // Logic on local player too for improved responsiveness
             var pose = PlayerAttackHelper.poseForPlayer(player);
             if (!pose.base().isEmpty()) {
@@ -124,7 +122,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
         // Update body poses (disabled during walking/sneaking for non-two-handed weapons)
         if (!PlayerAttackHelper.isTwoHandedWielding(player)) {
-            if (this.isWalking() || this.isSneaking()) {
+            if (this.isWalking() || this.isShiftKeyDown()) {
                 newMainHandPoseId = null;
                 newOffHandPoseId = null;
             }
@@ -137,7 +135,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     public void playAttackAnimation(String name, AnimatedHand animatedHand, float length, float upswing) {
         try {
             var controller = attackAnimation;
-            var animation = PlayerAnimResources.getAnimation(Identifier.of(name));
+            var animation = PlayerAnimResources.getAnimation(Identifier.parse(name));
 
             var endTick = animation.data().<Float>get(ExtraAnimationData.END_TICK_KEY).orElse(animation.length());
             var speed = endTick / length;
@@ -148,7 +146,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             var trueUpswingRatio = upswing / BetterCombatMod.config.getUpswingMultiplier();
             float upswingSpeed = speed / trueUpswingRatio;
             float downwindSpeed = (float) (speed *
-                    MathHelper.lerp(Math.max(BetterCombatMod.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
+                    Mth.lerp(Math.max(BetterCombatMod.config.getUpswingMultiplier() - 0.5, 0) / 0.5, // Choosing value :D
                             (1F - upswing),                     // Use this value at config `0.5`
                             upswing / (1F - upswing)));         // Use this value at config `1.0`
 
@@ -175,7 +173,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Override
     public void playAttackParticles(boolean isOffHand, float weaponRange, int delay, List<ParticlePlacement> particles, TrailAppearance appearance) {
-        var player = (AbstractClientPlayerEntity)(Object)this;
+        var player = (AbstractClientPlayer)(Object)this;
         var spawn = new SlashParticleUtil.SpawnArgs(
                 player,
                 isOffHand,
@@ -185,16 +183,16 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         );
         scheduledParticles = new SlashParticleUtil.ScheduledSpawnArgs(
                 spawn,
-                player.age + delay
+                player.tickCount + delay
         );
     }
 
     private boolean isWalking() {
-        return !this.isDead() && (this.isSwimming() || this.getVelocity().horizontalLength() > 0.03);
+        return !this.isDeadOrDying() && (this.isSwimming() || this.getDeltaMovement().horizontalDistance() > 0.03);
     }
 
     public boolean isLeftHanded() {
-        return this.getMainArm() == Arm.LEFT;
+        return this.getMainArm() == HumanoidArm.LEFT;
     }
 
     // PlayerAttackAnimatable

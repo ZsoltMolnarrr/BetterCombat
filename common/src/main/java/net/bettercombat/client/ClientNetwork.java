@@ -6,11 +6,11 @@ import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.Registries;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 
 public class ClientNetwork {
     public static void handleWeaponRegistrySync(Packets.WeaponRegistrySync packet) {
@@ -24,10 +24,10 @@ public class ClientNetwork {
     }
 
     public static void handleAttackAnimation(Packets.AttackAnimation packet) {
-        var client = MinecraftClient.getInstance();
+        var client = Minecraft.getInstance();
         client.execute(() -> {
-            var entity = client.world.getEntityById(packet.playerId());
-            if (entity instanceof PlayerEntity player
+            var entity = client.level.getEntity(packet.playerId());
+            if (entity instanceof Player player
                     // Avoid local playback, unless replay mod is loaded
                     && (player != client.player || Platform.isModLoaded("replaymod")) ) {
                 var animatable = (PlayerAttackAnimatable) entity;
@@ -48,22 +48,22 @@ public class ClientNetwork {
     }
 
     public static void handleAttackSound(Packets.AttackSound packet) {
-        var client = MinecraftClient.getInstance();
+        var client = Minecraft.getInstance();
         client.execute(() -> {
             try {
                 if (BetterCombatClientMod.config.weaponSwingSoundVolume == 0) {
                     return;
                 }
 
-                var soundEvent = Registries.SOUND_EVENT.get(Identifier.of(packet.soundId()));
+                var soundEvent = BuiltInRegistries.SOUND_EVENT.getValue(Identifier.parse(packet.soundId()));
                 var configVolume = BetterCombatClientMod.config.weaponSwingSoundVolume;
                 var volume = packet.volume() * ((float) Math.min(Math.max(configVolume, 0), 100) / 100F);
-                client.world.playSoundClient(
+                client.level.playLocalSound(
                         packet.x(),
                         packet.y(),
                         packet.z(),
                         soundEvent,
-                        SoundCategory.PLAYERS,
+                        SoundSource.PLAYERS,
                         volume,
                         packet.pitch(),
                         true);

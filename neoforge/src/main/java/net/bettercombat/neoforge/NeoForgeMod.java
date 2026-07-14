@@ -4,10 +4,10 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.neoforge.attachment.NeoForgePlayerAttachments;
 import net.bettercombat.particle.BetterCombatParticles;
 import net.bettercombat.utils.SoundHelper;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -31,15 +31,15 @@ public final class NeoForgeMod {
     }
 
     public static void register(RegisterEvent event) {
-        event.register(RegistryKeys.PARTICLE_TYPE, reg -> {
+        event.register(Registries.PARTICLE_TYPE, reg -> {
             BetterCombatParticles.register();
         });
     }
 
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
-            DeferredRegister.create(Registries.SOUND_EVENT, BetterCombatMod.ID);
+            DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, BetterCombatMod.ID);
 
     static {
-        SoundHelper.soundKeys.forEach(soundKey -> SOUND_EVENTS.register(soundKey, () -> SoundEvent.of(Identifier.of(BetterCombatMod.ID, soundKey))));
+        SoundHelper.soundKeys.forEach(soundKey -> SOUND_EVENTS.register(soundKey, () -> SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(BetterCombatMod.ID, soundKey))));
     }
 }

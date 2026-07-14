@@ -4,7 +4,7 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.logic.InventoryUtil;
 import net.bettercombat.mixin.player.PlayerEntityAccessor;
 import net.bettercombat.mixin.player.PlayerInventoryAccessor;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingSwapItemsEvent;
@@ -19,9 +19,9 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onHandSwap(LivingSwapItemsEvent.Hands event){
-        if (event.getEntity() instanceof PlayerEntity player) {
+        if (event.getEntity() instanceof Player player) {
             var offHandStack = InventoryUtil.getOffHandSlotStack(player);
-            event.setItemSwappedToOffHand(player.getMainHandStack());
+            event.setItemSwappedToOffHand(player.getMainHandItem());
             event.setItemSwappedToMainHand(offHandStack);
         }
     }

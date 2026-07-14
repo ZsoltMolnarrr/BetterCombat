@@ -17,20 +17,19 @@ import net.bettercombat.logic.*;
 import net.bettercombat.mixin.client.MinecraftClientAccessor;
 import net.bettercombat.network.Packets;
 import net.bettercombat.utils.PatternMatching;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import java.util.List;
 
-import static net.minecraft.util.hit.HitResult.Type.BLOCK;
+import static net.minecraft.world.phys.HitResult.Type.BLOCK;
 
 /**
  * Client-side attack management: upswing/combo state machine, attack-vs-mine input policy,
@@ -38,9 +37,9 @@ import static net.minecraft.util.hit.HitResult.Type.BLOCK;
  * Injected into the game by the thin `MinecraftClientInject` mixin, which delegates here.
  */
 public class AttackInteractor {
-    private final MinecraftClient client;
+    private final Minecraft client;
 
-    public AttackInteractor(MinecraftClient client) {
+    public AttackInteractor(Minecraft client) {
         this.client = client;
     }
 
@@ -83,7 +82,7 @@ public class AttackInteractor {
         if (!BetterCombatClientMod.ENABLED) { return false; }
         if (CombatFlags.isAttackDisabled(client.player)) { return false; }
 
-        WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandItem());
         if (attributes != null && attributes.attacks() != null) {
             if (isTargetingMineableBlock() || isHarvesting) {
                 isHarvesting = true;
@@ -103,10 +102,10 @@ public class AttackInteractor {
         if (!BetterCombatClientMod.ENABLED) { return false; }
         if (CombatFlags.isAttackDisabled(client.player)) { return false; }
 
-        WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandItem());
         if (attributes != null && attributes.attacks() != null) {
             boolean cancel = false;
-            boolean isPressed = client.options.attackKey.isPressed();
+            boolean isPressed = client.options.keyAttack.isDown();
             if(isPressed && !isHoldingAttackInput) {
                 if (isTargetingMineableBlock() || isHarvesting) {
                     isHarvesting = true;
@@ -139,7 +138,7 @@ public class AttackInteractor {
         var hand = getCurrentHand();
         if (hand == null) { return false; }
         double upswingRate = hand.upswingRate();
-        return currentUpswingTicks() > 0 || client.player.getAttackCooldownProgress(0) < (1.0 - upswingRate);
+        return currentUpswingTicks() > 0 || client.player.getAttackStrengthScale(0) < (1.0 - upswingRate);
     }
 
     public void preTick() {
@@ -178,13 +177,13 @@ public class AttackInteractor {
         if (client.player == null) {
             return;
         }
-        if (Keybindings.toggleMineKeyBinding.wasPressed()) {
+        if (Keybindings.toggleMineKeyBinding.consumeClick()) {
             BetterCombatClientMod.config.isMiningWithWeaponsEnabled = !BetterCombatClientMod.config.isMiningWithWeaponsEnabled;
             AutoConfig.getConfigHolder(ClientConfigWrapper.class).save();
 
-            var message = I18n.translate(BetterCombatClientMod.config.isMiningWithWeaponsEnabled ?
+            var message = I18n.get(BetterCombatClientMod.config.isMiningWithWeaponsEnabled ?
                     "hud.bettercombat.mine_with_weapons_on" : "hud.bettercombat.mine_with_weapons_off");
-            client.inGameHud.setOverlayMessage(Text.literal(message), false);
+            client.gui.setOverlayMessage(Component.literal(message), false);
         }
     }
 
@@ -197,8 +196,8 @@ public class AttackInteractor {
             if (whitelist == null || whitelist.isEmpty()) {
                 return false;
             }
-            var itemStack = player.getMainHandStack();
-            var id = Registries.ITEM.getId(itemStack.getItem()).toString();
+            var itemStack = player.getMainHandItem();
+            var id = BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString();
             if (!PatternMatching.matches(id, whitelist)) {
                 return false;
             }
@@ -206,8 +205,8 @@ public class AttackInteractor {
         }
         var regex = BetterCombatClientMod.config.mineWithWeaponBlacklist;
         if (regex != null && !regex.isEmpty()) {
-            var itemStack = player.getMainHandStack();
-            var id = Registries.ITEM.getId(itemStack.getItem()).toString();
+            var itemStack = player.getMainHandItem();
+            var id = BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString();
             if (PatternMatching.matches(id, regex)) {
                 return false;
             }
@@ -216,13 +215,13 @@ public class AttackInteractor {
                 && this.hasTargetsInReach()) {
             return false;
         }
-        HitResult crosshairTarget = client.crosshairTarget;
+        HitResult crosshairTarget = client.hitResult;
         if (crosshairTarget != null && crosshairTarget.getType() == BLOCK) {
             BlockHitResult blockHitResult = (BlockHitResult) crosshairTarget;
             BlockPos pos = blockHitResult.getBlockPos();
-            BlockState clicked = client.world.getBlockState(pos);
+            BlockState clicked = client.level.getBlockState(pos);
             if (shouldSwingThruGrass()) {
-                if (!clicked.getCollisionShape(client.world, pos).isEmpty() || clicked.getHardness(client.world, pos) != 0.0F) {
+                if (!clicked.getCollisionShape(client.level, pos).isEmpty() || clicked.getDestroySpeed(client.level, pos) != 0.0F) {
                     return true;
                 }
             } else {
@@ -244,8 +243,8 @@ public class AttackInteractor {
         if (regex == null || regex.isEmpty()) {
             return true;
         }
-        var itemStack = client.player.getMainHandStack();
-        var id = Registries.ITEM.getId(itemStack.getItem()).toString();
+        var itemStack = client.player.getMainHandItem();
+        var id = BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString();
         return !PatternMatching.matches(id, regex);
     }
 
@@ -253,7 +252,7 @@ public class AttackInteractor {
         if (client.player == null) {
             return 0;
         }
-        return client.player.age;
+        return client.player.tickCount;
     }
 
     private int currentUpswingTicks() {
@@ -268,7 +267,7 @@ public class AttackInteractor {
 
         // Guard conditions
 
-        if (player.isRiding()) {
+        if (player.isHandsBusy()) {
             // isRiding is `isHandsBusy()` according to official mappings
             // Support for revival mod
             return;
@@ -278,17 +277,17 @@ public class AttackInteractor {
         if (attackHand == null) { return; }
         float upswingRate = (float) attackHand.upswingRate();
         if (currentUpswingTicks() > 0
-                || ((MinecraftClientAccessor) client).getAttackCooldown() > 0
+                || ((MinecraftClientAccessor) client).getMissTime() > 0
                 || player.isUsingItem()
-                || player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
+                || player.getAttackStrengthScale(0) < (1.0 - upswingRate)) {
             return;
         }
 
         // Starting upswing
-        player.stopUsingItem();
+        player.releaseUsingItem();
 
         lastAttacked = 0;
-        upswingStack = player.getMainHandStack();
+        upswingStack = player.getMainHandItem();
         float attackCooldownTicksFloat = PlayerAttackHelper.getAttackCooldownTicksCapped(player); // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
         int attackCooldownTicks = Math.round(attackCooldownTicksFloat);
         this.comboReset = Math.round(attackCooldownTicksFloat * BetterCombatMod.config.combo_reset_rate);
@@ -317,7 +316,7 @@ public class AttackInteractor {
     }
 
     private void cancelSwingIfNeeded() {
-        if (upswingStack != null && !areItemStackEqual(client.player.getMainHandStack(), upswingStack)) {
+        if (upswingStack != null && !areItemStackEqual(client.player.getMainHandItem(), upswingStack)) {
             cancelWeaponSwing();
             return;
         }
@@ -338,8 +337,8 @@ public class AttackInteractor {
         }
         // Switching main-hand weapon
         if (!PlayerAttackHelper.shouldAttackWithOffHand(player, getComboCount())) {
-            if(player.getMainHandStack() == null
-                    || (lastAttacedWithItemStack != null && !lastAttacedWithItemStack.getItem().equals(player.getMainHandStack().getItem()) ) ) {
+            if(player.getMainHandItem() == null
+                    || (lastAttacedWithItemStack != null && !lastAttacedWithItemStack.getItem().equals(player.getMainHandItem().getItem()) ) ) {
                 setComboCount(0);
             }
         }
@@ -380,8 +379,8 @@ public class AttackInteractor {
 
     private void performAttack() {
         var player = client.player;
-        if (Keybindings.feintKeyBinding.isPressed()) {
-            player.resetTicksSinceLastAttack();
+        if (Keybindings.feintKeyBinding.isDown()) {
+            player.resetOnlyAttackStrengthTicker();
             cancelWeaponSwing();
             return;
         }
@@ -394,7 +393,7 @@ public class AttackInteractor {
         if (hand == null) { return; }
         var attack = hand.attack();
         var upswingRate = hand.upswingRate();
-        if (player.getAttackCooldownProgress(0) < (1.0 - upswingRate)) {
+        if (player.getAttackStrengthScale(0) < (1.0 - upswingRate)) {
             return;
         }
 
@@ -410,7 +409,7 @@ public class AttackInteractor {
         if(targets.size() == 0) {
             PlatformClient.onEmptyLeftClick(player);
 
-            var crosshairTarget = client.crosshairTarget;
+            var crosshairTarget = client.hitResult;
             if (crosshairTarget != null && crosshairTarget.getType() == BLOCK) {
                 var blockHitResult = (BlockHitResult) crosshairTarget;
                 var pos = blockHitResult.getBlockPos();
@@ -421,12 +420,12 @@ public class AttackInteractor {
 
         // Mimic logic of:
         // ClientPlayerInteractionManager.attackEntity(PlayerEntity player, Entity target)
-        var packet = new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), player.getInventory().getSelectedSlot(), cursorTarget, targets);
+        var packet = new Packets.C2S_AttackRequest(getComboCount(), player.isShiftKeyDown(), player.getInventory().getSelectedSlot(), cursorTarget, targets);
         Platform.networkC2S_Send(packet);
         for (var target: targets) {
             player.attack(target);
         }
-        player.resetTicksSinceLastAttack();
+        player.resetOnlyAttackStrengthTicker();
         BetterCombatClientEvents.ATTACK_HIT.invoke(handler -> {
             handler.onPlayerAttackStart(player, hand, targets, cursorTarget);
         });
@@ -460,7 +459,7 @@ public class AttackInteractor {
         if (left == null || right == null) {
             return false;
         }
-        return ItemStack.areEqual(left, right);
+        return ItemStack.matches(left, right);
     }
 
     private void setItemUseCooldown(int ticks) {

@@ -1,6 +1,6 @@
 package net.bettercombat.client.misc;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public interface ItemStackViewerPlayer {

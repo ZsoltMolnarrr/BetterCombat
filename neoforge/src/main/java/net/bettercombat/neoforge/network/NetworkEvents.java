@@ -5,8 +5,8 @@ import net.bettercombat.client.ClientNetwork;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.network.Packets;
 import net.bettercombat.network.ServerNetwork;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
@@ -42,23 +42,23 @@ public class NetworkEvents {
         // Server play stage
 
         registrar.playToServer(Packets.C2S_AttackRequest.PACKET_ID, Packets.C2S_AttackRequest.CODEC, (packet, context) -> {
-            var player = (ServerPlayerEntity)context.player();
-            var server = player.getEntityWorld().getServer();
-            var vanillaHandler = player.networkHandler;
+            var player = (ServerPlayer)context.player();
+            var server = player.level().getServer();
+            var vanillaHandler = player.connection;
             ServerNetwork.handleAttackRequest(packet, server, player, vanillaHandler);
         });
 
         registrar.playToServer(Packets.C2S_BlockHit.PACKET_ID, Packets.C2S_BlockHit.CODEC, (packet, context) -> {
-            var player = (ServerPlayerEntity)context.player();
-            var server = player.getEntityWorld().getServer();
+            var player = (ServerPlayer)context.player();
+            var server = player.level().getServer();
             ServerNetwork.handleBlockHit(packet, server, player);
         });
 
         // Shared play stage
 
         registrar.playBidirectional(Packets.AttackAnimation.PACKET_ID, Packets.AttackAnimation.CODEC, (packet, context) -> {
-            var player = (ServerPlayerEntity) context.player();
-            var server = player.getEntityWorld().getServer();
+            var player = (ServerPlayer) context.player();
+            var server = player.level().getServer();
             ServerNetwork.handleAttackAnimation(packet, server, player);
         }, (packet, context) -> {
             ClientNetwork.handleAttackAnimation(packet);
@@ -85,15 +85,15 @@ public class NetworkEvents {
 
     public record ConfigurationTask() implements ICustomConfigurationTask {
         public static final String name = BetterCombatMod.ID + ":" + "config";
-        public static final Key KEY = new Key(name);
+        public static final Type KEY = new Type(name);
 
         @Override
-        public Key getKey() {
+        public Type type() {
             return KEY;
         }
 
         @Override
-        public void run(Consumer<CustomPayload> sender) {
+        public void run(Consumer<CustomPacketPayload> sender) {
             var configString = Packets.ConfigSync.serialize(BetterCombatMod.config);
             var packet = new Packets.ConfigSync(configString);
             sender.accept(packet);
@@ -102,15 +102,15 @@ public class NetworkEvents {
 
     public record WeaponRegistrySyncTask() implements ICustomConfigurationTask {
         public static final String name = BetterCombatMod.ID + ":" + "weapon_registry";
-        public static final Key KEY = new Key(name);
+        public static final Type KEY = new Type(name);
 
         @Override
-        public Key getKey() {
+        public Type type() {
             return KEY;
         }
 
         @Override
-        public void run(Consumer<CustomPayload> sender) {
+        public void run(Consumer<CustomPacketPayload> sender) {
             var encodded = WeaponRegistry.getEncodedRegistry();
             var packet = new Packets.WeaponRegistrySync(encodded.compressed(), encodded.chunks());
             sender.accept(packet);

@@ -4,16 +4,15 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.WeaponAttributes.Attack;
 import net.bettercombat.api.client.AttackRangeExtensions;
 import net.bettercombat.logic.TargetHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,9 +28,9 @@ public class TargetFinder {
         }
     }
 
-    public static TargetResult findAttackTargetResult(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
+    public static TargetResult findAttackTargetResult(Player player, Entity cursorTarget, Attack attack, double attackRange) {
 //        long startTime = System.nanoTime();
-        Vec3d origin = getInitialTracingPoint(player);
+        Vec3 origin = getInitialTracingPoint(player);
         List<Entity> entities = getInitialTargets(player, cursorTarget, attackRange);
 
         if (!AttackRangeExtensions.sources().isEmpty()) {
@@ -39,8 +38,8 @@ public class TargetFinder {
         }
 
         boolean isSpinAttack = attack.angle() > 180;
-        Vec3d size = WeaponHitBoxes.createHitbox(attack.hitbox(), attackRange, isSpinAttack);
-        var obb = new OrientedBoundingBox(origin, size, player.getPitch(), player.getYaw());
+        Vec3 size = WeaponHitBoxes.createHitbox(attack.hitbox(), attackRange, isSpinAttack);
+        var obb = new OrientedBoundingBox(origin, size, player.getXRot(), player.getYRot());
         if (!isSpinAttack) {
             obb = obb.offsetAlongAxisZ(size.z / 2F);
         }
@@ -55,7 +54,7 @@ public class TargetFinder {
         return new TargetResult(cursorTarget, entities, obb);
     }
 
-    private static double applyAttackRangeModifiers(PlayerEntity player, double attackRange) {
+    private static double applyAttackRangeModifiers(Player player, double attackRange) {
         var context = new AttackRangeExtensions.Context(player,attackRange);
         var modifiers = AttackRangeExtensions.sources()
                 .stream()
@@ -76,20 +75,20 @@ public class TargetFinder {
         return result;
     }
 
-    public static List<Entity> findAttackTargets(PlayerEntity player, Entity cursorTarget, Attack attack, double attackRange) {
+    public static List<Entity> findAttackTargets(Player player, Entity cursorTarget, Attack attack, double attackRange) {
         return findAttackTargetResult(player, cursorTarget, attack, attackRange).entities;
     }
 
-    public static Vec3d getInitialTracingPoint(PlayerEntity player) {
-        double shoulderHeight = player.getHeight() * 0.15 * player.getScaleFactor();
-        return player.getEyePos().subtract(0, shoulderHeight, 0);
+    public static Vec3 getInitialTracingPoint(Player player) {
+        double shoulderHeight = player.getBbHeight() * 0.15 * player.getAgeScale();
+        return player.getEyePosition().subtract(0, shoulderHeight, 0);
     }
 
-    public static List<Entity> getInitialTargets(PlayerEntity player, Entity cursorTarget, double attackRange) {
-        Box box = player.getBoundingBox().expand(attackRange * BetterCombatMod.config.target_search_range_multiplier + 1.0);
+    public static List<Entity> getInitialTargets(Player player, Entity cursorTarget, double attackRange) {
+        AABB box = player.getBoundingBox().inflate(attackRange * BetterCombatMod.config.target_search_range_multiplier + 1.0);
         List<Entity> entities = player
-                .getEntityWorld()
-                .getOtherEntities(player, box, entity ->  !entity.isSpectator() && entity.canHit())
+                .level()
+                .getEntities(player, box, entity ->  !entity.isSpectator() && entity.isPickable())
                 .stream()
                 .filter(entity -> entity != player
                         && entity.isAttackable()
@@ -118,24 +117,24 @@ public class TargetFinder {
         @Override
         public List<Entity> filter(List<Entity> entities) {
             return entities.stream()
-                    .filter(entity -> obb.intersects(entity.getBoundingBox().expand(entity.getTargetingMargin()))
-                                || obb.contains(entity.getEntityPos().add(0, entity.getHeight() / 2F, 0))
+                    .filter(entity -> obb.intersects(entity.getBoundingBox().inflate(entity.getPickRadius()))
+                                || obb.contains(entity.position().add(0, entity.getBbHeight() / 2F, 0))
                     )
                     .collect(Collectors.toList());
         }
     }
 
     public static class RadialFilter implements Filter {
-        final private Vec3d origin;
-        final private Vec3d orientation;
+        final private Vec3 origin;
+        final private Vec3 orientation;
         final private double attackRange;
         final private double attackAngle;
 
-        public RadialFilter(Vec3d origin, Vec3d orientation, double attackRange, double attackAngle) {
+        public RadialFilter(Vec3 origin, Vec3 orientation, double attackRange, double attackAngle) {
             this.origin = origin;
             this.orientation = orientation;
             this.attackRange = attackRange;
-            this.attackAngle = MathHelper.clamp(attackAngle, 0, 360);
+            this.attackAngle = Mth.clamp(attackAngle, 0, 360);
         }
 
         @Override
@@ -143,8 +142,8 @@ public class TargetFinder {
             return entities.stream()
                     .filter(entity -> {
                         var maxAngleDif = (attackAngle / 2.0);
-                        Vec3d distanceVector = CollisionHelper.distanceVector(origin, entity.getBoundingBox());
-                        Vec3d positionVector = entity.getEntityPos().add(0, entity.getHeight() / 2F, 0).subtract(origin);
+                        Vec3 distanceVector = CollisionHelper.distanceVector(origin, entity.getBoundingBox());
+                        Vec3 positionVector = entity.position().add(0, entity.getBbHeight() / 2F, 0).subtract(origin);
                         return distanceVector.length() <= attackRange
                                 && ((attackAngle == 0)
                                     || (CollisionHelper.angleBetween(positionVector, orientation) <= maxAngleDif
@@ -156,11 +155,11 @@ public class TargetFinder {
                     .collect(Collectors.toList());
         }
 
-        private static boolean rayContainsNoObstacle(Vec3d start, Vec3d end) {
-            var client = MinecraftClient.getInstance();
+        private static boolean rayContainsNoObstacle(Vec3 start, Vec3 end) {
+            var client = Minecraft.getInstance();
             BlockHitResult hit = null;
-            if (client.world != null) {
-                hit = client.world.raycast(new RaycastContext(start, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, client.player));
+            if (client.level != null) {
+                hit = client.level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, client.player));
             }
             if (hit != null) {
                 return hit.getType() != HitResult.Type.BLOCK;

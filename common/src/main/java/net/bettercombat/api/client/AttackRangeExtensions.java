@@ -1,17 +1,16 @@
 package net.bettercombat.api.client;
 
-import net.minecraft.entity.player.PlayerEntity;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import net.minecraft.world.entity.player.Player;
 
 public class AttackRangeExtensions {
     /**
      * @param player - Player who is about to attack (always the local player)
      * @param attackRange - Non-cumulated, absolute attack range of the attack move
      */
-    public record Context(PlayerEntity player, double attackRange) { }
+    public record Context(Player player, double attackRange) { }
 
 
     /**

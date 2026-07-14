@@ -1,10 +1,10 @@
 package net.bettercombat.api.fx;
 
-import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Wrapper for TrailAppearance that supports conditional appearances based on ItemStack predicates.

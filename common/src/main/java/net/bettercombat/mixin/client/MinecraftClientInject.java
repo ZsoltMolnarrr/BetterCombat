@@ -3,7 +3,7 @@ package net.bettercombat.mixin.client;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.client.AttackInteractor;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * Thin injection glue. All attack management logic lives in `AttackInteractor`.
  */
-@Mixin(MinecraftClient.class)
+@Mixin(Minecraft.class)
 public abstract class MinecraftClientInject implements MinecraftClient_BetterCombat {
     @Unique
     private AttackInteractor interactor;
@@ -22,19 +22,19 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     @Unique
     private AttackInteractor interactor() {
         if (interactor == null) {
-            interactor = new AttackInteractor((MinecraftClient)(Object)this);
+            interactor = new AttackInteractor((Minecraft)(Object)this);
         }
         return interactor;
     }
 
     // Targeting the method where all the disconnection related logic is.
-    @Inject(method = "onDisconnected", at = @At("TAIL"))
+    @Inject(method = "clearDownloadedResourcePacks", at = @At("TAIL"))
     private void disconnect_TAIL(CallbackInfo ci) {
         interactor().onDisconnected();
     }
 
     // Press to attack
-    @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
     private void pre_doAttack(CallbackInfoReturnable<Boolean> info) {
         if (interactor().onDoAttack()) {
             info.setReturnValue(false);
@@ -42,14 +42,14 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
 
     // Hold to attack
-    @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "continueAttack", at = @At("HEAD"), cancellable = true)
     private void pre_handleBlockBreaking(boolean bl, CallbackInfo ci) {
         if (interactor().onHandleBlockBreaking()) {
             ci.cancel();
         }
     }
 
-    @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "startUseItem", at = @At("HEAD"), cancellable = true)
     private void pre_doItemUse(CallbackInfo ci) {
         if (interactor().onDoItemUse()) {
             ci.cancel();

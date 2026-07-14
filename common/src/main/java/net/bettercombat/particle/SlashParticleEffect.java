@@ -3,12 +3,12 @@ package net.bettercombat.particle;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleType;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
-public class SlashParticleEffect implements ParticleEffect {
+public class SlashParticleEffect implements ParticleOptions {
     private final ParticleType<SlashParticleEffect> type;
     private final float pitch;
     private final float yaw;
@@ -77,9 +77,9 @@ public class SlashParticleEffect implements ParticleEffect {
         });
     }
 
-    public static PacketCodec<? super RegistryByteBuf, SlashParticleEffect> createPacketCodec(final ParticleType<SlashParticleEffect> particleType) {
-        return new PacketCodec<RegistryByteBuf, SlashParticleEffect>() {
-            public SlashParticleEffect decode(RegistryByteBuf buf) {
+    public static StreamCodec<? super RegistryFriendlyByteBuf, SlashParticleEffect> createPacketCodec(final ParticleType<SlashParticleEffect> particleType) {
+        return new StreamCodec<RegistryFriendlyByteBuf, SlashParticleEffect>() {
+            public SlashParticleEffect decode(RegistryFriendlyByteBuf buf) {
                 float scale = buf.readFloat();
                 float pitch = buf.readFloat();
                 float yaw = buf.readFloat();
@@ -90,7 +90,7 @@ public class SlashParticleEffect implements ParticleEffect {
                 return new SlashParticleEffect(particleType, scale, pitch, yaw, localYaw, roll, light, color_rgba);
             }
 
-            public void encode(RegistryByteBuf buf, SlashParticleEffect effect) {
+            public void encode(RegistryFriendlyByteBuf buf, SlashParticleEffect effect) {
                 buf.writeFloat(effect.getScale());
                 buf.writeFloat(effect.getPitch());
                 buf.writeFloat(effect.getYaw());

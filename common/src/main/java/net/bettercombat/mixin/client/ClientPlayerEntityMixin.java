@@ -4,9 +4,9 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.client.misc.ItemStackViewerPlayer;
 import net.bettercombat.utils.MathHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,18 +15,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPlayerEntity.class)
+@Mixin(LocalPlayer.class)
 public abstract class ClientPlayerEntityMixin implements ItemStackViewerPlayer {
-    @Shadow protected abstract boolean isCamera();
+    @Shadow protected abstract boolean isControlledCamera();
 
-    @Inject(method = "tickMovementInput", at = @At(value = "TAIL"))
+    @Inject(method = "applyInput", at = @At(value = "TAIL"))
     private void tickMovement_ModifyInput(CallbackInfo ci) {
-        var clientPlayer = (ClientPlayerEntity)((Object)this);
-        if (!isCamera()) {
+        var clientPlayer = (LocalPlayer)((Object)this);
+        if (!isControlledCamera()) {
             return;
         }
         var config = BetterCombatMod.config;
-        var client = (MinecraftClient_BetterCombat) MinecraftClient.getInstance();
+        var client = (MinecraftClient_BetterCombat) Minecraft.getInstance();
         float multiplier = (float) Math.min(Math.max(config.movement_speed_while_attacking, 0.0), 1.0);
         var attack = client.getCurrentAttack();
         if (attack != null) {
@@ -36,7 +36,7 @@ public abstract class ClientPlayerEntityMixin implements ItemStackViewerPlayer {
         if (multiplier == 1) {
             return;
         }
-        if (clientPlayer.hasVehicle() && !config.movement_speed_effected_while_mounting) {
+        if (clientPlayer.isPassenger() && !config.movement_speed_effected_while_mounting) {
             return;
         }
 
@@ -53,8 +53,8 @@ public abstract class ClientPlayerEntityMixin implements ItemStackViewerPlayer {
 //                var chart = "-".repeat((int)(100.0 * multiplier)) + "x";
 //                System.out.println("Movement speed multiplier: " + String.format("%.4f", multiplier) + ">" + chart);
             }
-            clientPlayer.forwardSpeed *= multiplier;
-            clientPlayer.sidewaysSpeed *= multiplier;
+            clientPlayer.zza *= multiplier;
+            clientPlayer.xxa *= multiplier;
         }
     }
 

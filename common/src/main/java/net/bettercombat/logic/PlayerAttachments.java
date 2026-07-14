@@ -1,10 +1,10 @@
 package net.bettercombat.logic;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 public class PlayerAttachments {
-    public static final Identifier MAIN_HAND_IDLE_ANIMATION = Identifier.of("bettercombat", "main_hand_idle_animation");
-    public static final Identifier OFF_HAND_IDLE_ANIMATION = Identifier.of("bettercombat", "off_hand_idle_animation");
+    public static final Identifier MAIN_HAND_IDLE_ANIMATION = Identifier.fromNamespaceAndPath("bettercombat", "main_hand_idle_animation");
+    public static final Identifier OFF_HAND_IDLE_ANIMATION = Identifier.fromNamespaceAndPath("bettercombat", "off_hand_idle_animation");
     /*
      * Per-player combat flags, see `CombatFlags` for the public API.
      *   Bit 0 (0b00000001) TAG_DISABLED - attacks disabled, mirror of the `bettercombat_disabled` command tag, written only by `PlayerEntityMixin.updateCombatFlagsFromCommandTags`
@@ -16,6 +16,6 @@ public class PlayerAttachments {
      *   Bit 6 (0b01000000) unused
      *   Bit 7 (0b10000000) unused
      */
-    public static final Identifier COMBAT_FLAGS = Identifier.of("bettercombat", "combat_flags");
+    public static final Identifier COMBAT_FLAGS = Identifier.fromNamespaceAndPath("bettercombat", "combat_flags");
 }
 

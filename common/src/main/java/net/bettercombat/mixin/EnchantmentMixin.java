@@ -2,11 +2,11 @@ package net.bettercombat.mixin;
 
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,9 +19,9 @@ public class EnchantmentMixin {
 
     // FEATURE: Dual wielding
 
-    @Inject(method = "getEquipment", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getSlotItems", at = @At("RETURN"), cancellable = true)
     private void getEquipmentFix(LivingEntity entity, CallbackInfoReturnable<Map<EquipmentSlot, ItemStack>> cir) {
-        if(entity instanceof PlayerEntity player) {
+        if(entity instanceof Player player) {
             var comboCount = ((PlayerAttackProperties) player).getComboCount();
             var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
             // If striking with off-hand
@@ -31,7 +31,7 @@ public class EnchantmentMixin {
                 if (map.get(EquipmentSlot.MAINHAND) != null) {
                     map.remove(EquipmentSlot.MAINHAND);
                 }
-                var offHandStack = player.getOffHandStack();
+                var offHandStack = player.getOffhandItem();
                 if (!offHandStack.isEmpty()) {
                     map.put(EquipmentSlot.OFFHAND, offHandStack);
                 }

@@ -5,16 +5,16 @@ import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.ComboState;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.utils.AttributeModifierHelper;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShieldItem;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
 public class PlayerAttackHelper {
-    public static float getDualWieldingAttackDamageMultiplier(PlayerEntity player, AttackHand hand) {
+    public static float getDualWieldingAttackDamageMultiplier(Player player, AttackHand hand) {
         return isDualWielding(player)
                 ? (hand.isOffHand()
                     ? BetterCombatMod.config.dual_wielding_off_hand_damage_multiplier
@@ -22,13 +22,13 @@ public class PlayerAttackHelper {
                 : 1;
     }
 
-    public static boolean shouldAttackWithOffHand(PlayerEntity player, int comboCount) {
+    public static boolean shouldAttackWithOffHand(Player player, int comboCount) {
         return PlayerAttackHelper.isDualWielding(player) && comboCount % 2 == 1;
     }
 
-    public static boolean isDualWielding(PlayerEntity player) {
-        var mainAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
-        var offAttributes = WeaponRegistry.getAttributes(player.getOffHandStack());
+    public static boolean isDualWielding(Player player) {
+        var mainAttributes = WeaponRegistry.getAttributes(player.getMainHandItem());
+        var offAttributes = WeaponRegistry.getAttributes(player.getOffhandItem());
         return isDualWielding(mainAttributes, offAttributes);
     }
 
@@ -37,26 +37,26 @@ public class PlayerAttackHelper {
                 && offAttributes != null && !offAttributes.isTwoHanded();
     }
 
-    public static boolean isTwoHandedWielding(PlayerEntity player) {
-        var mainAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+    public static boolean isTwoHandedWielding(Player player) {
+        var mainAttributes = WeaponRegistry.getAttributes(player.getMainHandItem());
         if (mainAttributes != null) {
             return mainAttributes.isTwoHanded();
         }
         return false;
     }
 
-    public static float getAttackCooldownTicksCapped(PlayerEntity player) {
+    public static float getAttackCooldownTicksCapped(Player player) {
         // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
-        return Math.max(player.getAttackCooldownProgressPerTick(), BetterCombatMod.config.attack_interval_cap);
+        return Math.max(player.getCurrentItemAttackStrengthDelay(), BetterCombatMod.config.attack_interval_cap);
     }
 
     @Nullable
-    public static AttackHand getCurrentAttack(PlayerEntity player, int comboCount) {
+    public static AttackHand getCurrentAttack(Player player, int comboCount) {
         if (isDualWielding(player)) {
             boolean isOffHand = shouldAttackWithOffHand(player,comboCount);
             var itemStack = isOffHand
-                    ? player.getOffHandStack()
-                    : player.getMainHandStack();
+                    ? player.getOffhandItem()
+                    : player.getMainHandItem();
             var attributes = WeaponRegistry.getAttributes(itemStack);
             if (attributes != null && attributes.attacks() != null) {
                 int handSpecificComboCount = ((isOffHand && comboCount > 0) ? (comboCount - 1) : (comboCount)) / 2;
@@ -69,7 +69,7 @@ public class PlayerAttackHelper {
                 return new AttackHand(attack, combo, isOffHand, attributes, itemStack);
             }
         } else {
-            var itemStack = player.getMainHandStack();
+            var itemStack = player.getMainHandItem();
             WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
             if (attributes != null && attributes.attacks() != null) {
                 var attackSelection = selectAttack(comboCount, attributes, player, false);
@@ -87,7 +87,7 @@ public class PlayerAttackHelper {
     private record AttackSelection(WeaponAttributes.Attack attack, ComboState comboState) { }
 
     @Nullable
-    private static AttackSelection selectAttack(int comboCount, WeaponAttributes attributes, PlayerEntity player, boolean isOffHandAttack) {
+    private static AttackSelection selectAttack(int comboCount, WeaponAttributes attributes, Player player, boolean isOffHandAttack) {
         var attacks = attributes.attacks();
         attacks = Arrays.stream(attacks)
                 .filter(attack ->
@@ -106,11 +106,11 @@ public class PlayerAttackHelper {
         return new AttackSelection(attacks[index], new ComboState(index + 1, attacks.length));
     }
 
-    private static boolean evaluateConditions(WeaponAttributes.Condition[] conditions, PlayerEntity player, boolean isOffHandAttack) {
+    private static boolean evaluateConditions(WeaponAttributes.Condition[] conditions, Player player, boolean isOffHandAttack) {
         return Arrays.stream(conditions).allMatch(condition -> evaluateCondition(condition, player, isOffHandAttack));
     }
 
-    private static boolean evaluateCondition(WeaponAttributes.Condition condition, PlayerEntity player, boolean isOffHandAttack) {
+    private static boolean evaluateCondition(WeaponAttributes.Condition condition, Player player, boolean isOffHandAttack) {
         if (condition == null) {
             return true;
         }
@@ -123,14 +123,14 @@ public class PlayerAttackHelper {
             }
             case DUAL_WIELDING_SAME -> {
                 return isDualWielding(player) &&
-                        (player.getMainHandStack().getItem() == player.getOffHandStack().getItem());
+                        (player.getMainHandItem().getItem() == player.getOffhandItem().getItem());
             }
             case DUAL_WIELDING_SAME_CATEGORY -> {
                 if (!isDualWielding(player)) {
                     return false;
                 }
-                var mainHandAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
-                var offHandAttributes = WeaponRegistry.getAttributes(player.getOffHandStack());
+                var mainHandAttributes = WeaponRegistry.getAttributes(player.getMainHandItem());
+                var offHandAttributes = WeaponRegistry.getAttributes(player.getOffhandItem());
                 if (mainHandAttributes.category() == null
                         || mainHandAttributes.category().isEmpty()
                         || offHandAttributes.category() == null
@@ -140,14 +140,14 @@ public class PlayerAttackHelper {
                 return mainHandAttributes.category().equals(offHandAttributes.category());
             }
             case NO_OFFHAND_ITEM -> {
-                var offhandStack = player.getOffHandStack();
+                var offhandStack = player.getOffhandItem();
                 if(offhandStack == null || offhandStack.isEmpty()) {{
                     return true;
                 }}
                 return false;
             }
             case OFF_HAND_SHIELD -> {
-                var offhandStack = player.getOffHandStack();
+                var offhandStack = player.getOffhandItem();
                 if(offhandStack != null || offhandStack.getItem() instanceof ShieldItem) {{
                     return true;
                 }}
@@ -171,35 +171,35 @@ public class PlayerAttackHelper {
 
     private static final Object attributesLock = new Object();
 
-    public static void swapHandAttributes(PlayerEntity player, Runnable runnable) {
+    public static void swapHandAttributes(Player player, Runnable runnable) {
         swapHandAttributes(player, true, runnable);
     }
 
-    public static void swapHandAttributes(PlayerEntity player, boolean useOffHand, Runnable runnable) {
+    public static void swapHandAttributes(Player player, boolean useOffHand, Runnable runnable) {
         if (!useOffHand) {
             runnable.run();
             return;
         }
         synchronized (player) {
             var inventory = player.getInventory();
-            var mainHandStack = player.getMainHandStack();
+            var mainHandStack = player.getMainHandItem();
             var offHandStack = InventoryUtil.getOffHandSlotStack(player);
 
             setAttributesForOffHandAttack(player, true);
-            inventory.setSelectedStack(offHandStack);
+            inventory.setSelectedItem(offHandStack);
             InventoryUtil.setOffHandSlotStack(player, mainHandStack);
 
             runnable.run();
 
-            inventory.setSelectedStack(mainHandStack);
+            inventory.setSelectedItem(mainHandStack);
             InventoryUtil.setOffHandSlotStack(player, offHandStack);
             setAttributesForOffHandAttack(player, false);
         }
     }
 
-    private static void setAttributesForOffHandAttack(PlayerEntity player, boolean useOffHand) {
-        var mainHandStack = player.getMainHandStack();
-        var offHandStack = player.getOffHandStack();
+    private static void setAttributesForOffHandAttack(Player player, boolean useOffHand) {
+        var mainHandStack = player.getMainHandItem();
+        var offHandStack = player.getOffhandItem();
         ItemStack add;
         ItemStack remove;
         if (useOffHand) {
@@ -211,16 +211,16 @@ public class PlayerAttackHelper {
         }
         if (remove != null) {
             var modifiersMap = AttributeModifierHelper.modifierMultimap(remove);
-            player.getAttributes().removeModifiers(modifiersMap);
+            player.getAttributes().removeAttributeModifiers(modifiersMap);
         }
         if (add != null) {
             var modifiersMap = AttributeModifierHelper.modifierMultimap(add);
-            player.getAttributes().addTemporaryModifiers(modifiersMap);
+            player.getAttributes().addTransientAttributeModifiers(modifiersMap);
         }
     }
 
-    public static Pose poseForPlayer(PlayerEntity player) {
-        var mainHandStack = player.getMainHandStack();
+    public static Pose poseForPlayer(Player player) {
+        var mainHandStack = player.getMainHandItem();
         var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
         String mainPose;
         if (mainHandAttributes != null && mainHandAttributes.pose() != null) {
@@ -228,7 +228,7 @@ public class PlayerAttackHelper {
         } else {
             mainPose = "";
         }
-        var offHandStack = player.getOffHandStack();
+        var offHandStack = player.getOffhandItem();
         var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
         String offPose;
         if (PlayerAttackHelper.isDualWielding(mainHandAttributes, offHandAttributes)
@@ -242,18 +242,18 @@ public class PlayerAttackHelper {
 
 
 
-    public static double getStaticRange(PlayerEntity player, ItemStack stack) {
+    public static double getStaticRange(Player player, ItemStack stack) {
         var attributes = WeaponRegistry.getAttributes(stack);
-        return combineAttackRange(attributes, player.getAttributeBaseValue(EntityAttributes.ENTITY_INTERACTION_RANGE));
+        return combineAttackRange(attributes, player.getAttributeBaseValue(Attributes.ENTITY_INTERACTION_RANGE));
     }
 
-    public static double getRangeForItem(PlayerEntity player, ItemStack stack) {
-        var interactionRangeValue = player.getAttributeValue(EntityAttributes.ENTITY_INTERACTION_RANGE);
+    public static double getRangeForItem(Player player, ItemStack stack) {
+        var interactionRangeValue = player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE);
         return getRangeWithItem(stack, interactionRangeValue);
     }
 
-    public static double getRangeWithWeapon(PlayerEntity player, double interactionRangeValue) {
-        return getRangeWithItem(player.getMainHandStack(), interactionRangeValue);
+    public static double getRangeWithWeapon(Player player, double interactionRangeValue) {
+        return getRangeWithItem(player.getMainHandItem(), interactionRangeValue);
     }
 
     private static double getRangeWithItem(ItemStack stack, double interactionRangeValue) {

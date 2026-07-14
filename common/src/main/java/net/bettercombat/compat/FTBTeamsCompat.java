@@ -5,16 +5,15 @@ import dev.ftb.mods.ftbteams.api.Team;
 import dev.ftb.mods.ftbteams.api.client.KnownClientPlayer;
 import net.bettercombat.Platform;
 import net.bettercombat.logic.TargetHelper;
-import net.minecraft.entity.player.PlayerEntity;
-
+import net.minecraft.world.entity.player.Player;
 import java.util.Optional;
 
 public class FTBTeamsCompat {
     public static void init() {
         if (Platform.isModLoaded("ftbteams")) {
             TargetHelper.registerTeamMatcher("ftb", (attack, target) -> {
-                if (attack instanceof PlayerEntity attackerPlayer && target instanceof PlayerEntity targetPlayer) {
-                    if (attackerPlayer.getEntityWorld().isClient()) {
+                if (attack instanceof Player attackerPlayer && target instanceof Player targetPlayer) {
+                    if (attackerPlayer.level().isClientSide()) {
                         return checkClientTeamRelation(attackerPlayer, targetPlayer);
                     } else {
                         return checkServerTeamRelation(attackerPlayer, targetPlayer);
@@ -25,18 +24,18 @@ public class FTBTeamsCompat {
         }
     }
 
-    private static TargetHelper.TeamRelation checkClientTeamRelation(PlayerEntity attackerPlayer, PlayerEntity targetPlayer) {
+    private static TargetHelper.TeamRelation checkClientTeamRelation(Player attackerPlayer, Player targetPlayer) {
         if (!FTBTeamsAPI.api().isClientManagerLoaded()) {
             return null;
         }
         var manager = FTBTeamsAPI.api().getClientManager();
 
-        Optional<KnownClientPlayer> attackerKnownPlayerOpt = manager.getKnownPlayer(attackerPlayer.getUuid());
+        Optional<KnownClientPlayer> attackerKnownPlayerOpt = manager.getKnownPlayer(attackerPlayer.getUUID());
         if (attackerKnownPlayerOpt.isEmpty()) {
             return null;
         }
 
-        Optional<KnownClientPlayer> targetKnownPlayerOpt = manager.getKnownPlayer(targetPlayer.getUuid());
+        Optional<KnownClientPlayer> targetKnownPlayerOpt = manager.getKnownPlayer(targetPlayer.getUUID());
         if (targetKnownPlayerOpt.isEmpty()) {
             return null;
         }
@@ -54,8 +53,8 @@ public class FTBTeamsCompat {
         Optional<Team> targetTeamOpt = manager.getTeamByID(targetKnownPlayer.teamId());
 
         if (attackerTeamOpt.isPresent() && targetTeamOpt.isPresent()) {
-            boolean attackerSeesAlly = attackerTeamOpt.get().getRankForPlayer(targetPlayer.getUuid()).isAllyOrBetter();
-            boolean targetSeesAlly = targetTeamOpt.get().getRankForPlayer(attackerPlayer.getUuid()).isAllyOrBetter();
+            boolean attackerSeesAlly = attackerTeamOpt.get().getRankForPlayer(targetPlayer.getUUID()).isAllyOrBetter();
+            boolean targetSeesAlly = targetTeamOpt.get().getRankForPlayer(attackerPlayer.getUUID()).isAllyOrBetter();
 
             if (attackerSeesAlly && targetSeesAlly) {
                 return new TargetHelper.TeamRelation(true, false);
@@ -65,14 +64,14 @@ public class FTBTeamsCompat {
         return null;
     }
 
-    private static TargetHelper.TeamRelation checkServerTeamRelation(PlayerEntity attackerPlayer, PlayerEntity targetPlayer) {
+    private static TargetHelper.TeamRelation checkServerTeamRelation(Player attackerPlayer, Player targetPlayer) {
         if (!FTBTeamsAPI.api().isManagerLoaded()) {
             return null;
         }
         var manager = FTBTeamsAPI.api().getManager();
 
-        Optional<Team> attackerTeamOpt = manager.getTeamForPlayerID(attackerPlayer.getUuid());
-        Optional<Team> targetTeamOpt = manager.getTeamForPlayerID(targetPlayer.getUuid());
+        Optional<Team> attackerTeamOpt = manager.getTeamForPlayerID(attackerPlayer.getUUID());
+        Optional<Team> targetTeamOpt = manager.getTeamForPlayerID(targetPlayer.getUUID());
 
         if (attackerTeamOpt.isPresent() && targetTeamOpt.isPresent()) {
             Team attackerTeam = attackerTeamOpt.get();
@@ -84,8 +83,8 @@ public class FTBTeamsCompat {
             }
 
             // 2. Check for a mutual, two-way alliance to prevent abuse.
-            boolean attackerSeesAlly = attackerTeam.getRankForPlayer(targetPlayer.getUuid()).isAllyOrBetter();
-            boolean targetSeesAlly = targetTeam.getRankForPlayer(attackerPlayer.getUuid()).isAllyOrBetter();
+            boolean attackerSeesAlly = attackerTeam.getRankForPlayer(targetPlayer.getUUID()).isAllyOrBetter();
+            boolean targetSeesAlly = targetTeam.getRankForPlayer(attackerPlayer.getUUID()).isAllyOrBetter();
 
             if (attackerSeesAlly && targetSeesAlly) {
                 return new TargetHelper.TeamRelation(true, false);

@@ -8,8 +8,7 @@ import net.bettercombat.api.fx.TrailAppearance;
 import net.bettercombat.config.TrailConfig;
 import net.bettercombat.particle.BetterCombatParticles;
 import net.bettercombat.particle.SlashParticleEffect;
-import net.minecraft.particle.ParticleType;
-
+import net.minecraft.core.particles.ParticleType;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

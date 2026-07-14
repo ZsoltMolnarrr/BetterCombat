@@ -2,8 +2,8 @@ package net.bettercombat.api.client;
 
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.event.Publisher;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class BetterCombatClientEvents {
 
     @FunctionalInterface
     public interface PlayerAttackStart {
-        void onPlayerAttackStart(ClientPlayerEntity player, AttackHand attackHand);
+        void onPlayerAttackStart(LocalPlayer player, AttackHand attackHand);
     }
 
     /**
@@ -27,6 +27,6 @@ public class BetterCombatClientEvents {
 
     @FunctionalInterface
     public interface PlayerAttackHit {
-        void onPlayerAttackStart(ClientPlayerEntity player, AttackHand attackHand, List<Entity> targets, @Nullable Entity cursorTarget);
+        void onPlayerAttackStart(LocalPlayer player, AttackHand attackHand, List<Entity> targets, @Nullable Entity cursorTarget);
     }
 }

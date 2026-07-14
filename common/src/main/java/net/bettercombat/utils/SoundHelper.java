@@ -4,21 +4,20 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.network.Packets;
-import net.minecraft.entity.Entity;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Random;
 
 public class SoundHelper {
     private static Random rng = new Random();
 
-    public static void playSound(ServerWorld world, Entity entity, WeaponAttributes.Sound sound) {
+    public static void playSound(ServerLevel world, Entity entity, WeaponAttributes.Sound sound) {
         if (sound == null) {
             return;
         }
@@ -36,9 +35,9 @@ public class SoundHelper {
                     pitch,
                     rng.nextLong());
 
-            var soundEvent = Registries.SOUND_EVENT.get(Identifier.of(sound.id()));
-            var distance = soundEvent.getDistanceToTravel(sound.volume());
-            var origin = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
+            var soundEvent = BuiltInRegistries.SOUND_EVENT.getValue(Identifier.parse(sound.id()));
+            var distance = soundEvent.getRange(sound.volume());
+            var origin = new Vec3(entity.getX(), entity.getY(), entity.getZ());
             Platform.around(world, origin, distance).forEach(serverPlayer -> {
                 var channel = Packets.AttackSound.ID;
                 try {
@@ -86,9 +85,9 @@ public class SoundHelper {
 
     public static void registerSounds() {
         for (var soundKey: soundKeys) {
-            var soundId = Identifier.of(BetterCombatMod.ID, soundKey);
-            var soundEvent = SoundEvent.of(soundId);
-            Registry.register(Registries.SOUND_EVENT, soundId, soundEvent);
+            var soundId = Identifier.fromNamespaceAndPath(BetterCombatMod.ID, soundKey);
+            var soundEvent = SoundEvent.createVariableRangeEvent(soundId);
+            Registry.register(BuiltInRegistries.SOUND_EVENT, soundId, soundEvent);
         }
     }
 }

@@ -2,7 +2,7 @@ package net.bettercombat.mixin;
 
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.logic.ItemStackNBTWeaponAttributes;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ItemStack.class)

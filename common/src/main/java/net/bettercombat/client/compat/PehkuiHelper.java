@@ -3,16 +3,15 @@ package net.bettercombat.client.compat;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
 import net.bettercombat.api.client.AttackRangeExtensions;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
 public class PehkuiHelper {
-    public static Identifier scaleId = Identifier.of("pehkui", "entity_reach");
+    public static Identifier scaleId = Identifier.fromNamespaceAndPath("pehkui", "entity_reach");
     private static final Method GET_SCALE_DATA;
     private static final Method GET_SCALE;
     private static final Map<Identifier, Object> SCALE_TYPES;

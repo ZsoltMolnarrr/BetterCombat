@@ -3,28 +3,28 @@ package net.bettercombat.logic;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.utils.PatternMatching;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.Item;
-import net.minecraft.item.RangedWeaponItem;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ProjectileWeaponItem;
 
 public class WeaponAttributesFallback {
     public static void initialize() {
         var config = BetterCombatMod.fallbackConfig.value;
-        for(var itemId: Registries.ITEM.getIds()) {
-            var item = Registries.ITEM.get(itemId);
+        for(var itemId: BuiltInRegistries.ITEM.keySet()) {
+            var item = BuiltInRegistries.ITEM.getValue(itemId);
             if (PatternMatching.matches(itemId.toString(), config.blacklist_item_id_regex)) {
                 // Skipping items without attack damage attribute
                 continue;
             }
             FallbackConfig.CompatibilitySpecifier[] specifiers = null;
-            if (hasAttributeModifier(item, EntityAttributes.ATTACK_DAMAGE)) {
+            if (hasAttributeModifier(item, Attributes.ATTACK_DAMAGE)) {
                 specifiers = config.fallback_compatibility;
-            } else if (item instanceof RangedWeaponItem) {
+            } else if (item instanceof ProjectileWeaponItem) {
                 specifiers = config.ranged_weapons;
             }
             if (specifiers == null) {
@@ -34,7 +34,7 @@ public class WeaponAttributesFallback {
                 // If - no registration & matches regex
                 if (WeaponRegistry.getAttributes(itemId) == null
                         && PatternMatching.matches(itemId.toString(), fallbackOption.item_id_regex)) {
-                    var container = WeaponRegistry.containers.get(Identifier.of(fallbackOption.weapon_attributes));
+                    var container = WeaponRegistry.containers.get(Identifier.parse(fallbackOption.weapon_attributes));
                     // If assignable attributes are known
                     if (container != null) {
                         WeaponRegistry.resolveAndRegisterAttributes(itemId, container);
@@ -45,8 +45,8 @@ public class WeaponAttributesFallback {
         }
     }
 
-    private static boolean hasAttributeModifier(Item item, RegistryEntry<EntityAttribute> searchedAttribute) {
-        var attributes = item.getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+    private static boolean hasAttributeModifier(Item item, Holder<Attribute> searchedAttribute) {
+        var attributes = item.components().get(DataComponents.ATTRIBUTE_MODIFIERS);
         for (var entry: attributes.modifiers()) {
             var attribute = entry.attribute();
             if (attribute == searchedAttribute || attribute.equals(searchedAttribute)) {

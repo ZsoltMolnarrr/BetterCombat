@@ -1,10 +1,9 @@
 package net.bettercombat.api.fx;
 
-import net.minecraft.item.ItemStack;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Registry for item stack predicates used for conditional weapon trail appearances.
@@ -14,7 +13,7 @@ public class ItemConditions {
 
     static {
         // Register built-in conditions
-        register("is_enchanted", ItemStack::hasEnchantments);
+        register("is_enchanted", ItemStack::isEnchanted);
     }
 
     /**

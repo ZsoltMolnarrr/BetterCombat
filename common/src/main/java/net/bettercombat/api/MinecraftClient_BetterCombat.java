@@ -1,11 +1,12 @@
 package net.bettercombat.api;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.hit.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import static net.minecraft.util.hit.HitResult.Type.ENTITY;
+import static net.minecraft.world.phys.HitResult.Type.ENTITY;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.EntityHitResult;
 
 /**
  * Extension for `MinecraftClient`.
@@ -17,9 +18,9 @@ public interface MinecraftClient_BetterCombat {
     boolean hasTargetsInReach();
     @Nullable
     default Entity getCursorTarget() {
-        var client = (MinecraftClient)this;
-        if (client.crosshairTarget != null && client.crosshairTarget.getType() == ENTITY) {
-            return ((EntityHitResult)client.crosshairTarget).getEntity();
+        var client = (Minecraft)this;
+        if (client.hitResult != null && client.hitResult.getType() == ENTITY) {
+            return ((EntityHitResult)client.hitResult).getEntity();
         }
         return null;
     }

@@ -1,8 +1,8 @@
 package net.bettercombat.api.fx;
 
 import net.bettercombat.BetterCombatMod;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public interface TrailAppearanceOverride {
      * @param resolved The appearance resolved so far (trail config, weapon attributes, earlier overrides).
      * @return The appearance to use, or null to leave `resolved` untouched.
      */
-    @Nullable TrailAppearance override(PlayerEntity attacker, ItemStack stack, TrailAppearance resolved);
+    @Nullable TrailAppearance override(Player attacker, ItemStack stack, TrailAppearance resolved);
 
     /**
      * Registered overrides, applied in registration order, each receiving the result of the previous one.
@@ -32,7 +32,7 @@ public interface TrailAppearanceOverride {
         REGISTERED.add(override);
     }
 
-    @Nullable static TrailAppearance apply(PlayerEntity attacker, ItemStack stack, @Nullable TrailAppearance resolved) {
+    @Nullable static TrailAppearance apply(Player attacker, ItemStack stack, @Nullable TrailAppearance resolved) {
         if (resolved == null) {
             return null;
         }

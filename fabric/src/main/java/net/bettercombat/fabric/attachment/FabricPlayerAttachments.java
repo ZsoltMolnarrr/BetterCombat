@@ -4,8 +4,8 @@ import net.bettercombat.logic.PlayerAttachments;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.entity.player.Player;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FabricPlayerAttachments {
@@ -21,43 +21,43 @@ public class FabricPlayerAttachments {
                 PlayerAttachments.MAIN_HAND_IDLE_ANIMATION,
                 builder -> builder
                         .initializer(() -> "")
-                        .syncWith(PacketCodecs.STRING, AttachmentSyncPredicate.all())
+                        .syncWith(ByteBufCodecs.STRING_UTF8, AttachmentSyncPredicate.all())
         );
         OFF_HAND_IDLE_ANIMATION_TYPE = AttachmentRegistry.create(
                 PlayerAttachments.OFF_HAND_IDLE_ANIMATION,
                 builder -> builder
                         .initializer(() -> "")
-                        .syncWith(PacketCodecs.STRING, AttachmentSyncPredicate.all())
+                        .syncWith(ByteBufCodecs.STRING_UTF8, AttachmentSyncPredicate.all())
         );
         COMBAT_FLAGS_TYPE = AttachmentRegistry.create(
                 PlayerAttachments.COMBAT_FLAGS,
                 builder -> builder
                         .initializer(() -> (byte) 0)
-                        .syncWith(PacketCodecs.BYTE, AttachmentSyncPredicate.all())
+                        .syncWith(ByteBufCodecs.BYTE, AttachmentSyncPredicate.all())
         );
     }
 
-    public static String getMainHandIdleAnimation(PlayerEntity player) {
+    public static String getMainHandIdleAnimation(Player player) {
         return player.getAttachedOrCreate(MAIN_HAND_IDLE_ANIMATION_TYPE);
     }
 
-    public static String getOffHandIdleAnimation(PlayerEntity player) {
+    public static String getOffHandIdleAnimation(Player player) {
         return player.getAttachedOrCreate(OFF_HAND_IDLE_ANIMATION_TYPE);
     }
 
-    public static void setMainHandIdleAnimation(PlayerEntity player, String animation) {
+    public static void setMainHandIdleAnimation(Player player, String animation) {
         player.setAttached(MAIN_HAND_IDLE_ANIMATION_TYPE, animation);
     }
 
-    public static void setOffHandIdleAnimation(PlayerEntity player, String animation) {
+    public static void setOffHandIdleAnimation(Player player, String animation) {
         player.setAttached(OFF_HAND_IDLE_ANIMATION_TYPE, animation);
     }
 
-    public static byte getCombatFlags(PlayerEntity player) {
+    public static byte getCombatFlags(Player player) {
         return player.getAttachedOrCreate(COMBAT_FLAGS_TYPE);
     }
 
-    public static void setCombatFlags(PlayerEntity player, byte flags) {
+    public static void setCombatFlags(Player player, byte flags) {
         player.setAttached(COMBAT_FLAGS_TYPE, flags);
     }
 }
