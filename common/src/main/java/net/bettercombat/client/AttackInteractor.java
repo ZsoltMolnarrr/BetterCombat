@@ -5,6 +5,7 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
 import net.bettercombat.PlatformClient;
 import net.bettercombat.api.AttackHand;
+import net.bettercombat.api.CombatFlags;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.client.BetterCombatClientEvents;
@@ -80,6 +81,7 @@ public class AttackInteractor {
      */
     public boolean onDoAttack() {
         if (!BetterCombatClientMod.ENABLED) { return false; }
+        if (CombatFlags.isAttackDisabled(client.player)) { return false; }
 
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null && attributes.attacks() != null) {
@@ -99,6 +101,7 @@ public class AttackInteractor {
      */
     public boolean onHandleBlockBreaking() {
         if (!BetterCombatClientMod.ENABLED) { return false; }
+        if (CombatFlags.isAttackDisabled(client.player)) { return false; }
 
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null && attributes.attacks() != null) {
@@ -131,6 +134,7 @@ public class AttackInteractor {
      */
     public boolean onDoItemUse() {
         if (!BetterCombatClientMod.ENABLED) { return false; }
+        if (CombatFlags.isAttackDisabled(client.player)) { return false; }
 
         var hand = getCurrentHand();
         if (hand == null) { return false; }
@@ -145,6 +149,14 @@ public class AttackInteractor {
         }
         targetsInReach = null;
         lastAttacked += 1;
+
+        if (CombatFlags.isAttackDisabled(player)) {
+            // Cancel any in-flight swing, so vanilla input resumes cleanly
+            if (ongoingSwing != null) {
+                cancelWeaponSwing();
+            }
+            return;
+        }
 
         if (ongoingSwing != null) {
             var time = currentTime();
@@ -291,7 +303,7 @@ public class AttackInteractor {
         ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
 
         var particles = SlashParticleUtil.trailParticlesFromAttack(attackHand);
-        var appearance = SlashParticleUtil.appearanceFromItemStack(attackHand.itemStack());
+        var appearance = SlashParticleUtil.appearanceFor(player, attackHand.itemStack());
         var packet = new Packets.AttackAnimation(
                 player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate,
                 (float)PlayerAttackHelper.getStaticRange(player, attackHand.itemStack()),
@@ -420,7 +432,7 @@ public class AttackInteractor {
         });
 
         var particles = SlashParticleUtil.trailParticlesFromAttack(hand);
-        var appearance = SlashParticleUtil.appearanceFromItemStack(hand.itemStack());
+        var appearance = SlashParticleUtil.appearanceFor(player, hand.itemStack());
         SlashParticleUtil.spawnParticles(player, hand.isOffHand(), (float)PlayerAttackHelper.getStaticRange(player, hand.itemStack()), particles, appearance);
 
         setComboCount(getComboCount() + 1);

@@ -4,10 +4,12 @@ import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.fx.ParticlePlacement;
 import net.bettercombat.api.fx.TrailAppearance;
+import net.bettercombat.api.fx.TrailAppearanceOverride;
 import net.bettercombat.client.BetterCombatClientMod;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.particle.SlashParticleEffect;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.Vec3d;
@@ -36,6 +38,9 @@ public class SlashParticleUtil {
             return;
         }
         if (settingsList.isEmpty()) {
+            return;
+        }
+        if (appearance == null) {
             return;
         }
         var isLeftHanded = player.getMainArm() == Arm.LEFT;
@@ -79,21 +84,25 @@ public class SlashParticleUtil {
                 var posY = trail.stabPosition() ? yStab : y;
                 var posZ = trail.stabPosition() ? zStab : z;
                 for (var layeredParticle: trail.particles()) {
-                    player.getEntityWorld().addParticleClient(new SlashParticleEffect(
-                            layeredParticle.bottom(), weaponRange,
-                            player.getPitch() + settings.pitch_addition(), player.getYaw(),
-                            settings.local_yaw() * offhandFlip,
-                            (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip,
-                            appearance.primary.glows(), appearance.primary.color_rgba()),
-                            posX, posY, posZ, 0.0, 0.0, 0.0);
+                    if (appearance.primary != null) {
+                        player.getEntityWorld().addParticleClient(new SlashParticleEffect(
+                                layeredParticle.bottom(), weaponRange,
+                                player.getPitch() + settings.pitch_addition(), player.getYaw(),
+                                settings.local_yaw() * offhandFlip,
+                                (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip,
+                                appearance.primary.glows(), appearance.primary.color_rgba()),
+                                posX, posY, posZ, 0.0, 0.0, 0.0);
+                    }
 
-                    player.getEntityWorld().addParticleClient(new SlashParticleEffect(
-                            layeredParticle.top(), weaponRange,
-                            player.getPitch() + settings.pitch_addition(), player.getYaw(),
-                            settings.local_yaw() * offhandFlip,
-                            (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip,
-                            appearance.secondary.glows(), appearance.secondary.color_rgba()),
-                            posX, posY, posZ, 0.0, 0.0, 0.0);
+                    if (appearance.secondary != null) {
+                        player.getEntityWorld().addParticleClient(new SlashParticleEffect(
+                                layeredParticle.top(), weaponRange,
+                                player.getPitch() + settings.pitch_addition(), player.getYaw(),
+                                settings.local_yaw() * offhandFlip,
+                                (settings.roll_set() + trail.rollOffset() + offhandRoll) * offhandFlip,
+                                appearance.secondary.glows(), appearance.secondary.color_rgba()),
+                                posX, posY, posZ, 0.0, 0.0, 0.0);
+                    }
                 }
             }
         }
@@ -114,13 +123,15 @@ public class SlashParticleUtil {
         return List.of();
     }
 
-    public static TrailAppearance appearanceFromItemStack(ItemStack stack) {
+    public static TrailAppearance appearanceFor(PlayerEntity attacker, ItemStack stack) {
         var defaults = BetterCombatMod.trailConfig.value.trail_appearance;
         var weaponAttributes = WeaponRegistry.getAttributes(stack);
+        TrailAppearance resolved;
         if (weaponAttributes != null && weaponAttributes.trailAppearance() != null) {
-            return defaults.merge(weaponAttributes.trailAppearance()).resolve(stack);
+            resolved = defaults.merge(weaponAttributes.trailAppearance()).resolve(stack);
         } else {
-            return defaults.resolve(stack);
+            resolved = defaults.resolve(stack);
         }
+        return TrailAppearanceOverride.apply(attacker, stack, resolved);
     }
 }

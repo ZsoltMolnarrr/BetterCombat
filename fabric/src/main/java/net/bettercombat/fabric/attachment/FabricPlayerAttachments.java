@@ -11,6 +11,7 @@ import net.minecraft.network.codec.PacketCodecs;
 public class FabricPlayerAttachments {
     private static AttachmentType<String> MAIN_HAND_IDLE_ANIMATION_TYPE;
     private static AttachmentType<String> OFF_HAND_IDLE_ANIMATION_TYPE;
+    private static AttachmentType<Byte> COMBAT_FLAGS_TYPE;
 
     public static void init() {
         // Register attachment types with default empty string values and syncing support
@@ -28,6 +29,12 @@ public class FabricPlayerAttachments {
                         .initializer(() -> "")
                         .syncWith(PacketCodecs.STRING, AttachmentSyncPredicate.all())
         );
+        COMBAT_FLAGS_TYPE = AttachmentRegistry.create(
+                PlayerAttachments.COMBAT_FLAGS,
+                builder -> builder
+                        .initializer(() -> (byte) 0)
+                        .syncWith(PacketCodecs.BYTE, AttachmentSyncPredicate.all())
+        );
     }
 
     public static String getMainHandIdleAnimation(PlayerEntity player) {
@@ -44,6 +51,14 @@ public class FabricPlayerAttachments {
 
     public static void setOffHandIdleAnimation(PlayerEntity player, String animation) {
         player.setAttached(OFF_HAND_IDLE_ANIMATION_TYPE, animation);
+    }
+
+    public static byte getCombatFlags(PlayerEntity player) {
+        return player.getAttachedOrCreate(COMBAT_FLAGS_TYPE);
+    }
+
+    public static void setCombatFlags(PlayerEntity player, byte flags) {
+        player.setAttached(COMBAT_FLAGS_TYPE, flags);
     }
 }
 

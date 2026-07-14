@@ -1,5 +1,6 @@
 package net.bettercombat.client.compat;
 
+import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
 import net.bettercombat.api.client.AttackRangeExtensions;
 import net.minecraft.entity.Entity;
@@ -37,7 +38,10 @@ public class PehkuiHelper {
                 getScaleMethod = scaleDataClass.getMethod("getScale", float.class);
                 scaleTypes = (Map<Identifier, Object>) scaleTypesField.get(null);
 
-                AttackRangeExtensions.register(context -> new AttackRangeExtensions.Modifier(PehkuiHelper.getScale(context.player()), AttackRangeExtensions.Operation.MULTIPLY));
+                AttackRangeExtensions.register(context -> {
+                    var multiplier = BetterCombatMod.config.getAttackRangeMultiplierForScale(PehkuiHelper.getScale(context.player()));
+                    return new AttackRangeExtensions.Modifier(multiplier, AttackRangeExtensions.Operation.MULTIPLY);
+                });
             }
             catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException e)
             {

@@ -77,6 +77,16 @@ public class PlatformImpl {
         public void setOffHandIdleAnimation(PlayerEntity player, String animation) {
             FabricPlayerAttachments.setOffHandIdleAnimation(player, animation);
         }
+
+        @Override
+        public byte getCombatFlags(PlayerEntity player) {
+            return FabricPlayerAttachments.getCombatFlags(player);
+        }
+
+        @Override
+        public void setCombatFlags(PlayerEntity player, byte flags) {
+            FabricPlayerAttachments.setCombatFlags(player, flags);
+        }
     }
     private static final PlayerAttachmentsImpl attachments = new PlayerAttachmentsImpl();
     public static Platform.PlayerAttachments playerAttachments() {

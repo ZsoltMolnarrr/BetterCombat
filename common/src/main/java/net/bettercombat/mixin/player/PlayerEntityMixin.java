@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
 import net.bettercombat.api.AttackHand;
+import net.bettercombat.api.CombatFlags;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.logic.PlayerAttachments;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
@@ -47,8 +48,31 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
             var pose = PlayerAttackHelper.poseForPlayer(player);
             Platform.playerAttachments().setMainHandIdleAnimation(player, pose.base());
             Platform.playerAttachments().setOffHandIdleAnimation(player, pose.offHand());
+            updateCombatFlagsFromCommandTags(player);
         }
         updateDualWieldingSpeedBoost();
+    }
+
+    // FEATURE: Per-player disable via vanilla command tag
+    // Tags have no change event, and NBT loading bypasses addCommandTag/removeCommandTag,
+    // so the tag is polled every tick. Diffing self-heals join, NBT load and respawn.
+    private void updateCombatFlagsFromCommandTags(PlayerEntity player) {
+        var tagged = player.getCommandTags().contains(CombatFlags.DISABLED_TAG);
+        var flags = getCombatFlags();
+        var mirrored = (flags & CombatFlags.TAG_DISABLED) != 0;
+        if (tagged != mirrored) {
+            setCombatFlags((byte) (tagged
+                    ? flags | CombatFlags.TAG_DISABLED
+                    : flags & ~CombatFlags.TAG_DISABLED));
+        }
+    }
+
+    public byte getCombatFlags() {
+        return Platform.playerAttachments().getCombatFlags(((PlayerEntity) ((Object)this)));
+    }
+
+    public void setCombatFlags(byte flags) {
+        Platform.playerAttachments().setCombatFlags(((PlayerEntity) ((Object)this)), flags);
     }
 
     public String getMainHandIdleAnimation() {

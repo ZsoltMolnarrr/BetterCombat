@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class NeoForgePlayerAttachments {
     private static AttachmentType<String> MAIN_HAND_IDLE_ANIMATION_TYPE;
     private static AttachmentType<String> OFF_HAND_IDLE_ANIMATION_TYPE;
+    private static AttachmentType<Byte> COMBAT_FLAGS_TYPE;
 
     public static void init(DeferredRegister<AttachmentType<?>> attachmentTypes) {
         // Register attachment types with serialization and syncing support
@@ -19,9 +20,13 @@ public class NeoForgePlayerAttachments {
         OFF_HAND_IDLE_ANIMATION_TYPE = AttachmentType.builder(() -> "")
                 .sync(PacketCodecs.STRING)
                 .build();
+        COMBAT_FLAGS_TYPE = AttachmentType.builder(() -> (byte) 0)
+                .sync(PacketCodecs.BYTE)
+                .build();
 
         attachmentTypes.register(PlayerAttachments.MAIN_HAND_IDLE_ANIMATION.getPath(), () -> MAIN_HAND_IDLE_ANIMATION_TYPE);
         attachmentTypes.register(PlayerAttachments.OFF_HAND_IDLE_ANIMATION.getPath(), () -> OFF_HAND_IDLE_ANIMATION_TYPE);
+        attachmentTypes.register(PlayerAttachments.COMBAT_FLAGS.getPath(), () -> COMBAT_FLAGS_TYPE);
     }
 
     public static String getMainHandIdleAnimation(PlayerEntity player) {
@@ -38,6 +43,14 @@ public class NeoForgePlayerAttachments {
 
     public static void setOffHandIdleAnimation(PlayerEntity player, String animation) {
         player.setData(OFF_HAND_IDLE_ANIMATION_TYPE, animation);
+    }
+
+    public static byte getCombatFlags(PlayerEntity player) {
+        return player.getData(COMBAT_FLAGS_TYPE);
+    }
+
+    public static void setCombatFlags(PlayerEntity player, byte flags) {
+        player.setData(COMBAT_FLAGS_TYPE, flags);
     }
 }
 

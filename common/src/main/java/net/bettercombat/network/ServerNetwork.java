@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.mojang.logging.LogUtils;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
+import net.bettercombat.api.CombatFlags;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.TargetHelper;
@@ -72,6 +73,9 @@ public class ServerNetwork {
         ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.getEntityWorld())
                 .orNull();
         if (world == null || world.isClient()) {
+            return;
+        }
+        if (CombatFlags.isAttackDisabled(player)) {
             return;
         }
         final var hand = PlayerAttackHelper.getCurrentAttack(player, request.comboCount());

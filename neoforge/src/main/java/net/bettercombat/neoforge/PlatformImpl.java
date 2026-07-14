@@ -76,6 +76,16 @@ public class PlatformImpl {
         public void setOffHandIdleAnimation(PlayerEntity player, String animation) {
             NeoForgePlayerAttachments.setOffHandIdleAnimation(player, animation);
         }
+
+        @Override
+        public byte getCombatFlags(PlayerEntity player) {
+            return NeoForgePlayerAttachments.getCombatFlags(player);
+        }
+
+        @Override
+        public void setCombatFlags(PlayerEntity player, byte flags) {
+            NeoForgePlayerAttachments.setCombatFlags(player, flags);
+        }
     }
     private static final PlayerAttachmentsImpl attachments = new PlayerAttachmentsImpl();
     public static Platform.PlayerAttachments playerAttachments() {

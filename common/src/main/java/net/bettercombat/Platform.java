@@ -96,6 +96,18 @@ public class Platform {
          * Sets the off hand idle animation string on the player's attachment.
          */
         void setOffHandIdleAnimation(PlayerEntity player, String animation);
+
+        /**
+         * Gets the combat flags byte from the player's attachment.
+         * See `CombatFlags` for flag values and helpers.
+         */
+        byte getCombatFlags(PlayerEntity player);
+
+        /**
+         * Sets the combat flags byte on the player's attachment.
+         * Server-side only, clients receive the value via sync.
+         */
+        void setCombatFlags(PlayerEntity player, byte flags);
     }
     @ExpectPlatform public static PlayerAttachments playerAttachments() { throw new AssertionError(); }
 }

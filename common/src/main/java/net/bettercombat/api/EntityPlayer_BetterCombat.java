@@ -8,4 +8,14 @@ public interface EntityPlayer_BetterCombat {
 
     String getMainHandIdleAnimation();
     String getOffHandIdleAnimation();
+
+    /**
+     * See {@link CombatFlags} for flag values and helpers.
+     */
+    byte getCombatFlags();
+
+    /**
+     * Server-side only. Clients receive the value via entity tracking.
+     */
+    void setCombatFlags(byte flags);
 }

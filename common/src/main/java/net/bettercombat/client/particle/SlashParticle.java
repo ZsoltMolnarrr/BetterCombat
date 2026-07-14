@@ -3,8 +3,6 @@ package net.bettercombat.client.particle;
 import net.bettercombat.api.fx.Color;
 import net.bettercombat.particle.BetterCombatParticles;
 import net.bettercombat.particle.SlashParticleEffect;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
@@ -20,7 +18,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-@Environment(EnvType.CLIENT)
 public class SlashParticle extends BillboardParticle {
     private final SpriteProvider spriteProvider;
     public final float modelOffset;
@@ -141,7 +138,6 @@ public class SlashParticle extends BillboardParticle {
         submittable.render(this.getRenderType(),x, y, z, rotationX, rotationY, rotationZ, rotationW, size, minU, maxU, minV, maxV, color, brightness);
     }
 
-    @Environment(EnvType.CLIENT)
     public static class Provider implements ParticleFactory<SlashParticleEffect> {
         private final SpriteProvider spriteProvider;
         private final BetterCombatParticles.StaticParams params;
