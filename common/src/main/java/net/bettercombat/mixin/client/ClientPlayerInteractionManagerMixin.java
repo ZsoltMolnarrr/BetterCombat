@@ -18,7 +18,7 @@ public class ClientPlayerInteractionManagerMixin {
 
     @Inject(method = "stopDestroyBlock", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/player/LocalPlayer;resetTicksSince()V",
+            target = "Lnet/minecraft/client/player/LocalPlayer;resetAttackStrengthTicker()V",
             shift = At.Shift.AFTER))
     public void cancelBlockBreaking_FixAttackCD(CallbackInfo ci) {
         try {
