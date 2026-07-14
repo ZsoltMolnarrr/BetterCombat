@@ -43,7 +43,8 @@ public class BetterCombatMod {
         loadFallbackConfig();
 
         AttackRangeExtensions.register( context -> {
-            return new AttackRangeExtensions.Modifier(context.player().getScale(), AttackRangeExtensions.Operation.MULTIPLY);
+            var multiplier = config.getAttackRangeMultiplierForScale(context.player().getScale());
+            return new AttackRangeExtensions.Modifier(multiplier, AttackRangeExtensions.Operation.MULTIPLY);
         });
 
         CompatFeatures.init();

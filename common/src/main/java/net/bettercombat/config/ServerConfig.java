@@ -68,6 +68,14 @@ public class ServerConfig implements ConfigData {
     public float target_search_range_multiplier = 2F;
     @Comment("Determines if the server should validate the target range. (If the target is within the range of the weapon)")
     public boolean server_target_range_validation = false;
+    @Comment("""
+            Determines how much the scale (size) of the player affects `attack_range`. (Also applies to scales from Pehkui)
+            Example values:
+            - `0` scale has no effect on attack range
+            - `0.5` attack range is affected by scale half as much
+            - `1` (default) attack range changes proportionally with scale
+            - `2` attack range is affected by scale twice as much""")
+    public float entity_scale_attack_range_influence = 1F;
     @Comment("Total multiplier, (examples: +30% = 1.3, -30% = 0.7)")
     public float dual_wielding_attack_speed_multiplier = 1.2F;
     @Comment("Total multiplier, (examples: +30% = 1.3, -30% = 0.7)")
@@ -118,5 +126,13 @@ public class ServerConfig implements ConfigData {
 
     public float getUpswingMultiplier() {
         return Math.max(0.2F, Math.min(1, upswing_multiplier));
+    }
+
+    /**
+     * Converts an entity scale into an attack range multiplier, according to `entity_scale_attack_range_influence`
+     */
+    public float getAttackRangeMultiplierForScale(float scale) {
+        var influence = Math.max(0F, entity_scale_attack_range_influence);
+        return Math.max(0F, 1F + ((scale - 1F) * influence));
     }
 }

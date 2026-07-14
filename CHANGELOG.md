@@ -4,6 +4,7 @@
 - Added CombatFlags API allowing to disable Better Combat on a per-player basis #600
   - Supports disabling via java API call
   - Supports disabling via entity tag command: `/tag @p add bettercombat_disabled`
+- Added `entity_scale_attack_range_influence` server config, to tune (or disable) how much entity scale affects attack range
 
 # 2.3.2
 
