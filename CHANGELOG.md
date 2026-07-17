@@ -1,3 +1,7 @@
+# 3.2.0
+
+- Support Minecraft 26.1, 26.1.1, 26.1.2
+
 # 3.1.0
 
 - Added TrailAppearanceOverride API
