@@ -17,14 +17,14 @@ logoFile = "logo.png"
 [[dependencies.bettercombat]]
 modId = "neoforge"
 type = "required"
-versionRange = "[26.1,)"
+versionRange = "[26.2,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.bettercombat]]
 modId = "minecraft"
 type = "required"
-versionRange = "[26.1,)"
+versionRange = "[26.2,)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -38,7 +38,7 @@ side="BOTH"
 [[dependencies.bettercombat]]
 modId="cloth_config"
 type = "required"
-versionRange="[26.1.0,)"
+versionRange="[26.2.0,)"
 ordering="AFTER"
 side="BOTH"
 

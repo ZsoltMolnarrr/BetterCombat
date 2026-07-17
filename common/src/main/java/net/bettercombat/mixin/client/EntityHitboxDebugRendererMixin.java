@@ -32,7 +32,7 @@ public class EntityHitboxDebugRendererMixin {
         if (!BetterCombatClientMod.config.isDebugOBBEnabled) {
             return;
         }
-        Camera camera = client.gameRenderer.getMainCamera();
+        Camera camera = client.gameRenderer.mainCamera();
         if (!camera.isInitialized()) {
             return;
         }

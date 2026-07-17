@@ -6,7 +6,7 @@ import net.bettercombat.particle.SlashParticleEffect;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
@@ -58,12 +58,12 @@ public class SlashParticle extends SingleQuadParticle {
         }
     }
 
-    protected int getLightColor(float tint) {
+    protected int getLightCoords(float tint) {
         BlockPos blockPos = BlockPos.containing(this.x, this.y, this.z);
         if (this.light) {
             return 15728880;
         } else {
-            return this.level.hasChunkAt(blockPos) ? LevelRenderer.getLightCoords(this.level, blockPos) : 0;
+            return this.level.hasChunkAt(blockPos) ? LightCoordsUtil.getLightCoords(this.level, blockPos) : 0;
         }
     }
 
@@ -120,7 +120,7 @@ public class SlashParticle extends SingleQuadParticle {
         y += (this.modelOffset);
 
         int color = ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol);
-        int brightness = this.getLightColor(tickDelta);
+        int brightness = this.getLightCoords(tickDelta);
 
         // Front face render
         submittable.add(this.getLayer(), x, y, z, rotationX, rotationY, rotationZ, rotationW, size, maxU, minU, minV, maxV, color, brightness);

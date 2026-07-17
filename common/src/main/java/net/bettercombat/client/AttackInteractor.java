@@ -183,7 +183,7 @@ public class AttackInteractor {
 
             var message = I18n.get(BetterCombatClientMod.config.isMiningWithWeaponsEnabled ?
                     "hud.bettercombat.mine_with_weapons_on" : "hud.bettercombat.mine_with_weapons_off");
-            client.gui.setOverlayMessage(Component.literal(message), false);
+            client.gui.hud.setOverlayMessage(Component.literal(message), false);
         }
     }
 
