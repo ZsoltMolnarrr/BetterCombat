@@ -47,10 +47,12 @@ dependencies {
     implementation("com.zigythebird.playeranim:PlayerAnimationLibCore:${project.player_anim_version}")
     implementation("maven.modrinth:tiny-config:${project.tiny_config_version}-fabric")
 
+    compileOnly("maven.modrinth:first-person-model:${project.fpm_version}")
+
+    compileOnly("dev.ftb.mods:ftb-teams:${project.ftb_teams_version}")
+    compileOnly("dev.ftb.mods:ftb-library:${project.ftb_library_version}")
+
     // TODO: Restore compile-only compat dependencies once 26.1 builds are published
     // (pre-26.1 jars are intermediary-mapped, unusable without remapping)
-    //compileOnly("maven.modrinth:first-person-model:${project.fpm_version}")
     //compileOnly("maven.modrinth:spell-engine:${project.spell_engine_version}-fabric")
-    //compileOnly("dev.ftb.mods:ftb-teams:${project.ftb_teams_version}")
-    //compileOnly("dev.ftb.mods:ftb-library:${project.ftb_library_version}")
 }
