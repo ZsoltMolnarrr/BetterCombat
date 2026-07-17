@@ -106,7 +106,7 @@ if(project.hasProperty('release_type')) {
             changelog = changelog_last_section()
             changelogType = 'markdown'
             releaseType = release_type
-            addGameVersion "${rootProject.minecraft_version}"
+            rootProject.ext.publishGameVersions().each { addGameVersion "$it" }
             addGameVersion "Fabric"
 
             relations {
@@ -133,7 +133,7 @@ if(project.hasProperty('release_type')) {
         versionNumber = "${project.version}-fabric" // You don't need to set this manually. Will fail if Modrinth has this version already
         versionType = release_type // This is the default -- can also be `beta` or `alpha`
         uploadFile = shadowJar
-        gameVersions = ["${rootProject.minecraft_version}"] // Must be an array, even with only one version
+        gameVersions = rootProject.ext.publishGameVersions() // Must be an array, even with only one version
         loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
         dependencies { // A special DSL for creating dependencies
             // scope.type

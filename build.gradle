@@ -78,6 +78,12 @@ ext.changelog_last_section = { ->
     return new File("CHANGELOG.md").text.split('\n# ')[0]
 }
 
+ext.publishGameVersions = { ->
+    def additional = rootProject.findProperty('additional_game_versions')
+    def older = additional ? additional.split(',').collect { it.trim() }.findAll { it } : []
+    return older + [rootProject.minecraft_version]
+}
+
 def gitBranch() {
     def branch = ""
     def proc = "git rev-parse --abbrev-ref HEAD".execute()
