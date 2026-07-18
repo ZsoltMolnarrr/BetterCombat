@@ -1,3 +1,7 @@
+# 3.2.1
+
+- Fix jar embedding
+
 # 3.2.0
 
 - Support Minecraft 26.1, 26.1.1, 26.1.2

@@ -79,6 +79,12 @@ jar {
 }
 
 shadowJar {
+    // Build on top of the `jar` task output instead of raw source-set outputs:
+    // in no-remap Loom the jar-in-jar nesting (`include`) is applied by `jar`
+    // (it was applied by `remapJar` after shadowing, before 26.1).
+    dependsOn jar
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = null
 }
