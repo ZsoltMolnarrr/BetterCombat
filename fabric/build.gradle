@@ -111,6 +111,8 @@ if (project.hasProperty('release_type')) {
         curseforge {
             projectId = providers.environmentVariable("CURSEFORGE_PROJECT_ID")
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
+            client = true
+            server = true
             rootProject.ext.publishGameVersions().each { minecraftVersions.add(it) }
             requires("fabric-api")
             requires("cloth-config")
