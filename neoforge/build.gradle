@@ -115,7 +115,7 @@ if (project.hasProperty('release_type')) {
         }
 
         modrinth {
-            projectId = providers.environmentVariable("MODRINTH_PROJECT_ID")
+            projectId = providers.environmentVariable("MODRINTH_PROJECT_ID").map { rootProject.ext.resolveModrinthId(it) }
             accessToken = providers.environmentVariable("MODRINTH_API_KEY")
             rootProject.ext.publishGameVersions().each { minecraftVersions.add(it) }
             requires("cloth-config")
