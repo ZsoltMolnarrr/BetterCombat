@@ -84,6 +84,14 @@ ext.publishGameVersions = { ->
     return older + [rootProject.minecraft_version]
 }
 
+// mod-publish-plugin's modrinth block requires the base62 project ID, not the slug.
+// Resolve the slug to an ID via the public Modrinth API so config can stay slug-based.
+ext.resolveModrinthId = { slug ->
+    def conn = new URL("https://api.modrinth.com/v2/project/${slug}").openConnection()
+    conn.setRequestProperty("User-Agent", "ZsoltMolnarrr/BetterCombat (gradle publish)")
+    return new groovy.json.JsonSlurper().parse(conn.inputStream).id
+}
+
 def gitBranch() {
     def branch = ""
     def proc = "git rev-parse --abbrev-ref HEAD".execute()

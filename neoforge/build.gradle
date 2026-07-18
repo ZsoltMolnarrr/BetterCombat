@@ -1,8 +1,6 @@
 plugins {
     id 'com.gradleup.shadow'
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "com.github.breadmoirai.github-release" version "2.4.1"
-    id "com.modrinth.minotaur" version "2.+"
+    id "me.modmuss50.mod-publish-plugin" version "2.1.1"
 }
 
 def platform = project.name;
@@ -87,54 +85,41 @@ shadowJar {
 
 assemble.dependsOn shadowJar
 
-if(project.hasProperty('release_type')) {
+if (project.hasProperty('release_type')) {
+    def mppType = release_type == "release" ? me.modmuss50.mpp.ReleaseType.STABLE
+            : release_type == "alpha" ? me.modmuss50.mpp.ReleaseType.ALPHA
+            : me.modmuss50.mpp.ReleaseType.BETA
+
+    // Preserve the `publishMod` task name so the GitHub Actions workflow keeps working.
     tasks.register("publishMod") {
         dependsOn(build)
-        finalizedBy(tasks.curseforge)
-        finalizedBy(tasks.modrinth)
+        finalizedBy(tasks.named("publishMods"))
     }
 
-    curseforge {
-        apiKey = System.getenv("CURSEFORGE_API_KEY")
-        project {
-            id = System.getenv("CURSEFORGE_PROJECT_ID")
-            changelog = changelog_last_section()
-            changelogType = 'markdown'
-            releaseType = release_type
-            rootProject.ext.publishGameVersions().each { addGameVersion "$it" }
-            addGameVersion "NeoForge"
-
-            relations {
-                requiredDependency 'cloth-config'
-                requiredDependency 'player-animation-library'
-            }
-
-            mainArtifact(shadowJar)
-            afterEvaluate {
-                uploadTask.dependsOn(shadowJar)
-            }
-            options {
-                forgeGradleIntegration = false
-            }
-        }
-    }
-
-    modrinth {
-        token = System.getenv("MODRINTH_API_KEY")
-        projectId = System.getenv("MODRINTH_PROJECT_ID") // This can be the project ID or the slug. Either will work!
+    publishMods {
+        file = shadowJar.archiveFile
         changelog = changelog_last_section()
-        versionName = "${project.version}"
-        versionNumber = "${project.version}-neoforge" // You don't need to set this manually. Will fail if Modrinth has this version already
-        versionType = release_type // This is the default -- can also be `beta` or `alpha`
-        uploadFile = shadowJar
-        gameVersions = rootProject.ext.publishGameVersions() // Must be an array, even with only one version
-        loaders = ["neoforge"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
-        dependencies { // A special DSL for creating dependencies
-            // scope.type
-            // The scope can be `required`, `optional`, `incompatible`, or `embedded`
-            // The type can either be `project` or `version`
-            required.project "cloth-config"
-            required.project "player-animation-library"
+        type = mppType
+        version = "${project.version}-neoforge" // Will fail if Modrinth already has this version
+        displayName = "${project.version}"
+        modLoaders.add("neoforge")
+
+        curseforge {
+            projectId = providers.environmentVariable("CURSEFORGE_PROJECT_ID")
+            accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
+            client = true
+            server = true
+            rootProject.ext.publishGameVersions().each { minecraftVersions.add(it) }
+            requires("cloth-config")
+            requires("player-animation-library")
+        }
+
+        modrinth {
+            projectId = providers.environmentVariable("MODRINTH_PROJECT_ID").map { rootProject.ext.resolveModrinthId(it) }
+            accessToken = providers.environmentVariable("MODRINTH_API_KEY")
+            rootProject.ext.publishGameVersions().each { minecraftVersions.add(it) }
+            requires("cloth-config")
+            requires("player-animation-library")
         }
     }
 }
