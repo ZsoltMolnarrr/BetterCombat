@@ -206,8 +206,24 @@ public class ServerNetwork {
                                 LOGGER.warn("Player {} tried to attack an invalid entity", (Object) player.getName().getString());
                                 return;
                             }
+                            // 26.1: the SPEAR damage type is in the `no_knockback` tag, so vanilla `LivingEntity.hurtServer`
+                            // skips the default melee knockback - it delivers spear knockback via the kinetic STAB lunge,
+                            // which we replace with a normal melee attack. Capture health to detect a landed hit, then
+                            // re-apply the standard melee knockback below.
+                            float healthBeforeAttack = (isPiercingWeapon && entity instanceof LivingEntity target)
+                                    ? target.getHealth() + target.getAbsorptionAmount() : 0F;
                             player.attack(entity);
                             attackedAnyEntity = true;
+                            if (isPiercingWeapon && entity instanceof LivingEntity target
+                                    && target.getHealth() + target.getAbsorptionAmount() < healthBeforeAttack) {
+                                // Mirrors vanilla `LivingEntity.hurtServer` exactly: knockback strength is
+                                // `LivingEntity.DEFAULT_KNOCKBACK` (0.4F), and for a melee source the direction is
+                                // `source.getSourcePosition() - target` which resolves to the attacker's position
+                                // (the spear damage source's directEntity is the player, with no override position).
+                                // Routing through `knockback()` keeps KNOCKBACK_RESISTANCE, our active multiplier
+                                // (LivingEntityMixin), and loader knockback events applied identically to vanilla.
+                                target.knockback(0.4F, player.getX() - target.getX(), player.getZ() - target.getZ());
+                            }
                         }
                     }
                     if (entity instanceof LivingEntity livingEntity) {
