@@ -5,6 +5,7 @@
   "keybinds.bettercombat.toggle_mine_with_weapons": "Alternar Minar con Armas",
   "hud.bettercombat.mine_with_weapons_on": "Minar con armas: Sí",
   "hud.bettercombat.mine_with_weapons_off": "Minar con armas: No",
+  "key.category.bettercombat.main" : "Better Combat",
 
   "text.autoconfig.bettercombat.title": "Better Combat",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled": "Mantener para atacar",
@@ -41,6 +42,8 @@
   "text.autoconfig.bettercombat.option.client.swingThruGrassBlacklist.@Tooltip": "Las armas cuyo ID coincida con esta regex nunca golpearán a través del pasto",
   "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist": "Lista negra de minar con armas",
   "text.autoconfig.bettercombat.option.client.mineWithWeaponBlacklist.@Tooltip": "Las armas cuyo ID coincida con esta regex no podrán usarse para minar bloques",
+  "text.autoconfig.bettercombat.option.client.mineWithWeaponWhitelist": "Lista blanca de armas para minar",
+  "text.autoconfig.bettercombat.option.client.mineWithWeaponWhitelist.@Tooltip": "Las armas con un ID que coincida con esta expresión regular (regex) siempre van a poder minar bloques, incluso cuando 'Minar con armas' esté desactivado",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled": "Debug de hitbox",
   "text.autoconfig.bettercombat.option.client.isDebugOBBEnabled.@Tooltip": "Mostrar la hitbox del arma cuando se muestran las hitbox de las entidades",
   "text.autoconfig.bettercombat.option.client.firstPersonAnimations": "Animaciones del jugador en primera persona",
