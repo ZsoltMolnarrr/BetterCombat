@@ -50,7 +50,11 @@ public class LivingEntityMixin implements ConfigurableKnockback {
         customKnockbackMultiplier_BetterCombat = value;
     }
 
-    @ModifyVariable(method = "knockback", at = @At("HEAD"), ordinal = 0, argsOnly = true)
+    // 26.2 split `knockback` into two overloads where the 5-arg delegates to the 6-arg terminal method.
+    // Target only the terminal 6-arg overload so the multiplier applies exactly once regardless of which
+    // overload the caller entered through (a bare `method = "knockback"` would inject into both and
+    // double-apply the multiplier for calls routed via the 5-arg, e.g. `dealDefaultKnockback`).
+    @ModifyVariable(method = "knockback(DDDLnet/minecraft/world/damagesource/DamageSource;FZ)V", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     public double takeKnockback_HEAD_changeStrength(double knockbackStrength) {
         return knockbackStrength * customKnockbackMultiplier_BetterCombat;
     }

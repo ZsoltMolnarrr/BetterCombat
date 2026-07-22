@@ -214,15 +214,16 @@ public class ServerNetwork {
                                     ? target.getHealth() + target.getAbsorptionAmount() : 0F;
                             player.attack(entity);
                             attackedAnyEntity = true;
-                            if (isPiercingWeapon && entity instanceof LivingEntity target
-                                    && target.getHealth() + target.getAbsorptionAmount() < healthBeforeAttack) {
-                                // Mirrors vanilla `LivingEntity.hurtServer` exactly: knockback strength is
-                                // `LivingEntity.DEFAULT_KNOCKBACK` (0.4F), and for a melee source the direction is
-                                // `source.getSourcePosition() - target` which resolves to the attacker's position
-                                // (the spear damage source's directEntity is the player, with no override position).
-                                // Routing through `knockback()` keeps KNOCKBACK_RESISTANCE, our active multiplier
-                                // (LivingEntityMixin), and loader knockback events applied identically to vanilla.
-                                target.knockback(0.4F, player.getX() - target.getX(), player.getZ() - target.getZ());
+                            if (isPiercingWeapon && entity instanceof LivingEntity target) {
+                                float damageDealt = healthBeforeAttack - (target.getHealth() + target.getAbsorptionAmount());
+                                if (damageDealt > 0F) {
+                                    // Invoke the exact method vanilla `hurtServer` uses to apply default melee knockback:
+                                    // it computes direction from the source position, applies `DEFAULT_KNOCKBACK` (0.4F)
+                                    // via `knockback()` (so KNOCKBACK_RESISTANCE, our multiplier, and loader knockback
+                                    // events all apply identically to vanilla), and calls `indicateDamage`. We rebuild
+                                    // the same spear damage source `player.attack` used so the source-derived behavior matches.
+                                    target.dealDefaultKnockback(hand.itemStack().getDamageSource(player), damageDealt, false);
+                                }
                             }
                         }
                     }
