@@ -15,6 +15,7 @@ import net.bettercombat.utils.AttributeModifierHelper;
 import net.bettercombat.utils.MathHelper;
 import net.bettercombat.utils.SoundHelper;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundAttackPacket;
 import net.minecraft.resources.Identifier;
@@ -89,7 +90,11 @@ public class ServerNetwork {
         }
         final var attack = hand.attack();
         final var attributes = hand.attributes();
-        final boolean useVanillaPacket = Packets.C2S_AttackRequest.UseVanillaPacket;
+        // 26.1: vanilla `ServerGamePacketListenerImpl.handleAttack` skips items with the PIERCING_WEAPON
+        // component (spears, tridents, lances) - those deal damage via the separate STAB/PiercingWeapon
+        // flow, which we don't use. Route them through our own `player.attack` path so they hit normally.
+        final boolean isPiercingWeapon = hand.itemStack().has(DataComponents.PIERCING_WEAPON);
+        final boolean useVanillaPacket = Packets.C2S_AttackRequest.UseVanillaPacket && !isPiercingWeapon;
         world.getServer().executeIfPossible(() -> {
             ((PlayerAttackProperties)player).setComboCount(request.comboCount());
 
@@ -212,9 +217,10 @@ public class ServerNetwork {
                     }
                 }
 
-                if (!attackedAnyEntity) {
-                    // Vanilla `PiercingWeaponComponent.stab` fires attack enchantment effects (such as Lunge)
-                    // even when nothing is hit. Swings with targets get this via `PlayerEntity.attack`.
+                if (!attackedAnyEntity && isPiercingWeapon) {
+                    // Vanilla `PiercingWeapon.attack` (the STAB path) fires post-piercing enchantment effects
+                    // (such as Lunge) even when nothing is hit - but only for piercing weapons. Swings with
+                    // targets get this via `PlayerEntity.attack`.
                     player.postPiercingAttack();
                 }
 
