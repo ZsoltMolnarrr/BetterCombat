@@ -95,51 +95,56 @@ shadowJar {
 
 assemble.dependsOn shadowJar
 
-if (project.hasProperty('release_type')) {
-    def mppType = release_type == "release" ? me.modmuss50.mpp.ReleaseType.STABLE
-            : release_type == "alpha" ? me.modmuss50.mpp.ReleaseType.ALPHA
-            : me.modmuss50.mpp.ReleaseType.BETA
+// Publishing is configured unconditionally: tasks only *run* when explicitly invoked
+// (e.g. `publishMod` in CI), and all credentials are lazy env providers, so a local
+// `build` — with none of the tokens present — is completely unaffected.
+def releaseTypeName = (project.findProperty('release_type') ?: 'beta').toString()
 
-    // Preserve the `publishMod` task name so the GitHub Actions workflow keeps working.
-    tasks.register("publishMod") {
-        dependsOn(build)
-        finalizedBy(tasks.named("publishMods"))
+// Preserve the `publishMod` task name so the GitHub Actions workflow keeps working.
+tasks.register("publishMod") {
+    dependsOn(build)
+    finalizedBy(tasks.named("publishMods"))
+}
+
+publishMods {
+    file = shadowJar.archiveFile
+    changelog = providers.provider { changelog_last_section() }   // lazy: read only at publish
+    type = releaseTypeName == "release" ? me.modmuss50.mpp.ReleaseType.STABLE
+            : releaseTypeName == "alpha" ? me.modmuss50.mpp.ReleaseType.ALPHA
+            : me.modmuss50.mpp.ReleaseType.BETA
+    version = "${project.version}-fabric" // Will fail if Modrinth already has this version
+    displayName = "${project.version}"
+    modLoaders.add("fabric")
+
+    curseforge {
+        projectId = providers.environmentVariable("CURSEFORGE_PROJECT_ID")
+        accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
+        client = true
+        server = true
+        rootProject.ext.publishGameVersions().each { minecraftVersions.add(it) }
+        requires("fabric-api")
+        requires("cloth-config")
+        requires("player-animation-library")
     }
 
-    publishMods {
-        file = shadowJar.archiveFile
-        changelog = changelog_last_section()
-        type = mppType
-        version = "${project.version}-fabric" // Will fail if Modrinth already has this version
-        displayName = "${project.version}"
-        modLoaders.add("fabric")
+    modrinth {
+        projectId = providers.environmentVariable("MODRINTH_PROJECT_ID").map { rootProject.ext.resolveModrinthId(it) }
+        accessToken = providers.environmentVariable("MODRINTH_API_KEY")
+        rootProject.ext.publishGameVersions().each { minecraftVersions.add(it) }
+        requires("fabric-api")
+        requires("cloth-config")
+        requires("player-animation-library")
+    }
 
-        curseforge {
-            projectId = providers.environmentVariable("CURSEFORGE_PROJECT_ID")
-            accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            client = true
-            server = true
-            rootProject.ext.publishGameVersions().each { minecraftVersions.add(it) }
-            requires("fabric-api")
-            requires("cloth-config")
-            requires("player-animation-library")
-        }
-
-        modrinth {
-            projectId = providers.environmentVariable("MODRINTH_PROJECT_ID").map { rootProject.ext.resolveModrinthId(it) }
-            accessToken = providers.environmentVariable("MODRINTH_API_KEY")
-            rootProject.ext.publishGameVersions().each { minecraftVersions.add(it) }
-            requires("fabric-api")
-            requires("cloth-config")
-            requires("player-animation-library")
-        }
-
-        github {
-            repository = providers.environmentVariable("GH_OWNER")
-                    .zip(providers.environmentVariable("GH_REPO")) { owner, repo -> "$owner/$repo" }
-            accessToken = providers.environmentVariable("GH_API_KEY")
-            commitish = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
-            tagName = "${project.version}"
-        }
+    // Each platform publishes its own GitHub release under a distinct, platform-suffixed
+    // tag (e.g. `2.3.1+26.1-fabric`), so the two publish jobs don't collide.
+    github {
+        repository = providers.environmentVariable("GH_OWNER")
+                .zip(providers.environmentVariable("GH_REPO")) { owner, repo -> "$owner/$repo" }
+        accessToken = providers.environmentVariable("GH_API_KEY")
+        tagName = "${project.version}-${platform}"
+        // `commitish` is REQUIRED by the plugin. GITHUB_SHA is set automatically by GitHub
+        // Actions to the triggering commit — valid even in a detached-HEAD checkout.
+        commitish = providers.environmentVariable("GITHUB_SHA")
     }
 }
