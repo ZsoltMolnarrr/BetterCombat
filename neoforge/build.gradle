@@ -38,7 +38,6 @@ repositories {
         url = "https://repo.redlance.org/public"
     }
     maven { url 'https://maven.shedaniel.me/' }
-    maven { url 'https://maven.terraformersmc.com/' }
     maven { url 'https://jitpack.io' }
     maven {
         name = 'Modrinth'

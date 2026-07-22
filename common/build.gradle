@@ -11,7 +11,6 @@ repositories {
     maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.fabricmc.net/' }
     maven { url 'https://jitpack.io' }
-    maven { url 'https://maven.terraformersmc.com/' }
     maven {
         name = 'Modrinth'
         url = 'https://api.modrinth.com/maven'
