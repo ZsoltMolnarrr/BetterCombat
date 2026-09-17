@@ -183,7 +183,7 @@ public class ServerNetwork {
 
                     if (entity instanceof LivingEntity livingEntity) {
                         if (BetterCombatMod.config.allow_fast_attacks) {
-                            livingEntity.invulnerableTime = 0;
+                            livingEntity.setInvulnerableTime(0);
                         }
                         if (knockbackMultiplier != 1F) {
                             ((ConfigurableKnockback) livingEntity).setKnockbackMultiplier_BetterCombat(knockbackMultiplier);

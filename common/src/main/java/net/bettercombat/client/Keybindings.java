@@ -16,13 +16,13 @@ public class Keybindings {
     static {
         feintKeyBinding = new KeyMapping(
                 "keybinds.bettercombat.feint",
-                InputConstants.Type.KEYSYM,
+                InputConstants.Type.KEYBOARD,
                 InputConstants.UNKNOWN.getValue(),
                 CATEGORY);
 
         toggleMineKeyBinding = new KeyMapping(
                 "keybinds.bettercombat.toggle_mine_with_weapons",
-                InputConstants.Type.KEYSYM,
+                InputConstants.Type.KEYBOARD,
                 InputConstants.UNKNOWN.getValue(),
                 CATEGORY);
 

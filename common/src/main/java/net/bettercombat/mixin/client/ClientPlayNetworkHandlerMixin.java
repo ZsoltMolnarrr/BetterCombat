@@ -14,7 +14,7 @@ public class ClientPlayNetworkHandlerMixin {
     @Inject(method = "handleParticleEvent", at = @At("HEAD"), cancellable = true)
     private void onParticle_Pre(ClientboundLevelParticlesPacket packet, CallbackInfo ci) {
         if(!BetterCombatClientMod.config.isSweepingParticleEnabled
-                && packet.getParticle().getType().equals(ParticleTypes.SWEEP_ATTACK)) {
+                && packet.particle().getType().equals(ParticleTypes.SWEEP_ATTACK)) {
             ci.cancel();
         }
     }

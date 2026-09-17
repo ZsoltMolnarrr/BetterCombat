@@ -12,7 +12,8 @@ credits="Malfu, KosmX, Gecko"
 description = '''
 Easy, spectacular and fun melee combat system from Minecraft Dungeons.
 '''
-logoFile = "logo.png"
+bannerFile = "logo.png"
+iconFile = "assets/bettercombat/icon.png"
 
 [[dependencies.bettercombat]]
 modId = "neoforge"

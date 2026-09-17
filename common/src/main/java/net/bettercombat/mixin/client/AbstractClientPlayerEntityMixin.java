@@ -71,7 +71,7 @@ public abstract class AbstractClientPlayerEntityMixin extends Player implements 
             scheduledParticles = null;
         }
 
-        if (player.swinging // Official mapping name: `isHandBusy`
+        if (player.isSwinging()
                 || player.isSwimming()
                 || player.isUsingItem()
                 || player.onClimbable()
