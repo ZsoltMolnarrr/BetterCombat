@@ -87,6 +87,10 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
 
     @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
     public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
+        if (slot != OFFHAND) {
+            return;
+        }
+
         var mainHandHasTwoHanded = false;
         var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
         var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
@@ -101,12 +105,9 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
             offHandHasTwoHanded = true;
         }
 
-        if (slot == OFFHAND) {
-            if (mainHandHasTwoHanded || offHandHasTwoHanded) {
-                cir.setReturnValue(ItemStack.EMPTY);
-                cir.cancel();
-                return;
-            }
+        if (mainHandHasTwoHanded || offHandHasTwoHanded) {
+            cir.setReturnValue(ItemStack.EMPTY);
+            cir.cancel();
         }
     }
 
